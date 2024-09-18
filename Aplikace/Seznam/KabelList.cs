@@ -17,58 +17,90 @@ namespace Aplikace.Seznam
             foreach (var radek in PoleData)
             {
                 var Data = new List<string>();
-                //Označení Kabel Odkud Kam
 
                 //1. Kabel
-                Data.Add("SO 01");
-                //2. Kabel Tag
                 Data.Add(radek[0]);
-                //3. Kabel
+
+                 //2. odkud Mcc
+                Data.Add(radek[11]);
+
+                //3. Odkud číslo
+                Data.Add(radek[12]);
+
+                //4. Kabel
                 Data.Add("WL 01");
-                //4. Jmeno kabelu
+
+
+
+                //5. Jmeno kabelu
                 if (radek[3] == "VSD")
                     Data.Add("ÖLFLEX CLASSIC 110 CY");
                 else
                     Data.Add("CYKY");
 
-                //5. Počet žil
+                //6. Počet žil
                 Data.Add("4x");
 
-                //6. Průřez
+                //7. Průřez
                 Data.Add(radek[9]);
 
-                //7. Průřez
+                //8. Průřez
                 Data.Add(radek[10]);
 
-                //8. zařízení
+
+
+
+                //9. zařízení
                 if (radek[3] == "PU")
                     Data.Add("Přívod");
                 else
                     Data.Add("Motor");
 
 
-                //9. odkud Mcc
-                Data.Add(radek[11]);
 
-                //10. Odkud číslo
-                Data.Add(radek[12]);
-
-                //11. Svorka
-                Data.Add("X 01");
-
-                //12. kam 
-                Data.Add("SO 01");
-
-                //13. kam číslo
+                //10. odkud tag
                 Data.Add(radek[0]);
 
-                //14.kam Svorka
+                //11. odkud Mcc
+                Data.Add(radek[11]);
+
+                //12. Odkud číslo
+                Data.Add(radek[12]);
+
+                //13. Svorka rozvaděče
                 Data.Add("X 01");
 
-                //15. Delka m
+                //14. Mezera
+                Data.Add(" ");
+
+
+
+
+                //15. kam tag
+                Data.Add(radek[0]);
+
+                //16. kam objekt nebo patro
+                Data.Add("SO 01");
+
+                //17.kam Zažizeni
+                //18.kam Svorka
+                if (radek[3] == "PU")
+                {
+                    Data.Add("PU 01");
+                    Data.Add("X 01");
+                }
+                else 
+                { 
+                    Data.Add("M 01");
+                    Data.Add("X 01");
+                }
+
+
+
+                //19. Delka m
                 Data.Add(radek[7]);
 
-                //16 Delka ft
+                //20 Delka ft
                 Data.Add(radek[8]);
 
                 //přidání řádku do pole
@@ -92,56 +124,71 @@ namespace Aplikace.Seznam
             //Ovládací kabel PTC
             var Data = new List<string>();
 
-            //1. Kabel
-            Data.Add("SO 01");
-
-            //2. Kabel Tag
+            //1. Kabel tag
             Data.Add(radek[0]);
 
-            //3. Kabel
-            Data.Add("WS 01");
-
-            //4. Kabel
-            Data.Add("ÖLFLEX CLASSIC 100 ");
-
-            //5. Počet žil
-            Data.Add("2x");
-
-            //6. Průřez mm2
+            //2. Kabel MCC
             Data.Add(radek[9]);
 
-            //7. Průřez awg
+            //3. Kabel MCC cislo
             Data.Add(radek[10]);
 
-            //8. Počet žil
+            //4. Kabel
+            Data.Add("WS 01");
+
+
+
+            //5. Kabel
+            Data.Add("ÖLFLEX CLASSIC 100 ");
+
+            //6. Počet žil
+            Data.Add("2x");
+
+            //7. Průřez mm2
+            Data.Add(radek[9]);
+
+            //8. Průřez awg
+            Data.Add(radek[10]);
+
+            //9. Počet žil
             Data.Add("Ptc");
 
-            //9. odkud Mcc
-            Data.Add(radek[11]);
-
-            //10. Odkud číslo
-            Data.Add(radek[12]);
-
-            //11. Odkud Svorka
-            Data.Add("X 01");
 
 
-
-            //12. kam tag
+            //10. odkud tag
             Data.Add(radek[0]);
 
-            //13. kam číslo
+            //11. odkud Mcc
+            Data.Add(radek[11]);
+
+            //12. Odkud číslo
+            Data.Add(radek[12]);
+
+            //13. Odkud Svorka
+            Data.Add("X 02");
+
+            //14. Mezera
+            Data.Add(" ");
+
+
+            //15. kam tag
+            Data.Add(radek[0]);
+
+            //16. kam číslo
+            Data.Add("SO 01");
+
+            //17. kam číslo
             Data.Add("M 01");
 
-            //14. kam Svorka
-            Data.Add("X 01");
+            //18. kam Svorka
+            Data.Add("X 02");
 
 
 
-            //15. Delka m
+            //19. Delka m
             Data.Add(radek[7]);
 
-            //16. Delka ft
+            //20. Delka ft
             Data.Add(radek[8]);
                 
             
@@ -153,55 +200,73 @@ namespace Aplikace.Seznam
             //Ovládací kabel PTC
             var Data = new List<string>();
 
-            //1. Kabel
-            Data.Add("SO 01");
-
-            //2. Kabel Tag
+            //1. Kabel tag
             Data.Add(radek[0]);
-
-            //3. Kabel
-            Data.Add("WS 02");
-
-            //4. Kabel
-            Data.Add("CYKY");
-
-            //5. Počet žil
-            Data.Add("12x");
-
-            //6. Průřez mm2
-            Data.Add(radek[9]);
-
-            //7. Průřez awg
-            Data.Add(radek[10]);
-
-            //8. Počet žil
-            Data.Add("Ovládání");
-
-            //9. odkud Mcc
+            
+            //2. odkud Mcc
             Data.Add(radek[11]);
 
-            //10. Odkud číslo
+            //3. Odkud číslo
             Data.Add(radek[12]);
 
-            //11. Odkud Svorka
-            Data.Add("X 01");
+            //4. Kabel
+            Data.Add("WS 02");
 
 
 
-            //12. kam tag
+            //5. Kabel
+            Data.Add("CYKY");
+
+            //6. Počet žil
+            Data.Add("12x");
+
+            //7. Průřez mm2
+            Data.Add(radek[9]);
+
+            //8. Průřez awg
+            Data.Add(radek[10]);
+
+            //9. Počet žil
+            Data.Add("Ovládání");
+
+
+
+            //10. odkud tag
             Data.Add(radek[0]);
 
-            //13. kam číslo
+            //11. odkud Mcc
+            Data.Add(radek[11]);
+
+            //12. Odkud číslo
+            Data.Add(radek[12]);
+
+            //13. Odkud Svorka
+            Data.Add("X 03");
+
+            //14. Mezera
+            Data.Add(" ");
+
+
+
+            //15. kam tag
+            Data.Add(radek[0]);
+
+            //16. kam číslo
+            Data.Add("SO 01");
+
+            //17. kam číslo
             Data.Add("MX 01");
 
-            //14. kam Svorka
+            //18. kam Svorka
             Data.Add("X 01");
 
 
-            //15. Delka m
+
+
+            //19. Delka m
             Data.Add(radek[7]);
 
-            //16. Delka ft
+            //20. Delka ft
             Data.Add(radek[8]);
 
 

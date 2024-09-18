@@ -8,7 +8,7 @@ using Exc = Microsoft.Office.Interop.Excel;
 
 var Ele = new ElektroLoad();
 
-//Kopírování informací ddo revize 7
+//Kopírování informací do revize 7
 //Ele.Elektro();
 
 //Vytvoření nového dokumentu

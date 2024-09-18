@@ -10,6 +10,8 @@ namespace Aplikace.Excel
 {
     public class ExcelLoad
     {
+
+        /// <summary> Načtení dpkumentu Ecxel do pole List<List<string>> z a vytvořejí JSON</summary>
         public List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek)
         {
             Console.Write("\nProbíná hačítání dat ... ");
@@ -22,10 +24,12 @@ namespace Aplikace.Excel
             if (File.Exists(json))
             {
                 Pole = Soubory.LoadJsonList<List<string>>(json);
+                Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             }
             else
             {
                 Pole = new ExcelApp().ExelLoadTable(cesta, Tabulka, Radek, Sloupce);
+                Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 Pole.SaveJsonList(json);
             }
             return Pole;

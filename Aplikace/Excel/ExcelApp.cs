@@ -441,8 +441,6 @@ namespace Aplikace.Excel
         public void ExcelSaveList(Worksheet Xls, List<List<string>> Vstup)
         {
             int col = 0; int row = 2;
-            Nadpis(Xls);
-            NadpisSet(Xls);
 
             //Čtení listu excel
             foreach (var radek in Vstup)
@@ -497,6 +495,18 @@ namespace Aplikace.Excel
                     }
                 }
 
+                if (cteni == null && i > 100)
+                    break;
+            }
+            return;
+        }
+
+        /// <summary> doplnění vzorců doExel </summary>
+        public void ExcelSaveVzorce(Worksheet ListExcel)
+        {
+            //Čtení listu excel
+            for (int i = 3; i < ListExcel.Rows.Count; i++)
+            {
                 // Dynamický vzorec (např. sčítání hodnot v buňkách A a B na daném řádku)
                 //string formula = $"=A{row}+B{row}";
                 //string formula = $"=Cells({i}, 3)+Cells({3}, 2)";
@@ -516,14 +526,11 @@ namespace Aplikace.Excel
                 formula = $"=H{i}*3.29";
                 ListExcel.Cells[i, 9].Formula = formula;
 
-                if (cteni == null)
+                if (i > 100)
                     break;
             }
             return;
         }
-
-
-
 
         /// <summary> Ze zadaného listu Exel vytvoř DataTable - podle zvolených sloupců </summary>
         public System.Data.DataTable GetTable(Exc.Worksheet oSheet, int rowNadpis, int[] sloupec)
@@ -763,6 +770,28 @@ namespace Aplikace.Excel
 
             //Styl pisma
             rada.Font.FontStyle = "Arial";
+        }
+
+        /// <summary>Nový dokument Elektro pro přípravu elektro seznamů </summary>
+        internal Worksheet ExcelElektro(string cesta)
+        {    
+            Exc.Workbook? doc;
+            Exc.Worksheet? xls;
+
+            if (File.Exists(cesta))
+            {
+                doc = new ExcelApp().DokumetExcel(cesta);
+                if (doc == null) return null;
+                //Nastavení listu
+                xls = new ExcelApp().GetSheet(doc, "Seznam Elektro");
+                if (doc == null) return null;
+            }
+            else
+            { 
+                doc = new ExcelApp().VytvorNovyDokument();
+                xls = new ExcelApp().PridatNovyList(doc, "Seznam Elektro");
+            }
+            return xls;
         }
     }
 }
