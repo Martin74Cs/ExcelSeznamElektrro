@@ -145,10 +145,10 @@ namespace Aplikace.Seznam
             Data.Add("2x");
 
             //7. Průřez mm2
-            Data.Add(radek[9]);
+            Data.Add("2,5");
 
             //8. Průřez awg
-            Data.Add(radek[10]);
+            Data.Add("13");
 
             //9. Počet žil
             Data.Add("Ptc");
@@ -221,10 +221,10 @@ namespace Aplikace.Seznam
             Data.Add("12x");
 
             //7. Průřez mm2
-            Data.Add(radek[9]);
+            Data.Add("2,5");
 
             //8. Průřez awg
-            Data.Add(radek[10]);
+            Data.Add("13");
 
             //9. Počet žil
             Data.Add("Ovládání");

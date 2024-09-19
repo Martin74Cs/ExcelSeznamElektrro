@@ -1,4 +1,6 @@
-﻿using Microsoft.Office.Interop.Excel;
+﻿using Aplikace.Sdilene;
+using Aplikace.Tridy;
+using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -102,7 +104,7 @@ namespace Aplikace.Excel
         //}
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public List<List<string>> ExelLoadTable(string cesta, string zalozka, int Radek, int[] CteniSloupcu)
+        public List<List<string>> ExelLoadTable(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
         {
             if (!System.IO.File.Exists(cesta)) return [];
 
@@ -118,8 +120,11 @@ namespace Aplikace.Excel
             var cteniPole = new List<string>();
             var Pole = new List<List<string>>();
             Console.Write("\nZal.Rows.Count=" + Zal.Rows.Count);
+            var Test = new List<Zarizeni>();
             for (int i = Radek; i < Zal.Rows.Count; i++)
             {
+                var obj = new Zarizeni();
+                int x = 0;
                 cteniPole = new List<string>();
                 foreach (var item in CteniSloupcu)
                 {
@@ -129,10 +134,15 @@ namespace Aplikace.Excel
 
                     string xxx = Convert.ToString(cteni);
                     if (!string.IsNullOrEmpty(xxx))
-                        cteniPole.Add(xxx);
+                    { 
+                        cteniPole.Add(xxx)
+                        Zarizeni.NastavVlastnost(obj, TextPole[x++], cteni);
+                    }
+                        //object obj = new Zarizeni();
                     else
                         cteniPole.Add("");
                 }
+                Test.Add(obj);
 
                 if (!string.IsNullOrEmpty(cteniPole[1]) && cteniPole[1] != "0")
                 {
@@ -140,8 +150,10 @@ namespace Aplikace.Excel
                     Console.Write("\nRadek=" + i.ToString());
                 }
 
-                if (i > 500) break;
+                if (i > 100 && Pole.Last().First().Count() < 2) break;
             }
+            Test.SaveJsonList(Path.ChangeExtension(cesta, ".Pole"));
+
             Console.Write("\nUkončení Excel");
             //Xls.Save();
             //Console.Write("\nSave OK");
@@ -223,7 +235,7 @@ namespace Aplikace.Excel
         {
             string cesta1 = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
-            var Motory500 = new ExcelLoad().LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2);
+            var Motory500 = new ExcelLoad().LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2, []);
 
             if (!System.IO.File.Exists(cesta)) return;
 
@@ -704,17 +716,19 @@ namespace Aplikace.Excel
             return Data;
         }
 
-        public void ExcelSaveTable(Worksheet xls, List<List<string>> data, int Radek)
+        public void ExcelSaveTable(Worksheet xls, List<List<string>> data, int Row)
         {
-            Radek--;
-            int X1 = Radek;
+            Row--;
+            int X1 = Row;
             int j = 1;
             foreach (var radek in data)
             {
-                Radek++; j = 1;
+                Console.WriteLine("Radek " + Row);
+                Row++; j = 1;
                 foreach (var item in radek)
                 {
-                    Exc.Range Zapis1 = xls.Cells[Radek, j++];
+
+                    Exc.Range Zapis1 = xls.Cells[Row, j++];
                     if (double.TryParse(item, out double cislo))
                     {
                         Zapis1.Value = cislo;
@@ -730,6 +744,7 @@ namespace Aplikace.Excel
 
         public void ExcelSaveNadpis(Worksheet xls, List<List<string>> PoleData)
         {
+            xls.Activate();
             Nadpis(xls, "A1:D1", "Označeni", PoleData);
             Nadpis(xls, "E1:H1", "Kabel", PoleData);
             Nadpis(xls, "I1:I1", "Zařízení", PoleData);
@@ -843,6 +858,7 @@ namespace Aplikace.Excel
                 doc = new ExcelApp().VytvorNovyDokument();
                 xls = new ExcelApp().PridatNovyList(doc, "Seznam Elektro");
             }
+            xls.Activate();
             return xls;
         }
     }
