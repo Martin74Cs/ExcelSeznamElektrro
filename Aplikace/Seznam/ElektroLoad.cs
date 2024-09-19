@@ -1,5 +1,6 @@
 ﻿using Aplikace.Excel;
 using Aplikace.Sdilene;
+using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
@@ -85,6 +86,10 @@ namespace Aplikace.Seznam
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
+            //Načtení json od z Milanového seznamu čerpadel
+            string cestaPump = @"U:\Elektro\mcsato\Zakázky\Natron\pumps.json";
+            var Pumpy = Pump.Load(cestaPump);
+
             //načtení základní infomací pro seznam Elektro dle čísel jednotlivých sloupců
             string cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
             //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
@@ -140,8 +145,9 @@ namespace Aplikace.Seznam
             //nová záložka
             xls = new ExcelApp().PridatNovyList(doc, "Kabely");
 
-            //doplnení nadpoisu
-            new ExcelApp().ExcelSaveNadpis(xls);
+            //doplnení nadpisu
+            new ExcelApp().ExcelSaveNadpis(xls, PoleData);
+
 
             //doplnění rozvaděčů mcc cislo
             new ExcelApp().ExcelSaveTable(xls, PoleData, 3);

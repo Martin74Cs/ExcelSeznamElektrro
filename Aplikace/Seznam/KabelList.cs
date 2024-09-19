@@ -128,10 +128,10 @@ namespace Aplikace.Seznam
             Data.Add(radek[0]);
 
             //2. Kabel MCC
-            Data.Add(radek[9]);
+            Data.Add(radek[11]);
 
             //3. Kabel MCC cislo
-            Data.Add(radek[10]);
+            Data.Add(radek[12]);
 
             //4. Kabel
             Data.Add("WS 01");
