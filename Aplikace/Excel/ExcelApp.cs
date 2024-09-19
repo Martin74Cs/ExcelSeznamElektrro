@@ -393,6 +393,7 @@ namespace Aplikace.Excel
 
             //range 
             range.Rows["1"].AutoFit();
+
             //range.Columns["A:M"].AutoFit();
         }
 
@@ -404,7 +405,7 @@ namespace Aplikace.Excel
             Xls.Range["B1"].Value = "Equipment name";
 
             Xls.Range["C1"].Value = "Power(electric)\n(EU Units)";
-            Xls.Range["C1"].Value = "[kW]";
+            Xls.Range["C2"].Value = "[kW]";
 
             Xls.Range["D1"].Value = "Package unit Power(electric)\n(EU Units)";
             
@@ -417,21 +418,21 @@ namespace Aplikace.Excel
             Xls.Range["G1"].Value = "CURRENT FOR 480V";
             Xls.Range["G2"].Value = "[A]";
 
-            Xls.Range["H1"].Value = "CABLE LENGHT\n[m]";
+            Xls.Range["H1"].Value = "CABLE LENGHT";
             Xls.Range["H2"].Value = "[m]";
 
-            Xls.Range["I1"].Value = "CABLE LENGHT\n[ft]";
+            Xls.Range["I1"].Value = "CABLE LENGHT";
             Xls.Range["I2"].Value = "[ft]";
 
-            Xls.Range["J1"].Value = "COPPER CABLE SIZE\n(EU Units)[mm2]";
+            Xls.Range["J1"].Value = "COPPER CABLE SIZE\n(EU Units)";
             Xls.Range["J2"].Value = "[mm2]";
 
-            Xls.Range["K1"].Value = "COPPER CABLE SIZE\n(US Units)[ft]";
+            Xls.Range["K1"].Value = "COPPER CABLE SIZE\n(US Units)";
             Xls.Range["K2"].Value = "[ft]";
 
-            Xls.Range["L1"].Value = "DISTRIBUTOR\nEA/MCC";
+            Xls.Range["L1"].Value = "DISTRIBUTOR EA/MCC";
 
-            Xls.Range["M1"].Value = "DISTRIBUTOR\nNUMBER";
+            Xls.Range["M1"].Value = "DISTRIBUTOR NUMBER";
             
             // Povolení zalamování textu, aby nový řádek byl viditelný
             Xls.Range["A1:M1"].WrapText = true;
@@ -467,6 +468,8 @@ namespace Aplikace.Excel
                                 Zapis.Value = item;
                         }
                     }
+                    Xls.Columns["B"].AutoFit();
+                    Xls.Rows[row].AutoFit();
                 }
             }
             return;
@@ -704,9 +707,11 @@ namespace Aplikace.Excel
         public void ExcelSaveTable(Worksheet xls, List<List<string>> data, int Radek)
         {
             Radek--;
+            int X1 = Radek;
+            int j = 1;
             foreach (var radek in data)
             {
-                Radek++;int j = 1;
+                Radek++; j = 1;
                 foreach (var item in radek)
                 {
                     Exc.Range Zapis1 = xls.Cells[Radek, j++];
@@ -720,24 +725,26 @@ namespace Aplikace.Excel
                     }
                 }
             }
+
         }
 
-        public void ExcelSaveNadpis(Worksheet xls)
+        public void ExcelSaveNadpis(Worksheet xls, List<List<string>> PoleData)
         {
-            Nadpis(xls, "A1:C1", "Označeni");
-            Nadpis(xls, "D1:G1", "Kabel");
-            Nadpis(xls, "H1:H1", "Zařízení");
-            Nadpis(xls, "I1:K1", "Odkud");
-            Nadpis(xls, "L1:N1", "Kam");
-            Nadpis(xls, "O1:P1", "Delka");
+            Nadpis(xls, "A1:D1", "Označeni", PoleData);
+            Nadpis(xls, "E1:H1", "Kabel", PoleData);
+            Nadpis(xls, "I1:I1", "Zařízení", PoleData);
+            Nadpis(xls, "J1:M1", "Odkud", PoleData);
+            Nadpis(xls, "N1:N1", "", PoleData);
+            Nadpis(xls, "O1:R1", "Kam", PoleData);
+            Nadpis(xls, "S1:T1", "Delka", PoleData);
 
-            xls.Range["E2"].Value = "[mm2]";
-            xls.Range["F2"].Value = "[AWG]";
-            xls.Range["O2"].Value = "[m]";
-            xls.Range["P2"].Value = "[ft]";
+            xls.Range["G2"].Value = "[mm2]";
+            xls.Range["H2"].Value = "[AWG]";
+            xls.Range["S2"].Value = "[m]";
+            xls.Range["T2"].Value = "[ft]";
         }
 
-        public void Nadpis(Worksheet xls, string pole, string Text)
+        public void Nadpis(Worksheet xls, string pole, string Text, List<List<string>> PoleData)
         {
             // Sloučení buněk od A1 do C1
             var rada = xls.Range[pole];
@@ -770,7 +777,52 @@ namespace Aplikace.Excel
 
             //Styl pisma
             rada.Font.FontStyle = "Arial";
+
+            //Formátování nadpisů
+            //Exc.Range range = xls.Range["A1", "M1"];
+            // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
+            //Exc.Range range = xls.Range[xls.Cells[3, 1], xls.Cells[PoleData.Count(), PoleData.First().Count()]];
+
+            string v = string.Concat(pole[..^1], PoleData.Count().ToString());
+            Exc.Range range = xls.Range[v];
+            Ramecek(xls,range);
         }
+
+        public void Ramecek(Worksheet xls, Exc.Range range)
+        {
+            // Výběr rozsahu buněk (např. A1:C3)
+            //Exc.Range range = xls.Range["A1", "C3"];
+            //Exc.Range range = xls.Range["A1:C3"];
+
+            // Přidání rámečku kolem vybraného rozsahu
+            Exc.Borders borders = range.Borders;
+
+            // Horní hrana
+            borders[Exc.XlBordersIndex.xlEdgeTop].LineStyle = Exc.XlLineStyle.xlContinuous;
+            borders[Exc.XlBordersIndex.xlEdgeTop].Weight = Exc.XlBorderWeight.xlThin;
+
+            // Spodní hrana
+            borders[Exc.XlBordersIndex.xlEdgeBottom].LineStyle = Exc.XlLineStyle.xlContinuous;
+            borders[Exc.XlBordersIndex.xlEdgeBottom].Weight = Exc.XlBorderWeight.xlThin;
+
+            // Levá hrana
+            borders[Exc.XlBordersIndex.xlEdgeLeft].LineStyle = Exc.XlLineStyle.xlContinuous;
+            borders[Exc.XlBordersIndex.xlEdgeLeft].Weight = Exc.XlBorderWeight.xlThin;
+
+            // Pravá hrana
+            borders[Exc.XlBordersIndex.xlEdgeRight].LineStyle = Exc.XlLineStyle.xlContinuous;
+            borders[Exc.XlBordersIndex.xlEdgeRight].Weight = Exc.XlBorderWeight.xlThin;
+
+            // Pokud chcete přidat vnitřní hranice
+            //borders[Exc.XlBordersIndex.xlInsideHorizontal].LineStyle = Exc.XlLineStyle.xlContinuous;
+            //borders[Exc.XlBordersIndex.xlInsideHorizontal].Weight = Exc.XlBorderWeight.xlThin;
+
+            //borders[Exc.XlBordersIndex.xlInsideVertical].LineStyle = Exc.XlLineStyle.xlContinuous;
+            //borders[Exc.XlBordersIndex.xlInsideVertical].Weight = Exc.XlBorderWeight.xlThin;
+
+        }
+
+
 
         /// <summary>Nový dokument Elektro pro přípravu elektro seznamů </summary>
         internal Worksheet ExcelElektro(string cesta)
