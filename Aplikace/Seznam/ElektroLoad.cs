@@ -13,6 +13,8 @@ namespace Aplikace.Seznam
 {
     public class ElektroLoad
     {
+     
+        /// <summary>Koirování parametrů</summary>
         public void Elektro()
         { 
             string cesta = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
@@ -82,11 +84,21 @@ namespace Aplikace.Seznam
 
         public void NovyExcel()
         {
+            bool Doma = false;
+            string basePath = "G:\\z\\W.002115_NATRON\\Prac_Prof\\e_EL\\vykresy\\Martin_PRS\\2024.09.03";
+            if (Environment.MachineName == "MARTIN" )
+            {
+                basePath = "D:\\Tractebel\\2024.09.03";
+                Doma = true;
+            }
+
+
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
+
             //načtení základní infomací pro seznam Elektro dle čísel jednotlivých sloupců
-            string cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
+            string cesta = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx");
             //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
             //var PouzitProTabulku = new int[] { 5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45 };
             //var TextPole = new string[] { "Tag","Popis", "Příkon", "Měnič", "Balená Jednotka", , "PID" };
@@ -94,7 +106,7 @@ namespace Aplikace.Seznam
             var Stara = Load.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7);
 
             //vytvoření nebo otevření dokumentu elekro
-            cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\Seznam.xlsx";
+            cesta = Path.Combine(basePath, @"Seznam.xlsx");
             Exc.Worksheet xls = ExcelApp.ExcelElektro(cesta);
             Exc.Workbook doc = xls.Parent;
 
@@ -115,7 +127,7 @@ namespace Aplikace.Seznam
             //doplnění vzorců doExel
             ExcelApp.ExcelSaveVzorce(xls);
 
-            cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx";
+            cesta = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx");
             //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
             PouzitProTabulku = new int[] { 5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45 };
             var Delka = Load.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7);
