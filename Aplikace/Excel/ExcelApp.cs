@@ -121,10 +121,9 @@ namespace Aplikace.Excel
             var cteniPole = new List<string>();
             var Pole = new List<List<string>>();
             Console.Write("\nZal.Rows.Count=" + Zal.Rows.Count);
-            var Test = new List<Zarizeni>();
+
             for (int i = Radek; i < Zal.Rows.Count; i++)
             {
-                var obj = new Zarizeni();
                 int x = 0;
                 cteniPole = new List<string>();
                 foreach (var item in CteniSloupcu)
@@ -137,14 +136,11 @@ namespace Aplikace.Excel
                     if (!string.IsNullOrEmpty(xxx))
                     {
                         cteniPole.Add(xxx);
-                        Zarizeni.NastavVlastnost(obj, TextPole[x++], cteni);
                     }
                         //object obj = new Zarizeni();
                     else
                         cteniPole.Add("");
                 }
-                Test.Add(obj);
-
                 if (!string.IsNullOrEmpty(cteniPole[1]) && cteniPole[1] != "0")
                 {
                     Pole.Add(cteniPole);
@@ -153,8 +149,6 @@ namespace Aplikace.Excel
 
                 if (i > 100 && Pole.Last().First().Count() < 2) break;
             }
-            Test.SaveJsonList(Path.ChangeExtension(cesta, ".Pole"));
-
             Console.Write("\nUkončení Excel");
             //Xls.Save();
             //Console.Write("\nSave OK");
@@ -163,6 +157,51 @@ namespace Aplikace.Excel
             return Pole;
         }
 
+                /// <summary> uložení dat do excel podle kriterii </summary>
+        public List<Zarizeni> ExelLoadTableTrida(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
+        {
+            if (!System.IO.File.Exists(cesta)) return [];
+
+            var Xls = DokumetExcel(cesta);
+            if (Xls == null) return [];
+            Console.Write("\nDokument excel - Otevřen");
+
+            //Nastavení listu
+            Exc.Worksheet? Zal = GetSheet(Xls, zalozka);
+            if (Zal == null) { Console.Write("\nChyba KONEC"); return []; }
+            Console.Write("\nSheet=" + Zal.Name);
+
+            var Pole = new List<Zarizeni>();
+            Console.Write("\nZal.Rows.Count=" + Zal.Rows.Count);
+            var Test = new List<Zarizeni>();
+            for (int i = Radek; i < Zal.Rows.Count; i++)
+            {
+                var obj = new Zarizeni();
+                int x = 0;
+                foreach (var item in CteniSloupcu)
+                {
+                    //Čtení buňky
+                    Exc.Range Pok = Zal.Cells[i, item];
+                    object cteni = Pok.Value;
+
+                    string xxx = Convert.ToString(cteni);
+                    if (!string.IsNullOrEmpty(xxx))
+                    {
+                        //ukladnní infomací do třídy dle jejího názvu parametru
+                        Zarizeni.NastavVlastnost(obj, TextPole[x++], cteni);
+                    }
+                }
+                Test.Add(obj);
+
+                if (i > 100 && obj.Tag.Count() < 2) break;
+            }
+            Console.Write("\nUkončení Excel");
+            //Xls.Save();
+            //Console.Write("\nSave OK");
+            ExcelQuit(Xls);
+            Console.Write("..... OK");
+            return Pole;
+        }
 
         /// <summary> uložení dat do excel podle kdyterii </summary>
         public void ExcelSaveJeden(string cesta, int[] SloupceZapisu, string zalozka, int[] SloupceCteni, List<List<string>> Vstup)
@@ -469,7 +508,16 @@ namespace Aplikace.Excel
         /// <summary> uložení dat do excel podle kryterii </summary>
         public void ExcelSaveList(Worksheet Xls, List<List<string>> Vstup)
         {
-            int col = 0; int row = 2;
+            int row = 2; int col = 1; 
+
+            //kontrola špatného přpsaní dat souboru
+            Exc.Range Kontrola = Xls.Cells[row + 1, col];
+            if (!string.IsNullOrEmpty(Kontrola.Value))
+            { 
+                Console.WriteLine("Přepsat");
+                if (Console.ReadKey().Key != ConsoleKey.A) return; 
+            }
+
 
             //Čtení listu excel
             foreach (var radek in Vstup)
@@ -478,7 +526,7 @@ namespace Aplikace.Excel
                 var cteniPole = new List<string>();
                 if (radek[3] != "" && radek[3] != "0")
                 { 
-                    col=1; row++;
+                    row++; col=1; 
                     foreach (var item in radek)
                     {
                         //zapis qwe

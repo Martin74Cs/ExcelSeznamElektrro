@@ -53,27 +53,6 @@ namespace Aplikace.Seznam
             Console.Write("\nFunguje --- ExelSaveSlopec ");
 
             Console.WriteLine(missingFromList2);
-
-            //var Ex = new Aplikace.Excel.ExcelApp();
-            //Exc.Workbook dok = Ex.DokumetExcel(cesta);
-            //if (dok == null) return;
-            //Console.Write("\nsheet" + dok.Name + " , pocet=" + dok.Worksheets.Count);
-
-            //Exc.Worksheet sheet = Ex.GetSheet(dok, "M_equipment_list");
-            //if (sheet == null) { Console.WriteLine("\nPožadovaný list nebyl nalezen!"); return; }
-            //Console.Write("\nByl nalezen list - " + sheet.Name);
-
-            ////int[] Sloupec = new int[] { 4, 8, 19, 22 };
-            //int[] Sloupec = [3, 8, 19, 22];
-            //int Nadpis = 5;
-            //var TableDate = Ex.GetTable(sheet, rowNadpis: Nadpis, Sloupec);
-            //Console.Write(" ... OK");
-            ////konec excel
-            //Ex.ExcelQuit(dok);
-
-            //kontrola velikosti
-            //Console.Write("\nTabulka má {0} radků.", TableDate.Rows.Count);
-            //if (TableDate.Rows.Count < 1) return;
         }
 
         static List<List<string>> FindMissingKeys(List<List<string>> sourceList, List<List<string>> compareList)
@@ -87,6 +66,7 @@ namespace Aplikace.Seznam
 
         public void NovyExcel()
         {
+            //volba kdy jsem doma a kdy v práci - volba dle nazvu PC
             bool Doma = true;
             string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             if (Environment.MachineName == "MARTIN" )
@@ -98,11 +78,14 @@ namespace Aplikace.Seznam
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
-            //Načtení json od z Milanového seznamu čerpadel
+            //Načtení json z Milanového seznamu čerpadel
+            var Pumps = new List<Pump>();
             if (Doma)
             { 
                 string cestaPump = @"U:\Elektro\mcsato\Zakázky\Natron\pumps.json";
-                var Pumpy = Pump.Load(cestaPump);
+                if (!File.Exists(cestaPump)) 
+                    { Pumps = Pump.Load(cestaPump); }
+                    
             }
 
             //načtení základní infomací pro seznam Elektro dle čísel jednotlivých sloupců
@@ -113,6 +96,7 @@ namespace Aplikace.Seznam
             var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic" };
             var PouzitProTabulku = new int[] { 3,  2,     7,      18,           1 ,             21   };
             var Stara = Load.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
+            var Zakalad = Load.LoadDataExcelTrida(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
             //vytvoření nebo otevření dokumentu elekro
             cesta = Path.Combine(basePath, @"Seznam.xlsx");
@@ -121,8 +105,10 @@ namespace Aplikace.Seznam
 
             //Vytvoření nadpisů
             var Souradnice = ExcelApp.Nadpis(xls);
+
             //Formátování nadpisů
             ExcelApp.NadpisSet(xls, Souradnice);
+
             //uložení základní seznam zařízení dle seznamu Stara
             new ExcelApp().ExcelSaveList(xls, Stara);
 

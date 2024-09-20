@@ -83,6 +83,18 @@ namespace Aplikace.Sdilene
             return new List<T>();
         }
 
+        /// <summary> načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
+        public static T LoadJson<T>(string cesta) where T : new() 
+        {
+            if (System.IO.File.Exists(cesta))
+            {
+                string jsonString = System.IO.File.ReadAllText(cesta);
+                T moje = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, nastaveni());
+                return moje;
+            }
+            return new();
+        }
+
         /// <summary> načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika </summary>
         public static List<T> LoadJsonEn<T>(string cesta) where T : new()
         {
