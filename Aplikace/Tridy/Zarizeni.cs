@@ -17,6 +17,8 @@ namespace Aplikace.Tridy
         public string Popis { get; set; } = string.Empty;
         public string Prikon { get; set; } = string.Empty;
 
+        public string PID { get; set; } = string.Empty;
+
         public double HP => double.TryParse(Prikon, out double hodnota) ? hodnota * 3.29 : 0; // Převod textu na číslo a součet
 
         public string Druh { get; set; } = string.Empty;

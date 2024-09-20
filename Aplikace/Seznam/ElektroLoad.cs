@@ -41,7 +41,7 @@ namespace Aplikace.Seznam
             // Najdeme položky v Stara, které nejsou v Nova.
             var missingFromList1 = FindMissingKeys(Stara, Nova);
 
-            //Cesta Excel pro změny změny
+            //Cesta Excel pro změny 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
             //Hledání shody radku excelu s polem SadaUpraveno --- PouzitProTabulku -> první je kryterium
             PouzitProTabulku = new int[] { 3, 18 };
@@ -95,7 +95,6 @@ namespace Aplikace.Seznam
                 Doma = false;
             }
 
-
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
@@ -111,8 +110,8 @@ namespace Aplikace.Seznam
             //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
             //var PouzitProTabulku = new int[] { 5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45 };
 
-            var TextPole = new string[] { "Tag","Popis", "Prikon", "Menic", "BalenaJednotka" };
-            var PouzitProTabulku = new int[] { 3,   7,      18,         21,         1                    };
+            var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic" };
+            var PouzitProTabulku = new int[] { 3,  2,     7,      18,           1 ,             21   };
             var Stara = Load.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
             //vytvoření nebo otevření dokumentu elekro
@@ -121,9 +120,9 @@ namespace Aplikace.Seznam
             Exc.Workbook doc = xls.Parent;
 
             //Vytvoření nadpisů
-            ExcelApp.Nadpis(xls);
+            var Souradnice = ExcelApp.Nadpis(xls);
             //Formátování nadpisů
-            ExcelApp.NadpisSet(xls);
+            ExcelApp.NadpisSet(xls, Souradnice);
             //uložení základní seznam zařízení dle seznamu Stara
             new ExcelApp().ExcelSaveList(xls, Stara);
 
@@ -138,7 +137,7 @@ namespace Aplikace.Seznam
             }
 
             //doplnění vzorců doExel
-            ExcelApp.ExcelSaveVzorce(xls);
+            ExcelApp.ExcelSaveVzorce(xls, Stara.Count);
 
             cesta = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx");
             //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
@@ -155,14 +154,15 @@ namespace Aplikace.Seznam
 
             //Načti seznam zařízení z vytvořeného seznamu zařízení elektro 
             //TextPole = new string[] { "Tag", "Jmeno", "kW", "Zapojeni", "Proud500",  "HP"  "Proud480", "Delkam",  Delkaft, mm2 , AWG ,    MCC ,  cisloMCC  };
-            PouzitProTabulku = new int[] { 1,   2,      3,      4,          5,          6,      7,          8,      9,       10,    11,     12,     13 };           
-            //v poli jsou čísla posunity o jedničku
+            PouzitProTabulku = new int[] { 1,   2,      3,      4,          5,          6,      7,          8,      9,       10,    11,     12,     13 , 14, 15};           
+            
+            //v poli jsou čísla posunuty o jedničku
             var PoleData = ExcelApp.ExcelLoadWorksheet(xls, PouzitProTabulku);
 
-            //Uprava našteného listu seznamu zařízení elektro 
+            //Úprava našteného listu seznamu zařízení elektro 
             PoleData = new KabelList().Kabely(PoleData);
 
-            //nová záložka
+            //Nová záložka
             xls = ExcelApp.PridatNovyList(doc, "Kabely");
 
             //doplnení nadpisu
@@ -202,14 +202,12 @@ namespace Aplikace.Seznam
             xls = ExcelApp.PridatNovyList(doc, "Seznam");
             ExcelApp.Nadpis(xls, "A1:C1", "Označeni", Soucet);
             ExcelApp.Nadpis(xls, "D1:E1", "Délka", Soucet);
-            ExcelApp.ExcelSaveTable(xls, Soucet,3);
+            xls.Range["D2"].Value = "[m]";
+            xls.Range["E2"].Value = "[ft]";
+            ExcelApp.ExcelSaveTable(xls, Soucet, 3);
 
-            //string formula = $"=SUMA(D3:D{Soucet.Count()})"; // SUMAE{i}*500/480";
-            xls.Cells[Soucet.Count+1, 4].Formula = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
-
-
+            xls.Cells[Soucet.Count + 1, 4].Formula = "=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
             new ExcelApp().ExcelQuit(doc);
-
         }
     }
 }

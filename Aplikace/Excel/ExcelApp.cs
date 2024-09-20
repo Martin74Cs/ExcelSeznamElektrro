@@ -38,6 +38,7 @@ namespace Aplikace.Excel
                 // Přidání nového listu na konec sešitu
                 xls = Dokument.Sheets.Add(After: Dokument.Sheets[Dokument.Sheets.Count]);
             xls.Name = NazevListu;
+            xls.Activate();
             return xls;
         }
 
@@ -134,8 +135,8 @@ namespace Aplikace.Excel
 
                     string xxx = Convert.ToString(cteni);
                     if (!string.IsNullOrEmpty(xxx))
-                    { 
-                        cteniPole.Add(xxx)
+                    {
+                        cteniPole.Add(xxx);
                         Zarizeni.NastavVlastnost(obj, TextPole[x++], cteni);
                     }
                         //object obj = new Zarizeni();
@@ -343,17 +344,17 @@ namespace Aplikace.Excel
             return;
         }
 
-        public void NadpisSet(Worksheet ListExcel)
+        public void NadpisSet(Worksheet xls,  (int,int) data)
         {
             //Podtržení nadpisů
-
+            
             // Výběr konkrétní oblasti buněk, např. A1:C3
-            Exc.Range range = ListExcel.Range["A1", "M1"];
+            //Exc.Range range = ListExcel.Range["A1", "M1"];
 
             // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
-            Exc.Range range1 = ListExcel.Range[
-                ListExcel.Cells[2, 1],  // A1 (1. řádek, 1. sloupec)
-                ListExcel.Cells[2, 12]   // C3 (3. řádek, 3. sloupec)
+            Exc.Range range = xls.Range[
+                xls.Cells[1, 1],  // A1 (1. řádek, 1. sloupec)
+                xls.Cells[1, data.Item2] // Vstup (data.Item1, data.Item2)
             ];
 
             // Nastavení okrajů kolem buněk
@@ -404,50 +405,65 @@ namespace Aplikace.Excel
             //Xls.Rows[1].AutoFit();
 
             //range 
+            range.Columns["A:Z"].AutoFit();
             range.Rows["1"].AutoFit();
-
-            //range.Columns["A:M"].AutoFit();
+            range.Rows["2"].AutoFit();
         }
 
-
-        public void Nadpis(Worksheet Xls)
+        public (int,int) Nadpis(Worksheet Xls)
         {
-            Xls.Range["A1"].Value = "Equipment\nnumber";
+            int col = 1;
+            //Range["A1"]
+            Xls.Cells[1,col++].Value = "Equipment\nnumber";
 
-            Xls.Range["B1"].Value = "Equipment name";
+            //Range["B1"]
+            Xls.Cells[1, col++].Value = "P&ID\nNumber";
+            Xls.Cells[2, col -1].Value = "";
 
-            Xls.Range["C1"].Value = "Power(electric)\n(EU Units)";
-            Xls.Range["C2"].Value = "[kW]";
+            Xls.Cells[1, col++].Value = "Equipment name";
+            Xls.Cells[2, col - 1].Value = "";
 
-            Xls.Range["D1"].Value = "Package unit Power(electric)\n(EU Units)";
-            
-            Xls.Range["E1"].Value = "PROUD Z TAB. PRO 500V";
-            Xls.Range["E2"].Value = "[A]";
+            Xls.Cells[1, col++].Value = "Power(electric)\n(EU Units)";
+            Xls.Cells[2, col - 1].Value = "[kW]";
 
-            Xls.Range["F1"].Value = "Power(electric)\n(US Units)";
-            Xls.Range["F2"].Value = "[HP]";
+            Xls.Cells[1, col++].Value = "Package unit Power";
+            Xls.Cells[2, col - 1].Value = "";
 
-            Xls.Range["G1"].Value = "CURRENT FOR 480V";
-            Xls.Range["G2"].Value = "[A]";
+            Xls.Cells[1, col++].Value = "Variable speed drive";
+            Xls.Cells[2, col - 1].Value = "";
 
-            Xls.Range["H1"].Value = "CABLE LENGHT";
-            Xls.Range["H2"].Value = "[m]";
+            Xls.Cells[1, col++].Value = "PROUD Z TAB. PRO 500V";
+            Xls.Cells[2, col - 1].Value = "[A]";
 
-            Xls.Range["I1"].Value = "CABLE LENGHT";
-            Xls.Range["I2"].Value = "[ft]";
+            Xls.Cells[1, col++].Value = "Power(electric)\n(US Units)";
+            Xls.Cells[2, col - 1].Value = "[HP]";
 
-            Xls.Range["J1"].Value = "COPPER CABLE SIZE\n(EU Units)";
-            Xls.Range["J2"].Value = "[mm2]";
+            Xls.Cells[1, col++].Value = "CURRENT FOR 480V";
+            Xls.Cells[2, col - 1].Value = "[A]";
 
-            Xls.Range["K1"].Value = "COPPER CABLE SIZE\n(US Units)";
-            Xls.Range["K2"].Value = "[ft]";
+            Xls.Cells[1, col++].Value = "COPPER CABLE SIZE\n(EU Units)";
+            Xls.Cells[2, col - 1].Value = "[mm2]";
 
-            Xls.Range["L1"].Value = "DISTRIBUTOR EA/MCC";
+            Xls.Cells[1, col++].Value = "COPPER CABLE SIZE\n(US Units)";
+            Xls.Cells[2, col - 1].Value = "";
 
-            Xls.Range["M1"].Value = "DISTRIBUTOR NUMBER";
-            
+            Xls.Cells[1, col++].Value = "CABLE LENGHT";
+            Xls.Cells[2, col - 1].Value = "[m]";
+
+            Xls.Cells[1, col++].Value = "CABLE LENGHT";
+            Xls.Cells[2, col - 1].Value = "[ft]";
+
+            Xls.Cells[1, col++].Value = "DISTRIBUTOR EA/MCC";
+            Xls.Cells[2, col - 1].Value = "";
+
+            Xls.Cells[1, col++].Value = "DISTRIBUTOR NUMBER";
+            Xls.Cells[2, col - 1].Value = "";
+
             // Povolení zalamování textu, aby nový řádek byl viditelný
-            Xls.Range["A1:M1"].WrapText = true;
+            //Xls.Range["A1:M1"].WrapText = true;
+            Xls.Range[Xls.Cells[1,1],Xls.Cells[2,col-1]].WrapText = true;
+
+            return (2, col-1);
         }
 
         /// <summary> uložení dat do excel podle kryterii </summary>
@@ -460,7 +476,7 @@ namespace Aplikace.Excel
             {
                 //Čtení radků excel
                 var cteniPole = new List<string>();
-                if (radek[2] != "" && radek[2] != "0")
+                if (radek[3] != "" && radek[3] != "0")
                 { 
                     col=1; row++;
                     foreach (var item in radek)
@@ -471,19 +487,19 @@ namespace Aplikace.Excel
                             Zapis.Value = cislo;
                         else 
                         {
-                            if (item == "PU")
-                            {
-                                Zapis = Xls.Cells[row, col - 2];
-                                Zapis.Value = item;
-                            }
-                            else
+                        //    if (item == "PU")
+                        //    {
+                        //        Zapis = Xls.Cells[row, col - 2];
+                        //        Zapis.Value = item;
+                        //    }
+                        //    else
                                 Zapis.Value = item;
                         }
                     }
-                    Xls.Columns["B"].AutoFit();
                     Xls.Rows[row].AutoFit();
                 }
             }
+            Xls.Columns["A:Z"].AutoFit();
             return;
         }
 
@@ -495,17 +511,17 @@ namespace Aplikace.Excel
             for (int i = 3; i < ListExcel.Rows.Count; i++)
             {
                 //Čtení kW
-                Exc.Range Pok = ListExcel.Cells[i, 3];
+                Exc.Range Pok = ListExcel.Cells[i, 4];
                 object cteni = Pok.Value;
 
                 string xxx = Convert.ToString(cteni);
                 if (double.TryParse(xxx, out double cislo))
                 {
-                    //hledni proudu z tabulky Motory500V
+                    //Hledáni proudu z tabulky Motory500V
                     var Informace = Vstup.FirstOrDefault(x => Convert.ToDouble(x[0]) == cislo)?[1]; //.ToArray(); 
                     if (double.TryParse(Informace, out double Proud))
                     {
-                        Exc.Range Zapis1 = ListExcel.Cells[i, 5];
+                        Exc.Range Zapis1 = ListExcel.Cells[i, 7];
                         Zapis1.Value = Proud;
                     }
                 }
@@ -517,7 +533,7 @@ namespace Aplikace.Excel
         }
 
         /// <summary> doplnění vzorců doExel </summary>
-        public void ExcelSaveVzorce(Worksheet ListExcel)
+        public void ExcelSaveVzorce(Worksheet ListExcel, int Pocet)
         {
             //Čtení listu excel
             for (int i = 3; i < ListExcel.Rows.Count; i++)
@@ -529,19 +545,18 @@ namespace Aplikace.Excel
                 //ListExcel.Cells[i, 6].Formula = formula;
 
                 // Dynamický vzorec pomocí Excelové notace (např. C pro sloupec 3)
-                string formula = $"=C{i}*1.34102";  // C{i} odkazuje na buňku ve sloupci C (3) a řádku i
+                //string formula = $"=C{i}*1.34102";  // C{i} odkazuje na buňku ve sloupci C (3) a řádku i
 
-                // Vložení vzorce do sloupce 6 (odpovídá sloupci F)
-                ListExcel.Cells[i, 6].Formula = formula;
+                //převod kilowatů na koně Kw -> HP * 
+                ListExcel.Cells[i, 8].Formula = $"=D{i}*1.341022";
 
+                //Převod prodů u 500 V na 480V
+                ListExcel.Cells[i, 9].Formula = $"=G{i}*500/480";
 
-                formula = $"=E{i}*500/480";
-                ListExcel.Cells[i, 7].Formula = formula;
+                //Převod metry na stopy m -> ft 
+                ListExcel.Cells[i, 13].Formula = $"=L{i}*3.280839895";
 
-                formula = $"=H{i}*3.29";
-                ListExcel.Cells[i, 9].Formula = formula;
-
-                if (i > 100)
+                if (i > Pocet)
                     break;
             }
             return;
@@ -644,7 +659,7 @@ namespace Aplikace.Excel
                 //delka
                 if (double.TryParse(Informace?[4], out double delka))
                 {
-                    Exc.Range Zapis1 = ListExcel.Cells[i, 8];
+                    Exc.Range Zapis1 = ListExcel.Cells[i, 12];
                     Zapis1.Value = delka;
                 }
 
@@ -678,13 +693,13 @@ namespace Aplikace.Excel
                 var Informace = Vstup.FirstOrDefault(x => x[0] == xxx); //.ToArray(); 
 
                 //mcc
-                Exc.Range Zapis = ListExcel.Cells[i, 12];
+                Exc.Range Zapis = ListExcel.Cells[i, 14];
                 Zapis.Value = Informace?[8];
 
                 //mcc
                 if (double.TryParse(Informace?[9], out double cislo))
                 {
-                    Exc.Range Zapis1 = ListExcel.Cells[i, 13];
+                    Exc.Range Zapis1 = ListExcel.Cells[i, 15];
                     Zapis1.Value = cislo;
                 }
 
@@ -798,7 +813,7 @@ namespace Aplikace.Excel
             // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
             //Exc.Range range = xls.Range[xls.Cells[3, 1], xls.Cells[PoleData.Count(), PoleData.First().Count()]];
 
-            string v = string.Concat(pole[..^1], PoleData.Count().ToString());
+            string v = string.Concat(pole[..^1], (PoleData.Count() + 2).ToString());
             Exc.Range range = xls.Range[v];
             Ramecek(xls,range);
         }
