@@ -508,6 +508,10 @@ namespace Aplikace.Excel
         /// <summary> uložení dat do excel podle kryterii </summary>
         public void ExcelSaveList(Worksheet Xls, List<List<string>> Vstup)
         {
+
+            //var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
+            //var PouzitProTabulku = new int[] { 3, 2, 7, 18, 1, 21, 63, 64, 61, 62, 65, 66 };
+
             int row = 2; int col = 1; 
 
             //kontrola špatného přpsaní dat souboru
@@ -556,7 +560,7 @@ namespace Aplikace.Excel
         {
 
             //Čtení listu excel
-            for (int i = 3; i < ListExcel.Rows.Count; i++)
+            for (int i = 3; i < ListExcel.UsedRange.Rows.Count; i++)
             {
                 //Čtení kW
                 Exc.Range Pok = ListExcel.Cells[i, 4];
@@ -584,7 +588,7 @@ namespace Aplikace.Excel
         public void ExcelSaveVzorce(Worksheet ListExcel, int Pocet)
         {
             //Čtení listu excel
-            for (int i = 3; i < ListExcel.Rows.Count; i++)
+            for (int i = 3; i < ListExcel.UsedRange.Rows.Count; i++)
             {
                 // Dynamický vzorec (např. sčítání hodnot v buňkách A a B na daném řádku)
                 //string formula = $"=A{row}+B{row}";
@@ -730,7 +734,9 @@ namespace Aplikace.Excel
         public void ExcelSaveRozvadec(Worksheet ListExcel, List<List<string>> Vstup)
         {
             //Čtení listu excel
-            for (int i = 2; i < ListExcel.Rows.Count; i++)
+            //for (int i = 2; i < ListExcel.Rows.Count; i++)
+            //skutečný počet použitých rádků
+            for (int i = 2; i < ListExcel.UsedRange.Rows.Count; i++)
             {
                 //Čtení nazvu
                 Exc.Range Pok = ListExcel.Cells[i, 1];
@@ -751,8 +757,8 @@ namespace Aplikace.Excel
                     Zapis1.Value = cislo;
                 }
 
-                if (cteni == null && i > 100)
-                    break;
+                //if (string.IsNullOrEmpty(xxx) && i > 100)
+                    //break;
             }
         }
 
@@ -761,7 +767,7 @@ namespace Aplikace.Excel
             var Data = new List<List<string>>();
             string Cteni = "";
             //Čtení listu excel
-            for (int i = 3; i < xls.Rows.Count; i++)
+            for (int i = 3; i < xls.UsedRange.Rows.Count; i++)
             {
                 var Radek = new List<string>();
                 foreach (var item in pouzitProTabulku)
@@ -773,7 +779,7 @@ namespace Aplikace.Excel
                 }
                 Data.Add(Radek);
 
-                if (Cteni == null && i > 100)
+                if (string.IsNullOrEmpty(Cteni) && i > 100)
                     break;
             }
             return Data;
@@ -790,7 +796,6 @@ namespace Aplikace.Excel
                 Row++; j = 1;
                 foreach (var item in radek)
                 {
-
                     Exc.Range Zapis1 = xls.Cells[Row, j++];
                     if (double.TryParse(item, out double cislo))
                     {
