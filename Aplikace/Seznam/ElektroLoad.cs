@@ -87,11 +87,8 @@ namespace Aplikace.Seznam
                 { Pumps = Pump.Load(cestaPump); }
 
             }
-
-            //vytvoření nebo otevření dokumentu elekro
-            var cesta = Path.Combine(basePath, "Seznam.xlsx");
-            Exc.Worksheet xls = ExcelApp.ExcelElektro(cesta);
-            Exc.Workbook doc = xls.Parent;
+            Exc.Worksheet xls;
+            Exc.Workbook doc;
 
             Console.WriteLine("\n----------------------------");
             Console.WriteLine("Načtení seznamu ze zdroje A/N");
@@ -108,6 +105,11 @@ namespace Aplikace.Seznam
                 //var Kotrola                    { 1,  2,     3,       4,           5,              6,      7,          8,      9,        10,   11,     12,         13,         14,     15 };
                 var Stara = Load.LoadDataExcel(cesta1, PouzitProTabulku1, "M_equipment_list", 7, TextPole);
                 //var Zakalad = Load.LoadDataExcelTrida(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
+
+                //vytvoření nebo otevření dokumentu elekro
+                var cesta = Path.Combine(basePath, "Seznam.xlsx");
+                xls = ExcelApp.ExcelElektro(cesta);
+                doc = xls.Parent;
 
                 //Vytvoření nadpisů
                 var Souradnice = ExcelApp.Nadpis(xls);
@@ -135,7 +137,8 @@ namespace Aplikace.Seznam
                 cesta = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx");
                 //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
                 PouzitProTabulku1 = new int[] { 5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45 };
-                var Delka = Load.LoadDataExcel(cesta, PouzitProTabulku1, "M_equipment_list", 7, []);
+                //var Delka = Load.LoadDataExcel(cesta, PouzitProTabulku1, "M_equipment_list", 7, []);
+
                 //doplnění kabelů z //delka  //awg  //mm2
                 //---- v budoucnu kontrola pokud by něco chybělo
                 //ExcelApp.ExcelSaveKabel(xls, Delka);
@@ -147,6 +150,14 @@ namespace Aplikace.Seznam
                 //Testovací kod
                 //new ExcelApp().PridatTextyTestovani(xls);
             }
+            else
+            { 
+                //vytvoření nebo otevření dokumentu elekro
+                var cesta = Path.Combine(basePath, "Seznam.xlsx");
+                xls = ExcelApp.ExcelElektro(cesta);
+                doc = xls.Parent;
+            }
+
             Console.WriteLine("Probíhá načítaní kabelů");
             //Načti seznam zařízení z vytvořeného seznamu zařízení elektro 
             //TextPole = new string[] { "Tag", "PId" "Jmeno", "kW", "BalenaJednotka", "Menic" "Proud500",  "HP"  "Proud480", "mm2" , "AWG" , "Delkam",  Delkaft,     MCC ,  cisloMCC  };

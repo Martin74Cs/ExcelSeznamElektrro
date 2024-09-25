@@ -144,7 +144,7 @@ namespace Aplikace.Excel
                 if (!string.IsNullOrEmpty(cteniPole[1]) && cteniPole[1] != "0")
                 {
                     Pole.Add(cteniPole);
-                    Console.Write("\nRadek=" + i.ToString());
+                    Console.Write("\nRadek=" + i.ToString() + "\t" + cteniPole[0]);
                 }
 
                 if (i > 100 && Pole.Last().First().Count() < 2) break;
