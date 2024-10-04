@@ -1,8 +1,12 @@
 ﻿using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -17,6 +21,8 @@ namespace Aplikace.Excel
 {
     public class ExcelApp
     {
+        public static int record = 0;
+
         /// <summary> Vytvoření nového Excel dokumentu </summary>
         public Exc.Workbook? VytvorNovyDokument()
         {
@@ -383,6 +389,193 @@ namespace Aplikace.Excel
             return;
         }
 
+        public void ExcelSave<T>(Worksheet xls, T[] pole, string Nazev)
+        {
+            // Získání názvu typu T
+            string className = typeof(T).Name;
+            //ed.WriteMessage("\nclassName " + className);
+
+            var TridaPole = pole.GetType();
+            //ed.WriteMessage("\nTridaPole " + TridaPole.Name);
+
+            var Sloupce = typeof(T).GetProperties();
+            //ed.WriteMessage("\nSloupce " + Sloupce.Length);
+
+            //Table tab = new Table();
+            //tab.TableStyle = Sdilene.Nastav.SetTable();
+
+            //Nastavení velikosti tabulky
+            //tab.SetSize(pole.Length + 2, Sloupce.Length);
+            //ed.WriteMessage("\nVelikost tabulky " + pole.Length + ", " + Sloupce.Length);
+
+            int row = 1; int col = 1;
+            xls.Cells[row, col].value = Nazev;
+            row++;
+            foreach (var item in Sloupce)
+            {
+                // Získání atributu DisplayAttribute
+                DisplayAttribute displayAttribute = item.GetCustomAttributes(typeof(DisplayAttribute), false).Cast<DisplayAttribute>().FirstOrDefault();
+                xls.Cells[row, col].value = item.Name.ToUpper();
+                if (displayAttribute != null)
+                    xls.Cells[row, col].value = displayAttribute.Name;
+
+                //tab.Cells[row, col].TextStyleId = Sdilene.Nastav.SetROMANS();
+                //tab.Columns[col].Width = (item.Name.Length * 3) + 5;
+                col++;
+            }
+            //ed.WriteMessage("\nFunguje");
+            col = 1;
+            row++;
+            foreach (var item in pole)
+            {
+                //ed.WriteMessage("\nFunguje Sloupce" + Sloupce.Length);
+                foreach (var Property in Sloupce)
+                {
+                    //ed.WriteMessage("\nProperty.PropertyType " + Property.PropertyType);
+                    //pokud je datovy typ pole
+                    Console.WriteLine(Property.PropertyType.ToString());     
+                    Console.WriteLine(typeof(_Item__fluid).ToString());
+
+                    if (Property.PropertyType == typeof(int))
+                    {
+                        Console.WriteLine("Jedná se o int");
+                    }
+
+                    if (Property.PropertyType.IsGenericType) 
+                    {
+                        Console.WriteLine("Jedná se o IsGenericType");
+                        if (Property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                        {
+                            var xx = item.GetType().GetProperty(Property.Name).GetValue(item) as List<T>;
+                            //var dad = xx.GetProperties();
+
+                            var Sloudvapce = typeof(T).GetProperties();
+                            Console.WriteLine("Jedná se o List");
+                        }
+                    }
+
+
+                    if (Property.PropertyType == typeof(List<>))
+                    {
+                        Console.WriteLine("Jedná se o IList");
+                    }
+
+                    if (Property.PropertyType == typeof(_Item__fluid))
+                    {
+                        Console.WriteLine("Jedná se o seznam");
+                    }
+
+                    if (Property.PropertyType == typeof(string[]))
+                    {
+                        var Hodnota = (string[])item.GetType().GetProperty(Property.Name).GetValue(item);
+                        string Hodpole = string.Empty;
+                        //bude vytvožen seznam tohoto pole
+                        foreach (var txt in Hodnota)
+                        {
+                            Hodpole += txt + ",";
+                        }
+                        xls.Cells[row, col].value = Hodpole.Substring(0, Hodpole.Length - 1);
+                    }
+
+                    //pokud je datovy typ string
+                    if (Property.PropertyType == typeof(string))
+                    {
+                        //ed.WriteMessage("\nFunguje Sloupce " + Sloupce.Length);
+                        //ed.WriteMessage("\nFunguje GetProperty " + Property.Name);
+                        var value = item.GetType().GetProperty(Property.Name).GetValue(item).ToString(); // Získání hodnoty vlastnosti
+                        //ed.WriteMessage("\nFunguje GetProperty " + value);
+                        //if (value == "") 
+                        //    value = "x";
+                        //ed.WriteMessage("\nFunguje");
+                        xls.Cells[row, col].value = value;
+
+                        //tab.Cells[row, col].Alignment = CellAlignment.BottomLeft;
+                        //tab.Cells[row, col].TextStyleId = Sdilene.Nastav.SetROMANS();
+                        //tab.Columns[col].Width = (value.Length * 3) + 5;
+                        col++;
+                        //this.GetType().GetProperty(Property.Name).SetValue(this, Propertys);
+                        //this.GetType().GetProperty(Property.Name).GetValue(Propertys);
+                    }
+                }
+                col = 1; row++;
+            }
+            //tab.GenerateLayout();
+            //return; //tab;
+        }
+
+        public void NadpisMIlan(Worksheet xls)
+        {
+            string Nad = @"    |     |   |     |     |                                        |  |KAPACITA        |                        |        |        |      |EL.  |        ";
+            int col = 1;
+            int row = 1;
+            foreach (var item in Nad.Split('|'))
+            {
+                xls.Cells[row, col++].value = item;
+            }
+            row++; col = 1;
+            Nad = "GUID|IO/SO|NO |PS   |TAG  |NÁZEV                                   |KS|NOSTNOST        |MEDIUM                  |OBJEM   |PRŮTOK  |HMOTN.|PŘÍK.|POZNÁMKA";
+            foreach (var item in Nad.Split('|'))
+            {
+                xls.Cells[row, col++].value = item;
+            }
+            xls.Range[xls.Cells[1, 1], xls.Cells[2, col - 1]].WrapText = true;
+            NadpisSet(xls, (row, col));
+        }
+
+        public void ExcelSave(Worksheet xls, Item[] pole, string Nazev)
+        {
+            NadpisMIlan(xls);
+            //ed.WriteMessage("\nFunguje");
+            int col = 1;
+            int row = 3;
+            Tisk(xls, pole, row, col);
+            //tab.GenerateLayout();
+            return; //tab;
+        }
+
+        public int Tisk(Worksheet xls, Item[] pole, int row, int col)
+        {
+            foreach (var item in pole)
+            {
+                xls.Cells[row, col++].value = item._Item__id;
+                xls.Cells[row, col++].value = item._Item__pos._Object__obj;
+                xls.Cells[row, col++].value = record++.ToString();
+                xls.Cells[row, col++].value = item._Item__unit._Object__obj;
+                xls.Cells[row, col++].value = item._Item__tag;
+                xls.Cells[row, col++].value = item._Item__name;
+                xls.Cells[row, col++].value = item._Item__pcs;
+                if (item._Item__fluid.Count > 0)
+                {
+                    if (item._Item__fluid.Count > 1) row++;
+                    foreach (var item2 in item._Item__fluid)
+                    {
+                        xls.Cells[row, col + 1].value = item2._Fluid__parameter._Param__value;
+                        xls.Cells[row, col + 2].value = item2._Fluid__parameter._Param__unit;
+                        xls.Cells[row, col + 3].value = item2._Fluid__fluid;
+                        xls.Cells[row, col + 4].value = item2._Fluid__volume;
+                        xls.Cells[row, col + 5].value = item2._Fluid__flowrate;
+                        row++;
+                    }
+                    col += 5; row--;
+                }
+                xls.Cells[row, col++].value = item._Item__mass;
+                xls.Cells[row, col++].value = item._Item__power;
+                xls.Cells[row, col++].value = item._Item__note;
+
+                if (item._Item__subitem.Count > 0)
+                {
+                    row++; col = 1;
+                    row = Tisk(xls, item._Item__subitem.ToArray(), row, col);
+                }
+                else 
+                {
+                    row++; col = 1;
+                }
+            }
+            return row;
+        }
+
+
         public void NadpisSet(Worksheet xls,  (int,int) data)
         {
             //Podtržení nadpisů
@@ -393,7 +586,7 @@ namespace Aplikace.Excel
             // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
             Exc.Range range = xls.Range[
                 xls.Cells[1, 1],  // A1 (1. řádek, 1. sloupec)
-                xls.Cells[1, data.Item2] // Vstup (data.Item1, data.Item2)
+                xls.Cells[data.Item1, data.Item2] // Vstup (data.Item1, data.Item2)
             ];
 
             // Nastavení okrajů kolem buněk
@@ -404,10 +597,10 @@ namespace Aplikace.Excel
             range.Borders[Exc.XlBordersIndex.xlEdgeBottom].LineStyle = Exc.XlLineStyle.xlContinuous;
 
             // Další možnosti nastavení tloušťky a barvy okrajů
-            range.Borders.LineStyle = Exc.XlLineStyle.xlContinuous;
+            //range.Borders.LineStyle = Exc.XlLineStyle.xlContinuous;
 
             // Weight: Určuje tloušťku čáry(xlThin, xlMedium, xlThick).
-            range.Borders.Weight = Exc.XlBorderWeight.xlMedium;  // nebo xlMedium, xlThick - tlustá
+            //range.Borders.Weight = Exc.XlBorderWeight.xlMedium;  // nebo xlMedium, xlThick - tlustá
 
             //Color: Převádí barvu z knihovny System.Drawing.Color na formát použitelný v Excelu.
             range.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black); // nastavení barvy čar
@@ -431,10 +624,11 @@ namespace Aplikace.Excel
             range.VerticalAlignment = Exc.XlVAlign.xlVAlignCenter;
 
             //Orientace textu 
-            range.Orientation = 90;
+            //range.Orientation = 90;
 
             // Nastavení barvy buňky (pozadí) (např. světle modrá)
             range.Interior.Color = ColorTranslator.ToOle(Color.LightBlue);
+
             //range.Interior.Color = ColorTranslator.ToOle(Color.FromArgb(173, 216, 230));  // Světle modrá
 
             // Automatické přizpůsobení šířky sloupce (např. pro sloupec A)
@@ -444,9 +638,9 @@ namespace Aplikace.Excel
             //Xls.Rows[1].AutoFit();
 
             //range 
-            range.Columns["A:Z"].AutoFit();
-            range.Rows["1"].AutoFit();
-            range.Rows["2"].AutoFit();
+            //range.Columns["A:Z"].AutoFit();
+            //range.Rows["1"].AutoFit();
+            //range.Rows["2"].AutoFit();
         }
 
         public (int,int) Nadpis(Worksheet Xls)
