@@ -1,0 +1,153 @@
+﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Reflection.PortableExecutable;
+using System.Data;
+using System.Text.Json.Nodes;
+
+namespace Aplikace.Sdilene
+{
+    public class Prevod
+    {
+        public static void DataTabletoToCsv(DataTable Table, string Soubor)
+        {
+            //DataTable Table = new() { TableName = "cestina", } ; 
+            Table.TableName = "Cestina";
+            using FileStream fs = new(Soubor, FileMode.Create);
+            using StreamWriter sw = new(fs);
+            string Pole = "";
+            foreach (DataColumn item in Table.Columns)
+            {
+                Pole += item.ColumnName + ";";
+            }
+            sw.WriteLine(Pole[..^1]);
+
+            foreach (DataRow item in Table.Rows)
+            {
+                Pole = "";
+                foreach (DataColumn col in Table.Columns)
+                {
+                    Pole += item[col].ToString() + ";";
+                }
+                sw.WriteLine(Pole[..^1]);
+            }
+        }
+
+        public static void JsonToCsv(string json, string file)
+        {
+            // Deserialize JSON to JArray
+            JArray jsonArray = JArray.Parse(json);
+
+            // Check if the array has elements
+            if (jsonArray.Count > 0)
+            {
+                // Get property names from the first object (they will be used as headers)
+                var headers = ((JObject)jsonArray[0]).Properties().Select(p => p.Name).ToArray();
+
+                // Prepare the CSV file
+                using (var writer = new StreamWriter(file))
+                {
+                    // Write the headers
+                    writer.WriteLine(string.Join(";", headers));
+
+                    // Write data rows
+                    foreach (JObject obj in jsonArray)
+                    {
+                        var values = obj.Properties().Select(p => p.Value.ToString()).ToArray();
+                        writer.WriteLine(string.Join(";", values));
+                    }
+                }
+
+                Console.WriteLine("CSV file has been created.");
+            }
+        }
+
+
+        //od umělé inteligence
+        public static string JsonToXmlAI(string json)
+        {
+            // Zabalíme JSON, pokud začíná polem
+            if (json.TrimStart().StartsWith("["))
+            {
+                json = $"{{\"Hlavni\": {json}}}";
+            }
+
+            // Použijeme přetíženou metodu, která specifikuje název kořenového elementu
+            // Například "Root", můžete zvolit libovolný vhodný název
+            //XDocument doc = JsonConvert.DeserializeXNode(json, "Polozka");
+
+            // Parsuje JSON řetězec na objekt JObject
+            JObject jObject = JsonConvert.DeserializeObject<JObject>(json);
+
+            // Vytvoří se kořenový element XML dokumentu
+            var xmlRoot = new XElement("Root");
+
+            // Rekurzivně projde objekt JObject a přidá jeho prvky do XML
+            AddJsonToXml(jObject, xmlRoot);
+
+            // Vrátí se XML řetězec
+            return xmlRoot.ToString();
+        }
+
+        /// <summary>Rekurzivně projde objekt JObject a přidá jeho prvky do XML</summary>
+        private static void AddJsonToXml(JObject jObject, XElement parent)
+        {
+            foreach (var property in jObject.Properties())
+            {
+                var name = property.Name;
+                var value = property.Value;
+
+                var element = new XElement(name);
+
+                if (value.Type == JTokenType.Object)
+                {
+                    // Pokud je hodnota objekt, rekurzivně se volá AddJsonToXml
+                    AddJsonToXml((JObject)value, element);
+                }
+                else if (value.Type == JTokenType.Array)
+                {
+                    // Pokud je hodnota pole, rekurzivně se volá AddJsonToXml pro každý prvek v poli
+                    foreach (var arrayValue in value.Children())
+                    {
+                        var arrayElement = new XElement("item");
+                        AddJsonToXml((JObject)arrayValue, arrayElement);
+                        element.Add(arrayElement);
+                    }
+                }
+                else
+                {
+                    // Jinak se přidá hodnota jako textový element
+                    element.Value = value.ToString();
+                }
+
+                parent.Add(element);
+            }
+        }
+
+        /// <summary> Vstup Json jako string </summary>
+        /// <returns>Výstup XML jako string</returns>
+        public static string JsonToXml(string json)
+        {
+            // Zabalíme JSON, pokud začíná polem
+            if (json.TrimStart().StartsWith("["))
+            {
+                json = $"{{\"Hlavni\": {json}}}";
+            }
+
+            // Použijeme přetíženou metodu, která specifikuje název kořenového elementu
+            // Například "Root", můžete zvolit libovolný vhodný název
+            XDocument doc = JsonConvert.DeserializeXNode(json, "Polozka");
+
+            // Přidáme deklaraci XML, pokud není přítomna
+            XDeclaration declaration = doc.Declaration ?? new XDeclaration("1.0", "utf-8", "yes");
+
+            return $"{declaration}{Environment.NewLine}{doc}";
+        }
+
+    }
+}

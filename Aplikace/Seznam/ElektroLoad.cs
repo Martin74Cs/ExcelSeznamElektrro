@@ -64,7 +64,7 @@ namespace Aplikace.Seznam
             return sourceList.Where(x => !compareKeys.Contains(x[0])).ToList();
         }
 
-        public void NovyExcel()
+        public static void NovyExcel()
         {
             //volba kdy jsem doma a kdy v práci - volba dle nazvu PC
             bool Doma = true;
