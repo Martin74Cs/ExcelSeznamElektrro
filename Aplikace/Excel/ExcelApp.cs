@@ -32,9 +32,32 @@ namespace Aplikace.Excel
 
             // Vytvoření nového sešitu
             Exc.Workbook NovyDokument = App.Workbooks.Add();
-            Console.Write("\nNový Excel dokument byl vytvořen.");
+            Console.Write("\nVytvořen prázný dokument Excel.");
             return NovyDokument;
         }
+
+        public static Exc.Workbook? NovyExcelSablona(string cesta)
+        {
+            /// <summary> Cesta k dresaři kde bylo spuštěno nevím jak funguje u dll </summary>
+            string AktuallniAdresear = System.Environment.CurrentDirectory + @"\";
+            /// <summary> Cesta k Aresaři kde bylo spuštěno nevím jak funguje u dll </summary>
+            string AktuallniAdresearJinak = System.IO.Directory.GetCurrentDirectory() + @"\";
+
+            string BaseAdress = Path.Combine(System.Environment.CurrentDirectory, "Podpora");
+            string sablona =  Path.Combine(BaseAdress, "Sablona_SSaZ.xlsx");
+            // pokud neexistuje vlastní šablona použij výchozí
+            if (!File.Exists(sablona))
+               return VytvorNovyDokument();
+            Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
+            if (App == null) return null;
+            App.Visible = true;
+            //if(File.Exists(cesta))
+            File.Copy(sablona, cesta);
+            var sesit = App.Workbooks.Open(cesta);
+            Console.Write("\nVytvořen soubor ze šablony Excel.");
+            return sesit;
+        }
+
 
         /// <summary> Přidání nového listu do Excelového dokumentu </summary>
         public static Exc.Worksheet PridatNovyList(Exc.Workbook Dokument, string NazevListu)

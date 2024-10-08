@@ -45,7 +45,7 @@ ExcelApp Ex = new ExcelApp();
 
 //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
-var Filtr = pokus.GroupBy(x => x._Item__cunit._Unit__pfx + " " + x._Item__cunit._Unit__num)
+var Filtr = pokus.GroupBy(x => x._Item__eunit._Unit__pfx + " " + x._Item__eunit._Unit__num)
     .Select(group => group
     // Kombinovaný název skupiny z parametrů
     //var NazevSkupiny = $"{group.Key._Item__cunit._Object__pfx}";
@@ -55,11 +55,13 @@ var Filtr = pokus.GroupBy(x => x._Item__cunit._Unit__pfx + " " + x._Item__cunit.
 
 foreach (var tr in Filtr)
 {
-    var xls = ExcelApp.VytvorNovyDokument();
-    var sheet = ExcelApp.PridatNovyList(xls, "Seznam");
+    string cestap = Path.Combine(BaseAdres, @"zarizeni_" + tr.First()._Item__eunit._Unit__pfx + " " + tr.First()._Item__eunit._Unit__num + ".json");
+    string cestax = Path.ChangeExtension(cestap, ".xlsx");
+    //var xls = ExcelApp.VytvorNovyDokument();
+    var xls = ExcelApp.NovyExcelSablona(cestax);
+    var sheet = ExcelApp.PridatNovyList(xls, "Seznam zažízení");
     Ex.ExcelSave(sheet, tr.ToArray());
-    string cestap = Path.Combine(BaseAdres, @"zarizeni_" + tr.First()._Item__cunit._Unit__pfx + " " + tr.First()._Item__cunit._Unit__num + ".json");
-    xls.SaveAs(Path.ChangeExtension(cestap, ".xlsx"));
+    xls.SaveAs(cestax);
     xls.Application.Quit();
 }
 
