@@ -45,13 +45,17 @@ ExcelApp Ex = new ExcelApp();
 
 //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
-var Filtr = pokus.GroupBy(x => x._Item__eunit._Unit__pfx + " " + x._Item__eunit._Unit__num)
-    .Select(group => group
-    // Kombinovaný název skupiny z parametrů
-    //var NazevSkupiny = $"{group.Key._Item__cunit._Object__pfx}";
-    //var Zaznamy = group.ToList();
+string cestacelek = Path.Combine(BaseAdres, @"zarizeni_vse.xlsx");
+var xlsc = ExcelApp.NovyExcelSablona(cestacelek);
+var sheetc = ExcelApp.PridatNovyList(xlsc, "Seznam zažízení");
+Ex.ExcelSave(sheetc, pokus.ToArray());
+xlsc.Save();
+//xlsc.Close();
+xlsc.Application.Quit();
 
-    ).ToList();
+
+var Filtr = pokus.GroupBy(x => x._Item__eunit._Unit__pfx + " " + x._Item__eunit._Unit__num)
+    .Select(group => group).ToArray();
 
 foreach (var tr in Filtr)
 {
@@ -61,7 +65,8 @@ foreach (var tr in Filtr)
     var xls = ExcelApp.NovyExcelSablona(cestax);
     var sheet = ExcelApp.PridatNovyList(xls, "Seznam zažízení");
     Ex.ExcelSave(sheet, tr.ToArray());
-    xls.SaveAs(cestax);
+    xls.Save();
+    //xlsc.Close();
     xls.Application.Quit();
 }
 

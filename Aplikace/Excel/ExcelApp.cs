@@ -51,7 +51,8 @@ namespace Aplikace.Excel
             Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
             if (App == null) return null;
             App.Visible = true;
-            //if(File.Exists(cesta))
+            if(File.Exists(cesta))
+                File.Delete(cesta);
             File.Copy(sablona, cesta);
             var sesit = App.Workbooks.Open(cesta);
             Console.Write("\nVytvořen soubor ze šablony Excel.");
@@ -565,6 +566,15 @@ namespace Aplikace.Excel
         {
             foreach (var item in pole)
             {
+                if (record % 2 == 1)
+                {
+                    //Console.WriteLine(row + ", " + col);
+                    Exc.Range range1 = xls.Range[xls.Cells[row, 1], xls.Cells[row, 15]];
+                    range1.Interior.Color = ColorTranslator.ToOle(Color.LightGray);
+                    //range1.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray); // nastavení barvy čar
+                    //range1.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red); // nastavení barvy čar
+                }
+
                 xls.Cells[row, col++].value = item._Item__id;
                 xls.Cells[row, col++].value = item._Item__cunit._Unit__pfx + " " +  item._Item__cunit._Unit__num;
                 xls.Cells[row, col++].value = record++.ToString();
@@ -572,6 +582,7 @@ namespace Aplikace.Excel
                 xls.Cells[row, col++].value = item._Item__tag;
                 xls.Cells[row, col++].value = item._Item__name;
                 xls.Cells[row, col++].value = item._Item__pcs;
+
                 if (item._Item__fluid.Count > 0)
                 {
                     if (item._Item__fluid.Count > 1) row++;
@@ -586,9 +597,16 @@ namespace Aplikace.Excel
                     }
                     col += 5; row--;
                 }
-                xls.Cells[row, col++].value = item._Item__mass;
-                xls.Cells[row, col++].value = item._Item__power;
-                xls.Cells[row, col++].value = item._Item__note;
+
+                xls.Cells[row, col + 4].value = item._Item__mass;
+                xls.Cells[row, col + 5].value = item._Item__power;
+                xls.Cells[row, col + 6].value = item._Item__note;
+
+                // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
+                Exc.Range range = xls.Range[xls.Cells[row, 1], xls.Cells[row, col] ];
+                
+                // Nastavení okrajů kolem buněk
+                range.Borders[Exc.XlBordersIndex.xlEdgeBottom].LineStyle = Exc.XlLineStyle.xlContinuous;
 
                 if (item._Item__subitem.Count > 0)
                 {
@@ -600,6 +618,8 @@ namespace Aplikace.Excel
                 {
                     row++; col = 1;
                 }
+
+
             }
             return row;
         }
