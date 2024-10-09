@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -21,12 +22,56 @@ namespace Aplikace.Excel
 {
     public class ExcelApp
     {
+        [DllImport("oleaut32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern int GetActiveObject(ref Guid rclsid, IntPtr reserved, out object ppunk);
+
         public static int record = 0;
+
+        static Exc.Application ExcelExist()
+        {
+            //Exc.Application excelApp = null;
+            object excelAppObj = null;
+            Guid clsid = new Guid("00024500-0000-0000-C000-000000000046"); // CLSID pro Excel.Application
+
+            int hResult = GetActiveObject(ref clsid, IntPtr.Zero, out excelAppObj);
+            if (hResult == 0)
+            {
+                Exc.Application excelApp = (Exc.Application)excelAppObj;
+                Console.WriteLine("Excel je spuštěn.");
+                return excelApp;
+            }
+            Console.WriteLine("Excel není spuštěn.");
+            return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;      
+
+            //    try
+            //{
+            //    // Pokus o připojení k již spuštěné instanci Excelu
+            //    //excelApp = (Exc.Application)Marshal.GetActiveObject("Excel.Application");
+            //}
+            //catch (COMException)
+            //{
+            //    Console.WriteLine("Excel není spuštěn.");
+            //    return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
+            //}
+
+            //if (excelApp != null)
+            //{
+            //    Console.WriteLine("Excel je spuštěn.");
+            //    // Nyní můžete pracovat s aplikací Excel
+            //    // Například první otevřený sešit
+            //    Exc.Workbook workbook = excelApp.Worksheets[1];
+            //    Exc.Worksheet worksheet = (Exc.Worksheet)workbook.Worksheets[1];
+            //    // Proveďte nějaké operace s Excel
+            //    //Console.WriteLine("Název prvního listu: " + worksheet.Name);
+            //    return excelApp;
+            //}
+        }
 
         /// <summary> Vytvoření nového Excel dokumentu </summary>
         public static Exc.Workbook? VytvorNovyDokument()
         {
-            Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
+            //Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
+            var App = ExcelExist();
             if (App == null) return null;
             App.Visible = true;
 
@@ -566,13 +611,17 @@ namespace Aplikace.Excel
         {
             foreach (var item in pole)
             {
+                Exc.Range range1 = xls.Range[xls.Cells[row, 1], xls.Cells[row, 15]];
                 if (record % 2 == 1)
                 {
                     //Console.WriteLine(row + ", " + col);
-                    Exc.Range range1 = xls.Range[xls.Cells[row, 1], xls.Cells[row, 15]];
                     range1.Interior.Color = ColorTranslator.ToOle(Color.LightGray);
                     //range1.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray); // nastavení barvy čar
                     //range1.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red); // nastavení barvy čar
+                }
+                else
+                {
+                    range1.Interior.Color = ColorTranslator.ToOle(Color.LightPink);
                 }
 
                 xls.Cells[row, col++].value = item._Item__id;
@@ -935,6 +984,11 @@ namespace Aplikace.Excel
         {
             // Ukončení aplikace Excel
             work.Application.Quit();
+
+            // Uvolněte paměť
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
             return true;
         }
 

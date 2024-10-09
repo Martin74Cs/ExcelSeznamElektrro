@@ -50,10 +50,11 @@ var xlsc = ExcelApp.NovyExcelSablona(cestacelek);
 var sheetc = ExcelApp.PridatNovyList(xlsc, "Seznam zažízení");
 Ex.ExcelSave(sheetc, pokus.ToArray());
 xlsc.Save();
+//uzavření dokumentu bez uložení  
 //xlsc.Close();
-xlsc.Application.Quit();
+Ex.ExcelQuit(xlsc);
 
-
+//Třdění jdenotlivých PS
 var Filtr = pokus.GroupBy(x => x._Item__eunit._Unit__pfx + " " + x._Item__eunit._Unit__num)
     .Select(group => group).ToArray();
 
@@ -66,8 +67,9 @@ foreach (var tr in Filtr)
     var sheet = ExcelApp.PridatNovyList(xls, "Seznam zažízení");
     Ex.ExcelSave(sheet, tr.ToArray());
     xls.Save();
+    //uzavření dokumentu bez uložení  
     //xlsc.Close();
-    xls.Application.Quit();
+    Ex.ExcelQuit(xlsc);
 }
 
 //Ex.ExcelSave(sheet, pokus.ToArray());
@@ -81,7 +83,7 @@ void Vypis(List<Item> item)
 {
     foreach (var i in item)
     {
-        //Console.WriteLine($"Tag={i._Item__tag}, Patro={i._Item__name}");
+        Console.WriteLine($"Tag={i._Item__tag}, Jmeno={i._Item__name}");
         if (i._Item__subitem.Count > 0)
             Vypis(i._Item__subitem);
     }
