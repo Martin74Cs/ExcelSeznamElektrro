@@ -589,7 +589,7 @@ namespace Aplikace.Excel
             }
             //zalamování textu - pozor pokud dále řěším šírku sloupcu nesmí být zapnuto
             xls.Range[xls.Cells[1, 1], xls.Cells[2, col - 1]].WrapText = false;
-            NadpisSet(xls, (row, col));
+            NadpisSet(xls, (row, col - 1));
         }
 
         public void ExcelSave(Worksheet xls, Item[] pole)
@@ -598,7 +598,7 @@ namespace Aplikace.Excel
             //ed.WriteMessage("\nFunguje");
             int col = 1;
             int row = 3;
-            Tisk(xls, pole, ref row, ref col);
+            Tisk(xls, pole, ref row, col);
 
             for (int i = 1; i < 20; i++)
                 xls.Columns[i].AutoFit();
@@ -607,24 +607,11 @@ namespace Aplikace.Excel
             return; //tab;
         }
 
-        public static int Tisk(Worksheet xls, Item[] pole, ref int row, ref int col)
+        public static int Tisk(Worksheet xls, Item[] pole, ref int row, int col)
         {
             foreach (var item in pole)
             {
-                Exc.Range range1 = xls.Range[xls.Cells[row, 1], xls.Cells[row, 15]];
-                if (record % 2 == 1)
-                {
-                    //Console.WriteLine(row + ", " + col);
-                    range1.Interior.Color = ColorTranslator.ToOle(Color.LightGray);
-                    //range1.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray); // nastavení barvy čar
-                    //range1.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red); // nastavení barvy čar
-                }
-                else
-                {
-                    range1.Interior.Color = ColorTranslator.ToOle(Color.LightPink);
-                }
-
-                xls.Cells[row, col++].value = item._Item__id;
+                xls.Cells[row, col++].value = item._Item__id.ToString();
                 xls.Cells[row, col++].value = item._Item__cunit._Unit__pfx + " " +  item._Item__cunit._Unit__num;
                 xls.Cells[row, col++].value = record++.ToString();
                 xls.Cells[row, col++].value = item._Item__eunit._Unit__pfx + " " + item._Item__eunit._Unit__num;
@@ -646,10 +633,11 @@ namespace Aplikace.Excel
                     }
                     col += 5; row--;
                 }
-
-                xls.Cells[row, col + 4].value = item._Item__mass;
-                xls.Cells[row, col + 5].value = item._Item__power;
-                xls.Cells[row, col + 6].value = item._Item__note;
+                else
+                    col += 5;
+                xls.Cells[row, col-5].value = item._Item__mass;
+                xls.Cells[row, col].value = item._Item__power;
+                xls.Cells[row, col++].value = item._Item__note;
 
                 // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
                 Exc.Range range = xls.Range[xls.Cells[row, 1], xls.Cells[row, col] ];
@@ -657,11 +645,15 @@ namespace Aplikace.Excel
                 // Nastavení okrajů kolem buněk
                 range.Borders[Exc.XlBordersIndex.xlEdgeBottom].LineStyle = Exc.XlLineStyle.xlContinuous;
 
+                //Exc.Range range1 = xls.Range[xls.Cells[row, 1], xls.Cells[row, 15]];
+                if (record % 2 == 1)
+                    range.Interior.Color = ColorTranslator.ToOle(Color.LightGray);
+
                 if (item._Item__subitem.Count > 0)
                 {
                     row++; col = 1;
                     //row = Tisk(xls, item._Item__subitem.ToArray(), row, col);
-                    Tisk(xls, item._Item__subitem.ToArray(), ref row, ref col);
+                    Tisk(xls, item._Item__subitem.ToArray(), ref row, col);
                 }
                 else 
                 {
