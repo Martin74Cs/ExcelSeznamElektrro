@@ -619,25 +619,25 @@ namespace Aplikace.Excel
                 xls.Cells[row, col++].value = item._Item__name;
                 xls.Cells[row, col++].value = item._Item__pcs;
 
+                xls.Cells[row, col+4].value = item._Item__mass;
+                xls.Cells[row, col+5].value = item._Item__power;
+                xls.Cells[row, col+6].value = item._Item__note;
+
                 if (item._Item__fluid.Count > 0)
                 {
                     if (item._Item__fluid.Count > 1) row++;
                     foreach (var item2 in item._Item__fluid)
                     {
-                        xls.Cells[row, col + 1].value = item2._Fluid__parameter._Param__value;
-                        xls.Cells[row, col + 2].value = item2._Fluid__parameter._Param__unit;
-                        xls.Cells[row, col + 3].value = item2._Fluid__fluid;
-                        xls.Cells[row, col + 4].value = item2._Fluid__volume;
-                        xls.Cells[row, col + 5].value = item2._Fluid__flowrate;
+                        xls.Cells[row, col ].value = item2._Fluid__parameter._Param__value.ToString() + " " +item2._Fluid__parameter._Param__unit;
+                        xls.Cells[row, col + 1].value = item2._Fluid__fluid;
+                        xls.Cells[row, col + 2].value = item2._Fluid__volume;
+                        xls.Cells[row, col + 3].value = item2._Fluid__flowrate;
                         row++;
                     }
-                    col += 5; row--;
+                    col += 4; row--;
                 }
                 else
-                    col += 5;
-                xls.Cells[row, col-5].value = item._Item__mass;
-                xls.Cells[row, col].value = item._Item__power;
-                xls.Cells[row, col++].value = item._Item__note;
+                    col += 4;
 
                 // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
                 Exc.Range range = xls.Range[xls.Cells[row, 1], xls.Cells[row, col] ];
