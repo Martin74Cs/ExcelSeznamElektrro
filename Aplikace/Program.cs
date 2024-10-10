@@ -54,23 +54,23 @@ xlsc.Save();
 //xlsc.Close();
 Ex.ExcelQuit(xlsc);
 
-////Třdění jdenotlivých PS
-//var Filtr = pokus.GroupBy(x => x._Item__eunit._Unit__pfx + " " + x._Item__eunit._Unit__num)
-//    .Select(group => group).ToArray();
+//Třdění jdenotlivých PS
+var Filtr = pokus.GroupBy(x => x._Item__eunit._Unit__pfx + " " + x._Item__eunit._Unit__num)
+    .Select(group => group).ToArray();
 
-//foreach (var tr in Filtr)
-//{
-//    string cestap = Path.Combine(BaseAdres, @"zarizeni_" + tr.First()._Item__eunit._Unit__pfx + " " + tr.First()._Item__eunit._Unit__num + ".json");
-//    string cestax = Path.ChangeExtension(cestap, ".xlsx");
-//    //var xls = ExcelApp.VytvorNovyDokument();
-//    var xls = ExcelApp.NovyExcelSablona(cestax);
-//    var sheet = ExcelApp.PridatNovyList(xls, "Seznam zažízení");
-//    Ex.ExcelSave(sheet, tr.ToArray());
-//    xls.Save();
-//    //uzavření dokumentu bez uložení  
-//    //xlsc.Close();
-//    Ex.ExcelQuit(xlsc);
-//}
+foreach (var tr in Filtr)
+{
+    string cestap = Path.Combine(BaseAdres, @"zarizeni_" + tr.First()._Item__eunit._Unit__pfx + " " + tr.First()._Item__eunit._Unit__num + ".json");
+    string cestax = Path.ChangeExtension(cestap, ".xlsx");
+    //var xls = ExcelApp.VytvorNovyDokument();
+    var xls = ExcelApp.NovyExcelSablona(cestax);
+    var sheet = ExcelApp.PridatNovyList(xls, "Seznam zažízení");
+    Ex.ExcelSave(sheet, tr.ToArray());
+    xls.Save();
+    //uzavření dokumentu bez uložení  
+    //xlsc.Close();
+    Ex.ExcelQuit(xlsc);
+}
 
 //Ex.ExcelSave(sheet, pokus.ToArray());
 //xls.SaveAs2(Path.ChangeExtension(cesta, ".xlsx"));
