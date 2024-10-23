@@ -503,7 +503,7 @@ namespace Aplikace.Excel
                     //ed.WriteMessage("\nProperty.PropertyType " + Property.PropertyType);
                     //pokud je datovy typ pole
                     Console.WriteLine(Property.PropertyType.ToString());     
-                    Console.WriteLine(typeof(_Item__fluid).ToString());
+                    Console.WriteLine(typeof(Fluid).ToString());
 
                     if (Property.PropertyType == typeof(int))
                     {
@@ -529,7 +529,7 @@ namespace Aplikace.Excel
                         Console.WriteLine("Jedná se o IList");
                     }
 
-                    if (Property.PropertyType == typeof(_Item__fluid))
+                    if (Property.PropertyType == typeof(Fluid))
                     {
                         Console.WriteLine("Jedná se o seznam");
                     }
@@ -611,27 +611,27 @@ namespace Aplikace.Excel
         {
             foreach (var item in pole)
             {
-                xls.Cells[row, col++].value = item._Item__id.ToString();
-                xls.Cells[row, col++].value = item._Item__cunit._Unit__pfx + " " +  item._Item__cunit._Unit__num;
+                xls.Cells[row, col++].value = item.id.ToString();
+                xls.Cells[row, col++].value = item.cunit.pfx + " " +  item.cunit.num;
                 xls.Cells[row, col++].value = record++.ToString();
-                xls.Cells[row, col++].value = item._Item__eunit._Unit__pfx + " " + item._Item__eunit._Unit__num;
-                xls.Cells[row, col++].value = item._Item__tag;
-                xls.Cells[row, col++].value = item._Item__name;
-                xls.Cells[row, col++].value = item._Item__pcs;
+                xls.Cells[row, col++].value = item.munit.pfx + " " + item.munit.num;
+                xls.Cells[row, col++].value = item.tag;
+                xls.Cells[row, col++].value = item.name;
+                xls.Cells[row, col++].value = item.pcs;
 
-                xls.Cells[row, col+4].value = item._Item__mass;
-                xls.Cells[row, col+5].value = item._Item__power;
-                xls.Cells[row, col+6].value = item._Item__note;
+                xls.Cells[row, col+4].value = item.mass;
+                xls.Cells[row, col+5].value = item.power;
+                xls.Cells[row, col+6].value = item.note;
 
-                if (item._Item__fluid.Count > 0)
+                if (item.fluid.Count > 0)
                 {
-                    if (item._Item__fluid.Count > 1) row++;
-                    foreach (var item2 in item._Item__fluid)
+                    if (item.fluid.Count > 1) row++;
+                    foreach (var item2 in item.fluid)
                     {
-                        xls.Cells[row, col ].value = item2._Fluid__parameter._Param__value.ToString() + " " +item2._Fluid__parameter._Param__unit;
-                        xls.Cells[row, col + 1].value = item2._Fluid__fluid;
-                        xls.Cells[row, col + 2].value = item2._Fluid__volume;
-                        xls.Cells[row, col + 3].value = item2._Fluid__flowrate;
+                        xls.Cells[row, col ].value = item2.parameter.value.ToString() + " " +item2.parameter.unit;
+                        xls.Cells[row, col + 1].value = item2.fluid;
+                        xls.Cells[row, col + 2].value = item2.volume;
+                        xls.Cells[row, col + 3].value = item2.flowrate;
                         row++;
                     }
                     col += 4; row--;
@@ -649,11 +649,11 @@ namespace Aplikace.Excel
                 if (record % 2 == 1)
                     range.Interior.Color = ColorTranslator.ToOle(Color.LightGray);
 
-                if (item._Item__subitem.Count > 0)
+                if (item.subitem.Count > 0)
                 {
                     row++; col = 1;
                     //row = Tisk(xls, item._Item__subitem.ToArray(), row, col);
-                    Tisk(xls, item._Item__subitem.ToArray(), ref row, col);
+                    Tisk(xls, item.subitem.ToArray(), ref row, col);
                 }
                 else 
                 {

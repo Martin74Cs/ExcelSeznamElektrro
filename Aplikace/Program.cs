@@ -55,12 +55,12 @@ xlsc.Save();
 Ex.ExcelQuit(xlsc);
 
 ////Třdění jdenotlivých PS
-//var Filtr = pokus.GroupBy(x => x._Item__eunit._Unit__pfx + " " + x._Item__eunit._Unit__num)
+//var Filtr = pokus.GroupBy(x => x.cunit.pfx + " " + x.cunit.num)
 //    .Select(group => group).ToArray();
 
 //foreach (var tr in Filtr)
 //{
-//    string cestap = Path.Combine(BaseAdres, @"zarizeni_" + tr.First()._Item__eunit._Unit__pfx + " " + tr.First()._Item__eunit._Unit__num + ".json");
+//    string cestap = Path.Combine(BaseAdres, @"zarizeni_" + tr.First().cunit.pfx + " " + tr.First().cunit.num + ".json");
 //    string cestax = Path.ChangeExtension(cestap, ".xlsx");
 //    //var xls = ExcelApp.VytvorNovyDokument();
 //    var xls = ExcelApp.NovyExcelSablona(cestax);
@@ -83,9 +83,9 @@ void Vypis(List<Item> item)
 {
     foreach (var i in item)
     {
-        Console.WriteLine($"Tag={i._Item__tag}, Jmeno={i._Item__name}");
-        if (i._Item__subitem.Count > 0)
-            Vypis(i._Item__subitem);
+        Console.WriteLine($"Tag={i.tag}, Jmeno={i.name}");
+        if (i.subitem.Count > 0)
+            Vypis(i.subitem);
     }
 }
 
