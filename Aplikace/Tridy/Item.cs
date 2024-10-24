@@ -11,13 +11,14 @@ namespace Aplikace.Tridy
         public int id { get; set; }
         public Unit cunit { get; set; }
         public Unit munit { get; set; }
+        
         //public string revNo { get; set; } = string.Empty;
         //public string tag { get; set; } = string.Empty;
-        //public string revNo { get; set; } = string.Empty;
+        
         public string tag { get; set; } = string.Empty;
         public string name { get; set; } = string.Empty;
         public string pcs { get; set; } = string.Empty;
-        public string type { get; set; }
+        public string type { get; set; } = string.Empty;
 
         public List<Fluid> fluid { get; set; } = [];
         public float dimensionX { get; set; }

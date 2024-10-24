@@ -34,7 +34,7 @@ namespace Aplikace.Sdilene
 
         public static JsonSerializerSettings nastaveniEn()
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
+            var settings = new JsonSerializerSettings()
             {
                 //Culture = System.Globalization.CultureInfo.GetCultureInfo("cs-CZ"),
                 //formátovaný text
@@ -48,6 +48,8 @@ namespace Aplikace.Sdilene
                 //ignorováno kdy JSON není v cílovém typu objektu.
                 //MissingMemberHandling = MissingMemberHandling.Ignore,
 
+                //Určuje možnosti zpracování referenční smyčky pro JsonSerializer.
+                //Ignorujte odkazy na smyčky a neprovádějte serializaci.
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
 
                 //DefaultValueHandling = DefaultValueHandling.Ignore,
