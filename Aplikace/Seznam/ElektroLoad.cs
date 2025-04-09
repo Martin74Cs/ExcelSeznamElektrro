@@ -68,7 +68,9 @@ namespace Aplikace.Seznam
         {
             //volba kdy jsem doma a kdy v práci - volba dle nazvu PC
             bool Doma = true;
-            string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
+            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
+            string basePath = @"c:\a\Natron\2024.09.03";
+        
             if (Environment.MachineName == "MARTIN")
             {
                 basePath = @"D:\Tractebel\2024.09.03";
@@ -78,17 +80,18 @@ namespace Aplikace.Seznam
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
+            Exc.Worksheet xls;
+            Exc.Workbook doc;
+
             //Načtení json z Milanového seznamu čerpadel
             var Pumps = new List<Pump>();
             if (Doma)
             {
                 string cestaPump = @"U:\Elektro\mcsato\Zakázky\Natron\pumps.json";
                 if (File.Exists(cestaPump))
-                { Pumps = Pump.Load(cestaPump); }
+                    Pumps = Pump.Load(cestaPump); 
 
             }
-            Exc.Worksheet xls;
-            Exc.Workbook doc;
 
             Console.WriteLine("\n----------------------------");
             Console.WriteLine("Načtení seznamu ze zdroje A/N");

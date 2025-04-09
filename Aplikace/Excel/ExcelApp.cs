@@ -1094,7 +1094,7 @@ namespace Aplikace.Excel
                     }
                     else 
                     {
-                        Zapis1.Value = item;
+                         Zapis1.Value = item;
                     }
                 }
             }
@@ -1122,7 +1122,9 @@ namespace Aplikace.Excel
         {
             // Sloučení buněk od A1 do C1
             var rada = xls.Range[pole];
-            rada.Merge();
+            //Koontrola počtu buněk nelze sloučit jen jednu bunku.
+            if (rada.Cells.Count > 1)
+                rada.Merge();
             rada.Value = Text;
 
             //zarovnání
