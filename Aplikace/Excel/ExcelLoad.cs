@@ -13,7 +13,7 @@ namespace Aplikace.Excel
     {
 
         /// <summary> Načtení dpkumentu Ecxel do pole List<List<string>> z a vytvořejí JSON</summary>
-        public List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
+        public static List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
         {
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
@@ -29,16 +29,15 @@ namespace Aplikace.Excel
             }
             else
             {
-                Pole = new ExcelApp().ExelLoadTable(cesta, Tabulka, Radek, Sloupce, TextPole);
+                Pole = ExcelApp.ExelLoadTable(cesta, Tabulka, Radek, Sloupce, TextPole);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 Pole.SaveJsonList(json);
             }
             return Pole;
         }
-
         
         /// <summary> Načtení dpkumentu Ecxel do pole Třídy z a vytvořejí JSON</summary>
-        public List<Zarizeni> LoadDataExcelTrida(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
+        public static List<Zarizeni> LoadDataExcelTrida(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
         {
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
@@ -54,7 +53,7 @@ namespace Aplikace.Excel
             }
             else
             {
-                Pole = new ExcelApp().ExelLoadTableTrida(cesta, Tabulka, Radek, Sloupce, TextPole);
+                Pole = ExcelApp.ExelLoadTableTrida(cesta, Tabulka, Radek, Sloupce, TextPole);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 Pole.SaveJsonList(json);
             }

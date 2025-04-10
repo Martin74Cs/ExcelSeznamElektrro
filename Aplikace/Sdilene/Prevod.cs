@@ -72,7 +72,7 @@ namespace Aplikace.Sdilene
         public static string JsonToXmlAI(string json)
         {
             // Zabalíme JSON, pokud začíná polem
-            if (json.TrimStart().StartsWith("["))
+            if (json.TrimStart().StartsWith('['))
             {
                 json = $"{{\"Hlavni\": {json}}}";
             }

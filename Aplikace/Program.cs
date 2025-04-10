@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.Data;
 using Exc = Microsoft.Office.Interop.Excel;
 
-
+//var Ele = new ElektroLoad();
+//Vytvoření nového dokumentu
+ElektroLoad.NovyExcel();
 
 ////Třdění jdenotlivých PS
 //var Filtr = pokus.GroupBy(x => x.cunit.pfx + " " + x.cunit.num)
@@ -36,10 +38,6 @@ using Exc = Microsoft.Office.Interop.Excel;
 //Ex.ExcelSave<Item>(sheet, pokus.ToArray(), "Pokus");
 //Ex.ExcelSave(sheet, pokus.ToArray(), "Pokus");
 
-
 //Kopírování informací do revize 7
 //Ele.Elektro();
 
-//var Ele = new ElektroLoad();
-//Vytvoření nového dokumentu
- ElektroLoad.NovyExcel();

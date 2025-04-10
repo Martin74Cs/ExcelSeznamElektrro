@@ -17,22 +17,22 @@ namespace Aplikace.Seznam
     {
 
         /// <summary>Koirování parametrů</summary>
-        public void Elektro()
+        public static void Elektro()
         {
             string cesta = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
-            var Motory500 = new ExcelLoad().LoadDataExcel(cesta, PouzitProTabulku, "Motory500V", 2, []);
+            var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "Motory500V", 2, []);
 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
             //var TextPole = new string[] { "Tag", "Příkon", "Měnič", "Balená Jednotka", "Popis", "PID"
             var TextPole = new string[] { "Tag", "Popis", "Prikon", "Menic", "BalenaJednotka", "PID" };
-            PouzitProTabulku = new int[] { 3, 18, 21, 1, 7, 2 };
-            var Nova = new ExcelLoad().LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
+            PouzitProTabulku = [3, 18, 21, 1, 7, 2];
+            var Nova = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx";
             TextPole = new string[] { "Tag", "HP", "Měnič", "Proud", "Delka", "AWG", "BalenaJednotka", "Popis", "Rozvadec", "RozvadecCislo", "PruzezMM2" };
-            PouzitProTabulku = new int[] { 5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45 };
-            var Stara = new ExcelLoad().LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
+            PouzitProTabulku = [5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45];
+            var Stara = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
             // Najít chybějící klíče v obou seznamech
             // Najdeme položky v Nova, které nejsou v Stara.
@@ -44,12 +44,12 @@ namespace Aplikace.Seznam
             //Cesta Excel pro změny 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
             //Hledání shody radku excelu s polem SadaUpraveno --- PouzitProTabulku -> první je kryterium
-            PouzitProTabulku = new int[] { 3, 18 };
+            PouzitProTabulku = [3, 18];
 
             //zapis do buněk.
             //var PouzitProZapis = new int[] { 56, 57 };
             var PouzitProZapis = new int[] { 59, 65, 66, 61, 63, 64 };
-            new ExcelApp().ExcelSaveSloupec(cesta, PouzitProZapis, zalozka: "M_equipment_list", PouzitProTabulku, Stara);
+            ExcelApp.ExcelSaveSloupec(cesta, PouzitProZapis, zalozka: "M_equipment_list", PouzitProTabulku, Stara);
             Console.Write("\nFunguje --- ExelSaveSlopec ");
 
             Console.WriteLine(missingFromList2);
@@ -58,7 +58,7 @@ namespace Aplikace.Seznam
         static List<List<string>> FindMissingKeys(List<List<string>> sourceList, List<List<string>> compareList)
         {
             // Vytvoříme množinu klíčů z compareList
-            HashSet<string> compareKeys = new HashSet<string>(compareList.Select(x => x[0]));
+            var compareKeys = new HashSet<string>(compareList.Select(x => x[0]));
 
             // Najdeme položky v sourceList, které nejsou v compareKeys
             return sourceList.Where(x => !compareKeys.Contains(x[0])).ToList();
@@ -106,7 +106,7 @@ namespace Aplikace.Seznam
                 var PouzitProTabulku1 = new int[] { 3, 2, 7, 18, 1, 21, 59, 56, 60, 63, 64, 61, 62, 65, 66 };
                 //převod                           3, 2, 7, 18, 1, 21, A, HP,  A, mm2, AWG, m,  ft  mcc cislo
                 //var Kotrola                    { 1,  2,     3,       4,           5,              6,      7,          8,      9,        10,   11,     12,         13,         14,     15 };
-                var Stara = Load.LoadDataExcel(cesta1, PouzitProTabulku1, "M_equipment_list", 7, TextPole);
+                var Stara = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku1, "M_equipment_list", 7, TextPole);
                 //var Zakalad = Load.LoadDataExcelTrida(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
                 //vytvoření nebo otevření dokumentu elekro
@@ -122,14 +122,14 @@ namespace Aplikace.Seznam
 
                 //uložení základní seznam zařízení dle seznamu Stara
                 //var TabulkuProPeevod = new int[] { 1, 2, 3, 4,  5, 6,  7, 8,   9,  10,  11, 12, 13,  14,  15 };
-                new ExcelApp().ExcelSaveList(xls, Stara);
+                ExcelApp.ExcelSaveList(xls, Stara);
 
                 if (Doma)
                 {
                     //naštení tabulky proudů 
                     cesta = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
-                    PouzitProTabulku1 = new int[] { 1, 2, 3 };
-                    var Motory500 = Load.LoadDataExcel(cesta, PouzitProTabulku1, "Motory500V", 2, []);
+                    PouzitProTabulku1 = [1, 2, 3];
+                    var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku1, "Motory500V", 2, []);
                     //doplnění tabulky proudů rabulky Excel
                     ExcelApp.ExcelSaveProud(xls, Motory500);
                 }
@@ -139,7 +139,7 @@ namespace Aplikace.Seznam
 
                 cesta = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx");
                 //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
-                PouzitProTabulku1 = new int[] { 5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45 };
+                PouzitProTabulku1 = [5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45];
                 //var Delka = Load.LoadDataExcel(cesta, PouzitProTabulku1, "M_equipment_list", 7, []);
 
                 //doplnění kabelů z //delka  //awg  //mm2
@@ -170,7 +170,7 @@ namespace Aplikace.Seznam
             var PoleData = ExcelApp.ExcelLoadWorksheet(xls, PouzitProTabulku);
 
             //Úprava načteného listu seznamu zařízení elektro 
-            PoleData = new KabelList().Kabely(PoleData);
+            PoleData = KabelList.Kabely(PoleData);
 
             //Nová záložka
             xls = ExcelApp.PridatNovyList(doc, "Kabely");
@@ -189,7 +189,7 @@ namespace Aplikace.Seznam
                 .Select(g => g.First()) // Vybereme první záznam z každé skupiny
                 .ToList();
 
-            Console.Write($"\nPocet zaznamu:{unikatniZaznamy.Count()}");
+            Console.Write($"\nPocet zaznamu:{unikatniZaznamy.Count}");
 
             var Soucet = new List<List<string>>();
             foreach (var item in unikatniZaznamy)
@@ -220,7 +220,7 @@ namespace Aplikace.Seznam
 
 
             xls.Cells[Soucet.Count + 1, 4].Formula = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
-            new ExcelApp().ExcelQuit(doc);
+            ExcelApp.ExcelQuit(doc);
         }
     }
 }
