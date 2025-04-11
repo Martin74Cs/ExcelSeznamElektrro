@@ -1,5 +1,6 @@
 ﻿using Aplikace.Excel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,11 @@ namespace Aplikace.Seznam
     {
         public static List<List<string>> Kabely(List<List<string>> PoleData)
         {
+            //string[] TextPole =     ["Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "Proud500", "HP", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC"];
+            //int[] PouzitProTabulku1 = [3,   2,      7,      18,         1,              21,         59,     56,     60,         63,     64,     61,     62,         65,     66];
+
+            //Stara.Add(["P101", "V101", "Čeradlo", "10", "", "VSD", "", "100", "MCC", "1",]);
+
             //uprava pole tabulky pro vypsaní
             var NovaData = new List<List<string>>();
             foreach (var radek in PoleData)
@@ -19,19 +25,17 @@ namespace Aplikace.Seznam
                 var Data = new List<string>
                 {
                     //1. Kabel
-                    radek[0],
+                    radek[6],
 
                     //2. odkud Mcc
-                    radek[13],
+                    radek[8],
 
                     //3. Odkud číslo
-                    radek[14],
+                    radek[9],
 
                     //4. Kabel
                     "WL 01"
                 };
-
-
 
                 //5. Jmeno kabelu
                 if (radek[5] == "VSD")
@@ -40,15 +44,16 @@ namespace Aplikace.Seznam
                     Data.Add("CYKY");
 
                 //6. Počet žil
-                Data.Add("4x");
+                if (radek[5] == "VSD")
+                    Data.Add("4x");
+                else
+                    Data.Add("5x");             
 
                 //7. Průřez
                 Data.Add(radek[9]);
 
                 //8. Průřez
                 Data.Add(radek[10]);
-
-
 
 
                 //9. zařízení

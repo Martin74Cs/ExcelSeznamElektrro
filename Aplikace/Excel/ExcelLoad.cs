@@ -2,6 +2,7 @@
 using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,8 +32,9 @@ namespace Aplikace.Excel
             {
                 Pole = ExcelApp.ExelLoadTable(cesta, Tabulka, Radek, Sloupce, TextPole);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-                Pole.SaveJsonList(json);
+                if(Pole.Count>1) Pole.SaveJsonList(json);
             }
+            Console.WriteLine($"načeno {Pole.Count} záznamů.");
             return Pole;
         }
         

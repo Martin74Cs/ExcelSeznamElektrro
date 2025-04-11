@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -31,16 +32,28 @@ namespace Aplikace.Excel
         {
             //Exc.Application excelApp = null;
             Guid clsid = new("00024500-0000-0000-C000-000000000046"); // CLSID pro Excel.Application
-
-            int hResult = GetActiveObject(ref clsid, IntPtr.Zero, out object excelAppObj);
-            if (hResult == 0)
+            try
             {
-                Exc.Application excelApp = (Exc.Application)excelAppObj;
-                Console.WriteLine("Excel je spuštěn.");
-                return excelApp;
+                int hResult = GetActiveObject(ref clsid, IntPtr.Zero, out object excelAppObj);
+                if (hResult == 0)
+                {
+                    Exc.Application excelApp = (Exc.Application)excelAppObj;
+                    Console.WriteLine("Excel je spuštěn.");
+                    return excelApp;
+                }
+                Console.WriteLine("Excel není spuštěn.");
+                return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
             }
-            Console.WriteLine("Excel není spuštěn.");
-            return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
+            catch (Exception)
+            {
+                Console.WriteLine("Chyba - Excel bude nově spuštěn.");
+                return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
+            }
+
+
+
+
+
 
             //    try
             //{
@@ -76,6 +89,7 @@ namespace Aplikace.Excel
 
             // Vytvoření nového sešitu
             Exc.Workbook NovyDokument = App.Workbooks.Add();
+            //Automatikcky se vytvoří nový List1
             Console.Write("\nVytvořen prázný dokument Excel.");
             return NovyDokument;
         }
@@ -108,7 +122,7 @@ namespace Aplikace.Excel
         public static Exc.Worksheet PridatNovyList(Exc.Workbook Dokument, string NazevListu)
         {
             Exc.Worksheet? xls = ExcelApp.GetSheet(Dokument, NazevListu);
-            // Přidání nového listu na konec sešitu
+            // Přidání nového listu na konec sešitu pokud je XLs praázdné
             xls ??= Dokument.Sheets.Add(After: Dokument.Sheets[Dokument.Sheets.Count]);
             xls.Name = NazevListu;
             xls.Activate();
@@ -194,8 +208,7 @@ namespace Aplikace.Excel
             var cteniPole = new List<string>();
             var Pole = new List<List<string>>();
             Console.Write("\nZal.Rows.Count=" + Zal.Rows.Count);
-
-            for (int i = Radek; i < Zal.Rows.Count; i++)
+            for (int i = Radek; i < Zal.UsedRange.Rows.Count; i++)
             {
                 //int x = 0;
                 cteniPole = [];
@@ -220,7 +233,7 @@ namespace Aplikace.Excel
                     Pole.Add(cteniPole);
                     Console.Write("\nRadek=" + i.ToString() + "\t" + cteniPole[0]);
                 }
-
+                //Pojistka
                 if (i > 100 && Pole.Last().First().Length < 2) break;
             }
             Console.Write("\nUkončení Excel");
@@ -587,8 +600,9 @@ namespace Aplikace.Excel
                 xls.Cells[row, col++].value = item;
             }
             //zalamování textu - pozor pokud dále řěším šírku sloupcu nesmí být zapnuto
-            xls.Range[xls.Cells[1, 1], xls.Cells[2, col - 1]].WrapText = false;
-            NadpisSet(xls, (row, col - 1));
+            var range = xls.Range[xls.Cells[1, 1], xls.Cells[2, col - 1]];
+            range.WrapText = false;
+            NadpisSet(xls, range);
         }
 
         public static void ExcelSave(Worksheet xls, Item[] pole)
@@ -664,8 +678,7 @@ namespace Aplikace.Excel
             return row;
         }
 
-
-        public static void NadpisSet(Worksheet xls,  (int,int) data)
+        public static void NadpisSet(Worksheet xls,  Exc.Range range)
         {
             //Podtržení nadpisů
             
@@ -673,10 +686,11 @@ namespace Aplikace.Excel
             //Exc.Range range = ListExcel.Range["A1", "M1"];
 
             // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
-            Exc.Range range = xls.Range[
-                xls.Cells[1, 1],  // A1 (1. řádek, 1. sloupec)
-                xls.Cells[data.Item1, data.Item2] // Vstup (data.Item1, data.Item2)
-            ];
+            //Exc.Range range = xls.Range[
+            //    xls.Cells[1, 1],  // A1 (1. řádek, 1. sloupec)
+            //    xls.Cells[data.Item1, data.Item2] // Vstup (data.Item1, data.Item2)
+            //];
+            
 
             // Nastavení okrajů kolem buněk
             // LineStyle: Může být xlContinuous, xlDash, xlDot a další styly čar.
@@ -694,20 +708,7 @@ namespace Aplikace.Excel
             //Color: Převádí barvu z knihovny System.Drawing.Color na formát použitelný v Excelu.
             range.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black); // nastavení barvy čar
 
-            // Nastavení barvy textu (např. červená)
-            range.Font.Color = ColorTranslator.ToOle(Color.Red);
-            //range.Font.Color = ColorTranslator.ToOle(Color.FromArgb(255, 0, 0));  // Červená barva
-
-            //Tučné písmo
-            range.Font.Bold = true;
-            //range.Font.Italic = true;
-
-            //Velikost písma
-            range.Font.Size = 14;
-
-            //Druh písma
-            range.Font.Name = "Arial";
-            //range.Font.FontStyle = "Arial";
+            SetFontRed(range.Font);
 
             //Vycentruje text vodorovně.
             range.HorizontalAlignment = Exc.XlHAlign.xlHAlignCenter;
@@ -724,12 +725,20 @@ namespace Aplikace.Excel
             //range.Interior.Color = ColorTranslator.ToOle(Color.FromArgb(173, 216, 230));  // Světle modrá
 
             // Automatické přizpůsobení šířky sloupce (např. pro sloupec A)
-            for (int i = 1; i <= data.Item2; i++)
-                xls.Columns[i].AutoFit();
+            //for (int i = 1; i <= data.Item2; i++)
+            //    xls.Columns[i].AutoFit();
+
+            //Nastavení sloupců hromadně
+            //range.EntireColumn.AutoFit();
+            foreach (Exc.Range item in range.Columns)
+                item.AutoFit();
 
             // Automatické přizpůsobení výšky řádku (např. pro řádek 1)
-            xls.Rows[1].AutoFit();
-            xls.Rows[2].AutoFit();
+            foreach (Exc.Range item in range.Rows)
+                item.AutoFit();
+
+            //xls.Rows[1].AutoFit();
+            //xls.Rows[2].AutoFit();
 
             //range 
             //range.Columns["A:Z"].AutoFit();
@@ -737,37 +746,23 @@ namespace Aplikace.Excel
             //range.Rows["2"].AutoFit();
         }
 
-        public static (int,int) Nadpis(Worksheet Xls)
+        public static Exc.Range Nadpisy(Worksheet Xls, Nadpis[] data)
         {
-            var data = new List<Nadpis>() { 
-                new Nadpis { Name = "Equipment\nnumber", Jednotky=""  },
-                new Nadpis { Name = "P&ID\nNumber", Jednotky="" },
-                new Nadpis { Name = "Equipment name", Jednotky="" },
-                new Nadpis { Name = "Power(electric)\n(EU Units)", Jednotky="[kW]" },
-                new Nadpis { Name = "Package unit Power", Jednotky="" },
-                new Nadpis { Name = "Variable speed drive", Jednotky="" },
-                new Nadpis { Name = "PROUD Z TAB. PRO 500V", Jednotky="[A]" },
-                new Nadpis { Name = "Power(electric)\n(US Units)", Jednotky="[HP]" },
-                new Nadpis { Name = "CURRENT FOR 480V", Jednotky="[A]" },
-                new Nadpis { Name = "COPPER CABLE SIZE\n(EU Units)", Jednotky="[mm2]" },
-                new Nadpis { Name = "COPPER CABLE SIZE\n(US Units)", Jednotky="" },
-                new Nadpis { Name = "CABLE LENGHT", Jednotky="[m]" },
-                new Nadpis { Name = "DISTRIBUTOR EA/MCC", Jednotky="" },
-                new Nadpis { Name = "DISTRIBUTOR NUMBER", Jednotky="" },
-            };
-
+    
             int col = 1;
-            //Range["A1"]
+            //Tisk pole data
             foreach (var item in data)
             {
                 Xls.Cells[1, col].Value = item.Name;
                 Xls.Cells[2, col++].Value = item.Jednotky;
-            }   
+            }
 
             // Povolení zalamování textu, aby nový řádek byl viditelný
             //Xls.Range["A1:M1"].WrapText = true;
-            Xls.Range[Xls.Cells[1,1],Xls.Cells[2,col-1]].WrapText = true;
-            return (2, col-1);
+            var Range = Xls.Range[Xls.Cells[1, 1], Xls.Cells[2, col - 1]];
+            //polovlit zalamování
+            Range.WrapText = false;
+            return Range;
         }
 
         /// <summary> uložení dat do excel podle kryterii </summary>
@@ -778,7 +773,7 @@ namespace Aplikace.Excel
 
             int row = 2; int col = 1; 
 
-            //kontrola špatného přpsaní dat souboru
+            //kontrola špatného přepsaní dat souboru
             Exc.Range Kontrola = Xls.Cells[row + 1, col];
             if (!string.IsNullOrEmpty(Kontrola.Value))
             { 
@@ -786,14 +781,13 @@ namespace Aplikace.Excel
                 if (Console.ReadKey().Key != ConsoleKey.A) return; 
             }
 
-
             //Čtení listu excel
             foreach (var radek in Vstup)
             {
                 //Čtení radků excel
                 var cteniPole = new List<string>();
-                if (radek[3] != "" && radek[3] != "0")
-                { 
+                //if (radek[3] != "" && radek[3] != "0")
+                //{ 
                     row++; col=1; 
                     foreach (var item in radek)
                     {
@@ -811,10 +805,11 @@ namespace Aplikace.Excel
                         //    else
                                 Zapis.Value = item;
                         }
-                    }
+                  //  }
                     Xls.Rows[row].AutoFit();
                 }
             }
+            //zalomení
             Xls.Columns["A:Z"].AutoFit();
             return;
         }
@@ -915,7 +910,7 @@ namespace Aplikace.Excel
                 var Pole = new List<string>();
                 //seznam sloupců ze zadání
 
-                //DataRow rada;
+                //DataRow range;
                 var rada = Table.NewRow();
                 int colpomoc = 0;
                 string text = string.Empty;
@@ -1089,35 +1084,40 @@ namespace Aplikace.Excel
             Nadpis(xls, "O1:R1", "Kam", PoleData);
             Nadpis(xls, "S1:T1", "Delka", PoleData);
 
-            xls.Range["G2"].Value = "[mm2]";
-            xls.Range["H2"].Value = "[AWG]";
-            xls.Range["S2"].Value = "[m]";
-            xls.Range["T2"].Value = "[ft]";
+            //xls.Range["G2"].Value = "[mm2]";
+            //xls.Range["H2"].Value = "[AWG]";
+            //xls.Range["S2"].Value = "[m]";
+            //xls.Range["T2"].Value = "[ft]";
         }
 
         public static void Nadpis(Worksheet xls, string pole, string Text, List<List<string>> PoleData)
         {
             // Sloučení buněk od A1 do C1
-            var rada = xls.Range[pole];
+            var range = xls.Range[pole];
             //Koontrola počtu buněk nelze sloučit jen jednu bunku.
-            if (rada.Cells.Count > 1)
-                rada.Merge();
-            rada.Value = Text;
+            if (range.Cells.Count > 1)
+                range.Merge();
+
+            // Nastavení auto šířky sloupce
+            range.WrapText = false;
+
+            //Hodnota bunky
+            range.Value = Text;
 
             //zarovnání
-            rada.HorizontalAlignment = Exc.XlHAlign.xlHAlignCenter;
-            rada.VerticalAlignment = Exc.XlVAlign.xlVAlignCenter;
+            range.HorizontalAlignment = Exc.XlHAlign.xlHAlignCenter;
+            range.VerticalAlignment = Exc.XlVAlign.xlVAlignCenter;
 
             // Další možnosti nastavení tloušťky a barvy okrajů
-            rada.Borders.LineStyle = Exc.XlLineStyle.xlContinuous;
+            range.Borders.LineStyle = Exc.XlLineStyle.xlContinuous;
 
             // Weight: Určuje tloušťku čáry(xlThin, xlMedium, xlThick).
-            rada.Borders.Weight = Exc.XlBorderWeight.xlMedium;  // nebo xlMedium, xlThick - tlusté
+            range.Borders.Weight = Exc.XlBorderWeight.xlMedium;  // nebo xlMedium, xlThick - tlusté
 
             //Color: Převádí barvu z knihovny System.Drawing.Color na formát použitelný v Excelu.
-            rada.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black); // nastavení barvy čar
+            range.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black); // nastavení barvy čar
 
-            SetFont(rada.Font);
+            SetFont(range.Font);
 
             //Formátování nadpisů
             //Exc.Range range = xls.Range["A1", "M1"];
@@ -1125,7 +1125,7 @@ namespace Aplikace.Excel
             //Exc.Range range = xls.Range[xls.Cells[3, 1], xls.Cells[PoleData.Count(), PoleData.First().Count()]];
 
             string v = string.Concat(pole[..^1], (PoleData.Count + 2).ToString());
-            Exc.Range range = xls.Range[v];
+            range = xls.Range[v];
             Ramecek(range.Borders);
         }
 
@@ -1133,7 +1133,7 @@ namespace Aplikace.Excel
         public static void SetFont(Exc.Font Fonty)
         {
             // Nastavení barvy textu (např. červená)
-            Fonty.Color = ColorTranslator.ToOle(Color.Red);
+            //Fonty.Color = ColorTranslator.ToOle(Color.Red);
             //range.Font.Color = ColorTranslator.ToOle(Color.FromArgb(255, 0, 0));  // Červená barva
 
             //Tučné písmo
@@ -1147,6 +1147,12 @@ namespace Aplikace.Excel
             Fonty.FontStyle = "Arial";
         }
 
+        /// <summary> Nastavení Stylu písma červené</summary>
+        public static void SetFontRed(Exc.Font Fonty)
+        {
+            Fonty.Color = ColorTranslator.ToOle(Color.Red);
+            SetFont(Fonty);
+        }
         /// <summary>Orámování rozsahu Rameček </summary>
         public static void Ramecek(Exc.Borders borders)
         {
@@ -1188,7 +1194,8 @@ namespace Aplikace.Excel
 
         /// <summary>Nový dokument Elektro pro přípravu elektro seznamů </summary>
         internal static Worksheet ExcelElektro(string cesta)
-        {    
+        {   
+            //Exc.Application? App;
             Exc.Workbook? Doc;
             Exc.Worksheet? xls;
 
