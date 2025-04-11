@@ -9,10 +9,10 @@ namespace Aplikace.Tridy
 {
     public class Pump
     {
-        public string[] _Pump__locatedOnPIDNumber { get; set; }
+        public string[] _Pump__locatedOnPIDNumber { get; set; } = [];
         public string _Pump__tag { get; set; } = string.Empty;
-        public string[] _Pump__tagSuffix { get; set; }
-        public string _Pump__tagSuffixes { get; set; }
+        public string[] _Pump__tagSuffix { get; set; } = [];
+        public string _Pump__tagSuffixes { get; set; } = string.Empty;
         public string _Pump__quantity { get; set; } = string.Empty;
         public string _Pump__name { get; set; } = string.Empty;
         public string _Pump__docNo { get; set; } = string.Empty;

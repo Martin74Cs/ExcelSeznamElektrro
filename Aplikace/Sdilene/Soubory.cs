@@ -10,9 +10,9 @@ namespace Aplikace.Sdilene
 {
     public static class Soubory
     {
-        public static JsonSerializerSettings nastaveni()
+        public static JsonSerializerSettings Nastaveni()
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings()
+            var settings = new JsonSerializerSettings()
             {
                 Culture = System.Globalization.CultureInfo.GetCultureInfo("cs-CZ"),
                 //formátovaný text
@@ -26,13 +26,12 @@ namespace Aplikace.Sdilene
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
 
                 //DefaultValueHandling = DefaultValueHandling.Ignore,
-
                 //ContractResolver = new IgnoreEmptyStringResolver(),
             };
             return settings;
         }
 
-        public static JsonSerializerSettings nastaveniEn()
+        public static JsonSerializerSettings NastaveniEn()
         {
             var settings = new JsonSerializerSettings()
             {
@@ -67,7 +66,7 @@ namespace Aplikace.Sdilene
             //MessageBox.Show("save");
             // Nastavení formátování JSON s odsazením (entery)
             //var settings = new JsonSerializerSettings { Formatting = Formatting.Indented };
-            string Json = JsonConvert.SerializeObject(values, nastaveni());
+            string Json = JsonConvert.SerializeObject(values, Nastaveni());
             //MessageBox.Show(Json);
             File.WriteAllText(cesta, Json);
             return;
@@ -79,10 +78,10 @@ namespace Aplikace.Sdilene
             if (System.IO.File.Exists(cesta))
             {
                 string jsonString = System.IO.File.ReadAllText(cesta);
-                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, nastaveni());
+                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, Nastaveni()) ?? [];
                 return moje;
             }
-            return new List<T>();
+            return [];
         }
 
         /// <summary> načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
@@ -91,7 +90,7 @@ namespace Aplikace.Sdilene
             if (System.IO.File.Exists(cesta))
             {
                 string jsonString = System.IO.File.ReadAllText(cesta);
-                T moje = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, nastaveni());
+                T moje = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, Nastaveni()) ?? new();
                 return moje;
             }
             return new();
@@ -104,10 +103,10 @@ namespace Aplikace.Sdilene
             {
                 string jsonString = System.IO.File.ReadAllText(cesta);
                 //List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString);
-                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, nastaveniEn());
+                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
                 return moje;
             }
-            return new List<T>();
+            return [];
         }
     }
 }

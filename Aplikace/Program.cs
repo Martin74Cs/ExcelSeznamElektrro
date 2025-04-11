@@ -3,6 +3,7 @@ using Aplikace.Excel;
 using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Tridy;
+using Aplikace.Upravy;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,11 @@ using Exc = Microsoft.Office.Interop.Excel;
 
 //var Ele = new ElektroLoad();
 //Vytvoření nového dokumentu
-ElektroLoad.NovyExcel();
+//ElektroLoad.NovyExcel();
+
+//Lithtchem
+//var LigthChem = new LigthChem();
+LigthChem.Hlavni();
 
 ////Třdění jdenotlivých PS
 //var Filtr = pokus.GroupBy(x => x.cunit.pfx + " " + x.cunit.num)

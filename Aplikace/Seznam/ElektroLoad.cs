@@ -25,12 +25,12 @@ namespace Aplikace.Seznam
 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
             //var TextPole = new string[] { "Tag", "Příkon", "Měnič", "Balená Jednotka", "Popis", "PID"
-            var TextPole = new string[] { "Tag", "Popis", "Prikon", "Menic", "BalenaJednotka", "PID" };
+            string[] TextPole = ["Tag", "Popis", "Prikon", "Menic", "BalenaJednotka", "PID"];
             PouzitProTabulku = [3, 18, 21, 1, 7, 2];
             var Nova = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx";
-            TextPole = new string[] { "Tag", "HP", "Měnič", "Proud", "Delka", "AWG", "BalenaJednotka", "Popis", "Rozvadec", "RozvadecCislo", "PruzezMM2" };
+            TextPole = [ "Tag", "HP", "Měnič", "Proud", "Delka", "AWG", "BalenaJednotka", "Popis", "Rozvadec", "RozvadecCislo", "PruzezMM2" ];
             PouzitProTabulku = [5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45];
             var Stara = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 

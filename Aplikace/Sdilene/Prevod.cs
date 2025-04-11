@@ -73,9 +73,7 @@ namespace Aplikace.Sdilene
         {
             // Zabalíme JSON, pokud začíná polem
             if (json.TrimStart().StartsWith('['))
-            {
                 json = $"{{\"Hlavni\": {json}}}";
-            }
 
             // Použijeme přetíženou metodu, která specifikuje název kořenového elementu
             // Například "Root", můžete zvolit libovolný vhodný název
