@@ -41,11 +41,12 @@ namespace Aplikace.Upravy
                 
                 //toto je vzor pro vytvoření tabulky
                 //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
-                //var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-                Stara.Add(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
-
-                Stara.Add(["P102", "V101", "Míchadlo", "5", "", "DOL", "CYKY 4x4", "100", "MCC", "1",]);
-                Stara.Add(["P102", "V101", "Míchadlo", "50", "", "BJ", "CYKY 4x25", "50", "MCC", "1",]);
+                //var PouzitProTabulku = new int[] { 1, 2, 3, 4,  5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+                Stara.Add(["1",    "2",    "3",             "4",  "5",  "6",    "7",   "8",         "9",        "10",  "11",  "12",     "13",      "14", "15"       ]);
+                         //"Tag",  "PID",  "Equipment name","kW", "BJ", "Menic","Nic", "Power [HP]","Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC"
+                Stara.Add(["P102", "V101", "Míchadlo",      "5",  "BJ", "VSD",  "Nic", "8",         "9",        "4",   "AWG", "100",    "ft",      "MCC", "1"       ]);
+                Stara.Add(["P102", "V101", "Míchadlo",      "50", "",   "VSD",  "NIC", "50",        "9",        "4",   "AWG", "50",     "ft",      "MCC", "1"       ]) ;
+                Stara.Add(["Tag",  "PID",  "Equipment name","kW", "BJ", "Menic","Nic", "Power [HP]","Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC"]) ;
             }
             ExcelApp.ExcelSaveList(xls, Stara);
 
