@@ -244,7 +244,7 @@ namespace Aplikace.Excel
             return Pole;
         }
 
-                /// <summary> uložení dat do excel podle kriterii </summary>
+        /// <summary> uložení dat do excel podle kriterii </summary>
         public static List<Zarizeni> ExelLoadTableTrida(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
         {
             if (!System.IO.File.Exists(cesta)) return [];
@@ -275,7 +275,8 @@ namespace Aplikace.Excel
                     if (!string.IsNullOrEmpty(xxx))
                     {
                         //ukladnní infomací do třídy dle jejího názvu parametru
-                        Zarizeni.NastavVlastnost(obj, TextPole[x++], cteni);
+                        //Zarizeni.NastavVlastnost(obj, TextPole[x++], cteni);
+                        obj[TextPole[x++]] = cteni;
                     }
                 }
                 Test.Add(obj);

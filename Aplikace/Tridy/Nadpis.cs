@@ -1,7 +1,9 @@
 ﻿using Aplikace.Tridy;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +17,10 @@ namespace Aplikace.Tridy
 
     public class Nadpis : Entiry
     {
+        [Display(Name = "Text Nadpisu")]
         public string Name { get; set; }
+
+        [Display(Name = "Jednotky")]
         public string Jednotky { get; set; }
 
         public static List<Nadpis> dataEn() { return [
@@ -48,6 +53,28 @@ namespace Aplikace.Tridy
                 new Nadpis {Id=9, Name = "číslo", Jednotky="[m]" },
             ];
         }
+
+        /// <summary>Volání parametru jako string např. Nadpis[Name]  </summary>
+        public object this[string nazev]
+        {
+            get
+            {
+                var prop = GetType().GetProperty(nazev, BindingFlags.Public | BindingFlags.Instance);
+                if (prop == null) throw new ArgumentException($"Neexistující vlastnost: {nazev}");
+                return prop.GetValue(this);
+            }
+            set
+            {
+                var prop = GetType().GetProperty(nazev, BindingFlags.Public | BindingFlags.Instance);
+                if (prop == null) throw new ArgumentException($"Neexistující vlastnost: {nazev}");
+                prop.SetValue(this, Convert.ChangeType(value, prop.PropertyType));
+            }
+        }
+
+        /// <summary> List vlastností třídy </summary>
+        public List<string> vlastnosti => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                      .Select(p => p.Name)
+                      .ToList();
 
     }
 }

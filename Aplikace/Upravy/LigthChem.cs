@@ -10,6 +10,9 @@ namespace Aplikace.Upravy
     {
         public static void Hlavni()
         {
+            Zarizeni xxx = new Zarizeni();
+            xxx.Vypis();
+
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             string basePath = @"c:\a\LightChem\";
             if(!Directory.Exists(basePath))
@@ -33,9 +36,14 @@ namespace Aplikace.Upravy
             ExcelApp.NadpisSet(xls, range);
 
             if (Stara.Count < 1)
-            { 
+            {
                 //Fake data
-                Stara.Add(["P101", "V101", "Čeradlo", "10", "", "VSD", "CYKY 4x6", "100", "MCC", "1",]);
+                
+                //toto je vzor pro vytvoření tabulky
+                //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
+                //var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+                Stara.Add(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
+
                 Stara.Add(["P102", "V101", "Míchadlo", "5", "", "DOL", "CYKY 4x4", "100", "MCC", "1",]);
                 Stara.Add(["P102", "V101", "Míchadlo", "50", "", "BJ", "CYKY 4x25", "50", "MCC", "1",]);
             }

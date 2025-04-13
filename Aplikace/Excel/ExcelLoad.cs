@@ -13,7 +13,7 @@ namespace Aplikace.Excel
     public class ExcelLoad
     {
 
-        /// <summary> Načtení dpkumentu Ecxel do pole List<List<string>> z a vytvořejí JSON</summary>
+        /// <summary> Načtení dpkumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
         public static List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
         {
             Console.Write("\nProbíná hačítání dat ... ");

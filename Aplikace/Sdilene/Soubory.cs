@@ -10,6 +10,8 @@ namespace Aplikace.Sdilene
 {
     public static class Soubory
     {
+        readonly static Encoding čeština = Encoding.GetEncoding(1250); //funguje čeština
+
         public static JsonSerializerSettings Nastaveni()
         {
             var settings = new JsonSerializerSettings()
