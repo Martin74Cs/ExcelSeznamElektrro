@@ -766,6 +766,7 @@ namespace Aplikace.Excel
             return Range;
         }
 
+
         /// <summary> uložení dat do excel podle kryterii </summary>
         public static void ExcelSaveList(Worksheet Xls, List<List<string>> Vstup)
         {
