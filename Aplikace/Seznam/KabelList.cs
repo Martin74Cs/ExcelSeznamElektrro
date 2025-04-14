@@ -186,7 +186,7 @@ namespace Aplikace.Seznam
                 radek.Delka,
 
                 //20. Delka ft
-                radek.Delka
+                //radek.Delka
             };
                 
             
@@ -262,7 +262,7 @@ namespace Aplikace.Seznam
                 radek.Delka,
 
                 //20. Delka ft
-                radek.Delka
+                //radek.Delka
             };
 
 

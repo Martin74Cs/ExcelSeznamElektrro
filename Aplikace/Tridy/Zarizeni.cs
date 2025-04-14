@@ -46,7 +46,7 @@ namespace Aplikace.Tridy
         public string BalenaJednotka { get; set; } = string.Empty;
         public string Menic { get; set; } = string.Empty;
         public string Nic { get; set; } = string.Empty;
-        public double HP => double.TryParse(Prikon, out double hodnota) ? hodnota * 1.3333 : 0; // Převod textu na číslo a součet
+        public double HP => double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0; // Převod textu na číslo a na koně
         public string Proud { get; set; } = string.Empty;
         public string PruzezMM2 { get; set; } = string.Empty;
         public string AWG { get; set; } = string.Empty;

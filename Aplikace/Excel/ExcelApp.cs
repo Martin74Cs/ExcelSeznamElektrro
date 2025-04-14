@@ -1282,21 +1282,26 @@ namespace Aplikace.Excel
 
         }
 
-        public static void ExcelSaveNadpis(Worksheet xls, List<List<string>> PoleData)
+        public static void ExcelSaveNadpis(Worksheet xls, List<List<string>> Ramecek)
         {
             xls.Activate();
-            Nadpis(xls, "A1:D1", "Označeni", PoleData);
-            Nadpis(xls, "E1:H1", "Kabel", PoleData);
-            Nadpis(xls, "I1:I1", "Zařízení", PoleData);
-            Nadpis(xls, "J1:M1", "Odkud", PoleData);
-            Nadpis(xls, "N1:N1", "", PoleData);
-            Nadpis(xls, "O1:R1", "Kam", PoleData);
-            Nadpis(xls, "S1:T1", "Delka", PoleData);
+            Nadpis(xls, "A1:D1", "Označeni", Ramecek);
+            Nadpis(xls, "E1:H1", "Kabel", Ramecek);
+            Nadpis(xls, "I1:I1", "Zařízení", Ramecek);
+            Nadpis(xls, "J1:M1", "Odkud", Ramecek);
+            Nadpis(xls, "N1:N1", "", Ramecek);
+            Nadpis(xls, "O1:R1", "Kam", Ramecek);
+            Nadpis(xls, "S1:S1", "Delka", Ramecek);
 
             //xls.Range["G2"].Value = "[mm2]";
             //xls.Range["H2"].Value = "[AWG]";
             //xls.Range["S2"].Value = "[m]";
             //xls.Range["T2"].Value = "[ft]";
+        }
+
+        public static void Nadpis(Worksheet xls, string pole, string Text)
+        {
+            Nadpis(xls, pole, Text, []);
         }
 
         public static void Nadpis(Worksheet xls, string pole, string Text, List<List<string>> PoleData)

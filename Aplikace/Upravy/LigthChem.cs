@@ -83,7 +83,7 @@ namespace Aplikace.Upravy
             //Nová záložka
             xls = ExcelApp.PridatNovyList(doc, "Kabely");
 
-            //Doplnení nadpisu
+            //Doplnení nadpisu a ramecku
             ExcelApp.ExcelSaveNadpis(xls, PoleData);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů

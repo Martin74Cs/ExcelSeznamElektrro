@@ -176,7 +176,7 @@ namespace Aplikace.Seznam
             xls = ExcelApp.PridatNovyList(doc, "Kabely");
 
             //doplnení nadpisu
-            ExcelApp.ExcelSaveNadpis(xls, PoleData);
+            ExcelApp.ExcelSaveNadpis(xls);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
             ExcelApp.ExcelSaveTable(xls, PoleData, 3);
