@@ -1,4 +1,5 @@
 ﻿using Aplikace.Excel;
+using Aplikace.Tridy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Aplikace.Seznam
 {
     public class KabelList
     {
-        public static List<List<string>> Kabely(List<List<string>> PoleData)
+        public static List<List<string>> Kabely(List<Zarizeni> PoleData)
         {
             //string[] TextPole =     ["Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "Proud500", "HP", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC"];
             //int[] PouzitProTabulku1 = [3,   2,      7,      18,         1,              21,         59,     56,     60,         63,     64,     61,     62,         65,     66];
@@ -25,53 +26,51 @@ namespace Aplikace.Seznam
                 var Data = new List<string>
                 {
                     //1. Kabel
-                    radek[6],
+                    radek.Tag,
 
                     //2. odkud Mcc
-                    radek[8],
+                    radek.Rozvadec,
 
                     //3. Odkud číslo
-                    radek[9],
+                    radek.RozvadecCislo,
 
                     //4. Kabel
                     "WL 01"
                 };
 
                 //5. Jmeno kabelu
-                if (radek[5] == "VSD")
+                if (radek.Menic == "VSD")
                     Data.Add("ÖLFLEX CLASSIC 110 CY");
                 else
                     Data.Add("CYKY");
 
                 //6. Počet žil
-                if (radek[5] == "VSD")
+                if (radek.Menic == "VSD")
                     Data.Add("4x");
                 else
                     Data.Add("5x");             
 
-                //7. Průřez
-                Data.Add(radek[9]);
+                //7. proud
+                Data.Add(radek.PruzezMM2);
 
                 //8. Průřez
-                Data.Add(radek[10]);
-
+                Data.Add(radek.PruzezMM2);
 
                 //9. zařízení
-                if (radek[4] == "PU")
+                //Pokud začíná na P ne B jedná se  balenou jednotku
+                if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B'))
                     Data.Add("Přívod");
                 else
                     Data.Add("Motor");
 
-
-
                 //10. odkud tag
-                Data.Add(radek[0]);
+                Data.Add(radek.Tag);
 
                 //11. odkud Mcc
-                Data.Add(radek[13]);
+                Data.Add(radek.Rozvadec);
 
                 //12. Odkud číslo
-                Data.Add(radek[14]);
+                Data.Add(radek.RozvadecCislo);
 
                 //13. Svorka rozvaděče
                 Data.Add("X 01");
@@ -83,16 +82,16 @@ namespace Aplikace.Seznam
 
 
                 //15. kam tag
-                Data.Add(radek[0]);
+                Data.Add(radek.Tag);
 
                 //16. kam objekt nebo patro
                 Data.Add("SO 01");
 
                 //17.kam Zažizeni
                 //18.kam Svorka
-                if (radek[4] == "PU")
+                if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B'))
                 {
-                    Data.Add("PU 01");
+                    Data.Add(radek.BalenaJednotka);
                     Data.Add("X 01");
                 }
                 else 
@@ -101,47 +100,41 @@ namespace Aplikace.Seznam
                     Data.Add("X 01");
                 }
 
-
-
                 //19. Delka m
-                Data.Add(radek[11]);
+                Data.Add(radek.Delka);
 
                 //20 Delka ft
-                Data.Add(radek[12]);
+                //Data.Add(radek.Delka);
 
                 //přidání řádku do pole
                 NovaData.Add(Data);
 
                 //Ovládací kabel PTC
-                if (radek[4] != "PU")
+                if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
                 { 
                   NovaData.Add(KabelPTC(radek));
                   NovaData.Add(KabelOvladani(radek));
                 }
-
-
-
             }
             return NovaData;
         }
 
-        public static List<string> KabelPTC(List<string> radek)
+        public static List<string> KabelPTC(Zarizeni radek)
         {
             //Ovládací kabel PTC
             var Data = new List<string>
             {
                 //1. Kabel tag
-                radek[0],
+                radek.Tag,
 
                 //2. Kabel MCC
-                radek[13],
+                radek.Rozvadec,
 
                 //3. Kabel MCC cislo
-                radek[14],
+                radek.RozvadecCislo,
 
                 //4. Kabel
                 "WS 01",
-
 
 
                 //5. Kabel
@@ -162,13 +155,13 @@ namespace Aplikace.Seznam
 
 
                 //10. odkud tag
-                radek[0],
+                radek.Tag,
 
                 //11. odkud Mcc
-                radek[13],
+                radek.Rozvadec,
 
                 //12. Odkud číslo
-                radek[14],
+                radek.RozvadecCislo,
 
                 //13. Odkud Svorka
                 "X 02",
@@ -178,7 +171,7 @@ namespace Aplikace.Seznam
 
 
                 //15. kam tag
-                radek[0],
+                radek.Tag,
 
                 //16. kam číslo
                 "SO 01",
@@ -189,32 +182,30 @@ namespace Aplikace.Seznam
                 //18. kam Svorka
                 "X 02",
 
-
-
                 //19. Delka m
-                radek[11],
+                radek.Delka,
 
                 //20. Delka ft
-                radek[12]
+                radek.Delka
             };
                 
             
             return Data;
         }
 
-        public static List<string> KabelOvladani(List<string> radek)
+        public static List<string> KabelOvladani(Zarizeni radek)
         {
             //Ovládací kabel PTC
             var Data = new List<string>
             {
                 //1. Kabel tag
-                radek[0],
+                radek.Tag,
 
                 //2. odkud Mcc
-                radek[13],
+                radek.Rozvadec,
 
                 //3. Odkud číslo
-                radek[14],
+                radek.RozvadecCislo,
 
                 //4. Kabel
                 "WS 02",
@@ -239,13 +230,13 @@ namespace Aplikace.Seznam
 
 
                 //10. odkud tag
-                radek[0],
+                radek.Tag,
 
                 //11. odkud Mcc
-                radek[13],
+                radek.Rozvadec,
 
                 //12. Odkud číslo
-                radek[14],
+                radek.RozvadecCislo,
 
                 //13. Odkud Svorka
                 "X 03",
@@ -256,7 +247,7 @@ namespace Aplikace.Seznam
 
 
                 //15. kam tag
-                radek[0],
+                radek.Tag,
 
                 //16. kam číslo
                 "SO 01",
@@ -267,14 +258,11 @@ namespace Aplikace.Seznam
                 //18. kam Svorka
                 "X 01",
 
-
-
-
                 //19. Delka m
-                radek[11],
+                radek.Delka,
 
                 //20. Delka ft
-                radek[12]
+                radek.Delka
             };
 
 

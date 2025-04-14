@@ -47,7 +47,6 @@ namespace Aplikace.Upravy
             Vypis(pokus);
 
             //ExcelApp Ex = new ExcelApp();
-
             //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
             string cestacelek = Path.Combine(BaseAdres, @"zarizeni_vse.xlsx");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace Aplikace.Tridy
 {
 
-    public class Zarizeni
+    public class Zarizeni : Entity
     {
         public Zarizeni() { }
         public Zarizeni(string Tag, string PID, string Popis, string Prikon ,string BalenaJednotka, string Menic , string Nic, string HPstr , string Proud, string PruzezMM2, string AWG, 
@@ -45,11 +46,11 @@ namespace Aplikace.Tridy
         public string BalenaJednotka { get; set; } = string.Empty;
         public string Menic { get; set; } = string.Empty;
         public string Nic { get; set; } = string.Empty;
-        public double HP => double.TryParse(Prikon, out double hodnota) ? hodnota * 3.29 : 0; // Převod textu na číslo a součet
+        public double HP => double.TryParse(Prikon, out double hodnota) ? hodnota * 1.3333 : 0; // Převod textu na číslo a součet
         public string Proud { get; set; } = string.Empty;
         public string PruzezMM2 { get; set; } = string.Empty;
         public string AWG { get; set; } = string.Empty;
-        public string Delka { get; set; } = string.Empty;
+        public string Delka { get; set; } = "100";
         public string Delkaft { get; set; } = string.Empty;
 
         public string Rozvadec { get; set; } = string.Empty;
@@ -57,6 +58,8 @@ namespace Aplikace.Tridy
 
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
         public string Druh { get; set; } = string.Empty;
+        public string Napeti { get; set; } = "400";
+        public string Radek { get; set; }
 
         /// <summary>Rozvaděč</summary>
 
@@ -119,6 +122,7 @@ namespace Aplikace.Tridy
         }
 
         /// <summary> List vlastností třídy </summary>
+        [JsonIgnore]
         public List<string> vlastnosti => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                       .Select(p => p.Name)
                        .ToList();
