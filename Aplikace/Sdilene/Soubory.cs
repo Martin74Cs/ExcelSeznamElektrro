@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -109,6 +110,23 @@ namespace Aplikace.Sdilene
                 return moje;
             }
             return [];
+        }
+
+        public static void KillExcel()
+        {
+            foreach (var process in Process.GetProcessesByName("EXCEL"))
+            {
+                try
+                {
+                    process.Kill();
+                    process.WaitForExit();
+                    Console.WriteLine($"Proces {process.Id} ukončen");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Chyba při ukončování: {ex.Message}");
+                }
+            }
         }
     }
 }

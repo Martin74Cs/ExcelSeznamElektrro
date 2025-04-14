@@ -106,8 +106,7 @@ namespace Aplikace.Excel
             // pokud neexistuje vlastní šablona použij výchozí
             if (!File.Exists(sablona))
                return VytvorNovyDokument();
-            Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
-            if (App == null) return null;
+            if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
             App.Visible = true;
             if(File.Exists(cesta))
                 File.Delete(cesta);
@@ -144,8 +143,7 @@ namespace Aplikace.Excel
         public static Exc.Workbook? DokumetExcel(string Cesta)
         {
             //Exc.Application App = AplikaceExcel();
-            Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
-            if (App == null) return null;
+            if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
             App.Visible = true;
 
             Console.Write("\nKontrolaOtevenehoNeboOtevreniSobroruExel - OK");
@@ -245,6 +243,115 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
+        public static List<Zarizeni> ExelTable(Exc.Worksheet Zal, string zalozka, int Radek)
+        {
+            var dir = new Dictionary<int, string>() {
+                {1, "Radek"     },
+                {2, "Tag"       },
+                {4, "Popis"     },
+                {11, "Menic"    },
+                {10, "Prikon"   },
+                {18, "BalenaJednotka"   },
+            };
+            int pocet = 1;
+            string prikon = string.Empty;
+            //var cteniPole = new List<string>();
+            //var Pole = new List<List<string>>();
+            var Pole = new List<Zarizeni>();
+            Console.WriteLine($"[Rows.Col]=[{Zal.UsedRange.Rows.Count},{Zal.UsedRange.Columns.Count}]");
+            for ( int i = Radek; i < Zal.UsedRange.Rows.Count; i++)
+            {
+                //int x = 0;
+                //čteniPole = [];
+                //čtení jednotlivých řádků excelu
+                var jeden = new Zarizeni();
+                for (int j = 1; j < Zal.UsedRange.Columns.Count; j++)
+                {
+                    //přeskok příkon prazdný
+                    prikon = Convert.ToString(Zal.Cells[i, 10].Value);
+                    if (string.IsNullOrEmpty(prikon) || prikon == "0") { jeden.Prikon = ""; break; } 
+
+                    //Čtení buňky
+                    Exc.Range Pok = Zal.Cells[i, j];
+                    string xxx = Convert.ToString(Pok.Value);
+
+                    //přeskočit prázdné buňky a nulové
+                    if (string.IsNullOrEmpty(xxx) || xxx == "0") continue;
+
+
+                    //ukladnní infomací do třídy dle jejího názvu parametru
+                    if (dir.TryGetValue(j, out string value))
+                        jeden[value] = xxx; 
+                }
+                if (!string.IsNullOrEmpty(jeden.Prikon))
+                { 
+                    Pole.Add(jeden);
+                    Console.WriteLine($"Radek {pocet++} - přídán");
+                }
+
+                //if (!string.IsNullOrEmpty(Pole[1]) && Pole[1] != "0")
+                //{
+                //    Pole.Add(Pole);
+                //    Console.Write("\nRadek=" + i.ToString() + "\t" + Pole[0]);
+                //}
+                //Pojistka
+                //if (i > 100 && Pole.Last().First().Length < 2) break;
+            }
+            Console.WriteLine("Zavřít sešit Excel");
+            //Xls.Save();
+            //Zal.Parent.Close();
+            //Console.Write("\nSave OK");
+            //ExcelQuit(Xls);
+            //Console.Write("\nUkončení Excel");
+            return Pole;
+        }
+
+        /// <summary> uložení dat do excel podle kriterii </summary>
+        public static void ClassToExcel(Exc.Worksheet xls, string zalozka, int Radek, List<Zarizeni> Pole)
+        {
+            var dir = new Dictionary<int, string>() {
+            {1,"Tag"},
+            {2,"Popis"},
+            {3,"Prikon"},
+            {4,"Napeti"},
+            {5,"Proud"},
+            {6,"BalenaJednotka"},
+            {7,"Menic"},
+            {8,"Druh"},
+            {9,"PruzezMM2"},
+            {10,"Delka"},
+            {11,"Rozvadec"},
+            {12,"RozvadecCislo"},
+
+            {100,"PID"},
+            {101,"Nic"},
+            {102,"HP"},
+            {103,"AWG"},
+            {105,"Napeti"},
+            {106,"Radek"},
+            };
+
+            //var cteniPole = new List<string>();
+            //var Pole = new List<List<string>>();
+            int Row = 3; 
+            Console.WriteLine($"[Rows.Col]=[{xls.UsedRange.Rows.Count},{xls.UsedRange.Columns.Count}]");
+            foreach (var item in Pole)
+            {
+                for (int Col = 1; Col < 15; Col++)
+                {
+                    Exc.Range Pok = xls.Cells[Row, Col];
+                    if (dir.TryGetValue(Col, out string value) && !string.IsNullOrEmpty(value))
+                        Pok.Value = item[value];
+                }
+                Row++;
+            }
+                for (int i = 1; i < 15; i++)
+                    xls.Columns[i].AutoFit();
+            return;
+        }
+
+
+        /// <summary> uložení dat do excel podle kriterii </summary>
         public static List<Zarizeni> ExelLoadTableTrida(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
         {
             if (!System.IO.File.Exists(cesta)) return [];
@@ -281,7 +388,7 @@ namespace Aplikace.Excel
                 }
                 Test.Add(obj);
 
-                if (i > 100 && obj.Tag.Length < 2) break;
+                //if (i > 100 && obj.Tag.Length < 2) break;
             }
             Console.Write("\nUkončení Excel");
             //Xls.Save();
@@ -766,6 +873,7 @@ namespace Aplikace.Excel
             return Range;
         }
 
+
         /// <summary> uložení dat do excel podle kryterii </summary>
         public static void ExcelSaveList(Worksheet Xls, List<List<string>> Vstup)
         {
@@ -814,8 +922,105 @@ namespace Aplikace.Excel
             Xls.Columns["A:Z"].AutoFit();
             return;
         }
+        /// <summary> uložení dat do excel podle kryterii </summary>
+        public static void ExcelSaveClass(Worksheet Xls, List<Zarizeni> Vstup)
+        {
+            //var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
+            //var PouzitProTabulku = new int[] { 3, 2, 7, 18, 1, 21, 63, 64, 61, 62, 65, 66 };
+            int row = 2; int col = 1;
 
-        /// <summary> uložení dat do excel podle kdyterii </summary>
+            //Čtení listu tridy
+            foreach (var radek in Vstup)
+            {
+                //Čtení radků excel
+                //var cteniPole = new List<string>();
+                //if (radek[3] != "" && radek[3] != "0")
+                //{ 
+                              
+                row++; col = 1;
+                //zapis qwe
+                var Zapis = Xls.Cells[row, col++];
+                switch (col)
+                {
+                    case 1: 
+                        Zapis.value = radek.Tag;    
+                        break;
+                    case 2:
+                        //pid
+                        Zapis.value = radek.PID;
+                        break;
+                    case 3:
+                        //popis
+                        Zapis.value = radek.Popis;
+                        break;
+                    case 4:
+                        //prikon
+                        Zapis.value = radek.Prikon;
+                        break;
+                    case 5:
+                        //balená jednotka
+                        Zapis.value = radek.BalenaJednotka;
+                        break;
+                    case 6:
+                        //menic
+                        Zapis.value = radek.Menic;
+                        break;
+                    case 7:
+                        //proud
+                        Zapis.value = radek.Proud;
+                        break;
+                    case 8:
+                        //HP
+                        Zapis.value = radek.HP;
+                        break;
+                    case 9:
+                        //proud
+                        if (double.TryParse(radek.Proud, out double proud1))
+                            Zapis.value = (proud1 * 500 / 480).ToString();
+                        break;
+                    case 10:
+                        //PruzezMM2
+                        Zapis.value = radek.PruzezMM2;
+                        break;
+                    case 11:
+                        //Pruzez US unit
+                        //Zapis.value = radek.PruzezMM2;
+                        break;
+                    case 12:
+                        //delka
+                        Zapis.value = radek.Delka;
+                        break;
+                    case 13:
+                        //delka stopy
+                        //Zapis.value = radek.Delka;
+                        break;
+                    case 14:
+                        //royvaděč
+                        Zapis.value = radek.Rozvadec;
+                        break;
+                    case 15:
+                        //royvaděč
+                        Zapis.value = radek.RozvadecCislo;
+                        break;
+                    default:
+                        break;
+                }
+
+                //if (double.TryParse(item, out double cislo))
+                //    Zapis.Value = cislo;
+                //else
+                //{
+                //    Zapis.Value = item;
+                //}
+                //  }
+                Xls.Rows[row].AutoFit();
+            }
+            //zalomení
+            Xls.Columns["A:Z"].AutoFit();
+            return;
+        }
+
+        /// <summary> uložení dat do excel podle kryterii </summary>
         public static void ExcelSaveProud(Worksheet ListExcel, List<List<string>> Vstup)
         {
 
@@ -948,8 +1153,11 @@ namespace Aplikace.Excel
         //ukončení worksheet
         public static bool ExcelQuit(Exc.Workbook work)
         {
+            //Uložení dokumentu
+            work.Close();
+
             // Ukončení aplikace Excel
-            work.Application.Quit();
+            //work.Application.Quit();
 
             // Uvolněte paměť
             GC.Collect();
@@ -1074,21 +1282,26 @@ namespace Aplikace.Excel
 
         }
 
-        public static void ExcelSaveNadpis(Worksheet xls, List<List<string>> PoleData)
+        public static void ExcelSaveNadpis(Worksheet xls, List<List<string>> Ramecek)
         {
             xls.Activate();
-            Nadpis(xls, "A1:D1", "Označeni", PoleData);
-            Nadpis(xls, "E1:H1", "Kabel", PoleData);
-            Nadpis(xls, "I1:I1", "Zařízení", PoleData);
-            Nadpis(xls, "J1:M1", "Odkud", PoleData);
-            Nadpis(xls, "N1:N1", "", PoleData);
-            Nadpis(xls, "O1:R1", "Kam", PoleData);
-            Nadpis(xls, "S1:T1", "Delka", PoleData);
+            Nadpis(xls, "A1:D1", "Označeni", Ramecek);
+            Nadpis(xls, "E1:H1", "Kabel", Ramecek);
+            Nadpis(xls, "I1:I1", "Zařízení", Ramecek);
+            Nadpis(xls, "J1:M1", "Odkud", Ramecek);
+            Nadpis(xls, "N1:N1", "", Ramecek);
+            Nadpis(xls, "O1:R1", "Kam", Ramecek);
+            Nadpis(xls, "S1:S1", "Delka", Ramecek);
 
             //xls.Range["G2"].Value = "[mm2]";
             //xls.Range["H2"].Value = "[AWG]";
             //xls.Range["S2"].Value = "[m]";
             //xls.Range["T2"].Value = "[ft]";
+        }
+
+        public static void Nadpis(Worksheet xls, string pole, string Text)
+        {
+            Nadpis(xls, pole, Text, []);
         }
 
         public static void Nadpis(Worksheet xls, string pole, string Text, List<List<string>> PoleData)

@@ -66,7 +66,7 @@ namespace Aplikace.Seznam
 
         public static void NovyExcel()
         {
-            //volba kdy jsem doma a kdy v práci - volba dle nazvu PC
+            //Volba kdy jsem doma a kdy v práci - volba dle nazvu PC
             bool Doma = true;
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             string basePath = @"c:\a\Natron\2024.09.03";
@@ -166,17 +166,17 @@ namespace Aplikace.Seznam
             //TextPole = new string[] { "Tag", "PId" "Jmeno", "kW", "BalenaJednotka", "Menic" "Proud500",  "HP"  "Proud480", "mm2" , "AWG" , "Delkam",  Delkaft,     MCC ,  cisloMCC  };
             var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-            //v poli jsou čísla posunuty o jedničku
+            //V poli jsou čísla posunuty o jedničku
             var PoleData = ExcelApp.ExcelLoadWorksheet(xls, PouzitProTabulku);
 
             //Úprava načteného listu seznamu zařízení elektro 
-            PoleData = KabelList.Kabely(PoleData);
+            //PoleData = KabelList.Kabely(PoleData);
 
             //Nová záložka
             xls = ExcelApp.PridatNovyList(doc, "Kabely");
 
             //doplnení nadpisu
-            ExcelApp.ExcelSaveNadpis(xls, PoleData);
+            ExcelApp.ExcelSaveNadpis(xls);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
             ExcelApp.ExcelSaveTable(xls, PoleData, 3);
