@@ -18,7 +18,8 @@ namespace Aplikace.Upravy
 
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             string basePath = @"c:\a\LightChem\Elektro\";
-            if(!Directory.Exists(basePath))
+            string filename = "Seznam.xlsx";
+            if (!Directory.Exists(basePath))
                 Directory.CreateDirectory(basePath);
             //string cesta1 = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx");
 
@@ -37,7 +38,7 @@ namespace Aplikace.Upravy
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
 
             //vytvoření nebo otevření dokumentu elektro
-            var cesta = Path.Combine(basePath, "Seznam.xlsx");
+            var cesta = Path.Combine(basePath, filename);
             Worksheet xls = ExcelApp.ExcelElektro(cesta);
             Workbook doc = xls.Parent;
 
@@ -91,6 +92,9 @@ namespace Aplikace.Upravy
             //vyzváření seznamu kabelů podle krytérii
             Pridat.Soucet(doc, PoleData);
             Application ex = doc.Parent;
+            if(!File.Exists(cesta))
+                doc.SaveAs(cesta);
+
             doc.Close(false);
 
             ex.Quit();
