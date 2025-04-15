@@ -14,7 +14,7 @@ namespace Aplikace.Excel
     {
 
         /// <summary> Načtení dpkumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
-        public static List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
+        public static List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek)
         {
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
@@ -40,6 +40,8 @@ namespace Aplikace.Excel
             }
         }
 
+
+
         /// <summary> Načtení dpkumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
         public static List<Zarizeni> DataExcel(string cesta, string Tabulka, int Radek)
         {
@@ -47,36 +49,35 @@ namespace Aplikace.Excel
             //začíná sloupcem číslo 1
 
             //var Pole = new List<List<string>>();
-            var Pole = new List<Zarizeni>();
-            string Soubor = Path.GetFileName(cesta);
-            string Adresar = Path.GetDirectoryName(cesta);
-            string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
+            //var Pole = new List<Zarizeni>();
+            //string Soubor = Path.GetFileName(cesta);
+            //string Adresar = Path.GetDirectoryName(cesta);
+            string json = Path.ChangeExtension(cesta, ".json");
             if (File.Exists(json))
             {
-                Pole = Soubory.LoadJsonList<Zarizeni>(json);
+                return Soubory.LoadJsonList<Zarizeni>(json);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             }
-            else
-            {
-                if (!System.IO.File.Exists(cesta)) return [];
 
-                var ExcelApp = new ExcelApp();
-                ExcelApp.DokumetExcel(cesta);
+            if (!System.IO.File.Exists(cesta)) return [];
 
-                if (ExcelApp.Xls == null) return [];
-                Console.WriteLine("Dokument excel - Otevřen");
+            var ExcelApp = new ExcelApp();
+            ExcelApp.DokumetExcel(cesta);
 
-                if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
-                Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
-                Pole = ExcelApp.ExelTable(Radek,Tabulka);
-                //Console.WriteLine("Zavřit dokument ");
-                ExcelApp.Doc.Close();
+            if (ExcelApp.Xls == null) return [];
+            Console.WriteLine("Dokument excel - Otevřen");
 
-                //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-                if (Pole.Count > 1) Pole.SaveJsonList(json);
-            }
+            if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+            Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
+            var Pole = ExcelApp.ExelTable(Radek,Tabulka);
+            //Console.WriteLine("Zavřit dokument ");
+            ExcelApp.Doc.Close();
+
+            //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
+            if (Pole.Count > 1) Pole.SaveJsonList(json);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");
             return Pole;
+            
         }
 
 

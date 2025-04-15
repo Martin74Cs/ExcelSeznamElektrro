@@ -13,7 +13,7 @@ namespace Aplikace.Upravy
     {
         public static void Hlavni()
         {
-            Zarizeni xxx = new Zarizeni();
+            var xxx = new Zarizeni();
             xxx.Vypis();
 
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
@@ -36,10 +36,11 @@ namespace Aplikace.Upravy
             //Výpočet položky proud
             Stara.AddProud();
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+            Prevod.JsonToCsv(Stara, Path.ChangeExtension(cesta1, ".csv"));
 
             //vytvoření nebo otevření dokumentu elektro
-            var cesta = Path.Combine(basePath, filename);
-            ExcelApp ExcelApp = new ExcelApp();
+             var cesta = Path.Combine(basePath, filename);
+            var ExcelApp = new ExcelApp();
             //var (App, Doc ,Xls) = ExcelApp.ExcelElektro(cesta);
             ExcelApp.ExcelElektro(cesta);
 
@@ -58,7 +59,7 @@ namespace Aplikace.Upravy
                 //Stara.Add(["1",     "2",    "3",    "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
             //}
             //ExcelApp.ExcelSaveClass(xls, Stara);
-            ExcelApp.ClassToExcel("Seznam Elektro", Row: 3, Stara);
+            ExcelApp.ClassToExcel(Row: 3, Stara);
             //Doplnění vzorců doExel
             //ExcelApp.ExcelSaveVzorce(xls, Stara.Count);
 

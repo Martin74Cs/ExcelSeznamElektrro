@@ -21,25 +21,28 @@ namespace Aplikace.Seznam
         {
             string cesta = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
-            var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "Motory500V", 2, []);
+            var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "Motory500V", 2);
+            Motory500.Vypis();
 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
             //var TextPole = new string[] { "Tag", "Příkon", "Měnič", "Balená Jednotka", "Popis", "PID"
-            string[] TextPole = ["Tag", "Popis", "Prikon", "Menic", "BalenaJednotka", "PID"];
+            //string[] TextPole = ["Tag", "Popis", "Prikon", "Menic", "BalenaJednotka", "PID"];
             PouzitProTabulku = [3, 18, 21, 1, 7, 2];
-            var Nova = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
+            var Nova = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7);
 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx";
-            TextPole = [ "Tag", "HP", "Měnič", "Proud", "Delka", "AWG", "BalenaJednotka", "Popis", "Rozvadec", "RozvadecCislo", "PruzezMM2" ];
+            //TextPole = [ "Tag", "HP", "Měnič", "Proud", "Delka", "AWG", "BalenaJednotka", "Popis", "Rozvadec", "RozvadecCislo", "PruzezMM2" ];
             PouzitProTabulku = [5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45];
-            var Stara = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
+            var Stara = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7);
 
             // Najít chybějící klíče v obou seznamech
             // Najdeme položky v Nova, které nejsou v Stara.
-            var missingFromList2 = FindMissingKeys(Nova, Stara);
+            var MissingFromList2 = FindMissingKeys(Nova, Stara);
+            Console.WriteLine(MissingFromList2);
 
             // Najdeme položky v Stara, které nejsou v Nova.
-            var missingFromList1 = FindMissingKeys(Stara, Nova);
+            var MissingFromList1 = FindMissingKeys(Stara, Nova);
+            Console.WriteLine(MissingFromList1);
 
             //Cesta Excel pro změny 
             cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
@@ -52,7 +55,7 @@ namespace Aplikace.Seznam
             new ExcelApp().ExcelSaveSloupec(cesta, PouzitProZapis, zalozka: "M_equipment_list", PouzitProTabulku, Stara);
             Console.Write("\nFunguje --- ExelSaveSlopec ");
 
-            Console.WriteLine(missingFromList2);
+            Console.WriteLine(MissingFromList2);
         }
 
         static List<List<string>> FindMissingKeys(List<List<string>> sourceList, List<List<string>> compareList)
@@ -107,7 +110,7 @@ namespace Aplikace.Seznam
                 var PouzitProTabulku1 = new int[] { 3, 2, 7, 18, 1, 21, 59, 56, 60, 63, 64, 61, 62, 65, 66 };
                 //převod                           3, 2, 7, 18, 1, 21, A, HP,  A, mm2, AWG, m,  ft  mcc cislo
                 //var Kotrola                    { 1,  2,     3,       4,           5,              6,      7,          8,      9,        10,   11,     12,         13,         14,     15 };
-                var Stara = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku1, "M_equipment_list", 7, TextPole);
+                var Stara = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku1, "M_equipment_list", 7);
                 //var Zakalad = Load.LoadDataExcelTrida(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
                 //vytvoření nebo otevření dokumentu elekro
@@ -130,7 +133,7 @@ namespace Aplikace.Seznam
                     //naštení tabulky proudů 
                     cesta = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
                     PouzitProTabulku1 = [1, 2, 3];
-                    var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku1, "Motory500V", 2, []);
+                    var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku1, "Motory500V", 2);
                     //doplnění tabulky proudů rabulky Excel
                     ExcelApp.ExcelSaveProud(Motory500);
                 }

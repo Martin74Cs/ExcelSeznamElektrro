@@ -29,6 +29,7 @@ namespace Aplikace.Sdilene
                 MissingMemberHandling = MissingMemberHandling.Ignore,
 
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                StringEscapeHandling = StringEscapeHandling.Default,
 
                 //DefaultValueHandling = DefaultValueHandling.Ignore,
                 //ContractResolver = new IgnoreEmptyStringResolver(),

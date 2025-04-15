@@ -9,10 +9,11 @@ using System.Xml.Linq;
 using System.Reflection.PortableExecutable;
 using System.Data;
 using System.Text.Json.Nodes;
+using Aplikace.Tridy;
 
 namespace Aplikace.Sdilene
 {
-    public class Prevod
+    public static class Prevod
     {
         public static void DataTabletoToCsv(DataTable Table, string Soubor)
         {
@@ -37,6 +38,11 @@ namespace Aplikace.Sdilene
                 sw.WriteLine(Pole[..^1]);
             }
         }
+        public static void JsonToCsv(List<Zarizeni> json, string file)
+        {
+            string Json = JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
+            JsonToCsv(Json, file);
+        }
 
         public static void JsonToCsv(string json, string file)
         {
@@ -50,9 +56,10 @@ namespace Aplikace.Sdilene
                 var headers = ((JObject)jsonArray[0]).Properties().Select(p => p.Name).ToArray();
 
                 // Prepare the CSV file
-                using (var writer = new StreamWriter(file))
+                //using (var writer = new StreamWriter(file, false ,Encoding.UTF8))
+                using (var writer = new StreamWriter(file, false, new UTF8Encoding(true)))
                 {
-                    // Write the headers
+                    // Write the Hlavička
                     writer.WriteLine(string.Join(";", headers));
 
                     // Write data rows
@@ -145,6 +152,14 @@ namespace Aplikace.Sdilene
             XDeclaration declaration = doc.Declaration ?? new XDeclaration("1.0", "utf-8", "yes");
 
             return $"{declaration}{Environment.NewLine}{doc}";
+        }
+
+        public static void Vypis(this List<List<string>> Pole)
+        {
+            foreach (var item in Pole)
+            {
+
+            }
         }
 
     }

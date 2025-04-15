@@ -334,7 +334,7 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public void ClassToExcel(string zalozka, int Row, List<Zarizeni> Pole)
+        public void ClassToExcel(int Row, List<Zarizeni> Pole)
         {
             var dir = new Dictionary<int, string>() {
             {1,"Tag"},
@@ -499,7 +499,7 @@ namespace Aplikace.Excel
         {
             string cesta1 = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
-            var Motory500 = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2, []);
+            var Motory500 = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2);
 
             if (!System.IO.File.Exists(cesta)) return;
 
