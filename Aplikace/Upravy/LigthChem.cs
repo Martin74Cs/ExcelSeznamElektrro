@@ -44,7 +44,7 @@ namespace Aplikace.Upravy
             ExcelApp.ExcelElektro(cesta);
 
             //Vytvoření nadpisů
-            var range = ExcelApp.Nadpisy([.. Nadpis.dataCz()]);
+            var range = ExcelApp.Nadpisy([.. Nadpis.DataCz()]);
 
             //Formátování nadpisů
             ExcelApp.NadpisSet(range);
@@ -91,7 +91,7 @@ namespace Aplikace.Upravy
             ExcelApp.ExcelSaveTable(PoleData, 3);
 
             //vyzváření seznamu kabelů podle krytérii
-            Pridat.Soucet(ExcelApp.Doc, PoleData);
+            Pridat.Soucet(PoleData);
             
             //var Proces =  Soubory.GetExcelProcess(ExcelApp.App);
             if (!File.Exists(cesta))

@@ -65,9 +65,9 @@ namespace Aplikace.Upravy
         {
             foreach (var i in item)
             {
-                Console.WriteLine($"Tag={i.tag}, Jmeno={i.name}");
-                if (i.subitem.Count > 0)
-                    Vypis(i.subitem);
+                Console.WriteLine($"Tag={i.Tag}, Jmeno={i.Name}");
+                if (i.Subitem.Count > 0)
+                    Vypis(i.Subitem);
             }
         }
     }

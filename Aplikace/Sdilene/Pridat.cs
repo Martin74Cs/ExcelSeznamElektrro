@@ -39,7 +39,7 @@ namespace Aplikace.Sdilene
             return nove;
         }
 
-        public static void Soucet(Workbook doc, List<List<string>> PoleData)
+        public static void Soucet(List<List<string>> PoleData)
         {
             // Použití GroupBy k získání unikátních záznamů na základě tří kritérií
             var unikatniZaznamy = PoleData

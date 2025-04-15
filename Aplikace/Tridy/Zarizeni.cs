@@ -67,7 +67,7 @@ namespace Aplikace.Tridy
         public void Vypis()
         {
 
-            foreach (var Parametr in vlastnosti)
+            foreach (var Parametr in Vlastnosti)
             {
                 if (Parametr == "Item") continue;
                 //// Pomocí reflexe získáme hodnotu vlastnosti
@@ -109,21 +109,19 @@ namespace Aplikace.Tridy
         {
             get
             {
-                var prop = GetType().GetProperty(nazev, BindingFlags.Public | BindingFlags.Instance);
-                if (prop == null) throw new ArgumentException($"Neexistující vlastnost: {nazev}");
+                var prop = GetType().GetProperty(nazev, BindingFlags.Public | BindingFlags.Instance) ?? throw new ArgumentException($"Neexistující vlastnost: {nazev}");
                 return prop.GetValue(this);
             }
             set
             {
-                var prop = GetType().GetProperty(nazev, BindingFlags.Public | BindingFlags.Instance);
-                if (prop == null) throw new ArgumentException($"Neexistující vlastnost: {nazev}");
+                var prop = GetType().GetProperty(nazev, BindingFlags.Public | BindingFlags.Instance) ?? throw new ArgumentException($"Neexistující vlastnost: {nazev}");
                 prop.SetValue(this, Convert.ChangeType(value, prop.PropertyType));
             }
         }
 
         /// <summary> List vlastností třídy </summary>
         [JsonIgnore]
-        public List<string> vlastnosti => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        public List<string> Vlastnosti => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                       .Select(p => p.Name)
                        .ToList();
 

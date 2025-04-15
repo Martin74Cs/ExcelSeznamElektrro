@@ -116,7 +116,7 @@ namespace Aplikace.Seznam
                 //doc = xls.Parent;
 
                 //Vytvoření nadpisů
-                var Souradnice = ExcelApp.Nadpisy([.. Nadpis.dataEn()]);
+                var Souradnice = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
 
                 //Formátování nadpisů
                 ExcelApp.NadpisSet(Souradnice);
