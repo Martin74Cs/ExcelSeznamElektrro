@@ -18,10 +18,10 @@ namespace Aplikace.Tridy
     public class Nadpis : Entity
     {
         [Display(Name = "Text Nadpisu")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Display(Name = "Jednotky")]
-        public string Jednotky { get; set; }
+        public string Jednotky { get; set; } = string.Empty;
 
         public static List<Nadpis> dataEn() { return [
                 new Nadpis {Id=1,  Name = "Equipment\nnumber",              Jednotky=""  },

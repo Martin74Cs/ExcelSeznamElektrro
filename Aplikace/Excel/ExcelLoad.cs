@@ -19,23 +19,25 @@ namespace Aplikace.Excel
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
 
-            var Pole = new List<List<string>>();
-            string Soubor = Path.GetFileName(cesta);
-            string Adresar = Path.GetDirectoryName(cesta);
-            string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
+            //var Pole = new List<List<string>>();
+            //string Soubor = Path.GetFileName(cesta);
+            //string Adresar = Path.GetDirectoryName(cesta);
+            //string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
+            string json = Path.ChangeExtension(cesta, ".json");
             if (File.Exists(json))
             {
-                Pole = Soubory.LoadJsonList<List<string>>(json);
+                return Soubory.LoadJsonList<List<string>>(json);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             }
             else
             {
-                Pole = ExcelApp.ExelLoadTable(cesta, Tabulka, Radek, Sloupce, TextPole);
+                var ExcelApp = new ExcelApp();
+                var Pole = ExcelApp.ExelLoadTable(cesta, Tabulka, Radek, Sloupce);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 if(Pole.Count>1) Pole.SaveJsonList(json);
+                Console.WriteLine($"načeno {Pole.Count} záznamů.");
+                return Pole;
             }
-            Console.WriteLine($"načeno {Pole.Count} záznamů.");
-            return Pole;
         }
 
         /// <summary> Načtení dpkumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
@@ -58,18 +60,17 @@ namespace Aplikace.Excel
             {
                 if (!System.IO.File.Exists(cesta)) return [];
 
-                var (App, Xls) = ExcelApp.DokumetExcel(cesta);
-                if (Xls == null) return [];
+                var ExcelApp = new ExcelApp();
+                ExcelApp.DokumetExcel(cesta);
+
+                if (ExcelApp.Xls == null) return [];
                 Console.WriteLine("Dokument excel - Otevřen");
 
-                //Nastavení listu
-                var Zal = ExcelApp.GetSheet(Xls, Tabulka);
-
-                if (Zal == null) { Console.Write("\nChyba KONEC"); return []; }
-                Console.WriteLine("Sheet=" + Zal.Name);
-                Pole = ExcelApp.ExelTable(Zal, Tabulka, Radek);
+                if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+                Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
+                Pole = ExcelApp.ExelTable(Radek,Tabulka);
                 //Console.WriteLine("Zavřit dokument ");
-                Xls.Close();
+                ExcelApp.Doc.Close();
 
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 if (Pole.Count > 1) Pole.SaveJsonList(json);
@@ -82,25 +83,27 @@ namespace Aplikace.Excel
         /// <summary> Načtení dpkumentu Ecxel do pole Třídy z a vytvořejí JSON</summary>
         public static List<Zarizeni> LoadDataExcelTrida(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
         {
+            if (!System.IO.File.Exists(cesta)) return [];
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
 
-            var Pole = new List<Zarizeni>();
+            //var Pole = new List<Zarizeni>();
             string Soubor = Path.GetFileName(cesta);
             string Adresar = Path.GetDirectoryName(cesta);
             string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
             if (File.Exists(json))
             {
-                Pole = Soubory.LoadJsonList<Zarizeni>(json);
+                return Soubory.LoadJsonList<Zarizeni>(json);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             }
             else
             {
-                Pole = ExcelApp.ExelLoadTableTrida(cesta, Tabulka, Radek, Sloupce, TextPole);
+                var ExcelApp = new ExcelApp();
+                var Pole = ExcelApp.ExelLoadTableTrida(cesta, Tabulka, Radek, Sloupce, TextPole);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 Pole.SaveJsonList(json);
+                return Pole;
             }
-            return Pole;
         }
 
 

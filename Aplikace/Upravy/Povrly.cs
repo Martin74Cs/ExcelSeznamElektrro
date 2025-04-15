@@ -48,18 +48,18 @@ namespace Aplikace.Upravy
             Console.Write($"\n");
             Vypis(pokus);
 
-            //ExcelApp Ex = new ExcelApp();
+            var ExcelApp = new ExcelApp();
             //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
             string cestacelek = Path.Combine(BaseAdres, @"zarizeni_vse.xlsx");
-            var (App, Doc) = ExcelApp.NovyExcelSablona(cestacelek);
+            ExcelApp.NovyExcelSablona(cestacelek);
             //Worksheet Xls = Doc.Worksheets[1];
-            var sheetc = ExcelApp.PridatNovyList(Doc, "Seznam zažízení");
-            ExcelApp.ExcelSave(sheetc, [.. pokus]);
-            Doc.Save();
+            ExcelApp.PridatNovyList("Seznam zažízení");
+            ExcelApp.ExcelSave([.. pokus]);
+            ExcelApp.Doc.Save();
             //uzavření dokumentu bez uložení  
             //xlsc.Close();
-            ExcelApp.ExcelQuit(Doc);
+            ExcelApp.ExcelQuit();
         }
         static void Vypis(List<Item> item)
         {

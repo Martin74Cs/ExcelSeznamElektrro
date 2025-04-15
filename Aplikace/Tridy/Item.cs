@@ -9,8 +9,8 @@ namespace Aplikace.Tridy
     public class Item
     {
         public int id { get; set; }
-        public Unit cunit { get; set; }
-        public Unit munit { get; set; }
+        public Unit cunit { get; set; } = new();
+        public Unit munit { get; set; } = new();    
         
         //public string revNo { get; set; } = string.Empty;
         //public string tag { get; set; } = string.Empty;

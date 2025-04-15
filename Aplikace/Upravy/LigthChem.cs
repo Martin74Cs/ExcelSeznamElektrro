@@ -39,13 +39,15 @@ namespace Aplikace.Upravy
 
             //vytvoření nebo otevření dokumentu elektro
             var cesta = Path.Combine(basePath, filename);
-            var (App, Doc ,Xls) = ExcelApp.ExcelElektro(cesta);
+            ExcelApp ExcelApp = new ExcelApp();
+            //var (App, Doc ,Xls) = ExcelApp.ExcelElektro(cesta);
+            ExcelApp.ExcelElektro(cesta);
 
             //Vytvoření nadpisů
-            var range = ExcelApp.Nadpisy(Xls, [.. Nadpis.dataCz()]);
+            var range = ExcelApp.Nadpisy([.. Nadpis.dataCz()]);
 
             //Formátování nadpisů
-            ExcelApp.NadpisSet(Xls, range);
+            ExcelApp.NadpisSet(range);
 
             //if (Stara.Count < 1)
             //{
@@ -56,7 +58,7 @@ namespace Aplikace.Upravy
                 //Stara.Add(["1",     "2",    "3",    "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
             //}
             //ExcelApp.ExcelSaveClass(xls, Stara);
-            ExcelApp.ClassToExcel(Xls, "Seznam Elektro", Radek: 3, Stara);
+            ExcelApp.ClassToExcel("Seznam Elektro", Row: 3, Stara);
             //Doplnění vzorců doExel
             //ExcelApp.ExcelSaveVzorce(xls, Stara.Count);
 
@@ -80,42 +82,42 @@ namespace Aplikace.Upravy
             var PoleData = KabelList.Kabely(Stara);
 
             //Nová záložka
-            Xls = ExcelApp.PridatNovyList(Doc, "Kabely");
+            ExcelApp.PridatNovyList("Kabely");
 
             //Doplnení nadpisu a ramecku
-            ExcelApp.ExcelSaveNadpis(Xls, PoleData);
+            ExcelApp.ExcelSaveNadpis(PoleData);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
-            ExcelApp.ExcelSaveTable(Xls, PoleData, 3);
+            ExcelApp.ExcelSaveTable(PoleData, 3);
 
             //vyzváření seznamu kabelů podle krytérii
-            Pridat.Soucet(Doc, PoleData);
+            Pridat.Soucet(ExcelApp.Doc, PoleData);
             
-            var Proces =  Soubory.GetExcelProcess(App);
+            //var Proces =  Soubory.GetExcelProcess(ExcelApp.App);
             if (!File.Exists(cesta))
-                Doc.SaveAs(cesta);
+                ExcelApp.Doc.SaveAs(cesta);
             else
             { 
                 if(!Soubory.IsFileLocked(cesta))
                     //Doc.Save();
                     // Zavření bez uložení
-                    Doc.Close(false);
+                    ExcelApp.Doc.Close(false);
             }
-            App.Quit();
+            ExcelApp.App.Quit();
 
             // Uvolnění COM objektů
-            Marshal.ReleaseComObject(Doc);
-            Marshal.ReleaseComObject(App);
+            Marshal.ReleaseComObject(ExcelApp.Doc);
+            Marshal.ReleaseComObject(ExcelApp.App);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            Soubory.KillExcel(Proces);
+            Soubory.KillExcel(ExcelApp.Process);
 
             //if (File.Exists(cesta))
             //    File.Delete(cesta);
             //doc.SaveAs(cesta);
-            //ExcelApp.ExcelQuit(doc);
+            ExcelApp.ExcelQuit();
         }
     }
 }

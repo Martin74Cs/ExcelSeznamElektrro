@@ -70,14 +70,15 @@ namespace Aplikace.Sdilene
             Soucet.Add([.. xx1]);
 
             //nová záložka
-            var xls = ExcelApp.PridatNovyList(doc, "Seznam");
-            ExcelApp.Nadpis(xls, "A1:C1", "Označeni", Soucet);
-            ExcelApp.Nadpis(xls, "D1:D1", "Délka", Soucet);
-            xls.Range["D2"].Value = "[m]";
-            ExcelApp.ExcelSaveTable(xls, Soucet, 3);
+            var ExcelApp = new ExcelApp();
+            ExcelApp.PridatNovyList("Seznam");
+            ExcelApp.Nadpis("A1:C1", "Označeni", Soucet);
+            ExcelApp.Nadpis("D1:D1", "Délka", Soucet);
+            ExcelApp.Xls.Range["D2"].Value = "[m]";
+            ExcelApp.ExcelSaveTable(Soucet, 3);
 
             //xls.Cells[Soucet.Count + 1, 4].Formula = xxx může nastat chyba.
-            xls.Cells[Soucet.Count + 1, 4].FormulaLocal = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
+            ExcelApp.Xls.Cells[Soucet.Count + 1, 4].FormulaLocal = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
         }
     }
 }

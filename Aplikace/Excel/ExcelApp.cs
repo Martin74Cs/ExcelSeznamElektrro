@@ -17,95 +17,99 @@ namespace Aplikace.Excel
 {
     public class ExcelApp
     {
-        [DllImport("oleaut32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern int GetActiveObject(ref Guid rclsid, IntPtr reserved, out object ppunk);
+        public Exc.Application App { get; set; }
+        public Exc.Workbook Doc { get; set; }
+        public Exc.Worksheet Xls { get; set; }
+        public int Process { get; set; }
 
-        public static int record = 0;
+        static int record = 0;
 
-        static Exc.Application ExcelExist() 
-        {
-            //Exc.Application excelApp = null;
-            Guid clsid = new("00024500-0000-0000-C000-000000000046"); // CLSID pro Excel.Application
-            try
-            {
-                int hResult = GetActiveObject(ref clsid, IntPtr.Zero, out object excelAppObj);
-                if (hResult == 0)
-                {
-                    Exc.Application excelApp = (Exc.Application)excelAppObj;
-                    Console.WriteLine("Excel je spuštěn.");
-                    return excelApp;
-                }
-                Console.WriteLine("Excel není spuštěn.");
-                return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Chyba - Excel bude nově spuštěn.");
-                return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
-            }
+        //[DllImport("oleaut32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        //private static extern int GetActiveObject(ref Guid rclsid, IntPtr reserved, out object ppunk);
 
+        //static Exc.Application ExcelExist() 
+        //{
+        //    //Exc.Application excelApp = null;
+        //    Guid clsid = new("00024500-0000-0000-C000-000000000046"); // CLSID pro Excel.Application
+        //    try
+        //    {
+        //        int hResult = GetActiveObject(ref clsid, IntPtr.Zero, out object excelAppObj);
+        //        if (hResult == 0)
+        //        {
+        //            Exc.Application excelApp = (Exc.Application)excelAppObj;
+        //            Console.WriteLine("Excel je spuštěn.");
+        //            return excelApp;
+        //        }
+        //        Console.WriteLine("Excel není spuštěn.");
+        //        return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
+        //    }
+        //    catch (Exception)
+        //    {
+        //        Console.WriteLine("Chyba - Excel bude nově spuštěn.");
+        //        return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
+        //    }
 
+        //    //    try
+        //    //{
+        //    //    // Pokus o připojení k již spuštěné instanci Excelu
+        //    //    //excelApp = (Exc.Application)Marshal.GetActiveObject("Excel.Application");
+        //    //}
+        //    //catch (COMException)
+        //    //{
+        //    //    Console.WriteLine("Excel není spuštěn.");
+        //    //    return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
+        //    //}
 
-
-
-
-            //    try
-            //{
-            //    // Pokus o připojení k již spuštěné instanci Excelu
-            //    //excelApp = (Exc.Application)Marshal.GetActiveObject("Excel.Application");
-            //}
-            //catch (COMException)
-            //{
-            //    Console.WriteLine("Excel není spuštěn.");
-            //    return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
-            //}
-
-            //if (excelApp != null)
-            //{
-            //    Console.WriteLine("Excel je spuštěn.");
-            //    // Nyní můžete pracovat s aplikací Excel
-            //    // Například první otevřený sešit
-            //    Exc.Workbook workbook = excelApp.Worksheets[1];
-            //    Exc.Worksheet worksheet = (Exc.Worksheet)workbook.Worksheets[1];
-            //    // Proveďte nějaké operace s Excel
-            //    //Console.WriteLine("Název prvního listu: " + worksheet.Name);
-            //    return excelApp;
-            //}
-        }
+        //    //if (excelApp != null)
+        //    //{
+        //    //    Console.WriteLine("Excel je spuštěn.");
+        //    //    // Nyní můžete pracovat s aplikací Excel
+        //    //    // Například první otevřený sešit
+        //    //    Exc.Workbook workbook = excelApp.Worksheets[1];
+        //    //    Exc.Worksheet worksheet = (Exc.Worksheet)workbook.Worksheets[1];
+        //    //    // Proveďte nějaké operace s Excel
+        //    //    //Console.WriteLine("Název prvního listu: " + worksheet.Name);
+        //    //    return excelApp;
+        //    //}
+        //}
 
         /// <summary> Vytvoření nového Excel dokumentu </summary>
-        public static (Exc.Application ExApp, Exc.Workbook?) VytvorNovyDokument()
+        public void VytvorNovyDokument()
         {
             //Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
             //var App = ExcelExist();
             //if (App == null) return null;
             //App.Visible = true;
 
-            var App = new Exc.Application
+            //var App = new Exc.Application
+            App = new Exc.Application
             {
                 Visible = true,
                 DisplayAlerts = false // tohle je klíčové!
             };
 
             // Vytvoření nového sešitu
-            Exc.Workbook Doc = App.Workbooks.Add();
+            //Exc.Workbook Doc = App.Workbooks.Add();
+            Doc = App.Workbooks.Add();
+
             //Automatikcky se vytvoří nový List1
             Console.Write("\nVytvořen prázný dokument Excel.");
-            return (App, Doc);
+            //return (App, Doc);
         }
 
-        public static (Exc.Application ExApp, Exc.Workbook?) NovyExcelSablona(string cesta)
+        public void NovyExcelSablona(string cesta)
         {
             /// <summary> Cesta k dresaři kde bylo spuštěno nevím jak funguje u dll </summary>
-            var AktuallniAdresear = System.Environment.CurrentDirectory + @"\";
+            //var AktuallniAdresear = System.Environment.CurrentDirectory + @"\";
             /// <summary> Cesta k Aresaři kde bylo spuštěno nevím jak funguje u dll </summary>
-            var AktuallniAdresearJinak = System.IO.Directory.GetCurrentDirectory() + @"\";
+            //var AktuallniAdresearJinak = System.IO.Directory.GetCurrentDirectory() + @"\";
 
             string BaseAdress = Path.Combine(System.Environment.CurrentDirectory, "Podpora");
             string sablona =  Path.Combine(BaseAdress, "Sablona_SSaZ.xlsx");
             // pokud neexistuje vlastní šablona použij výchozí
             //if (!File.Exists(sablona))
-            var (App, Doc) = VytvorNovyDokument();
+            //var (App, Doc) = VytvorNovyDokument();
+            VytvorNovyDokument();
             //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
             App.Visible = true;
             if(File.Exists(cesta))
@@ -113,43 +117,46 @@ namespace Aplikace.Excel
             File.Copy(sablona, cesta);
             Doc = App.Workbooks.Open(cesta);
             Console.Write("\nVytvořen soubor ze šablony Excel.");
-            return (App, Doc);
+            //return (App, Doc);
         }
 
 
         /// <summary> Přidání nového listu do Excelového dokumentu </summary>
-        public static Exc.Worksheet PridatNovyList(Exc.Workbook Dokument, string NazevListu)
+        public void PridatNovyList(string NazevListu)
         {
-            Exc.Worksheet? xls = ExcelApp.GetSheet(Dokument, NazevListu);
+            GetSheet(NazevListu);
             // Přidání nového listu na konec sešitu pokud je XLs praázdné
-            xls ??= Dokument.Sheets.Add(After: Dokument.Sheets[Dokument.Sheets.Count]);
-            xls.Name = NazevListu;
-            xls.Activate();
-            return xls;
+            Xls = Doc.Sheets.Add(After: Doc.Sheets[Doc.Sheets.Count]);
+            Xls.Name = NazevListu;
+            Xls.Activate();
+            //return xls;
         }
 
         /// <summary> nastavení listu dle jeho jména</summary>
-        public static Exc.Worksheet? GetSheet(Exc.Workbook Dokument, string Nazev)
+        public void GetSheet(string Nazev)
         {
-            foreach (Exc.Worksheet item in Dokument.Sheets)
+            foreach (Exc.Worksheet item in Doc.Sheets)
             {
                 if (item.Name == Nazev)
-                    return item;
+                { 
+                    Xls = item;
+                    break;
+                }
             }
-            return null;
+            //return null;
         }
 
         /// <summary>Nový dokument v exelu</summary>
-        public static (Exc.Application ExApp,Exc.Workbook?) DokumetExcel(string Cesta)
+        public void DokumetExcel(string Cesta)
         {
             //Exc.Application App = AplikaceExcel();
 
-            var App = new Exc.Application
+            App = new Exc.Application
             {
                 Visible = true,
                 DisplayAlerts = false // tohle je klíčové!
             };
-
+            Process = Soubory.GetExcelProcess(App);
             //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App)
             //{
             //    App.Visible = true;
@@ -157,7 +164,8 @@ namespace Aplikace.Excel
             //} 
 
             Console.Write("\nKontrolaOtevenehoNeboOtevreniSobroruExel - OK");
-            return (App, KontrolaOtevenehoNeboOtevreniSobroruExel(App, Cesta));
+            Doc = KontrolaOtevenehoNeboOtevreniSobroruExel(App, Cesta);
+            //return (App, KontrolaOtevenehoNeboOtevreniSobroruExel(App, Cesta));
         }
 
         /// <summary>Kontrola otevřeného souboru v Excel</summary>
@@ -205,31 +213,32 @@ namespace Aplikace.Excel
         //}
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public static List<List<string>> ExelLoadTable(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
+        public List<List<string>> ExelLoadTable(string cesta, string zalozka, int Radek, int[] CteniSloupcu)
         {
             if (!System.IO.File.Exists(cesta)) return [];
 
-            var (App,Xls) = DokumetExcel(cesta);
+            //var (App,Xls) = DokumetExcel(cesta);
+            DokumetExcel(cesta);
             if (Xls == null) return [];
             Console.Write("\nDokument excel - Otevřen");
 
             //Nastavení listu
-            Exc.Worksheet? Zal = GetSheet(Xls, zalozka);
-            if (Zal == null) { Console.Write("\nChyba KONEC"); return []; }
-            Console.Write("\nSheet=" + Zal.Name);
+            GetSheet(zalozka);
+            if (Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+            Console.Write("\nSheet=" + Xls.Name);
 
-            var cteniPole = new List<string>();
+            //var cteniPole = new List<string>() ;
             var Pole = new List<List<string>>();
-            Console.Write("\nZal.Rows.Count=" + Zal.Rows.Count);
-            for (int i = Radek; i < Zal.UsedRange.Rows.Count; i++)
+            Console.Write("\nZal.Rows.Count=" + Xls.UsedRange.Rows.Count);
+            for (int i = Radek; i < Xls.UsedRange.Rows.Count; i++)
             {
                 //int x = 0;
-                cteniPole = [];
+                var cteniPole = new List<string>();
                 //čtení jednotlivých řádků excelu
                 foreach (var item in CteniSloupcu)
                 {
                     //Čtení buňky
-                    Exc.Range Pok = Zal.Cells[i, item];
+                    Exc.Range Pok = Xls.Cells[i, item];
                     object cteni = Pok.Value;
 
                     string xxx = Convert.ToString(cteni);
@@ -252,14 +261,17 @@ namespace Aplikace.Excel
             Console.Write("\nUkončení Excel");
             //Xls.Save();
             //Console.Write("\nSave OK");
-            ExcelQuit(Xls);
+            ExcelQuit();
             Console.Write("\nUkončení Excel");
             return Pole;
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public static List<Zarizeni> ExelTable(Exc.Worksheet Zal, string zalozka, int Radek)
+        public List<Zarizeni> ExelTable(int Radek, string Tabulka)
         {
+            //Nastavení listu
+            GetSheet(Tabulka);
+
             var dir = new Dictionary<int, string>() {
                 {1, "Radek"     },
                 {2, "Tag"       },
@@ -269,25 +281,25 @@ namespace Aplikace.Excel
                 {18, "BalenaJednotka"   },
             };
             int pocet = 1;
-            string prikon = string.Empty;
+            //string prikon = string.Empty;
             //var cteniPole = new List<string>();
             //var Pole = new List<List<string>>();
             var Pole = new List<Zarizeni>();
-            Console.WriteLine($"[Rows.Col]=[{Zal.UsedRange.Rows.Count},{Zal.UsedRange.Columns.Count}]");
-            for ( int i = Radek; i < Zal.UsedRange.Rows.Count; i++)
+            Console.WriteLine($"[Rows.Col]=[{Xls.UsedRange.Rows.Count},{Xls.UsedRange.Columns.Count}]");
+            for ( int i = Radek; i < Xls.UsedRange.Rows.Count; i++)
             {
                 //int x = 0;
                 //čteniPole = [];
                 //čtení jednotlivých řádků excelu
                 var jeden = new Zarizeni();
-                for (int j = 1; j < Zal.UsedRange.Columns.Count; j++)
+                for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
                 {
                     //přeskok příkon prazdný
-                    prikon = Convert.ToString(Zal.Cells[i, 10].Value);
+                    var prikon = Convert.ToString(Xls.Cells[i, 10].Value);
                     if (string.IsNullOrEmpty(prikon) || prikon == "0") { jeden.Prikon = ""; break; } 
 
                     //Čtení buňky
-                    Exc.Range Pok = Zal.Cells[i, j];
+                    Exc.Range Pok = Xls.Cells[i, j];
                     string xxx = Convert.ToString(Pok.Value);
 
                     //přeskočit prázdné buňky a nulové
@@ -322,7 +334,7 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public static void ClassToExcel(Exc.Worksheet xls, string zalozka, int Radek, List<Zarizeni> Pole)
+        public void ClassToExcel(string zalozka, int Row, List<Zarizeni> Pole)
         {
             var dir = new Dictionary<int, string>() {
             {1,"Tag"},
@@ -348,49 +360,50 @@ namespace Aplikace.Excel
 
             //var cteniPole = new List<string>();
             //var Pole = new List<List<string>>();
-            int Row = 3; 
-            Console.WriteLine($"[Rows.Col]=[{xls.UsedRange.Rows.Count},{xls.UsedRange.Columns.Count}]");
+            //int Row = 3; 
+            Console.WriteLine($"[Rows.Col]=[{Xls.UsedRange.Rows.Count},{Xls.UsedRange.Columns.Count}]");
             foreach (var item in Pole)
             {
                 for (int Col = 1; Col < 15; Col++)
                 {
-                    Exc.Range Pok = xls.Cells[Row, Col];
+                    Exc.Range Pok = Xls.Cells[Row, Col];
                     if (dir.TryGetValue(Col, out string value) && !string.IsNullOrEmpty(value))
                         Pok.Value = item[value];
                 }
                 Row++;
             }
                 for (int i = 1; i < 15; i++)
-                    xls.Columns[i].AutoFit();
+                    Xls.Columns[i].AutoFit();
             return;
         }
 
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public static List<Zarizeni> ExelLoadTableTrida(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
+        public List<Zarizeni> ExelLoadTableTrida(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
         {
             if (!System.IO.File.Exists(cesta)) return [];
 
-            var (App, Xls) = DokumetExcel(cesta);
+            //var (App, Xls) = DokumetExcel(cesta);
+            DokumetExcel(cesta);
             if (Xls == null) return [];
             Console.Write("\nDokument excel - Otevřen");
 
             //Nastavení listu
-            Exc.Worksheet? Zal = GetSheet(Xls, zalozka);
-            if (Zal == null) { Console.Write("\nChyba KONEC"); return []; }
-            Console.Write("\nSheet=" + Zal.Name);
+            GetSheet(zalozka);
+            if (Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+            Console.Write("\nSheet=" + Xls.Name);
 
             var Pole = new List<Zarizeni>();
-            Console.Write("\nZal.Rows.Count=" + Zal.Rows.Count);
+            Console.Write("\nZal.Rows.Count=" + Xls.Rows.Count);
             var Test = new List<Zarizeni>();
-            for (int i = Radek; i < Zal.Rows.Count; i++)
+            for (int i = Radek; i < Xls.Rows.Count; i++)
             {
                 var obj = new Zarizeni();
                 int x = 0;
                 foreach (var item in CteniSloupcu)
                 {
                     //Čtení buňky
-                    Exc.Range Pok = Zal.Cells[i, item];
+                    Exc.Range Pok = Xls.Cells[i, item];
                     object cteni = Pok.Value;
 
                     string xxx = Convert.ToString(cteni);
@@ -408,35 +421,36 @@ namespace Aplikace.Excel
             Console.Write("\nUkončení Excel");
             //Xls.Save();
             //Console.Write("\nSave OK");
-            ExcelQuit(Xls);
+            ExcelQuit();
             Console.Write("..... OK");
             return Pole;
         }
 
         /// <summary> uložení dat do excel podle kdyterii </summary>
-        public static void ExcelSaveJeden(string cesta, int[] SloupceZapisu, string zalozka, int[] SloupceCteni, List<List<string>> Vstup)
+        public void ExcelSaveJeden(string cesta, int[] SloupceZapisu, string zalozka, int[] SloupceCteni, List<List<string>> Vstup)
         {
             if (!System.IO.File.Exists(cesta)) return;
 
-            var (App, Xls) = DokumetExcel(cesta);
+            //var (App, Xls) = DokumetExcel(cesta);
+            DokumetExcel(cesta);
             if (Xls == null) return;
             Console.Write("\nDokument excel - Otevřen");
 
             //Nastavení listu
-            Exc.Worksheet? Zal = GetSheet(Xls, zalozka);
-            if (Zal == null) { Console.Write("\nChyba KONEC");  return; }
+            GetSheet(zalozka);
+            if (Xls == null) { Console.Write("\nChyba KONEC");  return; }
             //Exc.Worksheet Zal = Xls.Worksheets[zalozka];
-            Console.Write("\nSheet=" + Zal.Name);
+            Console.Write("\nSheet=" + Xls.Name);
 
             //Čtení listu excel
-            for (int i = 7; i < Zal.Rows.Count; i++)
+            for (int i = 7; i < Xls.Rows.Count; i++)
             {
                 //Čtení radků excel
                 var cteniPole = new List<string>();
                 foreach (var item in SloupceCteni)
                 {
                     //Čtení buňky Tag
-                    Exc.Range Pok = Zal.Cells[i, item];
+                    Exc.Range Pok = Xls.Cells[i, item];
                     string xxx = Convert.ToString(Pok.Value);
                     if (!string.IsNullOrEmpty(xxx))
                         cteniPole.Add(xxx);
@@ -451,18 +465,18 @@ namespace Aplikace.Excel
                      Console.Write("\nShoda buňky " + i + " = " + Shoda.First());
 
                     //zapis buňky
-                    Exc.Range Zapis = Zal.Cells[i, SloupceZapisu.First()];
+                    Exc.Range Zapis = Xls.Cells[i, SloupceZapisu.First()];
                     Zapis.Value = Shoda.First();
 
                     //Posledni
-                    Zapis = Zal.Cells[i, SloupceZapisu.Last()];
+                    Zapis = Xls.Cells[i, SloupceZapisu.Last()];
                     Zapis.Value = Shoda[8] + " " + Shoda.Last();
                 }
                 else
                 {
                     //nebyla shoda
                     //zapis buňky
-                    Exc.Range Zapis = Zal.Cells[i, SloupceZapisu.First()];
+                    Exc.Range Zapis = Xls.Cells[i, SloupceZapisu.First()];
                     Zapis.Value = "Nenalezeno";
                 }
 
@@ -470,18 +484,18 @@ namespace Aplikace.Excel
                 if (i > 500) break;
             }
             Console.Write("\nUkončení Excel");
-            Xls.Save();
+            Doc.Save();
 
             Console.Write("\nSave OK");
             //Xls.Close();
             //ed.WriteMessage("\nClose OK");
-            ExcelQuit(Xls);
+            ExcelQuit();
             Console.Write("\nUkončení Excel");
             return;
         }
 
         /// <summary> uložení dat do excel podle kdyterii </summary>
-        public static void ExcelSaveSloupec(string cesta, int[] SloupceZapisu, string zalozka, int[] SloupceCteni, List<List<string>> Vstup)
+        public void ExcelSaveSloupec(string cesta, int[] SloupceZapisu, string zalozka, int[] SloupceCteni, List<List<string>> Vstup)
         {
             string cesta1 = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
@@ -489,25 +503,26 @@ namespace Aplikace.Excel
 
             if (!System.IO.File.Exists(cesta)) return;
 
-            var (App, Xls) = DokumetExcel(cesta);
+            //var (App, Xls) = DokumetExcel(cesta);
+            DokumetExcel(cesta);
             if (Xls == null) return;
             Console.Write("\nDokument excel - Otevřen");
 
             //Nastavení listu
-            Exc.Worksheet? Zal = GetSheet(Xls, zalozka);
-            if (Zal == null) return;
+            GetSheet(zalozka);
+            if (Xls == null) return;
             //Exc.Worksheet Zal = Xls.Worksheets[zalozka];
-            Console.Write("\nSheet=" + Zal.Name);
+            Console.Write("\nSheet=" + Xls.Name);
 
             //Čtení listu excel
-            for (int i = 7; i < Zal.Rows.Count; i++)
+            for (int i = 7; i < Xls.Rows.Count; i++)
             {
                 //Čtení radků excel
                 var cteniPole = new List<string>();
                 foreach (var item in SloupceCteni)
                 {
                     //Čtení buňky
-                    Exc.Range Pok = Zal.Cells[i, item];
+                    Exc.Range Pok = Xls.Cells[i, item];
                     object cteni = Pok.Value;
 
                     string xxx = Convert.ToString(cteni);
@@ -530,7 +545,7 @@ namespace Aplikace.Excel
                         var Informace = Motory500.FirstOrDefault(x => Convert.ToDouble(x[0]) == Prikon)?[1]; //.ToArray(); 
                         if (double.TryParse(Informace, out double Proud))
                         {
-                            Exc.Range Zapis1 = Zal.Cells[i, SloupceZapisu.First()];
+                            Exc.Range Zapis1 = Xls.Cells[i, SloupceZapisu.First()];
                             Zapis1.Value = Proud;
                         }
                     }
@@ -543,29 +558,29 @@ namespace Aplikace.Excel
                     //    Zapis.Value = "";
 
                     //Rozvaděč
-                    var Zapis = Zal.Cells[i, SloupceZapisu[1]];
+                    var Zapis = Xls.Cells[i, SloupceZapisu[1]];
                     Zapis.Value = Shoda[8];
 
                     //Rozvaděč
-                    Zapis = Zal.Cells[i, SloupceZapisu[2]];
+                    Zapis = Xls.Cells[i, SloupceZapisu[2]];
                     Zapis.Value = Shoda[9];
 
                     //zapis delka
-                    Zapis = Zal.Cells[i, SloupceZapisu[3]];
+                    Zapis = Xls.Cells[i, SloupceZapisu[3]];
                     if (double.TryParse(Shoda[4], out double delka))
                         Zapis.Value = delka;
                     else
                         Zapis.Value = Shoda[4].ToString();
 
                     //zapis AWG
-                    Zapis = Zal.Cells[i, SloupceZapisu[5]];
+                    Zapis = Xls.Cells[i, SloupceZapisu[5]];
                     if (double.TryParse(Shoda[5], out double AWG))
                         Zapis.Value = AWG;
                     else
                         Zapis.Value = Shoda[5].ToString();
 
                     //zapis mm2
-                    Zapis = Zal.Cells[i, SloupceZapisu[4]];
+                    Zapis = Xls.Cells[i, SloupceZapisu[4]];
                     if (double.TryParse(Shoda[10], out double mm2))
                         Zapis.Value = mm2;
                     else
@@ -575,7 +590,7 @@ namespace Aplikace.Excel
                 {
                     //nebyla shoda
                     //zapis buňky
-                    Exc.Range Zapis = Zal.Cells[i, SloupceZapisu.First()];
+                    Exc.Range Zapis = Xls.Cells[i, SloupceZapisu.First()];
                     Zapis.Value = "Nenalezeno";
                 }
 
@@ -583,12 +598,12 @@ namespace Aplikace.Excel
                 if (i > 500) break;
             }
             Console.Write("\nUkončení Excel");
-            Xls.Save();
+            Doc.Save();
 
             Console.Write("\nSave OK");
             //Xls.Close();
             //ed.WriteMessage("\nClose OK");
-            ExcelQuit(Xls);
+            ExcelQuit();
             Console.Write("\nUkončení Excel");
             return;
         }
@@ -707,37 +722,37 @@ namespace Aplikace.Excel
             //return; //tab;
         }
 
-        public static void NadpisMIlan(Worksheet xls)
+        public void NadpisMIlan()
         {
             string Nad = @"    |     |   |     |     |                                        |  |KAPACITA        |                        |        |        |      |EL.  |        ";
             int col = 1;
             int row = 1;
             foreach (var item in Nad.Split('|'))
             {
-                xls.Cells[row, col++].value = item;
+                Xls.Cells[row, col++].value = item;
             }
             row++; col = 1;
             Nad = "GUID|IO/SO|NO |PS   |TAG  |NÁZEV                                   |KS|NOSTNOST        |MEDIUM                  |OBJEM   |PRŮTOK  |HMOTN.|PŘÍK.|POZNÁMKA";
             foreach (var item in Nad.Split('|'))
             {
-                xls.Cells[row, col++].value = item;
+                Xls.Cells[row, col++].value = item;
             }
             //zalamování textu - pozor pokud dále řěším šírku sloupcu nesmí být zapnuto
-            var range = xls.Range[xls.Cells[1, 1], xls.Cells[2, col - 1]];
+            var range = Xls.Range[Xls.Cells[1, 1], Xls.Cells[2, col - 1]];
             range.WrapText = false;
-            NadpisSet(xls, range);
+            NadpisSet(range);
         }
 
-        public static void ExcelSave(Worksheet xls, Item[] pole)
+        public void ExcelSave(Item[] pole)
         {
-            NadpisMIlan(xls);
+            NadpisMIlan();
             //ed.WriteMessage("\nFunguje");
             int col = 1;
             int row = 3;
-            Tisk(xls, pole, ref row, col);
+            Tisk(Xls, pole, ref row, col);
 
             for (int i = 1; i < 20; i++)
-                xls.Columns[i].AutoFit();
+                Xls.Columns[i].AutoFit();
 
             //tab.GenerateLayout();
             return; //tab;
@@ -801,7 +816,7 @@ namespace Aplikace.Excel
             return row;
         }
 
-        public static void NadpisSet(Worksheet xls,  Exc.Range range)
+        public static void NadpisSet(Exc.Range range)
         {
             //Podtržení nadpisů
             
@@ -869,7 +884,7 @@ namespace Aplikace.Excel
             //range.Rows["2"].AutoFit();
         }
 
-        public static Exc.Range Nadpisy(Worksheet Xls, Nadpis[] data)
+        public Exc.Range Nadpisy(Nadpis[] data)
         {
     
             int col = 1;
@@ -890,7 +905,7 @@ namespace Aplikace.Excel
 
 
         /// <summary> uložení dat do excel podle kryterii </summary>
-        public static void ExcelSaveList(Worksheet Xls, List<List<string>> Vstup)
+        public void ExcelSaveList(List<List<string>> Vstup)
         {
             //var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
             //var PouzitProTabulku = new int[] { 3, 2, 7, 18, 1, 21, 63, 64, 61, 62, 65, 66 };
@@ -942,7 +957,7 @@ namespace Aplikace.Excel
         {
             //var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
             //var PouzitProTabulku = new int[] { 3, 2, 7, 18, 1, 21, 63, 64, 61, 62, 65, 66 };
-            int row = 2; int col = 1;
+            int row = 2; int col;
 
             //Čtení listu tridy
             foreach (var radek in Vstup)
@@ -1036,14 +1051,14 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kryterii </summary>
-        public static void ExcelSaveProud(Worksheet ListExcel, List<List<string>> Vstup)
+        public void ExcelSaveProud(List<List<string>> Vstup)
         {
 
             //Čtení listu excel
-            for (int i = 3; i < ListExcel.UsedRange.Rows.Count; i++)
+            for (int i = 3; i < Xls.UsedRange.Rows.Count; i++)
             {
                 //Čtení kW
-                Exc.Range Pok = ListExcel.Cells[i, 4];
+                Exc.Range Pok = Xls.Cells[i, 4];
                 object cteni = Pok.Value;
 
                 string xxx = Convert.ToString(cteni);
@@ -1053,7 +1068,7 @@ namespace Aplikace.Excel
                     var Informace = Vstup.FirstOrDefault(x => Convert.ToDouble(x[0]) == cislo)?[1]; //.ToArray(); 
                     if (double.TryParse(Informace, out double Proud))
                     {
-                        Exc.Range Zapis1 = ListExcel.Cells[i, 7];
+                        Exc.Range Zapis1 = Xls.Cells[i, 7];
                         Zapis1.Value = Proud;
                     }
                 }
@@ -1065,10 +1080,10 @@ namespace Aplikace.Excel
         }
 
         /// <summary> doplnění vzorců doExel </summary>
-        public static void ExcelSaveVzorce(Worksheet ListExcel, int Pocet)
+        public void ExcelSaveVzorce(int Pocet)
         {
             //Čtení listu excel
-            for (int i = 3; i < ListExcel.UsedRange.Rows.Count; i++)
+            for (int i = 3; i < Xls.UsedRange.Rows.Count; i++)
             {
                 // Dynamický vzorec (např. sčítání hodnot v buňkách A a B na daném řádku)
                 //string formula = $"=A{row}+B{row}";
@@ -1080,13 +1095,13 @@ namespace Aplikace.Excel
                 //string formula = $"=C{i}*1.34102";  // C{i} odkazuje na buňku ve sloupci C (3) a řádku i
 
                 //převod kilowatů na koně Kw -> HP * 
-                ListExcel.Cells[i, 8].Formula = $"=D{i}*1.341022";
+                Xls.Cells[i, 8].Formula = $"=D{i}*1.341022";
 
                 //Převod prodů u 500 V na 480V
-                ListExcel.Cells[i, 9].Formula = $"=G{i}*500/480";
+                Xls.Cells[i, 9].Formula = $"=G{i}*500/480";
 
                 //Převod metry na stopy m -> ft 
-                ListExcel.Cells[i, 13].Formula = $"=L{i}*3.280839895";
+                Xls.Cells[i, 13].Formula = $"=L{i}*3.280839895";
 
                 if (i > Pocet)
                     break;
@@ -1166,10 +1181,10 @@ namespace Aplikace.Excel
         }
 
         //ukončení worksheet
-        public static bool ExcelQuit(Exc.Workbook work)
+        public bool ExcelQuit()
         {
             //Uložení dokumentu
-            work.Close();
+            Doc.Close();
 
             // Ukončení aplikace Excel
             //work.Application.Quit();
@@ -1250,18 +1265,18 @@ namespace Aplikace.Excel
             }
         }
 
-        public static List<List<string>> ExcelLoadWorksheet(Worksheet xls, int[] pouzitProTabulku)
+        public List<List<string>> ExcelLoadWorksheet(int[] pouzitProTabulku)
         {
             var Data = new List<List<string>>();
             string Cteni = "";
             //Čtení listu excel
-            for (int i = 3; i < xls.UsedRange.Rows.Count; i++)
+            for (int i = 3; i < Xls.UsedRange.Rows.Count; i++)
             {
                 var Radek = new List<string>();
                 foreach (var item in pouzitProTabulku)
                 {
                     //zapis qwe
-                    var Zapis = xls.Cells[i, item];
+                    var Zapis = Xls.Cells[i, item];
                     Cteni = Convert.ToString(Zapis.Value);
                     Radek.Add(Cteni);
                 }
@@ -1273,7 +1288,7 @@ namespace Aplikace.Excel
             return Data;
         }
 
-        public static void ExcelSaveTable(Worksheet xls, List<List<string>> data, int Row)
+        public void ExcelSaveTable(List<List<string>> data, int Row)
         {
             Row--;
             int j;
@@ -1283,7 +1298,7 @@ namespace Aplikace.Excel
                 Row++; j = 1;
                 foreach (var item in radek)
                 {
-                    Exc.Range Zapis1 = xls.Cells[Row, j++];
+                    Exc.Range Zapis1 = Xls.Cells[Row, j++];
                     if (double.TryParse(item, out double cislo))
                     {
                         Zapis1.Value = cislo;
@@ -1297,16 +1312,16 @@ namespace Aplikace.Excel
 
         }
 
-        public static void ExcelSaveNadpis(Worksheet xls, List<List<string>> Ramecek)
+        public void ExcelSaveNadpis(List<List<string>> Ramecek)
         {
-            xls.Activate();
-            Nadpis(xls, "A1:D1", "Označeni", Ramecek);
-            Nadpis(xls, "E1:H1", "Kabel", Ramecek);
-            Nadpis(xls, "I1:I1", "Zařízení", Ramecek);
-            Nadpis(xls, "J1:M1", "Odkud", Ramecek);
-            Nadpis(xls, "N1:N1", "", Ramecek);
-            Nadpis(xls, "O1:R1", "Kam", Ramecek);
-            Nadpis(xls, "S1:S1", "Delka", Ramecek);
+            Xls.Activate();
+            Nadpis("A1:D1", "Označeni", Ramecek);
+            Nadpis("E1:H1", "Kabel", Ramecek);
+            Nadpis("I1:I1", "Zařízení", Ramecek);
+            Nadpis("J1:M1", "Odkud", Ramecek);
+            Nadpis("N1:N1", "", Ramecek);
+            Nadpis("O1:R1", "Kam", Ramecek);
+            Nadpis("S1:S1", "Delka", Ramecek);
 
             //xls.Range["G2"].Value = "[mm2]";
             //xls.Range["H2"].Value = "[AWG]";
@@ -1314,15 +1329,15 @@ namespace Aplikace.Excel
             //xls.Range["T2"].Value = "[ft]";
         }
 
-        public static void Nadpis(Worksheet xls, string pole, string Text)
+        public void Nadpis(string pole, string Text)
         {
-            Nadpis(xls, pole, Text, []);
+            Nadpis(pole, Text, []);
         }
 
-        public static void Nadpis(Worksheet xls, string pole, string Text, List<List<string>> PoleData)
+        public void Nadpis(string pole, string Text, List<List<string>> PoleData)
         {
             // Sloučení buněk od A1 do C1
-            var range = xls.Range[pole];
+            var range = Xls.Range[pole];
             //Koontrola počtu buněk nelze sloučit jen jednu bunku.
             if (range.Cells.Count > 1)
                 range.Merge();
@@ -1354,7 +1369,7 @@ namespace Aplikace.Excel
             //Exc.Range range = xls.Range[xls.Cells[3, 1], xls.Cells[PoleData.Count(), PoleData.First().Count()]];
 
             string v = string.Concat(pole[..^1], (PoleData.Count + 2).ToString());
-            range = xls.Range[v];
+            range = Xls.Range[v];
             Ramecek(range.Borders);
         }
 
@@ -1422,27 +1437,30 @@ namespace Aplikace.Excel
         }
 
         /// <summary>Nový dokument Elektro pro přípravu elektro seznamů </summary>
-        internal static (Exc.Application ExApp, Exc.Workbook?, Exc.Worksheet? xls) ExcelElektro(string cesta)
+        public void ExcelElektro(string cesta)
         {   
-            Exc.Application? App;
-            Exc.Workbook? Doc;
-            Exc.Worksheet? Xls;
-            
+           
             if (File.Exists(cesta))
             {
-                (App, Doc) = ExcelApp.DokumetExcel(cesta);
-                if (Doc == null) return (App, Doc, null);
+                //(App, Doc) = ExcelApp.DokumetExcel(cesta);
+                DokumetExcel(cesta);
+                //if (Doc == null) return (App, Doc, null);
+                //if (Doc == null) return (App, Doc, null);
+                if (Doc == null) return;
                 //Nastavení listu
-                Xls = ExcelApp.GetSheet(Doc, "Seznam Elektro");
-                if (Doc == null) return (App, Doc, Xls);
+                GetSheet("Seznam Elektro");
+                //if (Doc == null) return (App, Doc, Xls);
+                if (Doc == null) return;
             }
             else
             {
-                (App, Doc) = VytvorNovyDokument();
-                Xls = PridatNovyList(Doc, "Seznam Elektro");
+                VytvorNovyDokument();
+                //(App, Doc) = VytvorNovyDokument();
+                PridatNovyList("Seznam Elektro");
             }
             Xls.Activate();
-            return (App, Doc, Xls);
+            //return (App, Doc, Xls);
+            return;
         }
     }
 }

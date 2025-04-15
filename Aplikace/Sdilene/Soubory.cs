@@ -146,38 +146,27 @@ namespace Aplikace.Sdilene
 
         }
 
-        //[DllImport("ole32.dll")]
-        //private static extern int GetRunningObjectTable(int reserved, out IRunningObjectTable prot);
-
-        //[DllImport("ole32.dll")]
-        //private static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
-
         [DllImport("user32.dll", SetLastError = true)]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
-        public static int GetExcelProcess(Application wordApp)
+        //[LibraryImport("user32.dll", SetLastError = true)]
+        //public static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        public static int GetExcelProcess(Application myApp)
         {
-            IntPtr hwnd = (IntPtr)wordApp.Hwnd;
-
-            GetWindowThreadProcessId(hwnd, out uint processId);
-            //Console.WriteLine("Word process ID: " + processId);
-
-            // Nezapomeň uklidit!
-            //wordApp.Quit();
-            //Marshal.ReleaseComObject(wordApp);
-
-            return (int)processId;
+            //IntPtr myHwnd = (IntPtr)myApp.Hwnd;
+            IntPtr myHwnd = (IntPtr)myApp.Hwnd;
+            GetWindowThreadProcessId(myHwnd, out uint myProcessId);
+            return (int)myProcessId;
         }
 
         public static bool IsFileLocked(string path)
         {
             try
             {
-                using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
-                {
-                    // Pokud se otevře, není zamčený
-                    return false;
-                }
+                using FileStream stream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                // Pokud se otevře, není zamčený
+                return false;
             }
             catch (IOException)
             {
