@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Data;
 using Exc = Microsoft.Office.Interop.Excel;
 
-Soubory.KillExcel();
+//Soubory.KillExcel();
 
 //var Ele = new ElektroLoad();
 //Vytvoření nového dokumentu

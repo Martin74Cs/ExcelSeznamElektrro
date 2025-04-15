@@ -1,10 +1,12 @@
 ﻿using Aplikace.Excel;
 using Aplikace.Sdilene;
 using Aplikace.Tridy;
+using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,13 +52,14 @@ namespace Aplikace.Upravy
             //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
             string cestacelek = Path.Combine(BaseAdres, @"zarizeni_vse.xlsx");
-            var xlsc = ExcelApp.NovyExcelSablona(cestacelek);
-            var sheetc = ExcelApp.PridatNovyList(xlsc, "Seznam zažízení");
+            var (App, Doc) = ExcelApp.NovyExcelSablona(cestacelek);
+            //Worksheet Xls = Doc.Worksheets[1];
+            var sheetc = ExcelApp.PridatNovyList(Doc, "Seznam zažízení");
             ExcelApp.ExcelSave(sheetc, [.. pokus]);
-            xlsc.Save();
+            Doc.Save();
             //uzavření dokumentu bez uložení  
             //xlsc.Close();
-            ExcelApp.ExcelQuit(xlsc);
+            ExcelApp.ExcelQuit(Doc);
         }
         static void Vypis(List<Item> item)
         {

@@ -80,8 +80,9 @@ namespace Aplikace.Seznam
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
-            Exc.Worksheet xls;
-            Exc.Workbook doc;
+            Exc.Worksheet Xls;
+            Exc.Workbook Doc;
+            Exc.Application App;
 
             //Načtení json z Milanového seznamu čerpadel
             var Pumps = new List<Pump>();
@@ -111,18 +112,18 @@ namespace Aplikace.Seznam
 
                 //vytvoření nebo otevření dokumentu elekro
                 var cesta = Path.Combine(basePath, "Seznam.xlsx");
-                xls = ExcelApp.ExcelElektro(cesta);
-                doc = xls.Parent;
+                (App, Doc, Xls) = ExcelApp.ExcelElektro(cesta);
+                //doc = xls.Parent;
 
                 //Vytvoření nadpisů
-                var Souradnice = ExcelApp.Nadpisy(xls, [.. Nadpis.dataEn()]);
+                var Souradnice = ExcelApp.Nadpisy(Xls, [.. Nadpis.dataEn()]);
 
                 //Formátování nadpisů
-                ExcelApp.NadpisSet(xls, Souradnice);
+                ExcelApp.NadpisSet(Xls, Souradnice);
 
                 //uložení základní seznam zařízení dle seznamu Stara
                 //var TabulkuProPeevod = new int[] { 1, 2, 3, 4,  5, 6,  7, 8,   9,  10,  11, 12, 13,  14,  15 };
-                ExcelApp.ExcelSaveList(xls, Stara);
+                ExcelApp.ExcelSaveList(Xls, Stara);
 
                 if (Doma)
                 {
@@ -131,11 +132,11 @@ namespace Aplikace.Seznam
                     PouzitProTabulku1 = [1, 2, 3];
                     var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku1, "Motory500V", 2, []);
                     //doplnění tabulky proudů rabulky Excel
-                    ExcelApp.ExcelSaveProud(xls, Motory500);
+                    ExcelApp.ExcelSaveProud(Xls, Motory500);
                 }
 
                 //doplnění vzorců doExel
-                ExcelApp.ExcelSaveVzorce(xls, Stara.Count);
+                ExcelApp.ExcelSaveVzorce(Xls, Stara.Count);
 
                 cesta = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx");
                 //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
@@ -157,8 +158,8 @@ namespace Aplikace.Seznam
             { 
                 //vytvoření nebo otevření dokumentu elekro
                 var cesta = Path.Combine(basePath, "Seznam.xlsx");
-                xls = ExcelApp.ExcelElektro(cesta);
-                doc = xls.Parent;
+                (App, Doc, Xls) = ExcelApp.ExcelElektro(cesta);
+                //doc = xls.Parent;
             }
 
             Console.WriteLine("Probíhá načítaní kabelů");
@@ -167,19 +168,19 @@ namespace Aplikace.Seznam
             var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
             //V poli jsou čísla posunuty o jedničku
-            var PoleData = ExcelApp.ExcelLoadWorksheet(xls, PouzitProTabulku);
+            var PoleData = ExcelApp.ExcelLoadWorksheet(Xls, PouzitProTabulku);
 
             //Úprava načteného listu seznamu zařízení elektro 
             //PoleData = KabelList.Kabely(PoleData);
 
             //Nová záložka
-            xls = ExcelApp.PridatNovyList(doc, "Kabely");
+            Xls = ExcelApp.PridatNovyList(Doc, "Kabely");
 
             //doplnení nadpisu
-            ExcelApp.ExcelSaveNadpis(xls);
+            ExcelApp.ExcelSaveNadpis(Xls, PoleData);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
-            ExcelApp.ExcelSaveTable(xls, PoleData, 3);
+            ExcelApp.ExcelSaveTable(Xls, PoleData, 3);
 
             //vyzváření seznamu kabelů podle krytérii
             // Použití GroupBy k získání unikátních záznamů na základě tří kritérií
@@ -211,16 +212,16 @@ namespace Aplikace.Seznam
             Soucet.Add([.. xx1]);
 
             //nová záložka
-            xls = ExcelApp.PridatNovyList(doc, "Seznam");
-            ExcelApp.Nadpis(xls, "A1:C1", "Označeni", Soucet);
-            ExcelApp.Nadpis(xls, "D1:E1", "Délka", Soucet);
-            xls.Range["D2"].Value = "[m]";
-            xls.Range["E2"].Value = "[ft]";
-            ExcelApp.ExcelSaveTable(xls, Soucet, 3);
+            Xls = ExcelApp.PridatNovyList(Doc, "Seznam");
+            ExcelApp.Nadpis(Xls, "A1:C1", "Označeni", Soucet);
+            ExcelApp.Nadpis(Xls, "D1:E1", "Délka", Soucet);
+            Xls.Range["D2"].Value = "[m]";
+            Xls.Range["E2"].Value = "[ft]";
+            ExcelApp.ExcelSaveTable(Xls, Soucet, 3);
 
 
-            xls.Cells[Soucet.Count + 1, 4].Formula = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
-            ExcelApp.ExcelQuit(doc);
+            Xls.Cells[Soucet.Count + 1, 4].Formula = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
+            ExcelApp.ExcelQuit(Doc);
         }
     }
 }

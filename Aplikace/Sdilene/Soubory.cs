@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Office.Interop.Excel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -126,6 +128,61 @@ namespace Aplikace.Sdilene
                 {
                     Console.WriteLine($"Chyba při ukončování: {ex.Message}");
                 }
+            }
+        }
+        public static void KillExcel(int processId)
+        {
+            var process = Process.GetProcessById(processId);
+                try
+                {
+                    process.Kill();
+                    process.WaitForExit();
+                    Console.WriteLine($"Proces {process.Id} ukončen");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Chyba při ukončování: {ex.Message}");
+                }
+
+        }
+
+        //[DllImport("ole32.dll")]
+        //private static extern int GetRunningObjectTable(int reserved, out IRunningObjectTable prot);
+
+        //[DllImport("ole32.dll")]
+        //private static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        public static int GetExcelProcess(Application wordApp)
+        {
+            IntPtr hwnd = (IntPtr)wordApp.Hwnd;
+
+            GetWindowThreadProcessId(hwnd, out uint processId);
+            //Console.WriteLine("Word process ID: " + processId);
+
+            // Nezapomeň uklidit!
+            //wordApp.Quit();
+            //Marshal.ReleaseComObject(wordApp);
+
+            return (int)processId;
+        }
+
+        public static bool IsFileLocked(string path)
+        {
+            try
+            {
+                using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    // Pokud se otevře, není zamčený
+                    return false;
+                }
+            }
+            catch (IOException)
+            {
+                // Pokud dojde k výjimce, soubor je pravděpodobně zamčený jiným procesem
+                return true;
             }
         }
     }

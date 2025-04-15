@@ -8,16 +8,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using System.Linq;
-using System.Reflection.Metadata;
+
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Exc = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 namespace Aplikace.Excel
 {
@@ -80,21 +74,27 @@ namespace Aplikace.Excel
         }
 
         /// <summary> Vytvoření nového Excel dokumentu </summary>
-        public static Exc.Workbook? VytvorNovyDokument()
+        public static (Exc.Application ExApp, Exc.Workbook?) VytvorNovyDokument()
         {
             //Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
-            var App = ExcelExist();
-            if (App == null) return null;
-            App.Visible = true;
+            //var App = ExcelExist();
+            //if (App == null) return null;
+            //App.Visible = true;
+
+            var App = new Exc.Application
+            {
+                Visible = true,
+                DisplayAlerts = false // tohle je klíčové!
+            };
 
             // Vytvoření nového sešitu
-            Exc.Workbook NovyDokument = App.Workbooks.Add();
+            Exc.Workbook Doc = App.Workbooks.Add();
             //Automatikcky se vytvoří nový List1
             Console.Write("\nVytvořen prázný dokument Excel.");
-            return NovyDokument;
+            return (App, Doc);
         }
 
-        public static Exc.Workbook? NovyExcelSablona(string cesta)
+        public static (Exc.Application ExApp, Exc.Workbook?) NovyExcelSablona(string cesta)
         {
             /// <summary> Cesta k dresaři kde bylo spuštěno nevím jak funguje u dll </summary>
             var AktuallniAdresear = System.Environment.CurrentDirectory + @"\";
@@ -104,16 +104,16 @@ namespace Aplikace.Excel
             string BaseAdress = Path.Combine(System.Environment.CurrentDirectory, "Podpora");
             string sablona =  Path.Combine(BaseAdress, "Sablona_SSaZ.xlsx");
             // pokud neexistuje vlastní šablona použij výchozí
-            if (!File.Exists(sablona))
-               return VytvorNovyDokument();
-            if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
+            //if (!File.Exists(sablona))
+            var (App, Doc) = VytvorNovyDokument();
+            //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
             App.Visible = true;
             if(File.Exists(cesta))
                 File.Delete(cesta);
             File.Copy(sablona, cesta);
-            var sesit = App.Workbooks.Open(cesta);
+            Doc = App.Workbooks.Open(cesta);
             Console.Write("\nVytvořen soubor ze šablony Excel.");
-            return sesit;
+            return (App, Doc);
         }
 
 
@@ -140,31 +140,46 @@ namespace Aplikace.Excel
         }
 
         /// <summary>Nový dokument v exelu</summary>
-        public static Exc.Workbook? DokumetExcel(string Cesta)
+        public static (Exc.Application ExApp,Exc.Workbook?) DokumetExcel(string Cesta)
         {
             //Exc.Application App = AplikaceExcel();
-            if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
-            App.Visible = true;
+
+            var App = new Exc.Application
+            {
+                Visible = true,
+                DisplayAlerts = false // tohle je klíčové!
+            };
+
+            //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App)
+            //{
+            //    App.Visible = true;
+            //    return null;
+            //} 
 
             Console.Write("\nKontrolaOtevenehoNeboOtevreniSobroruExel - OK");
-            return KontrolaOtevenehoNeboOtevreniSobroruExel(App, Cesta);
+            return (App, KontrolaOtevenehoNeboOtevreniSobroruExel(App, Cesta));
         }
 
         /// <summary>Kontrola otevřeného souboru v Excel</summary>
-        public static Exc.Workbook KontrolaOtevenehoNeboOtevreniSobroruExel(Exc.Application ExApp, string Cesta)
+        public static Exc.Workbook KontrolaOtevenehoNeboOtevreniSobroruExel(Exc.Application App, string Cesta)
         {
             Console.Write("\nMetoda Kontrola Oteveneho Nebo Otevreni Sobroru Exel");
             Console.Write("\nCesta" + Cesta.ToLowerInvariant());
-            foreach (Exc.Workbook item in ExApp.Workbooks)
+            if (File.Exists(Cesta))
             {
-                Console.Write("\nName=" + item.Name);
-                if (item.Name == System.IO.Path.GetFileName(Cesta.ToLowerInvariant()))
-                    return item;
+                Console.Write("\nSoubor není otevřen kontrola ");
+                //return null;
+                //nefunuguje otevření souboru
+                return App.Workbooks.Open(Cesta.ToLowerInvariant());
             }
-            Console.Write("\nSoubor není otevřen kontrola ");
-            //return null;
-            //nefunuguje otevření souboru
-            return ExApp.Workbooks.Open(Cesta.ToLowerInvariant());
+            return App.Workbooks.Add();
+            //foreach (Exc.Workbook item in App.Workbooks)
+            //{
+            //    Console.Write("\nName=" + item.Name);
+            //    if (item.Name == System.IO.Path.GetFileName(Cesta.ToLowerInvariant()))
+            //        return item;
+            //}
+
         }
 
         //public Exc.Application AplikaceExcel()
@@ -194,7 +209,7 @@ namespace Aplikace.Excel
         {
             if (!System.IO.File.Exists(cesta)) return [];
 
-            var Xls = DokumetExcel(cesta);
+            var (App,Xls) = DokumetExcel(cesta);
             if (Xls == null) return [];
             Console.Write("\nDokument excel - Otevřen");
 
@@ -356,7 +371,7 @@ namespace Aplikace.Excel
         {
             if (!System.IO.File.Exists(cesta)) return [];
 
-            var Xls = DokumetExcel(cesta);
+            var (App, Xls) = DokumetExcel(cesta);
             if (Xls == null) return [];
             Console.Write("\nDokument excel - Otevřen");
 
@@ -403,7 +418,7 @@ namespace Aplikace.Excel
         {
             if (!System.IO.File.Exists(cesta)) return;
 
-            var Xls = DokumetExcel(cesta);
+            var (App, Xls) = DokumetExcel(cesta);
             if (Xls == null) return;
             Console.Write("\nDokument excel - Otevřen");
 
@@ -474,7 +489,7 @@ namespace Aplikace.Excel
 
             if (!System.IO.File.Exists(cesta)) return;
 
-            var Xls = DokumetExcel(cesta);
+            var (App, Xls) = DokumetExcel(cesta);
             if (Xls == null) return;
             Console.Write("\nDokument excel - Otevřen");
 
@@ -1407,27 +1422,27 @@ namespace Aplikace.Excel
         }
 
         /// <summary>Nový dokument Elektro pro přípravu elektro seznamů </summary>
-        internal static Worksheet ExcelElektro(string cesta)
+        internal static (Exc.Application ExApp, Exc.Workbook?, Exc.Worksheet? xls) ExcelElektro(string cesta)
         {   
-            //Exc.Application? App;
+            Exc.Application? App;
             Exc.Workbook? Doc;
-            Exc.Worksheet? xls;
-
+            Exc.Worksheet? Xls;
+            
             if (File.Exists(cesta))
             {
-                Doc = ExcelApp.DokumetExcel(cesta);
-                if (Doc == null) return null;
+                (App, Doc) = ExcelApp.DokumetExcel(cesta);
+                if (Doc == null) return (App, Doc, null);
                 //Nastavení listu
-                xls = ExcelApp.GetSheet(Doc, "Seznam Elektro");
-                if (Doc == null) return null;
+                Xls = ExcelApp.GetSheet(Doc, "Seznam Elektro");
+                if (Doc == null) return (App, Doc, Xls);
             }
             else
-            { 
-                Doc = VytvorNovyDokument();
-                xls = PridatNovyList(Doc, "Seznam Elektro");
+            {
+                (App, Doc) = VytvorNovyDokument();
+                Xls = PridatNovyList(Doc, "Seznam Elektro");
             }
-            xls.Activate();
-            return xls;
+            Xls.Activate();
+            return (App, Doc, Xls);
         }
     }
 }

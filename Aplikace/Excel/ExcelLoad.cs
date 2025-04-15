@@ -58,7 +58,7 @@ namespace Aplikace.Excel
             {
                 if (!System.IO.File.Exists(cesta)) return [];
 
-                var Xls = ExcelApp.DokumetExcel(cesta);
+                var (App, Xls) = ExcelApp.DokumetExcel(cesta);
                 if (Xls == null) return [];
                 Console.WriteLine("Dokument excel - Otevřen");
 

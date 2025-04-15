@@ -39,14 +39,13 @@ namespace Aplikace.Upravy
 
             //vytvoření nebo otevření dokumentu elektro
             var cesta = Path.Combine(basePath, filename);
-            Worksheet xls = ExcelApp.ExcelElektro(cesta);
-            Workbook doc = xls.Parent;
+            var (App, Doc ,Xls) = ExcelApp.ExcelElektro(cesta);
 
             //Vytvoření nadpisů
-            var range = ExcelApp.Nadpisy(xls, [.. Nadpis.dataCz()]);
+            var range = ExcelApp.Nadpisy(Xls, [.. Nadpis.dataCz()]);
 
             //Formátování nadpisů
-            ExcelApp.NadpisSet(xls, range);
+            ExcelApp.NadpisSet(Xls, range);
 
             //if (Stara.Count < 1)
             //{
@@ -57,7 +56,7 @@ namespace Aplikace.Upravy
                 //Stara.Add(["1",     "2",    "3",    "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
             //}
             //ExcelApp.ExcelSaveClass(xls, Stara);
-            ExcelApp.ClassToExcel(xls, "Seznam Elektro", Radek: 3, Stara);
+            ExcelApp.ClassToExcel(Xls, "Seznam Elektro", Radek: 3, Stara);
             //Doplnění vzorců doExel
             //ExcelApp.ExcelSaveVzorce(xls, Stara.Count);
 
@@ -81,27 +80,37 @@ namespace Aplikace.Upravy
             var PoleData = KabelList.Kabely(Stara);
 
             //Nová záložka
-            xls = ExcelApp.PridatNovyList(doc, "Kabely");
+            Xls = ExcelApp.PridatNovyList(Doc, "Kabely");
 
             //Doplnení nadpisu a ramecku
-            ExcelApp.ExcelSaveNadpis(xls, PoleData);
+            ExcelApp.ExcelSaveNadpis(Xls, PoleData);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
-            ExcelApp.ExcelSaveTable(xls, PoleData, 3);
+            ExcelApp.ExcelSaveTable(Xls, PoleData, 3);
 
             //vyzváření seznamu kabelů podle krytérii
-            Pridat.Soucet(doc, PoleData);
-            Application ex = doc.Parent;
-            if(!File.Exists(cesta))
-                doc.SaveAs(cesta);
-
-            doc.Close(false);
-
-            ex.Quit();
+            Pridat.Soucet(Doc, PoleData);
+            
+            var Proces =  Soubory.GetExcelProcess(App);
+            if (!File.Exists(cesta))
+                Doc.SaveAs(cesta);
+            else
+            { 
+                if(!Soubory.IsFileLocked(cesta))
+                    //Doc.Save();
+                    // Zavření bez uložení
+                    Doc.Close(false);
+            }
+            App.Quit();
 
             // Uvolnění COM objektů
-            Marshal.ReleaseComObject(doc);
-            Marshal.ReleaseComObject(ex);
+            Marshal.ReleaseComObject(Doc);
+            Marshal.ReleaseComObject(App);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Soubory.KillExcel(Proces);
 
             //if (File.Exists(cesta))
             //    File.Delete(cesta);
