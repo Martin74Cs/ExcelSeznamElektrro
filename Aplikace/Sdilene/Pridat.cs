@@ -18,9 +18,12 @@ namespace Aplikace.Sdilene
             var nove = new List<Zarizeni>();
             foreach (var item in pole)
             {
-                if (double.TryParse(item.Napeti, out double U))
-                    if (double.TryParse(item.Prikon, out double kW))
-                        item.Proud = (kW * 1000 / (Math.Sqrt(3) * U * 0.85) ).ToString("F2");
+                if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
+                { 
+                    double Pomoc = kW * 1000 / (Math.Sqrt(3) * U * 0.85); 
+                    //zaokrouhluje na dvě desetinná místa (ne ořezává).
+                    item.Proud = Pomoc.ToString("F2");
+                }
                 nove.Add(item);
             }
             return nove;

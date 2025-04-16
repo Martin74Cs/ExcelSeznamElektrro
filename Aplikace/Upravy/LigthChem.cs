@@ -106,12 +106,23 @@ namespace Aplikace.Upravy
             }
             ExcelApp.App.Quit();
 
-            // Uvolnění COM objektů
-            Marshal.ReleaseComObject(ExcelApp.Doc);
-            Marshal.ReleaseComObject(ExcelApp.App);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                if (ExcelApp.Doc != null)
+                {
+                    Marshal.ReleaseComObject(ExcelApp.Doc);
+                    ExcelApp.Doc = null;
+                }
 
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+                if (ExcelApp.App != null)
+                {
+                    Marshal.ReleaseComObject(ExcelApp.App);
+                    ExcelApp.App = null;
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
 
             Soubory.KillExcel(ExcelApp.Process);
 

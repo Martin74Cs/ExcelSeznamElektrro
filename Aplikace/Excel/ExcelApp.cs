@@ -238,10 +238,10 @@ namespace Aplikace.Excel
                 foreach (var item in CteniSloupcu)
                 {
                     //Čtení buňky
-                    Exc.Range Pok = Xls.Cells[i, item];
+                    Exc.Range Pok = Xls.Cells[i, item]; 
                     object cteni = Pok.Value;
 
-                    string xxx = Convert.ToString(cteni);
+                    string xxx = Convert.ToString(cteni) ?? string.Empty;
                     if (!string.IsNullOrEmpty(xxx))
                     {
                         cteniPole.Add(xxx);
@@ -307,7 +307,7 @@ namespace Aplikace.Excel
 
 
                     //ukladnní infomací do třídy dle jejího názvu parametru
-                    if (dir.TryGetValue(j, out string value))
+                    if (dir.TryGetValue(j, out var value))
                         jeden[value] = xxx; 
                 }
                 if (!string.IsNullOrEmpty(jeden.Prikon))
@@ -367,7 +367,7 @@ namespace Aplikace.Excel
                 for (int Col = 1; Col < 15; Col++)
                 {
                     Exc.Range Pok = Xls.Cells[Row, Col];
-                    if (dir.TryGetValue(Col, out string value) && !string.IsNullOrEmpty(value))
+                    if (dir.TryGetValue(Col, out var value) && !string.IsNullOrEmpty(value))
                         Pok.Value = item[value];
                 }
                 Row++;
@@ -406,7 +406,7 @@ namespace Aplikace.Excel
                     Exc.Range Pok = Xls.Cells[i, item];
                     object cteni = Pok.Value;
 
-                    string xxx = Convert.ToString(cteni);
+                    string xxx = Convert.ToString(cteni)?? string.Empty;
                     if (!string.IsNullOrEmpty(xxx))
                     {
                         //ukladnní infomací do třídy dle jejího názvu parametru
@@ -525,7 +525,8 @@ namespace Aplikace.Excel
                     Exc.Range Pok = Xls.Cells[i, item];
                     object cteni = Pok.Value;
 
-                    string xxx = Convert.ToString(cteni);
+                    //string xxx = Convert.ToString(cteni);
+                    string xxx = Convert.ToString(cteni) ?? string.Empty;;
                     if (!string.IsNullOrEmpty(xxx))
                         cteniPole.Add(xxx);
                 }
@@ -621,7 +622,7 @@ namespace Aplikace.Excel
             //Sada vlasnotnotí 
             var Sloupce = typeof(T).GetProperties();
             foreach (var item in Sloupce)
-                Console.WriteLine(item.Name, item.GetValue(item).ToString());
+                Console.WriteLine(item.Name, item?.GetValue(item)?.ToString());
             //Table tab = new Table();
             //tab.TableStyle = Sdilene.Nastav.SetTable();
 
@@ -688,10 +689,14 @@ namespace Aplikace.Excel
 
                     if (Property.PropertyType == typeof(string[]))
                     {
-                        var Hodnota = (string[])item.GetType().GetProperty(Property.Name).GetValue(item);
+                        //var prop = item?.GetType().GetProperty(Property.Name);
+                        //var value = prop?.GetValue(item) as string[];
+                        //var Hodnota = value ?? [];
+
+                        var Hodnota = (string[])item?.GetType().GetProperty(Property.Name)?.GetValue(item);
                         string Hodpole = string.Empty;
                         //bude vytvožen seznam tohoto pole
-                        foreach (var txt in Hodnota)
+                        foreach (var txt in Hodnota.ToString() ?? string.Empty)
                         {
                             Hodpole += txt + ",";
                         }
@@ -703,7 +708,7 @@ namespace Aplikace.Excel
                     {
                         //ed.WriteMessage("\nFunguje Sloupce " + Sloupce.Length);
                         //ed.WriteMessage("\nFunguje GetProperty " + Property.Name);
-                        var value = item.GetType().GetProperty(Property.Name).GetValue(item).ToString(); // Získání hodnoty vlastnosti
+                        var value = item?.GetType().GetProperty(Property.Name)?.GetValue(item)?.ToString(); // Získání hodnoty vlastnosti
                         //ed.WriteMessage("\nFunguje GetProperty " + value);
                         //if (value == "") 
                         //    value = "x";
@@ -1063,7 +1068,7 @@ namespace Aplikace.Excel
                 Exc.Range Pok = Xls.Cells[i, 4];
                 object cteni = Pok.Value;
 
-                string xxx = Convert.ToString(cteni);
+                string xxx = Convert.ToString(cteni) ?? string.Empty;
                 if (double.TryParse(xxx, out double cislo))
                 {
                     //Hledáni proudu z tabulky Motory500V
@@ -1208,7 +1213,7 @@ namespace Aplikace.Excel
                 Exc.Range Pok = Xls.Cells[i, 1];
                 object cteni = Pok.Value;
 
-                string xxx = Convert.ToString(cteni);
+                string xxx = Convert.ToString(cteni) ?? string.Empty;
 
                 //hledni proudu z tabulky delka
                 var Informace = Vstup.FirstOrDefault(x => x[0] == xxx); //.ToArray(); 
@@ -1246,7 +1251,7 @@ namespace Aplikace.Excel
                 //Čtení nazvu
                 Exc.Range Pok = ListExcel.Cells[i, 1];
                 object cteni = Pok.Value;
-                string xxx = Convert.ToString(cteni);
+                string xxx = Convert.ToString(cteni) ?? string.Empty;
 
                 //hledni proudu z tabulky delka
                 var Informace = Vstup.FirstOrDefault(x => x[0] == xxx); //.ToArray(); 
