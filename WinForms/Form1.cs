@@ -38,6 +38,11 @@ namespace WinForms
         {
             Close();
         }
+
+        private async void button3_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => LigthChem.Hlavni());
+        }
     }
 
     public class ListBoxWriter : TextWriter
