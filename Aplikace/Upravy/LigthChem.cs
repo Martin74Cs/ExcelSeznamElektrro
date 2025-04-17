@@ -92,7 +92,7 @@ namespace Aplikace.Upravy
             ExcelApp.ExcelSaveTable(PoleData, 3);
 
             //vyzváření seznamu kabelů podle krytérii
-            Pridat.Soucet(PoleData);
+            Pridat.Soucet(ExcelApp, PoleData);
             
             //var Proces =  Soubory.GetExcelProcess(ExcelApp.App);
             if (!File.Exists(cesta))

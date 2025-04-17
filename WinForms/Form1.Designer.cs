@@ -32,6 +32,7 @@
             label1 = new Label();
             textBox1 = new TextBox();
             button2 = new Button();
+            listBox1 = new ListBox();
             SuspendLayout();
             // 
             // button1
@@ -43,12 +44,13 @@
             button1.TabIndex = 0;
             button1.Text = "Konec";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F);
-            label1.Location = new Point(121, 21);
+            label1.Location = new Point(592, 21);
             label1.Name = "label1";
             label1.Size = new Size(177, 21);
             label1.TabIndex = 1;
@@ -57,15 +59,15 @@
             // textBox1
             // 
             textBox1.Font = new Font("Segoe UI", 12F);
-            textBox1.Location = new Point(345, 356);
+            textBox1.Location = new Point(12, 409);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 29);
+            textBox1.Size = new Size(449, 29);
             textBox1.TabIndex = 2;
             // 
             // button2
             // 
             button2.Font = new Font("Segoe UI", 12F);
-            button2.Location = new Point(12, 12);
+            button2.Location = new Point(483, 12);
             button2.Name = "button2";
             button2.Size = new Size(86, 38);
             button2.TabIndex = 3;
@@ -73,17 +75,28 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += Button2_Click;
             // 
+            // listBox1
+            // 
+            listBox1.FormattingEnabled = true;
+            listBox1.Location = new Point(12, 17);
+            listBox1.Name = "listBox1";
+            listBox1.Size = new Size(449, 379);
+            listBox1.TabIndex = 4;
+            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged_1;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(listBox1);
             Controls.Add(button2);
             Controls.Add(textBox1);
             Controls.Add(label1);
             Controls.Add(button1);
             Name = "Form1";
             Text = "Form1";
+            Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -94,5 +107,6 @@
         private Label label1;
         private TextBox textBox1;
         private Button button2;
+        private ListBox listBox1;
     }
 }

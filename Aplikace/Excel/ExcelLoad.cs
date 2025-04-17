@@ -63,7 +63,7 @@ namespace Aplikace.Excel
 
             var ExcelApp = new ExcelApp();
             ExcelApp.DokumetExcel(cesta);
-
+            ExcelApp.GetSheet(Tabulka);
             if (ExcelApp.Xls == null) return [];
             Console.WriteLine("Dokument excel - Otevřen");
 
@@ -71,8 +71,8 @@ namespace Aplikace.Excel
             Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
             var Pole = ExcelApp.ExelTable(Radek,Tabulka);
             //Console.WriteLine("Zavřit dokument ");
-            ExcelApp.Doc.Close();
-
+            //ExcelApp.Doc.Close();
+            ExcelApp.ExcelQuit();
             //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             if (Pole.Count > 1) Pole.SaveJsonList(json);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");

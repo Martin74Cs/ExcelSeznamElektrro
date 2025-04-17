@@ -1194,6 +1194,7 @@ namespace Aplikace.Excel
         //ukončení worksheet
         public bool ExcelQuit()
         {
+            if (Doc == null) return false;
             //Uložení dokumentu
             Doc.Close();
 

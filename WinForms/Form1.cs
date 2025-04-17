@@ -1,4 +1,6 @@
-using Aplikace.Upravy;
+﻿using Aplikace.Upravy;
+using System.Text;
+using System.Windows.Forms;
 
 namespace WinForms
 {
@@ -9,10 +11,61 @@ namespace WinForms
             InitializeComponent();
         }
 
-        //P�evod
-        private void Button2_Click(object sender, EventArgs e)
+        //Převod
+        private async void Button2_Click(object sender, EventArgs e)
         {
-            LigthChem.Hlavni();
+            await Task.Run(() => LigthChem.Hlavni());
+            //Console.SetOut(new ListBoxWriter(listBox1));
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Console.SetOut(new ListBoxWriter(listBox1));
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            var box = (ListBox)sender;
+            textBox1.Text = box.Text;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+    }
+
+    public class ListBoxWriter : TextWriter
+    {
+        private readonly ListBox _listBox;
+        private readonly SynchronizationContext _context;
+
+        public ListBoxWriter(ListBox listBox)
+        {
+            _listBox = listBox;
+            _context = SynchronizationContext.Current;
+        }
+
+        public override Encoding Encoding => Encoding.UTF8;
+
+        public override void WriteLine(string value)
+        {
+            //_context.Post(_ => _listBox.Items.Add(value), null);
+            _context.Post(_ =>
+            {
+                _listBox.Items.Add(value);
+                _listBox.TopIndex = _listBox.Items.Count - 1; // ← automatické scrollování dolů
+            }, null);
+        }
+
+        public override void Write(char value)
+        {
+            // Nepřepisujeme po znacích, pouze řádky (volitelné)
         }
     }
 }
