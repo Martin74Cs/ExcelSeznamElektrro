@@ -147,7 +147,8 @@ namespace Aplikace.Seznam
                 "2,5",
 
                 //8. Průřez awg
-                "13",
+                //"13",
+                "",
 
                 //9. Počet žil
                 "Ptc",
@@ -222,7 +223,8 @@ namespace Aplikace.Seznam
                 "2,5",
 
                 //8. Průřez awg
-                "13",
+                //"13",
+                "",
 
                 //9. Počet žil
                 "Ovládání",

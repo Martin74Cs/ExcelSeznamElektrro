@@ -125,24 +125,28 @@ namespace Aplikace.Excel
         public void PridatNovyList(string NazevListu)
         {
             GetSheet(NazevListu);
-            // Přidání nového listu na konec sešitu pokud je XLs praázdné
-            Xls = Doc.Sheets.Add(After: Doc.Sheets[Doc.Sheets.Count]);
-            Xls.Name = NazevListu;
-            Xls.Activate();
             //return xls;
         }
 
         /// <summary> nastavení listu dle jeho jména</summary>
         public void GetSheet(string Nazev)
         {
+            if (Doc == null)
+                return;
             foreach (Exc.Worksheet item in Doc.Sheets)
             {
                 if (item.Name == Nazev)
-                { 
+                {
                     Xls = item;
-                    break;
+                    Xls.Activate();
+                    return;
                 }
             }
+            // Přidání nového listu na konec sešitu pokud je XLs praázdné
+            var listy = Doc.Sheets.Count;
+            Xls = Doc.Sheets.Add(After: Doc.Sheets[listy]);
+            Xls.Name = Nazev;
+            Xls.Activate();
             //return null;
         }
 
