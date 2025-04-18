@@ -199,6 +199,7 @@ namespace Aplikace.Sdilene
                 {
                     foreach (var prop in properties)
                     {
+                        if (prop.Name == "Item") continue;
                         var value = prop.GetValue(source);
                         prop.SetValue(target, value);
                     }

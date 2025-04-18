@@ -60,7 +60,7 @@ namespace Aplikace.Tridy
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
         public string Druh { get; set; } = string.Empty;
         public string Napeti { get; set; } = "400";
-        public string Radek { get; set; }
+        public string Radek { get; set; } = string.Empty;
 
         /// <summary>Rozvaděč</summary>
 
@@ -106,6 +106,7 @@ namespace Aplikace.Tridy
         //}
 
         /// <summary>Volání parametru jako string např. Nadpis[Name]  </summary>
+        [JsonIgnore]
         public object this[string nazev]
         {
             get

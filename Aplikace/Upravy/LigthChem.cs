@@ -125,7 +125,8 @@ namespace Aplikace.Upravy
         public static void PrevodCsvToJson()
         {
             string basePath = @"G:\Můj disk\Elektro";
-            string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
             var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
 
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
@@ -133,7 +134,9 @@ namespace Aplikace.Upravy
             string cesta = Path.Combine(basePath, filename);
             if (!File.Exists(cesta)) return;
             var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
+            
             Prevod.UpdateCsvToJson(Source, Target );
+
             Target.SaveJsonList(Path.ChangeExtension(cesta, ".json"));
         }
 
