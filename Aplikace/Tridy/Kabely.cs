@@ -29,21 +29,21 @@ namespace Aplikace.Tridy
         /// <summary>Rozvaděč</summary>
 
         // Seznam názvů parametrů (vlastností), které chceme vypsat
-        public static List<string> PoleVstup = ["Jmeno", "Vek", "Mesto"];
+        //public static string[] PoleVstup = ["Jmeno", "Vek", "Mesto"];
 
         public static void Vypis(List<Zarizeni> zaznamy)
         {
             // Vypsání hodnot záznamů podle názvů parametrů
             foreach (var zaznam in zaznamy)
             {
-                foreach (var nazevParametru in PoleVstup)
+                foreach (var Property in zaznam.GetType().GetProperties())
                 {
                     // Pomocí reflexe získáme hodnotu vlastnosti
-                    PropertyInfo vlastnost = zaznam.GetType().GetProperty(nazevParametru);
-                    if (vlastnost != null)
+                    //PropertyInfo vlastnost = zaznam.GetType().GetProperty(Property);
+                    if (Property != null)
                     {
-                        var hodnota = vlastnost.GetValue(zaznam);
-                        Console.WriteLine($"{nazevParametru}: {hodnota}");
+                        var hodnota = Property.GetValue(zaznam);
+                        Console.WriteLine($"{Property.Name}: {hodnota}");
                     }
                 }
                 Console.WriteLine();

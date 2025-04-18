@@ -1,4 +1,5 @@
-﻿using Aplikace.Upravy;
+﻿using Aplikace.Sdilene;
+using Aplikace.Upravy;
 using System.Text;
 using System.Windows.Forms;
 
@@ -23,38 +24,37 @@ namespace WinForms
             Console.SetOut(new ListBoxWriter(listBox1));
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             var box = (ListBox)sender;
             textBox1.Text = box.Text;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private async void button3_Click(object sender, EventArgs e)
+        private async void Button3_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.Hlavni());
+            await Task.Run(() => LigthChem.PrevodCsvToJson());
+        }
+
+        private async void Button4_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => Soubory.KillExcel());
         }
     }
 
-    public class ListBoxWriter : TextWriter
+    public class ListBoxWriter(ListBox listBox) : TextWriter
     {
-        private readonly ListBox _listBox;
-        private readonly SynchronizationContext _context;
-
-        public ListBoxWriter(ListBox listBox)
-        {
-            _listBox = listBox;
-            _context = SynchronizationContext.Current;
-        }
+        private readonly ListBox _listBox = listBox;
+        private readonly SynchronizationContext _context = SynchronizationContext.Current;
 
         public override Encoding Encoding => Encoding.UTF8;
 
@@ -68,9 +68,9 @@ namespace WinForms
             }, null);
         }
 
-        public override void Write(char value)
-        {
-            // Nepřepisujeme po znacích, pouze řádky (volitelné)
-        }
+        //public override void Write(char value)
+        //{
+        //    // Nepřepisujeme po znacích, pouze řádky (volitelné)
+        //}
     }
 }

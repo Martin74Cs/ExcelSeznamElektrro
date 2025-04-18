@@ -10,6 +10,7 @@ using System.Reflection.PortableExecutable;
 using System.Data;
 using System.Text.Json.Nodes;
 using Aplikace.Tridy;
+using System.Reflection;
 
 namespace Aplikace.Sdilene
 {
@@ -38,13 +39,19 @@ namespace Aplikace.Sdilene
                 sw.WriteLine(Pole[..^1]);
             }
         }
-        public static void JsonToCsv(List<Zarizeni> json, string file)
+        public static string JsonToCsv(List<Zarizeni> json)
         {
-            string Json = JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
-            JsonToCsv(Json, file);
+            //string Json = JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
+            return JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
+            //JsonToCsv(Json, file);
+        }
+        public static void SaveToCsv(List<Zarizeni> Class, string file)
+        {
+            string json = JsonToCsv(Class);
+            SaveToCsv(json, file);
         }
 
-        public static void JsonToCsv(string json, string file)
+        public static void SaveToCsv(string json, string file)
         {
             // Deserialize JSON to JArray
             JArray jsonArray = JArray.Parse(json);
@@ -63,9 +70,22 @@ namespace Aplikace.Sdilene
                     writer.WriteLine(string.Join(";", headers));
 
                     // Write data rows
-                    foreach (JObject obj in jsonArray)
+                    foreach (JObject obj in jsonArray.Cast<JObject>())
                     {
-                        var values = obj.Properties().Select(p => p.Value.ToString()).ToArray();
+                        //var values = obj.Properties().Select(p => p.Value.ToString()).ToArray();
+
+                        //zachová entery \n
+                        var values = obj.Properties()
+                            .Select(p =>
+                            {
+                                var value = p.Value.ToString()
+                                    .Replace("\"", "\"\"")         // zdvoj uvozovky
+                                    .Replace("\n", " ")            // nebo zachovej \n, jak chceš
+                                    .Replace("\r", " ");           // odstran i \r, pokud je tam
+                                return $"\"{value}\"";            // uzavři do uvozovek
+                            })
+                            .ToArray();
+
                         writer.WriteLine(string.Join(";", values));
                     }
                 }
@@ -139,7 +159,7 @@ namespace Aplikace.Sdilene
         public static string JsonToXml(string json)
         {
             // Zabalíme JSON, pokud začíná polem
-            if (json.TrimStart().StartsWith("["))
+            if (json.TrimStart().StartsWith('['))
             {
                 json = $"{{\"Hlavni\": {json}}}";
             }
@@ -153,14 +173,49 @@ namespace Aplikace.Sdilene
 
             return $"{declaration}{Environment.NewLine}{doc}";
         }
+ 
+        public static void UpdateCsvToJson<T>(List<T> sourceList, List<T> targetList, string keyProperty = "Apid")
+            where T : class, new()
+        {
+            var type = typeof(T);
+            var keyProp = type.GetProperty(keyProperty);
+            if (keyProp == null) throw new ArgumentException($"Property '{keyProperty}' not found.");
+
+            // vytvoř slovník pro rychlé hledání
+            var sourceDict = sourceList.ToDictionary(
+                item => keyProp.GetValue(item)?.ToString() ?? string.Empty
+            );
+
+            // všechny veřejné zapisovatelné vlastnosti kromě klíče
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                 .Where(p => p.CanWrite && p.Name != keyProperty)
+                                 .ToList();
+
+            foreach (var target in targetList)
+            {
+                var key = keyProp.GetValue(target)?.ToString() ?? string.Empty;
+
+                if (sourceDict.TryGetValue(key, out var source))
+                {
+                    foreach (var prop in properties)
+                    {
+                        var value = prop.GetValue(source);
+                        prop.SetValue(target, value);
+                    }
+                }
+            }
+        }
 
         public static void Vypis(this List<List<string>> Pole)
         {
             foreach (var item in Pole)
             {
-
+                foreach (var i in item)
+                {
+                    Console.Write($"{i}, ");
+                }
+                Console.Write("\n");
             }
         }
-
     }
 }

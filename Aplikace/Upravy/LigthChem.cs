@@ -2,8 +2,6 @@
 using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Tridy;
-using Microsoft.Office.Interop.Excel;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using Exc = Microsoft.Office.Interop.Excel;
 
@@ -13,11 +11,21 @@ namespace Aplikace.Upravy
     {
         public static void Hlavni()
         {
-            var xxx = new Zarizeni();
-            xxx.Vypis();
+            //var xxx = new Zarizeni();
+            //xxx.Vypis();
+
+            string basePath;
+            if (Environment.UserDomainName == "D10")
+            {
+                Console.WriteLine("Jsem v práci");
+                basePath = @"c:\a\LightChem\Elektro\";
+            }
+            else { 
+                Console.WriteLine("Jsem doma na Terase");
+                basePath = @"G:\Můj disk\Elektro";
+                }
 
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
-            string basePath = @"c:\a\LightChem\Elektro\";
             string filename = "Seznam.xlsx";
             if (!Directory.Exists(basePath))
                 Directory.CreateDirectory(basePath);
@@ -36,14 +44,15 @@ namespace Aplikace.Upravy
             //Výpočet položky proud
             Stara.AddProud();
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
-            Prevod.JsonToCsv(Stara, Path.ChangeExtension(cesta1, ".csv"));
+            Prevod.SaveToCsv(Stara, Path.ChangeExtension(cesta1, ".csv"));
 
             //vytvoření nebo otevření dokumentu elektro
              var cesta = Path.Combine(basePath, filename);
-            var ExcelApp = new ExcelApp();
+            var ExcelApp = new ExcelApp(cesta);
             //var (App, Doc ,Xls) = ExcelApp.ExcelElektro(cesta);
-            ExcelApp.ExcelElektro(cesta);
-
+            //ExcelApp.ExcelElektro(cesta);
+            
+            ExcelApp.GetSheet("Seznam Elektro");
             //Vytvoření nadpisů
             var range = ExcelApp.Nadpisy([.. Nadpis.DataCz()]);
 
@@ -89,7 +98,8 @@ namespace Aplikace.Upravy
             ExcelApp.ExcelSaveNadpis(PoleData);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
-            ExcelApp.ExcelSaveTable(PoleData, 3);
+            //Dlouho dočasně vypnuto
+            //ExcelApp.ExcelSaveTable(PoleData, 3);
 
             //vyzváření seznamu kabelů podle krytérii
             Pridat.Soucet(ExcelApp, PoleData);
@@ -99,37 +109,33 @@ namespace Aplikace.Upravy
                 ExcelApp.Doc.SaveAs(cesta);
             else
             { 
-                if(!Soubory.IsFileLocked(cesta))
-                    //Doc.Save();
+                ExcelApp.Doc.Save();
+                //if(!Soubory.IsFileLocked(cesta))
                     // Zavření bez uložení
-                    ExcelApp.Doc.Close(false);
+                    //ExcelApp.Doc.Close(false);
             }
-            ExcelApp.App.Quit();
-
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                if (ExcelApp.Doc != null)
-                {
-                    Marshal.ReleaseComObject(ExcelApp.Doc);
-                    ExcelApp.Doc = null;
-                }
-
-                if (ExcelApp.App != null)
-                {
-                    Marshal.ReleaseComObject(ExcelApp.App);
-                    ExcelApp.App = null;
-                }
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            }
-
-            Soubory.KillExcel(ExcelApp.Process);
+            //ExcelApp.App.Quit();
 
             //if (File.Exists(cesta))
             //    File.Delete(cesta);
             //doc.SaveAs(cesta);
             ExcelApp.ExcelQuit();
         }
+
+        public static void PrevodCsvToJson()
+        {
+            string basePath = @"G:\Můj disk\Elektro";
+            string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
+
+            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
+            string filename = @"N92120_Seznam_stroju_zarizeni_250311_250407.csv";
+            string cesta = Path.Combine(basePath, filename);
+            if (!File.Exists(cesta)) return;
+            var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
+            Prevod.UpdateCsvToJson(Source, Target );
+            Target.SaveJsonList(Path.ChangeExtension(cesta, ".json"));
+        }
+
     }
 }

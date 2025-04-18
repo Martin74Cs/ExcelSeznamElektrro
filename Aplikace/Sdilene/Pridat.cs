@@ -83,5 +83,6 @@ namespace Aplikace.Sdilene
             //xls.Cells[Soucet.Count + 1, 4].Formula = xxx může nastat chyba.
             ExcelApp.Xls.Cells[Soucet.Count + 1, 4].FormulaLocal = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
         }
+
     }
 }

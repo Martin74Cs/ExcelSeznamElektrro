@@ -35,6 +35,8 @@
             listBox1 = new ListBox();
             button3 = new Button();
             label2 = new Label();
+            button4 = new Button();
+            label3 = new Label();
             SuspendLayout();
             // 
             // button1
@@ -47,7 +49,7 @@
             button1.TabIndex = 0;
             button1.Text = "Konec";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            button1.Click += Button1_Click;
             // 
             // label1
             // 
@@ -87,9 +89,9 @@
             listBox1.FormattingEnabled = true;
             listBox1.Location = new Point(12, 17);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(594, 364);
+            listBox1.Size = new Size(595, 379);
             listBox1.TabIndex = 4;
-            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged_1;
+            listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged_1;
             // 
             // button3
             // 
@@ -101,7 +103,7 @@
             button3.TabIndex = 6;
             button3.Text = "Doplň Csv -> Json";
             button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            button3.Click += Button3_Click;
             // 
             // label2
             // 
@@ -114,11 +116,36 @@
             label2.TabIndex = 5;
             label2.Text = "Převod Strojů na Elektro";
             // 
+            // button4
+            // 
+            button4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button4.Font = new Font("Segoe UI", 12F);
+            button4.Location = new Point(613, 347);
+            button4.Name = "button4";
+            button4.Size = new Size(167, 38);
+            button4.TabIndex = 8;
+            button4.Text = "Kill Excel";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += Button4_Click;
+            // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 12F);
+            label3.Location = new Point(786, 356);
+            label3.Name = "label3";
+            label3.Size = new Size(86, 21);
+            label3.TabIndex = 7;
+            label3.Text = "Excel Close";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(977, 448);
+            Controls.Add(button4);
+            Controls.Add(label3);
             Controls.Add(button3);
             Controls.Add(label2);
             Controls.Add(listBox1);
@@ -142,5 +169,7 @@
         private ListBox listBox1;
         private Button button3;
         private Label label2;
+        private Button button4;
+        private Label label3;
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +13,9 @@ using System.Xml;
 
 namespace Aplikace.Sdilene
 {
-    public static class Soubory
+    public static partial class Soubory
     {
-        readonly static Encoding čeština = Encoding.GetEncoding(1250); //funguje čeština
+        //readonly static Encoding čeština = Encoding.GetEncoding(1250); //funguje čeština
 
         public static JsonSerializerSettings Nastaveni()
         {
@@ -115,6 +117,96 @@ namespace Aplikace.Sdilene
             return [];
         }
 
+
+        public static List<T> LoadFromCsv<T>(string file) where T : new()
+        {
+            var list = new List<T>();
+
+            using (var reader = new StreamReader(file, Encoding.UTF8))
+            {
+                // Načti hlavičku
+                var headerLine = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(headerLine))
+                    return list; // prázdný soubor
+
+                var headers = headerLine.Split(';');
+                var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+                // Načti data
+                string? line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var values = ParseCsvLine(line, headers.Length);
+                    var obj = new T();
+
+                    for (int i = 0; i < headers.Length && i < values.Count; i++)
+                    {
+                        var header = headers[i];
+                        var property = properties.FirstOrDefault(p => 
+                            string.Equals(p.Name, header, StringComparison.OrdinalIgnoreCase));
+
+                        if (property != null && property.CanWrite)
+                        {
+                            try
+                            {
+                                object? convertedValue = Convert.ChangeType(values[i], property.PropertyType);
+                                property.SetValue(obj, convertedValue);
+                            }
+                            catch
+                            {
+                                // Pokud převod selže, můžeš logovat nebo nastavit výchozí hodnotu
+                            }
+                        }
+                    }
+
+                    list.Add(obj);
+                }
+            }
+            return list; // nebo jsonArray.ToString(Formatting.Indented) pro čitelný výstup
+        }
+
+        private static List<string> ParseCsvLine(string line, int expectedColumns)
+        {
+            var values = new List<string>();
+            var sb = new StringBuilder();
+            bool inQuotes = false;
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+
+                if (c == '"' && (i == 0 || line[i - 1] != '\\'))
+                {
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        sb.Append('"'); // zdvojené uvozovky = 1 uvozovka
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = !inQuotes;
+                    }
+                }
+                else if (c == ';' && !inQuotes)
+                {
+                    values.Add(sb.ToString());
+                    sb.Clear();
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            values.Add(sb.ToString());
+
+            // Doplnění prázdných sloupců, pokud jich je méně než hlaviček
+            while (values.Count < expectedColumns)
+                values.Add("");
+
+            return values;
+        }
+
         public static void KillExcel()
         {
             foreach (var process in Process.GetProcessesByName("EXCEL"))
@@ -148,6 +240,7 @@ namespace Aplikace.Sdilene
         }
 
         [DllImport("user32.dll", SetLastError = true)]
+        //[LibraryImport("user32.dll", SetLastError = true)]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         //[LibraryImport("user32.dll", SetLastError = true)]

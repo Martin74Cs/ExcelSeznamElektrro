@@ -40,8 +40,6 @@ namespace Aplikace.Excel
             }
         }
 
-
-
         /// <summary> Načtení dpkumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
         public static List<Zarizeni> DataExcel(string cesta, string Tabulka, int Radek)
         {
@@ -61,8 +59,8 @@ namespace Aplikace.Excel
 
             if (!System.IO.File.Exists(cesta)) return [];
 
-            var ExcelApp = new ExcelApp();
-            ExcelApp.DokumetExcel(cesta);
+            var ExcelApp = new ExcelApp(cesta);
+            //ExcelApp.DokumetExcel(cesta);
             ExcelApp.GetSheet(Tabulka);
             if (ExcelApp.Xls == null) return [];
             Console.WriteLine("Dokument excel - Otevřen");
@@ -70,8 +68,7 @@ namespace Aplikace.Excel
             if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
             Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
             var Pole = ExcelApp.ExelTable(Radek,Tabulka);
-            //Console.WriteLine("Zavřit dokument ");
-            //ExcelApp.Doc.Close();
+
             ExcelApp.ExcelQuit();
             //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             if (Pole.Count > 1) Pole.SaveJsonList(json);
@@ -79,7 +76,6 @@ namespace Aplikace.Excel
             return Pole;
             
         }
-
 
         /// <summary> Načtení dpkumentu Ecxel do pole Třídy z a vytvořejí JSON</summary>
         public static List<Zarizeni> LoadDataExcelTrida(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
@@ -90,7 +86,7 @@ namespace Aplikace.Excel
 
             //var Pole = new List<Zarizeni>();
             string Soubor = Path.GetFileName(cesta);
-            string Adresar = Path.GetDirectoryName(cesta);
+            string Adresar = Path.GetDirectoryName(cesta) ?? Environment.SpecialFolder.MyDocuments.ToString();
             string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
             if (File.Exists(json))
             {
@@ -107,6 +103,12 @@ namespace Aplikace.Excel
             }
         }
 
-
+        public static string Apid(int length = 9)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
     }
 }

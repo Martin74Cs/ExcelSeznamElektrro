@@ -115,7 +115,8 @@ namespace Aplikace.Seznam
 
                 //vytvoření nebo otevření dokumentu elekro
                 var cesta = Path.Combine(basePath, "Seznam.xlsx");
-                ExcelApp.ExcelElektro(cesta);
+                //ExcelApp.ExcelElektro(cesta);
+                ExcelApp = new ExcelApp(cesta);
                 //doc = xls.Parent;
 
                 //Vytvoření nadpisů
@@ -162,8 +163,9 @@ namespace Aplikace.Seznam
                 //vytvoření nebo otevření dokumentu elekro
                 var cesta = Path.Combine(basePath, "Seznam.xlsx");
                 //(App, Doc, Xls) = ExcelApp.ExcelElektro(cesta);
-                ExcelApp.ExcelElektro(cesta);
+                //ExcelApp.ExcelElektro(cesta);
                 //doc = xls.Parent;
+                ExcelApp = new ExcelApp(cesta);
             }
 
             Console.WriteLine("Probíhá načítaní kabelů");

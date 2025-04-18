@@ -48,11 +48,11 @@ namespace Aplikace.Upravy
             Console.Write($"\n");
             Vypis(pokus);
 
-            var ExcelApp = new ExcelApp();
             //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
             string cestacelek = Path.Combine(BaseAdres, @"zarizeni_vse.xlsx");
-            ExcelApp.NovyExcelSablona(cestacelek);
+            var ExcelApp = new ExcelApp(cestacelek);
+            //ExcelApp.NovyExcelSablona(cestacelek);
             //Worksheet Xls = Doc.Worksheets[1];
             ExcelApp.PridatNovyList("Seznam zažízení");
             ExcelApp.ExcelSave([.. pokus]);

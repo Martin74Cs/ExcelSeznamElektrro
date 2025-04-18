@@ -1,23 +1,61 @@
 ﻿using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-
 using System.Runtime.InteropServices;
 using Exc = Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
 
 namespace Aplikace.Excel
 {
     public class ExcelApp
     {
-        public Exc.Application App { get; set; }
+        public ExcelApp()
+        {
+            //var App = new Exc.Application
+            App = new Exc.Application
+            {
+                Visible = true,
+                DisplayAlerts = false // tohle je klíčové!
+            };
+
+            // Vytvoření nového sešitu
+            //Exc.Workbook Doc = App.Workbooks.Add();
+            Doc = App.Workbooks.Add();
+
+            //Automatikcky se vytvoří nový List1
+            Console.Write("\nVytvořen prázný dokument Excel.");
+            //return (App, Doc);
+        }
+
+        public ExcelApp(string Cesta)
+        {
+            //var App = new Exc.Application
+            App = new Exc.Application
+            {
+                Visible = true,
+                DisplayAlerts = false // tohle je klíčové!
+            };
+            Process = Soubory.GetExcelProcess(App);
+
+            if (File.Exists(Cesta))
+            {
+                Console.WriteLine("\nOpem dokument Excel.");    
+                Doc = App.Workbooks.Add(Cesta);
+                return;
+            }
+            // Vytvoření nového sešitu
+            //Exc.Workbook Doc = App.Workbooks.Add();
+
+            Console.WriteLine("\nVytvořen prázný dokument Excel.");
+            Doc = App.Workbooks.Add();
+            Xls = Doc.Sheets[Doc.Sheets.Count];
+            Xls.Activate();
+            //Automatikcky se vytvoří nový List1
+            //return (App, Doc);
+        }
+
+        public Exc.Application App { get; set; } 
         public Exc.Workbook Doc { get; set; }
         public Exc.Worksheet Xls { get; set; }
         public int Process { get; set; }
@@ -74,51 +112,54 @@ namespace Aplikace.Excel
         //}
 
         /// <summary> Vytvoření nového Excel dokumentu </summary>
-        public void VytvorNovyDokument()
-        {
-            //Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
-            //var App = ExcelExist();
-            //if (App == null) return null;
-            //App.Visible = true;
+        //public void VytvorNovyDokument()
+        //{
+        //    //Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
+        //    //var App = ExcelExist();
+        //    //if (App == null) return null;
+        //    //App.Visible = true;
 
-            //var App = new Exc.Application
-            App = new Exc.Application
-            {
-                Visible = true,
-                DisplayAlerts = false // tohle je klíčové!
-            };
+        //    //var App = new Exc.Application
+        //    App = new Exc.Application
+        //    {
+        //        Visible = true,
+        //        DisplayAlerts = false // tohle je klíčové!
+        //    };
 
-            // Vytvoření nového sešitu
-            //Exc.Workbook Doc = App.Workbooks.Add();
-            Doc = App.Workbooks.Add();
+        //    // Vytvoření nového sešitu
+        //    //Exc.Workbook Doc = App.Workbooks.Add();
+        //    Doc = App.Workbooks.Add();
 
-            //Automatikcky se vytvoří nový List1
-            Console.Write("\nVytvořen prázný dokument Excel.");
-            //return (App, Doc);
-        }
+        //    //Automatikcky se vytvoří nový List1
+        //    Console.Write("\nVytvořen prázný dokument Excel.");
+        //    //return (App, Doc);
+        //}
 
-        public void NovyExcelSablona(string cesta)
-        {
-            /// <summary> Cesta k dresaři kde bylo spuštěno nevím jak funguje u dll </summary>
-            //var AktuallniAdresear = System.Environment.CurrentDirectory + @"\";
-            /// <summary> Cesta k Aresaři kde bylo spuštěno nevím jak funguje u dll </summary>
-            //var AktuallniAdresearJinak = System.IO.Directory.GetCurrentDirectory() + @"\";
+        //public void NovyExcelSablona(string cesta)
+        //{
+        //    /// <summary> Cesta k dresaři kde bylo spuštěno nevím jak funguje u dll </summary>
+        //    //var AktuallniAdresear = System.Environment.CurrentDirectory + @"\";
+        //    /// <summary> Cesta k Aresaři kde bylo spuštěno nevím jak funguje u dll </summary>
+        //    //var AktuallniAdresearJinak = System.IO.Directory.GetCurrentDirectory() + @"\";
 
-            string BaseAdress = Path.Combine(System.Environment.CurrentDirectory, "Podpora");
-            string sablona =  Path.Combine(BaseAdress, "Sablona_SSaZ.xlsx");
-            // pokud neexistuje vlastní šablona použij výchozí
-            //if (!File.Exists(sablona))
-            //var (App, Doc) = VytvorNovyDokument();
-            VytvorNovyDokument();
-            //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
-            App.Visible = true;
-            if(File.Exists(cesta))
-                File.Delete(cesta);
-            File.Copy(sablona, cesta);
-            Doc = App.Workbooks.Open(cesta);
-            Console.Write("\nVytvořen soubor ze šablony Excel.");
-            //return (App, Doc);
-        }
+        //    string BaseAdress = Path.Combine(System.Environment.CurrentDirectory, "Podpora");
+        //    string sablona =  Path.Combine(BaseAdress, "Sablona_SSaZ.xlsx");
+        //    // pokud neexistuje vlastní šablona použij výchozí
+        //    //if (!File.Exists(sablona))
+        //    //var (App, Doc) = VytvorNovyDokument();
+        //    //VytvorNovyDokument();
+        //    //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
+        //    //App.Visible = true;
+
+        //    if (File.Exists(cesta))
+        //        File.Delete(cesta);
+        //    File.Copy(sablona, cesta);
+
+        //    //new ExcelApp(cesta);
+        //    //Doc = App.Workbooks.Open(cesta);
+        //    //Console.Write("\nVytvořen soubor ze šablony Excel.");
+        //    //return (App, Doc);
+        //}
 
 
         /// <summary> Přidání nového listu do Excelového dokumentu </summary>
@@ -276,6 +317,7 @@ namespace Aplikace.Excel
             //Nastavení listu
             GetSheet(Tabulka);
 
+            //Sloupce Exel odpovídající názvům tříd.
             var dir = new Dictionary<int, string>() {
                 {1, "Radek"     },
                 {2, "Tag"       },
@@ -307,17 +349,25 @@ namespace Aplikace.Excel
                     string xxx = Convert.ToString(Pok.Value);
 
                     //přeskočit prázdné buňky a nulové
-                    if (string.IsNullOrEmpty(xxx) || xxx == "0") continue;
-
+                    if (string.IsNullOrEmpty(xxx) || xxx == "0")
+                    { 
+                        //Console.WriteLine($"Radek {pocet++} - je prázdný");
+                        continue;
+                    }
 
                     //ukladnní infomací do třídy dle jejího názvu parametru
                     if (dir.TryGetValue(j, out var value))
                         jeden[value] = xxx; 
                 }
                 if (!string.IsNullOrEmpty(jeden.Prikon))
-                { 
+                {
+                    jeden.Apid = ExcelLoad.Apid();
                     Pole.Add(jeden);
                     Console.WriteLine($"Radek {pocet++} - přídán");
+                }
+                else
+                {
+                    Console.WriteLine($"Radek {pocet++} - přeskočen, Příkon {jeden.Prikon} - není číslo");
                 }
 
                 //if (!string.IsNullOrEmpty(Pole[1]) && Pole[1] != "0")
@@ -504,6 +554,7 @@ namespace Aplikace.Excel
             string cesta1 = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
             var Motory500 = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2);
+            Motory500.Vypis();
 
             if (!System.IO.File.Exists(cesta)) return;
 
@@ -672,7 +723,7 @@ namespace Aplikace.Excel
                         Console.WriteLine("Jedná se o IsGenericType");
                         if (Property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                         {
-                            var xx = item.GetType().GetProperty(Property.Name).GetValue(item) as List<T>;
+                            var xx = item?.GetType().GetProperty(Property.Name)?.GetValue(item) as List<T>;
                             //var dad = xx.GetProperties();
 
                             var Sloudvapce = typeof(T).GetProperties();
@@ -897,7 +948,7 @@ namespace Aplikace.Excel
 
         public Exc.Range Nadpisy(Nadpis[] data)
         {
-    
+            
             int col = 1;
             //Tisk pole data
             foreach (var item in data)
@@ -1191,19 +1242,34 @@ namespace Aplikace.Excel
             return true;
         }
 
-        //ukončení worksheet
-        public bool ExcelQuit()
+        
+        ///<summary>Console.WriteLine("Zavřit dokument ");ukončení worksheet </summary>
+        public bool ExcelQuit(bool UkonceniApplikace = true)
         {
+            //ukončení worksheet
             if (Doc == null) return false;
+            Console.WriteLine("Zavřit dokument "); 
             //Uložení dokumentu
             Doc.Close();
 
-            // Ukončení aplikace Excel
-            //work.Application.Quit();
+            if (UkonceniApplikace == true)
+            { 
+                // Ukončení aplikace Excel
+                Console.WriteLine("Zavřit dokument "); 
+                if (App == null) return false;
+                App.Quit();
+            }
 
-            // Uvolněte paměť
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                Marshal.ReleaseComObject(Doc);
+                Marshal.ReleaseComObject(App);
+
+                // Uvolněte paměť
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+            Soubory.KillExcel(Process);
 
             return true;
         }
@@ -1449,30 +1515,30 @@ namespace Aplikace.Excel
         }
 
         /// <summary>Nový dokument Elektro pro přípravu elektro seznamů </summary>
-        public void ExcelElektro(string cesta)
-        {   
+        //public void ExcelElektro(string cesta)
+        //{   
            
-            if (File.Exists(cesta))
-            {
-                //(App, Doc) = ExcelApp.DokumetExcel(cesta);
-                DokumetExcel(cesta);
-                //if (Doc == null) return (App, Doc, null);
-                //if (Doc == null) return (App, Doc, null);
-                if (Doc == null) return;
-                //Nastavení listu
-                GetSheet("Seznam Elektro");
-                //if (Doc == null) return (App, Doc, Xls);
-                if (Doc == null) return;
-            }
-            else
-            {
-                VytvorNovyDokument();
-                //(App, Doc) = VytvorNovyDokument();
-                PridatNovyList("Seznam Elektro");
-            }
-            Xls.Activate();
-            //return (App, Doc, Xls);
-            return;
-        }
+        //    if (File.Exists(cesta))
+        //    {
+        //        //(App, Doc) = ExcelApp.DokumetExcel(cesta);
+        //        DokumetExcel(cesta);
+        //        //if (Doc == null) return (App, Doc, null);
+        //        //if (Doc == null) return (App, Doc, null);
+        //        if (Doc == null) return;
+        //        //Nastavení listu
+        //        GetSheet("Seznam Elektro");
+        //        //if (Doc == null) return (App, Doc, Xls);
+        //        if (Doc == null) return;
+        //    }
+        //    else
+        //    {
+        //        //VytvorNovyDokument();
+        //        //(App, Doc) = VytvorNovyDokument();
+        //        PridatNovyList("Seznam Elektro");
+        //    }
+        //    Xls.Activate();
+        //    //return (App, Doc, Xls);
+        //    return;
+        //}
     }
 }

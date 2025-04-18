@@ -12,27 +12,28 @@ namespace Aplikace.Tridy
 
     public class Zarizeni : Entity
     {
-        public Zarizeni() { }
-        public Zarizeni(string Tag, string PID, string Popis, string Prikon ,string BalenaJednotka, string Menic , string Nic, string HPstr , string Proud, string PruzezMM2, string AWG, 
-        string Delka, string Delkaft , string Rozvadec , string RozvadecCislo )
-        {
-            this.Tag = Tag;
-            this.PID = PID;
-            this.Popis = Popis;
-            this.Prikon = Prikon;
-            this.BalenaJednotka = BalenaJednotka;
-            this.Menic = Menic;
-            this.Nic = Nic;
-            //hp
-            this.Proud = Proud;
-            this.PruzezMM2 = PruzezMM2;
-            this.AWG = AWG;
-            this.Delka = Delka;
-            this.Delkaft = Delkaft;
-            this.Rozvadec = Rozvadec;
-            this.RozvadecCislo = RozvadecCislo;
-            //this.Druh = Druh;
-        }
+        //public Zarizeni() { }
+
+        //public Zarizeni(string Tag, string PID, string Popis, string Prikon ,string BalenaJednotka, string Menic , string Nic, string HPstr , string Proud, string PruzezMM2, string AWG, 
+        //string Delka, string Delkaft , string Rozvadec , string RozvadecCislo )
+        //{
+        //    this.Tag = Tag;
+        //    this.PID = PID;
+        //    this.Popis = Popis;
+        //    this.Prikon = Prikon;
+        //    this.BalenaJednotka = BalenaJednotka;
+        //    this.Menic = Menic;
+        //    this.Nic = Nic;
+        //    //hp
+        //    this.Proud = Proud;
+        //    this.PruzezMM2 = PruzezMM2;
+        //    this.AWG = AWG;
+        //    this.Delka = Delka;
+        //    this.Delkaft = Delkaft;
+        //    this.Rozvadec = Rozvadec;
+        //    this.RozvadecCislo = RozvadecCislo;
+        //    //this.Druh = Druh;
+        //}
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
 
         //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
