@@ -127,5 +127,23 @@ namespace Aplikace.Tridy
                       .Select(p => p.Name)
                        .ToList();
 
+        public static void Vypis(List<Zarizeni> zaznamy)
+        {
+            // Vypsání hodnot záznamů podle názvů parametrů
+            foreach (var zaznam in zaznamy)
+            {
+                foreach (var Property in zaznam.GetType().GetProperties())
+                {
+                    // Pomocí reflexe získáme hodnotu vlastnosti
+                    //PropertyInfo vlastnost = zaznam.GetType().GetProperty(Property);
+                    if (Property != null)
+                    {
+                        var hodnota = Property.GetValue(zaznam);
+                        Console.WriteLine($"{Property.Name}: {hodnota}");
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
     }
 }

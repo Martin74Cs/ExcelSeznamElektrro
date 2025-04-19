@@ -37,6 +37,8 @@
             label2 = new Label();
             button4 = new Button();
             label3 = new Label();
+            button5 = new Button();
+            label4 = new Label();
             SuspendLayout();
             // 
             // button1
@@ -139,11 +141,36 @@
             label3.TabIndex = 7;
             label3.Text = "Excel Close";
             // 
+            // button5
+            // 
+            button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button5.Font = new Font("Segoe UI", 12F);
+            button5.Location = new Point(615, 184);
+            button5.Name = "button5";
+            button5.Size = new Size(167, 38);
+            button5.TabIndex = 10;
+            button5.Text = "Přidat Kabely";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 12F);
+            label4.Location = new Point(788, 193);
+            label4.Name = "label4";
+            label4.Size = new Size(139, 21);
+            label4.TabIndex = 9;
+            label4.Text = "dle proudu a délky";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(977, 448);
+            Controls.Add(button5);
+            Controls.Add(label4);
             Controls.Add(button4);
             Controls.Add(label3);
             Controls.Add(button3);
@@ -171,5 +198,7 @@
         private Label label2;
         private Button button4;
         private Label label3;
+        private Button button5;
+        private Label label4;
     }
 }

@@ -49,6 +49,11 @@ namespace WinForms
         {
             await Task.Run(() => Soubory.KillExcel());
         }
+
+        private async void button5_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => LigthChem.KabelyAdd());
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter

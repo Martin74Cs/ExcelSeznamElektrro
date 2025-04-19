@@ -174,24 +174,25 @@ namespace Aplikace.Sdilene
             return $"{declaration}{Environment.NewLine}{doc}";
         }
  
-        public static void UpdateCsvToJson<T>(List<T> sourceList, List<T> targetList, string keyProperty = "Apid")
+        public static void UpdateCsvToJson<T>(List<T> sourceList, List<T> targets, string keyProperty = "Apid")
             where T : class, new()
         {
             var type = typeof(T);
             var keyProp = type.GetProperty(keyProperty);
             if (keyProp == null) throw new ArgumentException($"Property '{keyProperty}' not found.");
 
-            // vytvoř slovník pro rychlé hledání
+            // vytvoř slovník pro rychlé hledání dle klíče Apid
             var sourceDict = sourceList.ToDictionary(
                 item => keyProp.GetValue(item)?.ToString() ?? string.Empty
             );
 
-            // všechny veřejné zapisovatelné vlastnosti kromě klíče
+            // všechny veřejné zapisovatelné vlastnosti kromě klíče a Item
+            //item nevím co to je
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                 .Where(p => p.CanWrite && p.Name != keyProperty)
+                                 .Where(p => p.CanWrite && p.Name != keyProperty && p.Name != "Item")
                                  .ToList();
 
-            foreach (var target in targetList)
+            foreach (var target in targets)
             {
                 var key = keyProp.GetValue(target)?.ToString() ?? string.Empty;
 
@@ -199,7 +200,6 @@ namespace Aplikace.Sdilene
                 {
                     foreach (var prop in properties)
                     {
-                        if (prop.Name == "Item") continue;
                         var value = prop.GetValue(source);
                         prop.SetValue(target, value);
                     }

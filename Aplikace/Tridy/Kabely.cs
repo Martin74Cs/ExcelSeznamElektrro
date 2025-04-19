@@ -24,31 +24,129 @@ namespace Aplikace.Tridy
         public string Druh { get; set; } = string.Empty;
 
         public string OdkudSvokra { get; set; } = string.Empty;
-        
+
         public string Delka { get; set; } = string.Empty;
         /// <summary>Rozvaděč</summary>
 
         // Seznam názvů parametrů (vlastností), které chceme vypsat
         //public static string[] PoleVstup = ["Jmeno", "Vek", "Mesto"];
 
-        public static void Vypis(List<Zarizeni> zaznamy)
+    }
+
+    public class Kabel : Entity
+    {
+        //public string Deleni { get; set; } = string.Empty;
+        //public string Označení { get; set; } = string.Empty;
+        //public string Proud { get; set; } = string.Empty;
+
+        public string Name { get; set; } = string.Empty;
+        public string Proud { get; set; }
+
+        public float SLmm2 { get; set; }
+
+        //průřez PEN vodiče
+        [Display(Name = "průřez PEN vodiče")]
+        public float SPENmm2 { get; set; }
+
+        //proudové zatížení ve vzduchu svisle
+        public float IzAGsvis { get; set; }
+
+        //proudové zatížení ve vzduchu vovorovně 
+        public float IzAGvod { get; set; }
+
+        //proudové zatížení ve vzduchu vedle sebe
+        public float IzAFlin { get; set; }
+
+        //proudové zatížení ve  vzduchu trojůhelnik
+        public float IzAFtroj { get; set; }
+
+        //proudové zatížení v zemi
+        public float IzAE { get; set; }
+
+        //proudové zatížení v trubce v zemi
+        public float IzAD1 { get; set; }
+
+        //proudové zatížení přímo v zemi
+        public float IzAD2 { get; set; }
+
+        //proudové zatížení na stěně
+        public float IzAC { get; set; }
+
+        //proudové zatížení v trubce na stěně
+        public float IzAB { get; set; }
+
+        //proudové zatížení v izolační stěne
+        public float IzAA { get; set; }
+
+        //odpor krajního vodiče
+        public float RLOhmkm { get; set; }
+
+        //odpor PEN vodiče
+        public float RPENOhmkm { get; set; }
+
+        //induktance krajního vodiče
+        public float XLOhmkm { get; set; }
+
+        //induktance PEN vodiče
+        public float XPENOhmkm { get; set; }
+
+        //tau časová oteplovací konstanta vedení
+        public float Taus { get; set; }
+
+        public float TpracstC { get; set; }
+        public float TpretstC { get; set; }
+        public float TzkratstC { get; set; }
+
+        //složky netočivé impedance vedení / složky sousledné impedance vedení
+        public float RoR1 { get; set; }
+
+        //složky netočivé impedance vedení / složky sousledné impedance vedení
+        public float XoX1 { get; set; }
+    }
+
+    public class KabelVse : Kabel
+    {
+        public float MaxProud
         {
-            // Vypsání hodnot záznamů podle názvů parametrů
-            foreach (var zaznam in zaznamy)
+            get
             {
-                foreach (var Property in zaznam.GetType().GetProperties())
-                {
-                    // Pomocí reflexe získáme hodnotu vlastnosti
-                    //PropertyInfo vlastnost = zaznam.GetType().GetProperty(Property);
-                    if (Property != null)
-                    {
-                        var hodnota = Property.GetValue(zaznam);
-                        Console.WriteLine($"{Property.Name}: {hodnota}");
-                    }
-                }
-                Console.WriteLine();
+                float[] Poudy = new float[] { IzAGsvis, IzAGvod, IzAFlin, IzAFtroj, IzAE, IzAD1, IzAD2, IzAC, IzAB, IzAA };
+                return Poudy.Max();
             }
         }
 
+        //https://home.zcu.cz/~hejtman/PEC/Prednasky/pred4.pdf
+
+        public double DeltaU1f(KabelVse kabel, float proud, float delka, double uhel)
+        {
+            //Ubytek ve fazí
+            var du = proud * ((kabel.RLOhmkm * Math.Cos(uhel)) + (kabel.XLOhmkm * Math.Sin(uhel)));
+            //Ubytek ve Nule
+            var duPen = proud * ((kabel.RPENOhmkm * Math.Cos(uhel)) + (kabel.XPENOhmkm * Math.Sin(uhel)));
+
+            return (du + duPen) / 1000 * delka;
+        }
+
+        public double DeltaU3f(KabelVse kabel, float proud, float delka, double uhel)
+        {
+            var odpor = (kabel.RLOhmkm * Math.Cos(uhel)) + (kabel.XLOhmkm * Math.Sin(uhel));
+            var odporpe = (kabel.RPENOhmkm * Math.Cos(uhel)) + (kabel.XPENOhmkm * Math.Sin(uhel));
+            var du = proud * (odpor + odporpe) / 1000;
+            var v = delka * du; // / Math.Sqrt(3);
+            return v;
+        }
+
+        public double ProcentaU3f(KabelVse kabel, float napeti, float proud, float delka, double uhel) =>
+           DeltaU3f(kabel, proud, delka, uhel) / napeti * 100;
     }
+
+    public static class Extension
+    {
+        public static double DeltaU3f(this KabelVse kabel, float proud, float delka, double uhel) =>
+           new KabelVse().DeltaU3f(kabel, proud, delka, uhel);
+
+        public static double UProcenta(this KabelVse kabel, float napeti, float proud, float delka, double uhel) =>
+            new KabelVse().ProcentaU3f(kabel, napeti, proud, delka, uhel);
+    }
+
 }
