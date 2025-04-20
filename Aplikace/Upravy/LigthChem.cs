@@ -192,10 +192,16 @@ namespace Aplikace.Upravy
             string CestaKM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\KM.csv";
 
             var FM = Soubory.LoadFromCsv<Menic>(CestaFM);
+            Console.WriteLine($"Pocet menicu: {FM.Count}");
+            
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
+            Console.WriteLine($"Pocet stykaču: {KM.Count}");
 
             FM.SaveJsonList(Path.Combine(basePath, "FM.json"));
+            Console.WriteLine($"Měniče uloženy jako Json");
+
             KM.SaveJsonList(Path.Combine(basePath, "KM.json"));
+            Console.WriteLine($"Stykače uloženy jako Json");
         }
     }
 }
