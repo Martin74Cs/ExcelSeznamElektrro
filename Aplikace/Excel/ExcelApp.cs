@@ -10,23 +10,15 @@ namespace Aplikace.Excel
 {
     public class ExcelApp
     {
-        public ExcelApp()
-        {
-            //var App = new Exc.Application
-            App = new Exc.Application
-            {
-                Visible = true,
-                DisplayAlerts = false // tohle je klíčové!
-            };
 
-            // Vytvoření nového sešitu
-            //Exc.Workbook Doc = App.Workbooks.Add();
-            Doc = App.Workbooks.Add();
+        public Exc.Application App { get; set; } 
+        public Exc.Workbook Doc { get; set; }
+        public Exc.Worksheet Xls { get; set; }
+        public int Process { get; set; }
+        static int record = 0;
 
-            //Automatikcky se vytvoří nový List1
-            Console.Write("\nVytvořen prázný dokument Excel.");
-            //return (App, Doc);
-        }
+        public ExcelApp()   : this("") // zavolá druhý konstruktor s prázdným stringem
+        { }
 
         public ExcelApp(string Cesta)
         {
@@ -41,26 +33,23 @@ namespace Aplikace.Excel
             if (File.Exists(Cesta))
             {
                 Console.WriteLine("\nOpem dokument Excel.");    
+                // Vytvoření nového sešitu
+                //Automatikcky se vytvoří nový List1
                 Doc = App.Workbooks.Add(Cesta);
+                Xls = Doc.Sheets[1];
+                Xls.Activate();
                 return;
             }
-            // Vytvoření nového sešitu
             //Exc.Workbook Doc = App.Workbooks.Add();
 
             Console.WriteLine("\nVytvořen prázný dokument Excel.");
+            //Automatikcky se vytvoří nový List1
             Doc = App.Workbooks.Add();
             Xls = Doc.Sheets[Doc.Sheets.Count];
             Xls.Activate();
-            //Automatikcky se vytvoří nový List1
+            Console.Write("\nVztvořený dokument nastaven Aktivní.");
             //return (App, Doc);
         }
-
-        public Exc.Application App { get; set; } 
-        public Exc.Workbook Doc { get; set; }
-        public Exc.Worksheet Xls { get; set; }
-        public int Process { get; set; }
-
-        static int record = 0;
 
         //[DllImport("oleaut32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         //private static extern int GetActiveObject(ref Guid rclsid, IntPtr reserved, out object ppunk);

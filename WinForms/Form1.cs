@@ -50,9 +50,14 @@ namespace WinForms
             await Task.Run(() => Soubory.KillExcel());
         }
 
-        private async void button5_Click(object sender, EventArgs e)
+        private async void Button5_Click(object sender, EventArgs e)
         {
             await Task.Run(() => LigthChem.KabelyAdd());
+        }
+
+        private async void Button6_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => LigthChem.VyvoritFMKM());
         }
     }
 

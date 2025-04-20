@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace Aplikace.Tridy
 {
+    public class Kabely
+    { 
+
+    }
 
     public class Zarizeni : Entity
     {
@@ -61,10 +65,14 @@ namespace Aplikace.Tridy
         public string Druh { get; set; } = string.Empty;
         public string Napeti { get; set; } = "400";
         public string Radek { get; set; } = string.Empty;
+        public string Deleni { get; set; } = string.Empty;
 
-        /// <summary>Rozvaděč</summary>
+        [JsonIgnore]
+        public Kabel Kabel { get; set; } = new();
+
 
         // Vypsání hodnot záznamů podle názvů parametrů
+        /// <summary>Rozvaděč</summary>
         public void Vypis()
         {
 
@@ -107,7 +115,7 @@ namespace Aplikace.Tridy
 
         /// <summary>Volání parametru jako string např. Nadpis[Name]  </summary>
         [JsonIgnore]
-        public object this[string nazev]
+        public object? this[string nazev]
         {
             get
             {

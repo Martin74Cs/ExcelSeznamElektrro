@@ -8,10 +8,10 @@ namespace Aplikace.Tridy
     public class Generator
     {
 
-        static void Main(string[] args)
+        public static void Hlavni()
         {
             // Seznam stringů obsahující názvy vlastností
-            List<string> propertyNames = new List<string> { "Name", "Age", "Occupation" };
+            List<string> propertyNames = ["Name", "Age", "Occupation"];
 
             // Vytvoření dynamické třídy
             Type dynamicClass = CreateDynamicClass(propertyNames);
@@ -34,7 +34,7 @@ namespace Aplikace.Tridy
         public static Type CreateDynamicClass(List<string> propertyNames)
         {
             // Dynamický generátor třídy
-            AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
+            AssemblyName assemblyName = new("DynamicAssembly");
             AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
 
@@ -68,7 +68,7 @@ namespace Aplikace.Tridy
             getIL.Emit(OpCodes.Ret);
 
             // Vytvoření set metody
-            MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + propertyName, MethodAttributes.Public, null, new Type[] { propertyType });
+            MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + propertyName, MethodAttributes.Public, null, [propertyType]);
             ILGenerator setIL = setMethodBuilder.GetILGenerator();
             setIL.Emit(OpCodes.Ldarg_0);
             setIL.Emit(OpCodes.Ldarg_1);
@@ -91,7 +91,7 @@ namespace Aplikace.Tridy
         }
 
         // Získání hodnoty vlastnosti
-        public static object GetPropertyValue(object obj, string propertyName)
+        public static object? GetPropertyValue(object obj, string propertyName)
         {
             PropertyInfo prop = obj.GetType().GetProperty(propertyName);
             if (prop != null && prop.CanRead)

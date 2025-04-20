@@ -4,6 +4,7 @@ using Aplikace.Seznam;
 using Aplikace.Tridy;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Exc = Microsoft.Office.Interop.Excel;
 
 namespace Aplikace.Upravy
@@ -131,10 +132,11 @@ namespace Aplikace.Upravy
             var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
 
             var KabelCu = Soubory.LoadJsonList<KabelVse>(Cesty.CuJson)
-                .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase))
-                .OrderByDescending(x => x.Proud);
-            var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.Proud);
-      
+                .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
+                .OrderBy(x => x.IzAE).ToList();
+            KabelCu.SaveJsonList(Path.ChangeExtension(cesta1, ".txt"));
+
+            var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.IzAE );
 
             //item nevím co to je
             var properties = typeof(Zarizeni).GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -148,9 +150,12 @@ namespace Aplikace.Upravy
                     //var value = prop.GetValue(target);
                     var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > Convert.ToDouble(target.Proud));
                     if (JedenKabel == null) continue;
+
                     //prop.SetValue(target, value);
-                    target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.Name);
-                    
+                    //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
+                    target.PruzezMM2 = JedenKabel.SLmm2.ToString();
+                    target.Deleni = JedenKabel.Deleni;
+                    target.Kabel = JedenKabel;
                 }
 
             }
@@ -174,7 +179,23 @@ namespace Aplikace.Upravy
             Prevod.UpdateCsvToJson(Source, Target );
 
             Target.SaveJsonList(cesta1);
+            Prevod.SaveToCsv(Target, Path.ChangeExtension(cesta1, ".csv"));
         }
 
+        public static void VyvoritFMKM()
+        {
+            var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
+            var dir = Path.GetDirectoryName(cesta);         // Získá adresář, kde je spustitelný soubor
+
+            string basePath = @"G:\Můj disk\Elektro";
+            string CestaFM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\FM.csv";
+            string CestaKM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\KM.csv";
+
+            var FM = Soubory.LoadFromCsv<Menic>(CestaFM);
+            var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
+
+            FM.SaveJsonList(Path.Combine(basePath, "FM.json"));
+            KM.SaveJsonList(Path.Combine(basePath, "KM.json"));
+        }
     }
 }

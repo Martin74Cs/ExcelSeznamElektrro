@@ -39,6 +39,8 @@
             label3 = new Label();
             button5 = new Button();
             label4 = new Label();
+            button6 = new Button();
+            label5 = new Label();
             SuspendLayout();
             // 
             // button1
@@ -122,7 +124,7 @@
             // 
             button4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button4.Font = new Font("Segoe UI", 12F);
-            button4.Location = new Point(613, 347);
+            button4.Location = new Point(613, 398);
             button4.Name = "button4";
             button4.Size = new Size(167, 38);
             button4.TabIndex = 8;
@@ -135,7 +137,7 @@
             label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F);
-            label3.Location = new Point(786, 356);
+            label3.Location = new Point(786, 407);
             label3.Name = "label3";
             label3.Size = new Size(86, 21);
             label3.TabIndex = 7;
@@ -151,7 +153,7 @@
             button5.TabIndex = 10;
             button5.Text = "Přidat Kabely";
             button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
+            button5.Click += Button5_Click;
             // 
             // label4
             // 
@@ -164,11 +166,36 @@
             label4.TabIndex = 9;
             label4.Text = "dle proudu a délky";
             // 
+            // button6
+            // 
+            button6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button6.Font = new Font("Segoe UI", 12F);
+            button6.Location = new Point(613, 354);
+            button6.Name = "button6";
+            button6.Size = new Size(167, 38);
+            button6.TabIndex = 12;
+            button6.Text = "Vytvoř FM,KM";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += Button6_Click;
+            // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 12F);
+            label5.Location = new Point(786, 363);
+            label5.Name = "label5";
+            label5.Size = new Size(139, 21);
+            label5.TabIndex = 11;
+            label5.Text = "dle proudu a délky";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(977, 448);
+            Controls.Add(button6);
+            Controls.Add(label5);
             Controls.Add(button5);
             Controls.Add(label4);
             Controls.Add(button4);
@@ -200,5 +227,7 @@
         private Label label3;
         private Button button5;
         private Label label4;
+        private Button button6;
+        private Label label5;
     }
 }

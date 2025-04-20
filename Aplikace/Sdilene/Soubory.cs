@@ -118,13 +118,15 @@ namespace Aplikace.Sdilene
         }
 
 
-        public static List<T> LoadFromCsv<T>(string file) where T : new()
+        public static List<T> LoadFromCsv<T>(string file ) where T : new()
         {
             var list = new List<T>();
 
-            using (var reader = new StreamReader(file, Encoding.UTF8))
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //using (var reader = new StreamReader(file, Encoding.UTF8))
+            using (var reader = new StreamReader(file, Encoding.GetEncoding(1250)))
             {
-                // Načti hlavičku
+                //Načti hlavičku
                 var headerLine = reader.ReadLine();
                 if (string.IsNullOrWhiteSpace(headerLine))
                     return list; // prázdný soubor
@@ -132,13 +134,12 @@ namespace Aplikace.Sdilene
                 var headers = headerLine.Split(';');
                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-                // Načti data
+                //Načti data
                 string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     var values = ParseCsvLine(line, headers.Length);
                     var obj = new T();
-
                     for (int i = 0; i < headers.Length && i < values.Count; i++)
                     {
                         var header = headers[i];
@@ -152,13 +153,10 @@ namespace Aplikace.Sdilene
                                 object? convertedValue = Convert.ChangeType(values[i], property.PropertyType);
                                 property.SetValue(obj, convertedValue);
                             }
-                            catch
-                            {
-                                // Pokud převod selže, můžeš logovat nebo nastavit výchozí hodnotu
-                            }
+                            catch { // Pokud převod selže, můžeš logovat nebo nastavit výchozí hodnotu
+                                    }
                         }
                     }
-
                     list.Add(obj);
                 }
             }
@@ -174,7 +172,6 @@ namespace Aplikace.Sdilene
             for (int i = 0; i < line.Length; i++)
             {
                 char c = line[i];
-
                 if (c == '"' && (i == 0 || line[i - 1] != '\\'))
                 {
                     if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
@@ -183,9 +180,7 @@ namespace Aplikace.Sdilene
                         i++;
                     }
                     else
-                    {
                         inQuotes = !inQuotes;
-                    }
                 }
                 else if (c == ';' && !inQuotes)
                 {
@@ -193,9 +188,7 @@ namespace Aplikace.Sdilene
                     sb.Clear();
                 }
                 else
-                {
                     sb.Append(c);
-                }
             }
 
             values.Add(sb.ToString());

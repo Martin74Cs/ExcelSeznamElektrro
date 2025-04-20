@@ -19,7 +19,7 @@ namespace Aplikace.Tridy
         public string Velikost { get; set; } = string.Empty;   // Velikost rámu (např. R1, R2, ...)
         public int NapetiMin { get; set; }                     // Minimální napětí
         public int NapetiMax { get; set; }                     // Maximální napětí
-
+        public string Výrobce { get; set; }
         public static List<Menic> Nacti(string cesta)
         {
             var vysledek = new List<Menic>();

@@ -24,10 +24,10 @@ namespace Aplikace.Tridy
         public int Napeti { get; set; }
 
         // Rozsah napětí ovládání – AC
-        public string NapetiOvládáníAC { get; set; } = string.Empty; 
+        public string NapetiOvladaniAC { get; set; } = string.Empty; 
 
         // Rozsah napětí ovládání – DC
-        public string NapetiOvládáníDC { get; set; } = string.Empty; 
+        public string NapetiOvladaniDC { get; set; } = string.Empty; 
 
         // Počet normálně otevřených kontaktů (NO)
         public int NO { get; set; }
@@ -46,5 +46,6 @@ namespace Aplikace.Tridy
 
         // Maximální teplota (např. okolí) v °C
         public int Teplota { get; set; }
+        public string Výrobce { get; set; }
     }
 }

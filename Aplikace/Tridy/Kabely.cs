@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Aplikace.Tridy
 {
-    public class Kabely
+    public class Trasa
     {
         public string Tag { get; set; } = string.Empty;
         /// <summary>Jméno zařízení</summary>
@@ -41,6 +41,7 @@ namespace Aplikace.Tridy
 
         public string Name { get; set; } = string.Empty;
         public string Proud { get; set; }
+        public string Deleni { get; set; }
 
         public float SLmm2 { get; set; }
 
@@ -110,14 +111,14 @@ namespace Aplikace.Tridy
         {
             get
             {
-                float[] Poudy = new float[] { IzAGsvis, IzAGvod, IzAFlin, IzAFtroj, IzAE, IzAD1, IzAD2, IzAC, IzAB, IzAA };
+                float[] Poudy = [IzAGsvis, IzAGvod, IzAFlin, IzAFtroj, IzAE, IzAD1, IzAD2, IzAC, IzAB, IzAA];
                 return Poudy.Max();
             }
         }
 
         //https://home.zcu.cz/~hejtman/PEC/Prednasky/pred4.pdf
 
-        public double DeltaU1f(KabelVse kabel, float proud, float delka, double uhel)
+        public static double DeltaU1f(KabelVse kabel, float proud, float delka, double uhel)
         {
             //Ubytek ve fazí
             var du = proud * ((kabel.RLOhmkm * Math.Cos(uhel)) + (kabel.XLOhmkm * Math.Sin(uhel)));
@@ -127,7 +128,7 @@ namespace Aplikace.Tridy
             return (du + duPen) / 1000 * delka;
         }
 
-        public double DeltaU3f(KabelVse kabel, float proud, float delka, double uhel)
+        public static double DeltaU3f(KabelVse kabel, float proud, float delka, double uhel)
         {
             var odpor = (kabel.RLOhmkm * Math.Cos(uhel)) + (kabel.XLOhmkm * Math.Sin(uhel));
             var odporpe = (kabel.RPENOhmkm * Math.Cos(uhel)) + (kabel.XPENOhmkm * Math.Sin(uhel));
@@ -136,17 +137,19 @@ namespace Aplikace.Tridy
             return v;
         }
 
-        public double ProcentaU3f(KabelVse kabel, float napeti, float proud, float delka, double uhel) =>
-           DeltaU3f(kabel, proud, delka, uhel) / napeti * 100;
+        public static double ProcentaU3f(KabelVse kabel, float napeti, float proud, float delka, double uhel)
+        {
+            return DeltaU3f(kabel, proud, delka, uhel) / napeti * 100;
+        }
     }
 
     public static class Extension
     {
         public static double DeltaU3f(this KabelVse kabel, float proud, float delka, double uhel) =>
-           new KabelVse().DeltaU3f(kabel, proud, delka, uhel);
+           KabelVse.DeltaU3f(kabel, proud, delka, uhel);
 
         public static double UProcenta(this KabelVse kabel, float napeti, float proud, float delka, double uhel) =>
-            new KabelVse().ProcentaU3f(kabel, napeti, proud, delka, uhel);
+            KabelVse.ProcentaU3f(kabel, napeti, proud, delka, uhel);
     }
 
 }

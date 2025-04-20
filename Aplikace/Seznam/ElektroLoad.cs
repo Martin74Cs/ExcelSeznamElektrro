@@ -83,8 +83,8 @@ namespace Aplikace.Seznam
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
-            Exc.Worksheet Xls;
-            Exc.Workbook Doc;
+            //Exc.Worksheet Xls;
+            //Exc.Workbook Doc;
             Exc.Application App;
 
             //Načtení json z Milanového seznamu čerpadel
@@ -94,7 +94,6 @@ namespace Aplikace.Seznam
                 string cestaPump = @"U:\Elektro\mcsato\Zakázky\Natron\pumps.json";
                 if (File.Exists(cestaPump))
                     Pumps = Pump.Load(cestaPump); 
-
             }
 
             Console.WriteLine("\n----------------------------");
