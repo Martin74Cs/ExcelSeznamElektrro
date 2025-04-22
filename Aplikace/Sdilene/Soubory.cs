@@ -143,6 +143,7 @@ namespace Aplikace.Sdilene
                     for (int i = 0; i < headers.Length && i < values.Count; i++)
                     {
                         var header = headers[i];
+                        //Najdi v seznamu vlastností první vlastnost, jejíž název(p.Name) odpovídá názvu sloupce(header) z CSV, bez ohledu na velikost písmen(case -insensitive).
                         var property = properties.FirstOrDefault(p => 
                             string.Equals(p.Name, header, StringComparison.OrdinalIgnoreCase));
 

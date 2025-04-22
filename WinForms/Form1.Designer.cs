@@ -41,6 +41,8 @@
             label4 = new Label();
             button6 = new Button();
             label5 = new Label();
+            button7 = new Button();
+            label6 = new Label();
             SuspendLayout();
             // 
             // button1
@@ -185,15 +187,40 @@
             label5.Font = new Font("Segoe UI", 12F);
             label5.Location = new Point(786, 363);
             label5.Name = "label5";
-            label5.Size = new Size(139, 21);
+            label5.Size = new Size(92, 21);
             label5.TabIndex = 11;
-            label5.Text = "dle proudu a délky";
+            label5.Text = "CSV to Json";
+            // 
+            // button7
+            // 
+            button7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button7.Font = new Font("Segoe UI", 12F);
+            button7.Location = new Point(613, 310);
+            button7.Name = "button7";
+            button7.Size = new Size(167, 38);
+            button7.TabIndex = 14;
+            button7.Text = "Vytvoř Motry";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += Button7_Click;
+            // 
+            // label6
+            // 
+            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 12F);
+            label6.Location = new Point(786, 319);
+            label6.Name = "label6";
+            label6.Size = new Size(92, 21);
+            label6.TabIndex = 13;
+            label6.Text = "CSV to Json";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(977, 448);
+            Controls.Add(button7);
+            Controls.Add(label6);
             Controls.Add(button6);
             Controls.Add(label5);
             Controls.Add(button5);
@@ -229,5 +256,7 @@
         private Label label4;
         private Button button6;
         private Label label5;
+        private Button button7;
+        private Label label6;
     }
 }

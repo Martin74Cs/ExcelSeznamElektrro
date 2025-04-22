@@ -4,6 +4,7 @@ using Aplikace.Seznam;
 using Aplikace.Tridy;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using static Aplikace.Tridy.Motor;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Exc = Microsoft.Office.Interop.Excel;
 
@@ -11,6 +12,25 @@ namespace Aplikace.Upravy
 {
     public class LigthChem
     {
+        public static string BasePath {
+            get
+            {
+                if (Environment.UserDomainName == "D10")
+                    return @"c:\a\LightChem\Elektro\";
+                else
+                    return @"G:\Můj disk\Elektro";
+            }
+        }
+        public static string GooglePath
+        {
+            get
+            {
+                if (Environment.UserDomainName == "D10")
+                    return @"E:\Můj disk\Elektro";
+                else
+                    return @"G:\Můj disk\Elektro";
+            }
+        }
         public static void Hlavni()
         {
             //var xxx = new Zarizeni();
@@ -187,9 +207,11 @@ namespace Aplikace.Upravy
             var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
             var dir = Path.GetDirectoryName(cesta);         // Získá adresář, kde je spustitelný soubor
 
-            string basePath = @"G:\Můj disk\Elektro";
-            string CestaFM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\FM.csv";
-            string CestaKM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\KM.csv";
+            string basePath = Path.Combine(GooglePath, "Data");
+            //string CestaFM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\FM.csv";
+            //string CestaKM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\KM.csv";
+            string CestaFM = Path.Combine(basePath, "FM.csv");
+            string CestaKM = Path.Combine(basePath, "KM.csv"); 
 
             var FM = Soubory.LoadFromCsv<Menic>(CestaFM);
             Console.WriteLine($"Pocet menicu: {FM.Count}");
@@ -197,11 +219,21 @@ namespace Aplikace.Upravy
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
             Console.WriteLine($"Pocet stykaču: {KM.Count}");
 
-            FM.SaveJsonList(Path.Combine(basePath, "FM.json"));
+            FM.SaveJsonList(Path.ChangeExtension(CestaFM, ".json"));
             Console.WriteLine($"Měniče uloženy jako Json");
 
-            KM.SaveJsonList(Path.Combine(basePath, "KM.json"));
+            KM.SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
             Console.WriteLine($"Stykače uloženy jako Json");
+        }
+
+        public static void VyvoritMotor()
+        {
+            string basePath = Path.Combine(GooglePath, "Data" , "Motory");
+            string CestaMotor = Path.Combine(basePath, "Motory.csv");
+            var Motor = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            Console.WriteLine($"Pocet motorů: {Motor.Count}");
+            Motor.SaveJsonList(Path.ChangeExtension(CestaMotor, ".json"));
+            Console.WriteLine($"Motory uloženy jako Json");
         }
     }
 }

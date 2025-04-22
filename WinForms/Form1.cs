@@ -59,6 +59,11 @@ namespace WinForms
         {
             await Task.Run(() => LigthChem.VyvoritFMKM());
         }
+
+        private async void Button7_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => LigthChem.VyvoritMotor());
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter
