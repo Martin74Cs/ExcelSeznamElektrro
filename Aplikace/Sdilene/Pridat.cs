@@ -1,5 +1,6 @@
 ﻿using Aplikace.Excel;
 using Aplikace.Tridy;
+using Aplikace.Upravy;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,20 @@ namespace Aplikace.Sdilene
         /// <summary>výpočet proudu </summary>
         public static List<Zarizeni> AddProud(this List<Zarizeni> pole)
         {
+            string Cesta = Path.Combine(LigthChem.GooglePath, "Data", "Motory", "Motory.json");
+            var Motory = Soubory.LoadJsonList<Motor>(Cesta).OrderBy(x => x.Vykon50).ToList();
+
             // Přidání vlastnosti "Proud" do každého zařízení
             var nove = new List<Zarizeni>();
+            double cos = 0.9;
             foreach (var item in pole)
             {
+
                 if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
                 { 
-                    double Pomoc = kW * 1000 / (Math.Sqrt(3) * U * 0.85); 
+                    var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 > kW && x.Otacky50 == 3000);
+                    if(JedenMotor != null) cos = JedenMotor.Ucinik50;
+                    double Pomoc = kW * 1000 / (Math.Sqrt(3) * U * cos); 
                     //zaokrouhluje na dvě desetinná místa (ne ořezává).
                     item.Proud = Pomoc.ToString("F2");
                 }

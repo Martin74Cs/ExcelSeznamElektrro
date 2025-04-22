@@ -45,7 +45,7 @@ namespace Aplikace.Upravy
             else { 
                 Console.WriteLine("Jsem doma na Terase");
                 basePath = @"G:\Můj disk\Elektro";
-                }
+            }
 
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             string filename = "Seznam.xlsx";
@@ -65,6 +65,7 @@ namespace Aplikace.Upravy
 
             //Výpočet položky proud
             Stara.AddProud();
+
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             Prevod.SaveToCsv(Stara, Path.ChangeExtension(cesta1, ".csv"));
 
@@ -146,7 +147,7 @@ namespace Aplikace.Upravy
 
         public static void KabelyAdd()
         {
-            string basePath = @"G:\Můj disk\Elektro";
+            string basePath = GooglePath;
             //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
             var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
@@ -234,7 +235,7 @@ namespace Aplikace.Upravy
             Console.WriteLine($"Pocet motorů: {Motor.Count}");
 
             string CestaMotor3000 = Path.Combine(basePath, "Motory3000.csv");
-            var Motor3000 = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            var Motor3000 = Soubory.LoadFromCsv<Motor>(CestaMotor3000);
             Console.WriteLine($"Pocet motorů: {Motor3000.Count}");
 
             Motor.AddRange(Motor3000);

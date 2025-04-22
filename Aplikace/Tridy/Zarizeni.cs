@@ -70,6 +70,8 @@ namespace Aplikace.Tridy
         [JsonIgnore]
         public Kabel Kabel { get; set; } = new();
 
+        [JsonIgnore]
+        public Motor Motor { get; set; } = new();
 
         // Vypsání hodnot záznamů podle názvů parametrů
         /// <summary>Rozvaděč</summary>
