@@ -232,6 +232,14 @@ namespace Aplikace.Upravy
             string CestaMotor = Path.Combine(basePath, "Motory.csv");
             var Motor = Soubory.LoadFromCsv<Motor>(CestaMotor);
             Console.WriteLine($"Pocet motorů: {Motor.Count}");
+
+            string CestaMotor3000 = Path.Combine(basePath, "Motory3000.csv");
+            var Motor3000 = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            Console.WriteLine($"Pocet motorů: {Motor3000.Count}");
+
+            Motor.AddRange(Motor3000);
+            Console.WriteLine($"Pocet motorů: {Motor.Count}");
+
             Motor.SaveJsonList(Path.ChangeExtension(CestaMotor, ".json"));
             Console.WriteLine($"Motory uloženy jako Json");
         }
