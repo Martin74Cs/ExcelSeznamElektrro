@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aplikace.Sdilene
 {
@@ -146,6 +147,9 @@ namespace Aplikace.Sdilene
                         //Najdi v seznamu vlastností první vlastnost, jejíž název(p.Name) odpovídá názvu sloupce(header) z CSV, bez ohledu na velikost písmen(case -insensitive).
                         var property = properties.FirstOrDefault(p => 
                             string.Equals(p.Name, header, StringComparison.OrdinalIgnoreCase));
+                        if(header == "Obvod" || header == "Plocha" || header == "Objem") 
+                            values[i] = values[i].Split(' ').FirstOrDefault(); // odstranění uvozovek
+                        if (string.IsNullOrEmpty(values[i])) continue;
 
                         if (property != null && property.CanWrite)
                         {
@@ -158,7 +162,7 @@ namespace Aplikace.Sdilene
                                     }
                         }
                     }
-                    list.Add(obj);
+                     list.Add(obj);
                 }
             }
             return list; // nebo jsonArray.ToString(Formatting.Indented) pro čitelný výstup

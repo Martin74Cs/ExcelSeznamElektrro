@@ -18,7 +18,11 @@ using Exc = Microsoft.Office.Interop.Excel;
 
 //Lithtchem
 //var LigthChem = new LigthChem();
-LigthChem.Hlavni();
+//LigthChem.Hlavni();
+
+//Mistnoti
+Místnosti.VytvoritSeznamy();
+
 
 ////Třdění jdenotlivých PS
 //var Filtr = pokus.GroupBy(x => x.cunit.pfx + " " + x.cunit.num)

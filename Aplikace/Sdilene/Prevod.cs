@@ -39,13 +39,13 @@ namespace Aplikace.Sdilene
                 sw.WriteLine(Pole[..^1]);
             }
         }
-        public static string JsonToCsv(List<Zarizeni> json)
+        public static string JsonToCsv<T>(List<T> json)
         {
             //string Json = JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
             return JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
             //JsonToCsv(Json, file);
         }
-        public static void SaveToCsv(List<Zarizeni> Class, string file)
+        public static void SaveToCsv<T>(List<T> Class, string file)
         {
             string json = JsonToCsv(Class);
             SaveToCsv(json, file);
@@ -178,9 +178,7 @@ namespace Aplikace.Sdilene
             where T : class, new()
         {
             var type = typeof(T);
-            var keyProp = type.GetProperty(keyProperty);
-            if (keyProp == null) throw new ArgumentException($"Property '{keyProperty}' not found.");
-
+            var keyProp = type.GetProperty(keyProperty) ?? throw new ArgumentException($"Property '{keyProperty}' not found.");
             // vytvoř slovník pro rychlé hledání dle klíče Apid
             var sourceDict = sourceList.ToDictionary(
                 item => keyProp.GetValue(item)?.ToString() ?? string.Empty

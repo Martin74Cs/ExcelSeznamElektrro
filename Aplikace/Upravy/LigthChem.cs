@@ -12,25 +12,6 @@ namespace Aplikace.Upravy
 {
     public class LigthChem
     {
-        public static string BasePath {
-            get
-            {
-                if (Environment.UserDomainName == "D10")
-                    return @"c:\a\LightChem\Elektro\";
-                else
-                    return @"G:\Můj disk\Elektro";
-            }
-        }
-        public static string GooglePath
-        {
-            get
-            {
-                if (Environment.UserDomainName == "D10")
-                    return @"E:\Můj disk\Elektro";
-                else
-                    return @"G:\Můj disk\Elektro";
-            }
-        }
         public static void Hlavni()
         {
             //var xxx = new Zarizeni();
@@ -84,14 +65,37 @@ namespace Aplikace.Upravy
 
             //if (Stara.Count < 1)
             //{
-                //Fake data
-                //toto je vzor pro vytvoření tabulky
-                //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
-                //var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-                //Stara.Add(["1",     "2",    "3",    "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
+            //Fake data
+            //toto je vzor pro vytvoření tabulky
+            //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
+            //var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            //Stara.Add(["1",     "2",    "3",    "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
             //}
             //ExcelApp.ExcelSaveClass(xls, Stara);
-            ExcelApp.ClassToExcel(Row: 3, Stara);
+
+            //čísla sloupců a nazvy tříd. použíty pouze čísla do 15
+            var dir = new Dictionary<int, string>() {
+                {1,"Tag"},
+                {2,"Popis"},
+                {3,"Prikon"},
+                {4,"Napeti"},
+                {5,"Proud"},
+                {6,"BalenaJednotka"},
+                {7,"Menic"},
+                {8,"Druh"},
+                {9,"PruzezMM2"},
+                {10,"Delka"},
+                {11,"Rozvadec"},
+                {12,"RozvadecCislo"},
+
+                {100,"PID"},
+                {101,"Nic"},
+                {102,"HP"},
+                {103,"AWG"},
+                {105,"Napeti"},
+                {106,"Radek"},
+            };
+            ExcelApp.ClassToExcel(Row: 3, Stara, dir);
             //Doplnění vzorců doExel
             //ExcelApp.ExcelSaveVzorce(xls, Stara.Count);
 
@@ -147,7 +151,7 @@ namespace Aplikace.Upravy
 
         public static void KabelyAdd()
         {
-            string basePath = GooglePath;
+            string basePath = Cesty.GooglePath;
             //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
             var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
@@ -205,10 +209,10 @@ namespace Aplikace.Upravy
 
         public static void VyvoritFMKM()
         {
-            var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
-            var dir = Path.GetDirectoryName(cesta);         // Získá adresář, kde je spustitelný soubor
+            //var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
+            //var dir = Path.GetDirectoryName(cesta);         // Získá adresář, kde je spustitelný soubor
 
-            string basePath = Path.Combine(GooglePath, "Data");
+            string basePath = Path.Combine(Cesty.GooglePath, "Data");
             //string CestaFM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\FM.csv";
             //string CestaKM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\KM.csv";
             string CestaFM = Path.Combine(basePath, "FM.csv");
@@ -229,7 +233,7 @@ namespace Aplikace.Upravy
 
         public static void VyvoritMotor()
         {
-            string basePath = Path.Combine(GooglePath, "Data" , "Motory");
+            string basePath = Path.Combine(Cesty.GooglePath, "Data" , "Motory");
             string CestaMotor = Path.Combine(basePath, "Motory.csv");
             var Motor = Soubory.LoadFromCsv<Motor>(CestaMotor);
             Console.WriteLine($"Pocet motorů: {Motor.Count}");

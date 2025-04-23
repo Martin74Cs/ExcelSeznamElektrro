@@ -10,7 +10,6 @@ namespace Aplikace.Excel
 {
     public class ExcelApp
     {
-
         public Exc.Application App { get; set; } 
         public Exc.Workbook Doc { get; set; }
         public Exc.Worksheet Xls { get; set; }
@@ -377,29 +376,25 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public void ClassToExcel(int Row, List<Zarizeni> Pole)
+        public void ClassToExcel<T>(int Row, List<T> Pole, Dictionary<int, string> dir)
         {
-            var dir = new Dictionary<int, string>() {
-            {1,"Tag"},
-            {2,"Popis"},
-            {3,"Prikon"},
-            {4,"Napeti"},
-            {5,"Proud"},
-            {6,"BalenaJednotka"},
-            {7,"Menic"},
-            {8,"Druh"},
-            {9,"PruzezMM2"},
-            {10,"Delka"},
-            {11,"Rozvadec"},
-            {12,"RozvadecCislo"},
 
-            {100,"PID"},
-            {101,"Nic"},
-            {102,"HP"},
-            {103,"AWG"},
-            {105,"Napeti"},
-            {106,"Radek"},
-            };
+            //var properties = typeof(T).GetProperties();
+            var properties = typeof(T).GetProperties().ToDictionary(p => p.Name);
+
+            // kontrola vlastností v dir, jestli existují v T
+            foreach (var kvp in dir)
+            {
+                if (!properties.ContainsKey(kvp.Value))
+                {
+                    Console.WriteLine($"[WARN] Vlastnost '{kvp.Value}' (pro sloupec {kvp.Key}) neexistuje v typu {typeof(T).Name}");
+                }
+            }
+
+            // Vyfiltruj jen ty položky, které mají odpovídající vlastnost ve třídě T
+            var dirFiltered = dir
+                .Where(kvp => properties.ContainsKey(kvp.Value))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             //var cteniPole = new List<string>();
             //var Pole = new List<List<string>>();
@@ -410,8 +405,11 @@ namespace Aplikace.Excel
                 for (int Col = 1; Col < 15; Col++)
                 {
                     Exc.Range Pok = Xls.Cells[Row, Col];
-                    if (dir.TryGetValue(Col, out var value) && !string.IsNullOrEmpty(value))
-                        Pok.Value = item[value];
+                    if (dirFiltered.TryGetValue(Col, out var propName))
+                    {
+                        var prop = properties[propName];
+                        Pok.Value = prop.GetValue(item);
+                    }
                 }
                 Row++;
             }
