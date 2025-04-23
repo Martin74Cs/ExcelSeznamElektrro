@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 
 namespace Aplikace.Tridy
 {
-    public class Kabely
-    { 
 
+    //Pokud chceš jednotky ukládat přímo jako atribut, přidej si vlastní:
+    [AttributeUsage(AttributeTargets.Property)]
+    public class JednotkyAttribute(string text) : Attribute
+    {
+        public string Text { get; } = text;
     }
 
     public class Zarizeni : Entity
@@ -47,15 +50,29 @@ namespace Aplikace.Tridy
         /// <summary>Jméno zařízení</summary>
         [Display(Name = "Jméno zařízení")]
         public string Popis { get; set; } = string.Empty;
+
+        [Display(Name = "Příkon")]
+        [Jednotky("[kW]")]
         public string Prikon { get; set; } = string.Empty;
         public string BalenaJednotka { get; set; } = string.Empty;
         public string Menic { get; set; } = string.Empty;
         public string Nic { get; set; } = string.Empty;
         public double HP => double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0; // Převod textu na číslo a na koně
+
+        [Display(Name = "Proud")]
+        [Jednotky("[A]")]
         public string Proud { get; set; } = string.Empty;
+
+        [Display(Name = "Průřez")]
+        [Jednotky("[mm2]")]
         public string PruzezMM2 { get; set; } = string.Empty;
         public string AWG { get; set; } = string.Empty;
+
+        [Display(Name = "Délka")]
+        [Jednotky("[m]")]
         public string Delka { get; set; } = "100";
+
+
         public string Delkaft { get; set; } = string.Empty;
 
         public string Rozvadec { get; set; } = string.Empty;

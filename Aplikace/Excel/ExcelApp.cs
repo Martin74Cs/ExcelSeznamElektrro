@@ -3,6 +3,7 @@ using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Exc = Microsoft.Office.Interop.Excel;
 
@@ -376,14 +377,14 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public void ClassToExcel<T>(int Row, List<T> Pole, Dictionary<int, string> dir)
+        public void ClassToExcel<T>(int Row, List<T> Pole, Dictionary<int, string> Sloupce)
         {
 
             //var properties = typeof(T).GetProperties();
             var properties = typeof(T).GetProperties().ToDictionary(p => p.Name);
 
             // kontrola vlastností v dir, jestli existují v T
-            foreach (var kvp in dir)
+            foreach (var kvp in Sloupce)
             {
                 if (!properties.ContainsKey(kvp.Value))
                 {
@@ -392,7 +393,7 @@ namespace Aplikace.Excel
             }
 
             // Vyfiltruj jen ty položky, které mají odpovídající vlastnost ve třídě T
-            var dirFiltered = dir
+            var dirFiltered = Sloupce
                 .Where(kvp => properties.ContainsKey(kvp.Value))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
@@ -402,14 +403,14 @@ namespace Aplikace.Excel
             Console.WriteLine($"[Rows.Col]=[{Xls.UsedRange.Rows.Count},{Xls.UsedRange.Columns.Count}]");
             foreach (var item in Pole)
             {
-                for (int Col = 1; Col < 15; Col++)
+                foreach (var kvp in dirFiltered)
                 {
+                    int Col = kvp.Key;
+                    string propName = kvp.Value;
+
                     Exc.Range Pok = Xls.Cells[Row, Col];
-                    if (dirFiltered.TryGetValue(Col, out var propName))
-                    {
-                        var prop = properties[propName];
-                        Pok.Value = prop.GetValue(item);
-                    }
+                    var prop = properties[propName];
+                    Pok.Value = prop.GetValue(item);
                 }
                 Row++;
             }
@@ -952,6 +953,56 @@ namespace Aplikace.Excel
             return Range;
         }
 
+
+
+        public Exc.Range Nadpisy<T>()
+        {
+            int col = 1;
+            //var props = typeof(T).GetProperties();
+
+            //var properties = typeof(T).GetProperties();
+            var properties = typeof(T).GetProperties().ToDictionary(p => p.Name);
+
+            // kontrola vlastností v dir, jestli existují v T
+            foreach (var kvp in Mistnost.Sloupce)
+            {
+                if (!properties.ContainsKey(kvp.Value))
+                {
+                    Console.WriteLine($"[WARN] Vlastnost '{kvp.Value}' (pro sloupec {kvp.Key}) neexistuje v typu {typeof(T).Name}");
+                }
+            }
+
+            // Vyfiltruj jen ty položky, které mají odpovídající vlastnost ve třídě T
+            var dirFiltered = Mistnost.Sloupce
+                .Where(kvp => properties.ContainsKey(kvp.Value))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            //Tisk pole data
+            foreach (var kvp in dirFiltered)
+            {
+                //převod na PropertyInfo
+                var prop = properties[kvp.Value];
+
+                // Načti atribut [Display(Name = "...")]
+                var displayAttr = prop.GetCustomAttribute<DisplayAttribute>();
+                string displayName = displayAttr?.Name ?? prop.Name;
+
+                // Načti atribut [Jednotky("...")] - volitelně, pokud máš
+                var jednotkyAttr = prop.GetCustomAttribute<JednotkyAttribute>();
+                string jednotky = jednotkyAttr?.Text ?? "";
+
+                Xls.Cells[1, col].Value = displayName;
+                Xls.Cells[2, col].Value = jednotky;
+                col++;
+            }
+
+            // Povolení zalamování textu, aby nový řádek byl viditelný
+            //Xls.Range["A1:M1"].WrapText = true;
+            var Range = Xls.Range[Xls.Cells[1, 1], Xls.Cells[2, col - 1]];
+            //polovlit zalamování
+            Range.WrapText = false;
+            return Range;
+        }
 
         /// <summary> uložení dat do excel podle kryterii </summary>
         public void ExcelSaveList(List<List<string>> Vstup)

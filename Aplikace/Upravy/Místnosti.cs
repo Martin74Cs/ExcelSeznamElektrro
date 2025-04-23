@@ -1,7 +1,9 @@
-﻿using Aplikace.Sdilene;
+﻿using Aplikace.Excel;
+using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -38,6 +40,15 @@ namespace Aplikace.Upravy
             cesta = Path.Combine(Cesty.BasePath, "revit", "SO118", "Výkaz místností.csv");
             var Misto3 = Vytvorit(cesta, "SO118");
             Misto.AddRange(Misto3);
+
+            var ExcelApp = new ExcelApp();
+            ExcelApp.GetSheet("Místnosti");
+            
+            //Vytvoření nadpisů
+            ExcelApp.Nadpisy<Mistnost>();
+
+            //Vytvoření dat
+            ExcelApp.ClassToExcel(Row: 2, Misto, Mistnost.Sloupce);
         }
     }
 }

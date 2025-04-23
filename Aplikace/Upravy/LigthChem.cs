@@ -17,21 +17,21 @@ namespace Aplikace.Upravy
             //var xxx = new Zarizeni();
             //xxx.Vypis();
 
-            string basePath;
-            if (Environment.UserDomainName == "D10")
-            {
-                Console.WriteLine("Jsem v práci");
-                basePath = @"c:\a\LightChem\Elektro\";
-            }
-            else { 
-                Console.WriteLine("Jsem doma na Terase");
-                basePath = @"G:\Můj disk\Elektro";
-            }
+            //string basePath;
+            //if (Environment.UserDomainName == "D10")
+            //{
+            //    Console.WriteLine("Jsem v práci");
+            //    basePath = @"c:\a\LightChem\Elektro\";
+            //}
+            //else { 
+            //    Console.WriteLine("Jsem doma na Terase");
+            //    basePath = @"G:\Můj disk\Elektro";
+            //}
 
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             string filename = "Seznam.xlsx";
-            if (!Directory.Exists(basePath))
-                Directory.CreateDirectory(basePath);
+            if (!Directory.Exists(Cesty.BasePath))
+                Directory.CreateDirectory(Cesty.BasePath);
             //string cesta1 = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx");
 
             ////načtení základní infomací pro seznam Elektro dle čísel jednotlivých sloupců
@@ -41,7 +41,7 @@ namespace Aplikace.Upravy
 
             //string cesta1 = Path.Combine(basePath, @"N78020_Consumer_List.xls");
             //var Stara = ExcelLoad.DataExcel(cesta1, "Seznam", 4);
-            string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            string cesta1 = Path.Combine(Cesty.BasePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             var Stara = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
 
             //Výpočet položky proud
@@ -51,7 +51,7 @@ namespace Aplikace.Upravy
             Prevod.SaveToCsv(Stara, Path.ChangeExtension(cesta1, ".csv"));
 
             //vytvoření nebo otevření dokumentu elektro
-             var cesta = Path.Combine(basePath, filename);
+             var cesta = Path.Combine(Cesty.BasePath, filename);
             var ExcelApp = new ExcelApp(cesta);
             //var (App, Doc ,Xls) = ExcelApp.ExcelElektro(cesta);
             //ExcelApp.ExcelElektro(cesta);
