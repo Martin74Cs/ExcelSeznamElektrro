@@ -23,6 +23,7 @@ namespace Aplikace.Upravy
             for (int i = 0; i < Mistnost.Count; i++)
             {
                 Mistnost[i].Objekt = objekt;
+                Mistnost[i].Apid = ExcelLoad.Apid();
             }
             Mistnost.SaveJsonList(Path.ChangeExtension(cesta, ".json"));
             Prevod.SaveToCsv(Mistnost ,Path.ChangeExtension(cesta, ".txt"));
@@ -45,10 +46,11 @@ namespace Aplikace.Upravy
             ExcelApp.GetSheet("Místnosti");
             
             //Vytvoření nadpisů
-            ExcelApp.Nadpisy<Mistnost>();
+            //ExcelApp.Nadpisy<Mistnost>(Mistnost.Sloupce);
+            ExcelApp.Nadpisy(Slaboproudy.SloupceSpojit);
 
             //Vytvoření dat
-            ExcelApp.ClassToExcel(Row: 2, Misto, Mistnost.Sloupce);
+            ExcelApp.ClassToExcel(Row: 2, Misto, Slaboproudy.SloupceSpojit);
         }
     }
 }

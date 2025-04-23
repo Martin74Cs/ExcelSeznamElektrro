@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Aplikace.Rozšíření;
+using Aplikace.Upravy;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,15 +10,25 @@ using System.Threading.Tasks;
 
 namespace Aplikace.Tridy
 {
-    public class Mistnost
+    public class Mistnost : Entity
     {
+        [Display(Name = "Číslo místnosti")]
         public string Číslo { get; set; } = string.Empty;
+
+        [Display(Name = "Název místnosti")]
         public string Název { get; set; } = string.Empty;
+
+        [Display(Name = "Obvod místnosti")]
         public string Podlaží { get; set; } = string.Empty;
         public string Komentáře { get; set; } = string.Empty;
 
+        [Display(Name = "Obvod místnosti")]
         public double Obvod { get; set; }
+
+        [Display(Name = "Plocha mísnosti")]
         public double Plocha { get; set; }
+
+        [Display(Name = "Objem místnosti")]
         public double Objem { get; set; }
 
         [Display(Name = "Povrchová Úprava Podlahy")]
@@ -29,22 +41,87 @@ namespace Aplikace.Tridy
         public string PovrchováÚpravaStěny { get; set; } = string.Empty;
 
         /// <summary>Stavební objekt</summary>
+        [Display(Name = "Stavební objekt")]
         public string Objekt { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public static Dictionary<int, string> Sloupce => new() {
-                {1, "Číslo" },
-                {2, "Název" },
-                {3, "Podlaží" },
-                {4, "Komentáře" },
-                {5, "Obvod" },
-                {6, "Plocha" },
-                {7, "Objem" },
-                //{8, "PovrchováÚpravaPodlahy" },
-                //{9, "PovrchováÚpravaStropu" },
-                //{10, "PovrchováÚpravaStěny" },
-                {8, "Objekt" },
-                //{12, "Sloupce" },
-            };
+        internal static string[] Nadpis =>
+        [
+            "Objekt",
+            "Číslo",
+            "Název",
+            "Podlaží",
+            "Komentáře",
+            "Obvod",
+            "Plocha",
+            "Objem",
+            // "PovrchováÚpravaPodlahy",
+            // "PovrchováÚpravaStropu",
+            // "PovrchováÚpravaStěny",
+        ];
+
+        [JsonIgnore]
+        //public static Dictionary<int, string> Sloupce => new() {
+        //        {1, "Objekt" },
+        //        {2, "Číslo" },
+        //        {2, "Název" },
+        //        {3, "Podlaží" },
+        //        {4, "Komentáře" },
+        //        {5, "Obvod" },
+        //        {6, "Plocha" },
+        //        {7, "Objem" },
+        //        //{8, "PovrchováÚpravaPodlahy" },
+        //        //{9, "PovrchováÚpravaStropu" },
+        //        //{10, "PovrchováÚpravaStěny" },
+        //        //{12, "Sloupce" },
+        //    };
+        public static IDictionary<int, string> Sloupce => Nadpis
+            .Select((name, index) => new { Index = index + 1, Name = name })
+            .ToDictionary(x => x.Index, x => x.Name);
+    }
+
+    public class Slaboproudy : Místnosti
+    {
+        [Display(Name = "Hlásič")]
+        public string EpsHlasic { get; set; } = string.Empty;
+
+        [Display(Name = "Siréna")]
+        public string EpsSirena { get; set; } = string.Empty;
+        
+        [Display(Name = "Plynový detekce")]
+        public string GDS { get; set; } = string.Empty;
+
+        [Display(Name = "Ethernet")]
+        public string Ethernet { get; set; } = string.Empty;
+
+        [Display(Name = "Kamerový systém")]
+        public string Kamera { get; set; } = string.Empty;
+
+        [Display(Name = "Přístupový systém")]
+        public string ACS { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        internal static string[] Nadpis =>
+        [
+            "EpsHlasic",
+            "EpsSirena",
+            "GDS",
+            "Ethernet",
+            "Kamera",
+            "ACS",
+        ];
+
+        [JsonIgnore]
+        public static IDictionary<int, string> Sloupce => Nadpis
+            .Select((name, index) => new { Index = index + 1, Name = name })
+            .ToDictionary(x => x.Index, x => x.Name);
+
+        [JsonIgnore]
+        public static IDictionary<int, string> SloupceSpojit => Mistnost.Nadpis
+                .Concat(Nadpis)
+                .Select((name, index) => new { Index = index + 1, Name = name })
+                .ToDictionary(x => x.Index, x => x.Name);
+
+        //=> Sloupce.AddRange(Mistnost.Sloupce);
     }
 }

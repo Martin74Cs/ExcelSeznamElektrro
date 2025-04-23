@@ -377,7 +377,7 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public void ClassToExcel<T>(int Row, List<T> Pole, Dictionary<int, string> Sloupce)
+        public void ClassToExcel<T>(int Row, List<T> Pole, IDictionary<int, string> Sloupce)
         {
 
             //var properties = typeof(T).GetProperties();
@@ -955,33 +955,66 @@ namespace Aplikace.Excel
 
 
 
-        public Exc.Range Nadpisy<T>()
+        public Exc.Range Nadpisy(IDictionary<int, string> Dir)
         {
             int col = 1;
             //var props = typeof(T).GetProperties();
+            
+            var properties = new List<PropertyInfo>();
+
+            // Projdeme všechny třídy v hierarchii
+            Type currentType = typeof(Slaboproudy);
+            properties.AddRange(currentType.GetProperties(BindingFlags.Public | BindingFlags.Instance));
+            //while (currentType != null)
+            //{
+            //    //currentType = currentType.BaseType;
+            //}
+
+            currentType = typeof(Mistnost);
+            properties.AddRange(currentType.GetProperties(BindingFlags.Public | BindingFlags.Instance));
+            //while (currentType != null)
+            //{
+            //    //currentType = currentType.BaseType;
+            //}
+
+            // Převod na Dictionary
+            //var propertiesDict = properties.ToDictionary(p => p.Name);
 
             //var properties = typeof(T).GetProperties();
-            var properties = typeof(T).GetProperties().ToDictionary(p => p.Name);
+            //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy).ToDictionary(p => p.Name);
+
+            //var test = typeof(Slaboproudy).GetProperties().ToDictionary(p => p.Name);
 
             // kontrola vlastností v dir, jestli existují v T
-            foreach (var kvp in Mistnost.Sloupce)
-            {
-                if (!properties.ContainsKey(kvp.Value))
-                {
-                    Console.WriteLine($"[WARN] Vlastnost '{kvp.Value}' (pro sloupec {kvp.Key}) neexistuje v typu {typeof(T).Name}");
-                }
-            }
+            //foreach (var kvp in Dir)
+            //{
+            //    if (!properties.Contains(kvp.Value))
+            //    {
+            //        Console.WriteLine($"[WARN] Vlastnost '{kvp.Value}' (pro sloupec {kvp.Key}) neexistuje v typu {typeof(T).Name}");
+            //    }
+            //}
 
             // Vyfiltruj jen ty položky, které mají odpovídající vlastnost ve třídě T
-            var dirFiltered = Mistnost.Sloupce
-                .Where(kvp => properties.ContainsKey(kvp.Value))
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            //var dirFiltered = properties
+            //    .Where(p => Dir.Values.Contains(p.Name))
+            //    .ToList();
+                //.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            // Filtruj podle hodnot slovníku (tedy jmen vlastností, které chceš ponechat)
+            //var filtrovane = properties
+            //    .Where(p => Dir.Values.Contains(p.Name))
+            //    .ToDictionary(p => p.Name, p => p);
+
+            var ppp = properties.ToDictionary(p => p.Name);
 
             //Tisk pole data
-            foreach (var kvp in dirFiltered)
+            foreach (var kvp in Dir)
             {
-                //převod na PropertyInfo
-                var prop = properties[kvp.Value];
+                //převod kvp na PropertyInfo
+                var prop = ppp[kvp.Value];
+                //var prop = properties.FirstOrDefault(p => p.Name == kvp.Value);
+
+                if (prop == null) continue;
 
                 // Načti atribut [Display(Name = "...")]
                 var displayAttr = prop.GetCustomAttribute<DisplayAttribute>();
@@ -991,8 +1024,8 @@ namespace Aplikace.Excel
                 var jednotkyAttr = prop.GetCustomAttribute<JednotkyAttribute>();
                 string jednotky = jednotkyAttr?.Text ?? "";
 
-                Xls.Cells[1, col].Value = displayName;
-                Xls.Cells[2, col].Value = jednotky;
+                Xls.Cells[1, kvp.Key].Value = displayName;
+                Xls.Cells[2, kvp.Key].Value = jednotky;
                 col++;
             }
 
