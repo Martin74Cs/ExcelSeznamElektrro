@@ -265,14 +265,13 @@ namespace Aplikace.Sdilene
 
         public static bool IsFileLocked(string path)
         {
-            try
-            {
+            if (!File.Exists(path)) return false;
+            try {
                 using FileStream stream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
                 // Pokud se otevře, není zamčený
                 return false;
             }
-            catch (IOException)
-            {
+            catch (IOException) {
                 // Pokud dojde k výjimce, soubor je pravděpodobně zamčený jiným procesem
                 return true;
             }

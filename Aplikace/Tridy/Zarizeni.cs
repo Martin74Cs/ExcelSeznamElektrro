@@ -44,10 +44,12 @@ namespace Aplikace.Tridy
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
 
         //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
+
+        /// <summary>Označení zařízení </summary>
         public string Tag { get; set; } = string.Empty;
         public string PID { get; set; } = string.Empty;
 
-        /// <summary>Jméno zařízení</summary>
+        /// <summary>Popis zařízení</summary>
         [Display(Name = "Jméno zařízení")]
         public string Popis { get; set; } = string.Empty;
 
@@ -57,7 +59,11 @@ namespace Aplikace.Tridy
         public string BalenaJednotka { get; set; } = string.Empty;
         public string Menic { get; set; } = string.Empty;
         public string Nic { get; set; } = string.Empty;
-        public double HP => double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0; // Převod textu na číslo a na koně
+
+        [JsonIgnore]
+        [Display(Name = "Příkon")]
+        [Jednotky("[hp]")]
+        public double HP => Math.Pow(double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0, 2); // Převod textu na číslo a na koně
 
         [Display(Name = "Proud")]
         [Jednotky("[A]")]
@@ -72,16 +78,22 @@ namespace Aplikace.Tridy
         [Jednotky("[m]")]
         public string Delka { get; set; } = "100";
 
+        [Display(Name = "Délka")]
+        [Jednotky("[ft]")]
 
         public string Delkaft { get; set; } = string.Empty;
 
         public string Rozvadec { get; set; } = string.Empty;
         public string RozvadecCislo { get; set; } = string.Empty;
 
+        /// <summary>Označení celého rozvaděče</summary>
+        [JsonIgnore]
+        public string RozvadecOznačení => Rozvadec + " " + RozvadecCislo;
+
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
         public string Druh { get; set; } = string.Empty;
         public string Napeti { get; set; } = "400";
-        public string Radek { get; set; } = string.Empty;
+        public int Radek { get; set; }  
         public string Deleni { get; set; } = string.Empty;
 
         [JsonIgnore]

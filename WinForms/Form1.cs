@@ -52,7 +52,7 @@ namespace WinForms
 
         private async void Button5_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.KabelyAdd());
+            await Task.Run(() => LigthChem.AddKabely());
         }
 
         private async void Button6_Click(object sender, EventArgs e)
@@ -69,6 +69,11 @@ namespace WinForms
         {
             string cesta = Cesty.BasePath;
             System.Diagnostics.Process.Start("explorer.exe", cesta);
+        }
+
+        private async void Button9_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => LigthChem.AddVyvody());
         }
     }
 

@@ -21,14 +21,22 @@ namespace Aplikace.Sdilene
             // Přidání vlastnosti "Proud" do každého zařízení
             var nove = new List<Zarizeni>();
             double cos = 0.9;
+            double Pomoc;
             foreach (var item in pole)
             {
 
                 if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
                 { 
                     var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 > kW && x.Otacky50 == 3000);
-                    if(JedenMotor != null) cos = JedenMotor.Ucinik50;
-                    double Pomoc = kW * 1000 / (Math.Sqrt(3) * U * cos); 
+                    if (JedenMotor != null) { 
+                        cos = JedenMotor.Ucinik50;
+                        //přidání motoru do třídy
+                        item.Motor = JedenMotor;
+                    }
+                    if(U > 250)
+                        Pomoc = kW * 1000 / (Math.Sqrt(3) * U * cos); 
+                    else
+                        Pomoc = kW * 1000 / (U * cos);
                     //zaokrouhluje na dvě desetinná místa (ne ořezává).
                     item.Proud = Pomoc.ToString("F2");
                 }

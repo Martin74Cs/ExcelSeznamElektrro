@@ -149,7 +149,65 @@ namespace Aplikace.Upravy
             ExcelApp.ExcelQuit();
         }
 
-        public static void KabelyAdd()
+        public static void AddVyvody()
+        {
+            //Aktualní seznam vývodů
+            string cesta = Path.Combine(Cesty.BasePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
+            var Target = ExcelLoad.DataExcel(cesta, "Seznam", 8);
+
+            //Seznam vývodů pro doplnění
+            var Add = new List<Zarizeni>();
+            string cesta1 = Path.Combine(Cesty.BasePath, @"Vývody.csv");
+            if (!File.Exists(cesta1))
+            { 
+                Add.Add(new Zarizeni());
+                Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+                Add.SaveToCsv(cesta1);
+                return;
+            }
+
+            Add = Soubory.LoadFromCsv<Zarizeni>(cesta1);
+            bool zmena = false;
+            for (int i = 0; i < Add.Count; i++)
+            {
+                //přidat identifikátor
+                if (string.IsNullOrEmpty(Add[i].Apid))
+                { 
+                    Add[i].Apid = ExcelLoad.Apid();
+                    zmena = true;
+                }
+                //
+            }
+
+            //Mělo by přídat proud
+            Add.AddProud();
+
+            if (zmena)
+            { 
+                //Prevod.SaveToCsv(Add, cesta1);
+                Add.SaveToCsv(cesta1);
+                Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+            }
+
+            int pocet = Target.Count + 1;
+            foreach (var item in Add)
+            {
+                var Toto = Target.FirstOrDefault(x => x.Apid == item.Apid);
+                //existuje tak ho smaž
+                if (Toto != null) //continue;
+                    Target.Remove(Toto);
+
+                //objekt
+                item.Radek = pocet++;
+                Target.Add(item);
+            }
+
+            Target.SaveJsonList(cesta);
+            Target.SaveToCsv(Path.ChangeExtension(cesta, ".csv"));
+            //Target.SaveJsonList(Path.ChangeExtension(cesta, ".txt"));
+        }
+
+        public static void AddKabely()
         {
             string basePath = Cesty.BasePath;
             //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
@@ -164,7 +222,7 @@ namespace Aplikace.Upravy
             KabelCu.RemoveAll(x => x.SLmm2 < 2.5);
 
             //Kontrola
-            KabelCu.SaveJsonList(Path.ChangeExtension(cesta1, ".txt"));
+            //KabelCu.SaveJsonList(Path.ChangeExtension(cesta1, ".txt"));
 
             var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.IzAE ).ToList(); 
 
@@ -178,7 +236,8 @@ namespace Aplikace.Upravy
                 foreach (var prop in properties)
                 {
                     //var value = prop.GetValue(target);
-                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > Convert.ToDouble(Target[i].Proud) * 1.5);
+                    var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
+                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * 1.5);
                     if (JedenKabel == null) continue;
 
                     //prop.SetValue(target, value);
@@ -186,27 +245,10 @@ namespace Aplikace.Upravy
                     Target[i].PruzezMM2 = JedenKabel.SLmm2.ToString();
                     Target[i].Deleni = JedenKabel.Deleni;
                     Target[i].Kabel = JedenKabel;
-
                 }
             }
-
-            //foreach (var target in Target)
-            //{
-            //    foreach (var prop in properties)
-            //    {
-            //        //var value = prop.GetValue(target);
-            //        var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > Convert.ToDouble(target.Proud));
-            //        if (JedenKabel == null) continue;
-
-            //        //prop.SetValue(target, value);
-            //        //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-            //        target.PruzezMM2 = JedenKabel.SLmm2.ToString();
-            //        target.Deleni = JedenKabel.Deleni;
-            //        target.Kabel = JedenKabel;
-
-            //    }
-            //}
             Target.SaveJsonList(cesta1);
+            Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
         }
 
         public static void PrevodCsvToJson()

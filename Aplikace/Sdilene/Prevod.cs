@@ -39,13 +39,13 @@ namespace Aplikace.Sdilene
                 sw.WriteLine(Pole[..^1]);
             }
         }
-        public static string JsonToCsv<T>(List<T> json)
+        public static string JsonToCsv<T>(this List<T> json)
         {
             //string Json = JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
             return JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
             //JsonToCsv(Json, file);
         }
-        public static void SaveToCsv<T>(List<T> Class, string file)
+        public static void SaveToCsv<T>(this List<T> Class, string file)
         {
             string json = JsonToCsv(Class);
             SaveToCsv(json, file);
@@ -56,42 +56,44 @@ namespace Aplikace.Sdilene
             // Deserialize JSON to JArray
             JArray jsonArray = JArray.Parse(json);
 
+            // Get property names from the first object (they will be used as headers)
+            var headers = ((JObject)jsonArray[0]).Properties().Select(p => p.Name).ToArray();
+
+            if(Soubory.IsFileLocked(file))
+            {
+                Console.WriteLine($"Soubor {file} je zamčený.");
+                return;
+            }
+
+            // Prepare the CSV file
+            //using (var writer = new StreamWriter(file, false ,Encoding.UTF8))
+            using var writer = new StreamWriter(file, false, new UTF8Encoding(true));
+            // Write the Hlavička
+            writer.WriteLine(string.Join(";", headers));
+
             // Check if the array has elements
             if (jsonArray.Count > 0)
             {
-                // Get property names from the first object (they will be used as headers)
-                var headers = ((JObject)jsonArray[0]).Properties().Select(p => p.Name).ToArray();
-
-                // Prepare the CSV file
-                //using (var writer = new StreamWriter(file, false ,Encoding.UTF8))
-                using (var writer = new StreamWriter(file, false, new UTF8Encoding(true)))
+                // Write data rows
+                foreach (JObject obj in jsonArray.Cast<JObject>())
                 {
-                    // Write the Hlavička
-                    writer.WriteLine(string.Join(";", headers));
+                    //var values = obj.Properties().Select(p => p.Value.ToString()).ToArray();
 
-                    // Write data rows
-                    foreach (JObject obj in jsonArray.Cast<JObject>())
-                    {
-                        //var values = obj.Properties().Select(p => p.Value.ToString()).ToArray();
-
-                        //zachová entery \n
-                        var values = obj.Properties()
-                            .Select(p =>
-                            {
-                                var value = p.Value.ToString()
-                                    .Replace("\"", "\"\"")         // zdvoj uvozovky
-                                    .Replace("\n", " ")            // nebo zachovej \n, jak chceš
-                                    .Replace("\r", " ");           // odstran i \r, pokud je tam
-                                return $"\"{value}\"";            // uzavři do uvozovek
-                            })
-                            .ToArray();
-
-                        writer.WriteLine(string.Join(";", values));
-                    }
+                    //zachová entery \n
+                    var values = obj.Properties()
+                        .Select(p =>
+                        {
+                            var value = p.Value.ToString()
+                                .Replace("\"", "\"\"")         // zdvoj uvozovky
+                                .Replace("\n", " ")            // nebo zachovej \n, jak chceš
+                                .Replace("\r", " ");           // odstran i \r, pokud je tam
+                            return $"\"{value}\"";            // uzavři do uvozovek
+                        })
+                        .ToArray();
+                    writer.WriteLine(string.Join(";", values));
                 }
-
-                Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
             }
+            Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
         }
 
 

@@ -44,6 +44,8 @@
             button7 = new Button();
             label6 = new Label();
             button8 = new Button();
+            button9 = new Button();
+            label7 = new Label();
             SuspendLayout();
             // 
             // button1
@@ -227,11 +229,36 @@
             button8.UseVisualStyleBackColor = true;
             button8.Click += Button8_Click;
             // 
+            // button9
+            // 
+            button9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button9.Font = new Font("Segoe UI", 12F);
+            button9.Location = new Point(615, 228);
+            button9.Name = "button9";
+            button9.Size = new Size(167, 38);
+            button9.TabIndex = 18;
+            button9.Text = "Přidat Vývody";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += Button9_Click;
+            // 
+            // label7
+            // 
+            label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 12F);
+            label7.Location = new Point(788, 237);
+            label7.Name = "label7";
+            label7.Size = new Size(149, 21);
+            label7.TabIndex = 17;
+            label7.Text = "Přidat vlasní vývody";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(977, 448);
+            Controls.Add(button9);
+            Controls.Add(label7);
             Controls.Add(button8);
             Controls.Add(button7);
             Controls.Add(label6);
@@ -273,5 +300,7 @@
         private Button button7;
         private Label label6;
         private Button button8;
+        private Button button9;
+        private Label label7;
     }
 }

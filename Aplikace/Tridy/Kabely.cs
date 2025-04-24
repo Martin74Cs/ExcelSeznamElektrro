@@ -41,7 +41,7 @@ namespace Aplikace.Tridy
 
         public string Name { get; set; } = string.Empty;
         public string Proud { get; set; }
-        public string Deleni { get; set; }
+        public string Deleni { get; set; } = string.Empty;
 
         public double SLmm2 { get; set; }
 
