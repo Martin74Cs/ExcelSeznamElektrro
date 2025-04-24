@@ -39,20 +39,22 @@
             label3 = new Label();
             button5 = new Button();
             label4 = new Label();
-            button6 = new Button();
-            label5 = new Label();
-            button7 = new Button();
-            label6 = new Label();
             button8 = new Button();
             button9 = new Button();
             label7 = new Label();
+            menuStrip1 = new MenuStrip();
+            souborToolStripMenuItem = new ToolStripMenuItem();
+            openToolStripMenuItem = new ToolStripMenuItem();
+            seznamyToolStripMenuItem = new ToolStripMenuItem();
+            pomocToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // button1
             // 
             button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button1.Font = new Font("Segoe UI", 12F);
-            button1.Location = new Point(879, 398);
+            button1.Location = new Point(975, 618);
             button1.Name = "button1";
             button1.Size = new Size(86, 38);
             button1.TabIndex = 0;
@@ -65,7 +67,7 @@
             label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F);
-            label1.Location = new Point(788, 21);
+            label1.Location = new Point(882, 41);
             label1.Name = "label1";
             label1.Size = new Size(177, 21);
             label1.TabIndex = 1;
@@ -75,16 +77,16 @@
             // 
             textBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Font = new Font("Segoe UI", 12F);
-            textBox1.Location = new Point(15, 407);
+            textBox1.Location = new Point(15, 627);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(592, 29);
+            textBox1.Size = new Size(688, 29);
             textBox1.TabIndex = 2;
             // 
             // button2
             // 
             button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Font = new Font("Segoe UI", 12F);
-            button2.Location = new Point(615, 12);
+            button2.Location = new Point(709, 32);
             button2.Name = "button2";
             button2.Size = new Size(167, 38);
             button2.TabIndex = 3;
@@ -96,9 +98,9 @@
             // 
             listBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             listBox1.FormattingEnabled = true;
-            listBox1.Location = new Point(12, 17);
+            listBox1.Location = new Point(12, 32);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(595, 379);
+            listBox1.Size = new Size(691, 574);
             listBox1.TabIndex = 4;
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged_1;
             // 
@@ -106,7 +108,7 @@
             // 
             button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button3.Font = new Font("Segoe UI", 12F);
-            button3.Location = new Point(615, 56);
+            button3.Location = new Point(709, 120);
             button3.Name = "button3";
             button3.Size = new Size(167, 38);
             button3.TabIndex = 6;
@@ -119,7 +121,7 @@
             label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F);
-            label2.Location = new Point(788, 65);
+            label2.Location = new Point(882, 129);
             label2.Name = "label2";
             label2.Size = new Size(177, 21);
             label2.TabIndex = 5;
@@ -129,7 +131,7 @@
             // 
             button4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button4.Font = new Font("Segoe UI", 12F);
-            button4.Location = new Point(613, 398);
+            button4.Location = new Point(709, 618);
             button4.Name = "button4";
             button4.Size = new Size(167, 38);
             button4.TabIndex = 8;
@@ -142,7 +144,7 @@
             label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F);
-            label3.Location = new Point(786, 407);
+            label3.Location = new Point(882, 627);
             label3.Name = "label3";
             label3.Size = new Size(86, 21);
             label3.TabIndex = 7;
@@ -152,7 +154,7 @@
             // 
             button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button5.Font = new Font("Segoe UI", 12F);
-            button5.Location = new Point(615, 184);
+            button5.Location = new Point(709, 204);
             button5.Name = "button5";
             button5.Size = new Size(167, 38);
             button5.TabIndex = 10;
@@ -165,67 +167,21 @@
             label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F);
-            label4.Location = new Point(788, 193);
+            label4.Location = new Point(882, 213);
             label4.Name = "label4";
-            label4.Size = new Size(139, 21);
+            label4.Size = new Size(141, 21);
             label4.TabIndex = 9;
-            label4.Text = "dle proudu a délky";
-            // 
-            // button6
-            // 
-            button6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button6.Font = new Font("Segoe UI", 12F);
-            button6.Location = new Point(613, 354);
-            button6.Name = "button6";
-            button6.Size = new Size(167, 38);
-            button6.TabIndex = 12;
-            button6.Text = "Vytvoř FM,KM";
-            button6.UseVisualStyleBackColor = true;
-            button6.Click += Button6_Click;
-            // 
-            // label5
-            // 
-            label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 12F);
-            label5.Location = new Point(786, 363);
-            label5.Name = "label5";
-            label5.Size = new Size(92, 21);
-            label5.TabIndex = 11;
-            label5.Text = "CSV to Json";
-            // 
-            // button7
-            // 
-            button7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button7.Font = new Font("Segoe UI", 12F);
-            button7.Location = new Point(613, 310);
-            button7.Name = "button7";
-            button7.Size = new Size(167, 38);
-            button7.TabIndex = 14;
-            button7.Text = "Vytvoř Motry";
-            button7.UseVisualStyleBackColor = true;
-            button7.Click += Button7_Click;
-            // 
-            // label6
-            // 
-            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 12F);
-            label6.Location = new Point(786, 319);
-            label6.Name = "label6";
-            label6.Size = new Size(92, 21);
-            label6.TabIndex = 13;
-            label6.Text = "CSV to Json";
+            label4.Text = "Dle proudu a délky";
             // 
             // button8
             // 
             button8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button8.Font = new Font("Segoe UI", 12F);
-            button8.Location = new Point(615, 100);
+            button8.Location = new Point(709, 76);
             button8.Name = "button8";
-            button8.Size = new Size(89, 38);
+            button8.Size = new Size(167, 38);
             button8.TabIndex = 16;
-            button8.Text = "Otevřít";
+            button8.Text = "Otevřít Csv";
             button8.UseVisualStyleBackColor = true;
             button8.Click += Button8_Click;
             // 
@@ -233,7 +189,7 @@
             // 
             button9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button9.Font = new Font("Segoe UI", 12F);
-            button9.Location = new Point(615, 228);
+            button9.Location = new Point(709, 248);
             button9.Name = "button9";
             button9.Size = new Size(167, 38);
             button9.TabIndex = 18;
@@ -246,24 +202,57 @@
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 12F);
-            label7.Location = new Point(788, 237);
+            label7.Location = new Point(882, 257);
             label7.Name = "label7";
             label7.Size = new Size(149, 21);
             label7.TabIndex = 17;
             label7.Text = "Přidat vlasní vývody";
             // 
+            // menuStrip1
+            // 
+            menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, pomocToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1073, 29);
+            menuStrip1.TabIndex = 19;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // souborToolStripMenuItem
+            // 
+            souborToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem });
+            souborToolStripMenuItem.Name = "souborToolStripMenuItem";
+            souborToolStripMenuItem.Size = new Size(73, 25);
+            souborToolStripMenuItem.Text = "Soubor";
+            // 
+            // openToolStripMenuItem
+            // 
+            openToolStripMenuItem.Name = "openToolStripMenuItem";
+            openToolStripMenuItem.Size = new Size(118, 26);
+            openToolStripMenuItem.Text = "Open";
+            openToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
+            // 
+            // seznamyToolStripMenuItem
+            // 
+            seznamyToolStripMenuItem.Name = "seznamyToolStripMenuItem";
+            seznamyToolStripMenuItem.Size = new Size(85, 25);
+            seznamyToolStripMenuItem.Text = "Seznamy";
+            seznamyToolStripMenuItem.Click += seznamyToolStripMenuItem_Click;
+            // 
+            // pomocToolStripMenuItem
+            // 
+            pomocToolStripMenuItem.Name = "pomocToolStripMenuItem";
+            pomocToolStripMenuItem.Size = new Size(69, 25);
+            pomocToolStripMenuItem.Text = "Pomoc";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(977, 448);
+            ClientSize = new Size(1073, 668);
             Controls.Add(button9);
             Controls.Add(label7);
             Controls.Add(button8);
-            Controls.Add(button7);
-            Controls.Add(label6);
-            Controls.Add(button6);
-            Controls.Add(label5);
             Controls.Add(button5);
             Controls.Add(label4);
             Controls.Add(button4);
@@ -275,9 +264,13 @@
             Controls.Add(textBox1);
             Controls.Add(label1);
             Controls.Add(button1);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -295,12 +288,13 @@
         private Label label3;
         private Button button5;
         private Label label4;
-        private Button button6;
-        private Label label5;
-        private Button button7;
-        private Label label6;
         private Button button8;
         private Button button9;
         private Label label7;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem souborToolStripMenuItem;
+        private ToolStripMenuItem seznamyToolStripMenuItem;
+        private ToolStripMenuItem pomocToolStripMenuItem;
+        private ToolStripMenuItem openToolStripMenuItem;
     }
 }

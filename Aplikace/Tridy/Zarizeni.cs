@@ -76,12 +76,12 @@ namespace Aplikace.Tridy
 
         [Display(Name = "Délka")]
         [Jednotky("[m]")]
-        public string Delka { get; set; } = "100";
+        public double Delka { get; set; } = 100;
 
         [Display(Name = "Délka")]
         [Jednotky("[ft]")]
 
-        public string Delkaft { get; set; } = string.Empty;
+        public double Delkaft { get; set; } 
 
         public string Rozvadec { get; set; } = string.Empty;
         public string RozvadecCislo { get; set; } = string.Empty;

@@ -101,7 +101,7 @@ namespace Aplikace.Seznam
                 }
 
                 //19. Delka m
-                Data.Add(radek.Delka);
+                Data.Add(radek.Delka.ToString());
 
                 //20 Delka ft
                 //Data.Add(radek.Delka);
@@ -184,7 +184,7 @@ namespace Aplikace.Seznam
                 "X 02",
 
                 //19. Delka m
-                radek.Delka,
+                radek.Delka.ToString(),
 
                 //20. Delka ft
                 //radek.Delka
@@ -261,7 +261,7 @@ namespace Aplikace.Seznam
                 "X 01",
 
                 //19. Delka m
-                radek.Delka,
+                radek.Delka.ToString(),
 
                 //20. Delka ft
                 //radek.Delka

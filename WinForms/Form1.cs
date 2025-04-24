@@ -2,6 +2,7 @@
 using Aplikace.Upravy;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.DataFormats;
 
 namespace WinForms
 {
@@ -24,10 +25,6 @@ namespace WinForms
             Console.SetOut(new ListBoxWriter(listBox1));
         }
 
-        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void ListBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
@@ -55,25 +52,42 @@ namespace WinForms
             await Task.Run(() => LigthChem.AddKabely());
         }
 
-        private async void Button6_Click(object sender, EventArgs e)
-        {
-            await Task.Run(() => LigthChem.VyvoritFMKM());
-        }
-
-        private async void Button7_Click(object sender, EventArgs e)
-        {
-            await Task.Run(() => LigthChem.VyvoritMotor());
-        }
-
         private void Button8_Click(object sender, EventArgs e)
         {
-            string cesta = Cesty.BasePath;
+            string cesta = Path.Combine(Cesty.BasePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.csv");
             System.Diagnostics.Process.Start("explorer.exe", cesta);
         }
 
         private async void Button9_Click(object sender, EventArgs e)
         {
             await Task.Run(() => LigthChem.AddVyvody());
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string cesta = Cesty.BasePath;
+            System.Diagnostics.Process.Start("explorer.exe", cesta);
+        }
+
+        private void seznamyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var vyvorit = new Vytvořit();
+
+            // Vypočteme střed Form1 a posuneme Form2 tam
+            int x = this.Location.X + (this.Width - vyvorit.Width) / 2;
+            int y = this.Location.Y + (this.Height - vyvorit.Height) / 2;
+
+            // Nastavíme pozici druhého formuláře
+            vyvorit.StartPosition = FormStartPosition.Manual;
+            vyvorit.Location = new Point(x, y);
+
+            // Zobrazíme druhý formulář jako modální dialog
+            var result = vyvorit.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                // Zde můžete provést další akce po zavření dialogu
+                // Například načíst data nebo aktualizovat UI
+            }
         }
     }
 

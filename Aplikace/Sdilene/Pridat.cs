@@ -20,25 +20,28 @@ namespace Aplikace.Sdilene
 
             // Přidání vlastnosti "Proud" do každého zařízení
             var nove = new List<Zarizeni>();
-            double cos = 0.9;
+            double Cos = 0.95;
             double Pomoc;
             foreach (var item in pole)
             {
-
                 if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
                 { 
                     var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 > kW && x.Otacky50 == 3000);
                     if (JedenMotor != null) { 
-                        cos = JedenMotor.Ucinik50;
+                        Cos = JedenMotor.Ucinik50;
                         //přidání motoru do třídy
                         item.Motor = JedenMotor;
                     }
-                    if(U > 250)
-                        Pomoc = kW * 1000 / (Math.Sqrt(3) * U * cos); 
+                    //Pokud je napětí větší než 250V, použijeme vzorec pro třífázový proud
+                    if (U > 250)
+                        Pomoc = kW * 1000 / (Math.Sqrt(3) * U * Cos); 
                     else
-                        Pomoc = kW * 1000 / (U * cos);
+                        Pomoc = kW * 1000 / (U * Cos);
+
                     //zaokrouhluje na dvě desetinná místa (ne ořezává).
                     item.Proud = Pomoc.ToString("F2");
+                    var CosString = Pomoc.ToString("F2");
+                    Console.WriteLine($"Proud: {item.Proud}, cos: {CosString}");
                 }
                 nove.Add(item);
             }
@@ -46,13 +49,13 @@ namespace Aplikace.Sdilene
         }
 
         /// <summary>Pridání délky kabelu </summary>
-        public static List<Zarizeni> AddKabel(this List<Zarizeni> pole, int delka = 100)
+        public static List<Zarizeni> AddKabel(this List<Zarizeni> pole, double delka = 100)
         {
             // Přidání vlastnosti "Proud" do každého zařízení
             var nove = new List<Zarizeni>();
             foreach (var item in pole)
             {
-                item.Delka = delka.ToString();
+                item.Delka = delka;
                 nove.Add(item);
             }
             return nove;

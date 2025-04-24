@@ -48,6 +48,7 @@ namespace Aplikace.Upravy
             Stara.AddProud();
 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+            
             Prevod.SaveToCsv(Stara, Path.ChangeExtension(cesta1, ".csv"));
 
             //vytvoření nebo otevření dokumentu elektro
@@ -88,12 +89,12 @@ namespace Aplikace.Upravy
                 {11,"Rozvadec"},
                 {12,"RozvadecCislo"},
 
-                {100,"PID"},
-                {101,"Nic"},
-                {102,"HP"},
-                {103,"AWG"},
-                {105,"Napeti"},
-                {106,"Radek"},
+                //{100,"PID"},
+                //{101,"Nic"},
+                //{102,"HP"},
+                //{103,"AWG"},
+                //{105,"Napeti"},
+                //{106,"Radek"},
             };
             ExcelApp.ClassToExcel(Row: 3, Stara, dir);
             //Doplnění vzorců doExel
@@ -159,13 +160,15 @@ namespace Aplikace.Upravy
             var Add = new List<Zarizeni>();
             string cesta1 = Path.Combine(Cesty.BasePath, @"Vývody.csv");
             if (!File.Exists(cesta1))
-            { 
+            {
+                //Pokud neexistuje tak vytvoř
                 Add.Add(new Zarizeni());
                 Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
                 Add.SaveToCsv(cesta1);
                 return;
             }
 
+            //Načtení vývodů
             Add = Soubory.LoadFromCsv<Zarizeni>(cesta1);
             bool zmena = false;
             for (int i = 0; i < Add.Count; i++)
@@ -270,31 +273,47 @@ namespace Aplikace.Upravy
             //Asi zrušit načítám změny s .csv
             //Prevod.SaveToCsv(Target, Path.ChangeExtension(cesta1, ".csv"));
         }
-
         public static void VyvoritFMKM()
         {
-            //var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
+             //var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
             //var dir = Path.GetDirectoryName(cesta);         // Získá adresář, kde je spustitelný soubor
+            VyvoritFM();
+            VyvoritKM();
+        }
 
-            string basePath = Path.Combine(Cesty.GooglePath, "Data");
-            //string CestaFM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\FM.csv";
-            //string CestaKM = @"C:\VSCode\ExcelSeznamElektrro\Aplikace\Data\KM.csv";
-            string CestaFM = Path.Combine(basePath, "FM.csv");
+        /// <summary>
+        /// Převod seznamu frekvenčních měničů na Json
+        /// </summary>
+        public static void VyvoritFM()
+        {
+            string basePath = Path.Combine(Cesty.BasePath, "Data");
             string CestaKM = Path.Combine(basePath, "KM.csv"); 
-
-            var FM = Soubory.LoadFromCsv<Menic>(CestaFM);
-            Console.WriteLine($"Pocet menicu: {FM.Count}");
-            
+           
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
             Console.WriteLine($"Pocet stykaču: {KM.Count}");
-
-            FM.SaveJsonList(Path.ChangeExtension(CestaFM, ".json"));
-            Console.WriteLine($"Měniče uloženy jako Json");
 
             KM.SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
             Console.WriteLine($"Stykače uloženy jako Json");
         }
 
+        /// <summary>
+        /// Převod seznamu stykačů na Json
+        /// </summary>
+        public static void VyvoritKM()
+        {
+            string basePath = Path.Combine(Cesty.BasePath, "Data");
+            string CestaKM = Path.Combine(basePath, "KM.csv"); 
+           
+            var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
+            Console.WriteLine($"Pocet stykaču: {KM.Count}");
+
+            KM.SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
+            Console.WriteLine($"Stykače uloženy jako Json");
+        }
+
+        /// <summary>
+        /// Převod seznamu motorů a motorů3000 na jeden Json
+        /// </summary>
         public static void VyvoritMotor()
         {
             string basePath = Path.Combine(Cesty.GooglePath, "Data" , "Motory");
