@@ -180,6 +180,7 @@ namespace Aplikace.Sdilene
             where T : class, new()
         {
             var type = typeof(T);
+            //najdi vlastnost Apid
             var keyProp = type.GetProperty(keyProperty) ?? throw new ArgumentException($"Property '{keyProperty}' not found.");
             // vytvoř slovník pro rychlé hledání dle klíče Apid
             var sourceDict = sourceList.ToDictionary(
@@ -191,11 +192,12 @@ namespace Aplikace.Sdilene
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                  .Where(p => p.CanWrite && p.Name != keyProperty && p.Name != "Item")
                                  .ToList();
-
+            var delete = new List<T>();
             foreach (var target in targets)
             {
                 var key = keyProp.GetValue(target)?.ToString() ?? string.Empty;
 
+                //provádí změny parametrů stávajících vývodů
                 if (sourceDict.TryGetValue(key, out var source))
                 {
                     foreach (var prop in properties)
@@ -204,7 +206,12 @@ namespace Aplikace.Sdilene
                         prop.SetValue(target, value);
                     }
                 }
+                else {
+                    delete.Add(target);
+                }
             }
+            foreach (var item in delete)
+                targets.Remove(item);
         }
 
         public static void Vypis(this List<List<string>> Pole)

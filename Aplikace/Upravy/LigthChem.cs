@@ -253,7 +253,7 @@ namespace Aplikace.Upravy
 
         public static void PrevodCsvToJson()
         {
-            string basePath = @"G:\Můj disk\Elektro";
+            string basePath = Cesty.BasePath;
             //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
             var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
@@ -267,7 +267,8 @@ namespace Aplikace.Upravy
             Prevod.UpdateCsvToJson(Source, Target );
 
             Target.SaveJsonList(cesta1);
-            Prevod.SaveToCsv(Target, Path.ChangeExtension(cesta1, ".csv"));
+            //Asi zrušit načítám změny s .csv
+            //Prevod.SaveToCsv(Target, Path.ChangeExtension(cesta1, ".csv"));
         }
 
         public static void VyvoritFMKM()
