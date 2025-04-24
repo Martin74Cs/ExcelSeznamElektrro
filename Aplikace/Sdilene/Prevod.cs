@@ -90,7 +90,7 @@ namespace Aplikace.Sdilene
                     }
                 }
 
-                Console.WriteLine("CSV file has been created.");
+                Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
             }
         }
 

@@ -47,6 +47,7 @@ namespace Aplikace.Tridy
         [JsonIgnore]
         internal static string[] Nadpis =>
         [
+            "Apid",
             "Objekt",
             "Číslo",
             "Název",
@@ -109,6 +110,7 @@ namespace Aplikace.Tridy
             "Ethernet",
             "Kamera",
             "ACS",
+            "Pokus"
         ];
 
         [JsonIgnore]

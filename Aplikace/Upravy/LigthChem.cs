@@ -151,41 +151,62 @@ namespace Aplikace.Upravy
 
         public static void KabelyAdd()
         {
-            string basePath = Cesty.GooglePath;
+            string basePath = Cesty.BasePath;
             //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
             var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
 
-            var KabelCu = Soubory.LoadJsonList<KabelVse>(Cesty.CuJson)
+            var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
                 .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
                 .OrderBy(x => x.IzAE).ToList();
+
+            //vymazaní položek ze seznam
+            KabelCu.RemoveAll(x => x.SLmm2 < 2.5);
+
+            //Kontrola
             KabelCu.SaveJsonList(Path.ChangeExtension(cesta1, ".txt"));
 
-            var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.IzAE );
+            var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.IzAE ).ToList(); 
 
             //item nevím co to je
             var properties = typeof(Zarizeni).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                  .Where(p => p.CanWrite && p.Name != "Item")
                                  .ToList();
 
-            foreach (var target in Target)
+            for (int i = 0; i < Target.Count; i++)
             {
                 foreach (var prop in properties)
                 {
                     //var value = prop.GetValue(target);
-                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > Convert.ToDouble(target.Proud));
+                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > Convert.ToDouble(Target[i].Proud) * 1.5);
                     if (JedenKabel == null) continue;
 
                     //prop.SetValue(target, value);
                     //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-                    target.PruzezMM2 = JedenKabel.SLmm2.ToString();
-                    target.Deleni = JedenKabel.Deleni;
-                    target.Kabel = JedenKabel;
-                }
+                    Target[i].PruzezMM2 = JedenKabel.SLmm2.ToString();
+                    Target[i].Deleni = JedenKabel.Deleni;
+                    Target[i].Kabel = JedenKabel;
 
+                }
             }
-            Console.WriteLine("Save Json");
-            Target.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+
+            //foreach (var target in Target)
+            //{
+            //    foreach (var prop in properties)
+            //    {
+            //        //var value = prop.GetValue(target);
+            //        var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > Convert.ToDouble(target.Proud));
+            //        if (JedenKabel == null) continue;
+
+            //        //prop.SetValue(target, value);
+            //        //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
+            //        target.PruzezMM2 = JedenKabel.SLmm2.ToString();
+            //        target.Deleni = JedenKabel.Deleni;
+            //        target.Kabel = JedenKabel;
+
+            //    }
+            //}
+            Target.SaveJsonList(cesta1);
         }
 
         public static void PrevodCsvToJson()

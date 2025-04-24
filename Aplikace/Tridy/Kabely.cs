@@ -43,75 +43,75 @@ namespace Aplikace.Tridy
         public string Proud { get; set; }
         public string Deleni { get; set; }
 
-        public float SLmm2 { get; set; }
+        public double SLmm2 { get; set; }
 
         //průřez PEN vodiče
         [Display(Name = "průřez PEN vodiče")]
-        public float SPENmm2 { get; set; }
+        public double SPENmm2 { get; set; }
 
         //proudové zatížení ve vzduchu svisle
-        public float IzAGsvis { get; set; }
+        public double IzAGsvis { get; set; }
 
         //proudové zatížení ve vzduchu vovorovně 
-        public float IzAGvod { get; set; }
+        public double IzAGvod { get; set; }
 
         //proudové zatížení ve vzduchu vedle sebe
-        public float IzAFlin { get; set; }
+        public double IzAFlin { get; set; }
 
         //proudové zatížení ve  vzduchu trojůhelnik
-        public float IzAFtroj { get; set; }
+        public double IzAFtroj { get; set; }
 
         //proudové zatížení v zemi
-        public float IzAE { get; set; }
+        public double IzAE { get; set; }
 
         //proudové zatížení v trubce v zemi
-        public float IzAD1 { get; set; }
+        public double IzAD1 { get; set; }
 
         //proudové zatížení přímo v zemi
-        public float IzAD2 { get; set; }
+        public double IzAD2 { get; set; }
 
         //proudové zatížení na stěně
-        public float IzAC { get; set; }
+        public double IzAC { get; set; }
 
         //proudové zatížení v trubce na stěně
-        public float IzAB { get; set; }
+        public double IzAB { get; set; }
 
         //proudové zatížení v izolační stěne
-        public float IzAA { get; set; }
+        public double IzAA { get; set; }
 
         //odpor krajního vodiče
-        public float RLOhmkm { get; set; }
+        public double RLOhmkm { get; set; }
 
         //odpor PEN vodiče
-        public float RPENOhmkm { get; set; }
+        public double RPENOhmkm { get; set; }
 
         //induktance krajního vodiče
-        public float XLOhmkm { get; set; }
+        public double XLOhmkm { get; set; }
 
         //induktance PEN vodiče
-        public float XPENOhmkm { get; set; }
+        public double XPENOhmkm { get; set; }
 
         //tau časová oteplovací konstanta vedení
-        public float Taus { get; set; }
+        public double Taus { get; set; }
 
-        public float TpracstC { get; set; }
-        public float TpretstC { get; set; }
-        public float TzkratstC { get; set; }
-
-        //složky netočivé impedance vedení / složky sousledné impedance vedení
-        public float RoR1 { get; set; }
+        public double TpracstC { get; set; }
+        public double TpretstC { get; set; }
+        public double TzkratstC { get; set; }
 
         //složky netočivé impedance vedení / složky sousledné impedance vedení
-        public float XoX1 { get; set; }
+        public double RoR1 { get; set; }
+
+        //složky netočivé impedance vedení / složky sousledné impedance vedení
+        public double XoX1 { get; set; }
     }
 
     public class KabelVse : Kabel
     {
-        public float MaxProud
+        public double MaxProud
         {
             get
             {
-                float[] Poudy = [IzAGsvis, IzAGvod, IzAFlin, IzAFtroj, IzAE, IzAD1, IzAD2, IzAC, IzAB, IzAA];
+                double[] Poudy = [IzAGsvis, IzAGvod, IzAFlin, IzAFtroj, IzAE, IzAD1, IzAD2, IzAC, IzAB, IzAA];
                 return Poudy.Max();
             }
         }

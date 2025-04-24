@@ -43,6 +43,7 @@
             label5 = new Label();
             button7 = new Button();
             label6 = new Label();
+            button8 = new Button();
             SuspendLayout();
             // 
             // button1
@@ -214,11 +215,24 @@
             label6.TabIndex = 13;
             label6.Text = "CSV to Json";
             // 
+            // button8
+            // 
+            button8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button8.Font = new Font("Segoe UI", 12F);
+            button8.Location = new Point(615, 100);
+            button8.Name = "button8";
+            button8.Size = new Size(89, 38);
+            button8.TabIndex = 16;
+            button8.Text = "Otevřít";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += Button8_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(977, 448);
+            Controls.Add(button8);
             Controls.Add(button7);
             Controls.Add(label6);
             Controls.Add(button6);
@@ -258,5 +272,6 @@
         private Label label5;
         private Button button7;
         private Label label6;
+        private Button button8;
     }
 }

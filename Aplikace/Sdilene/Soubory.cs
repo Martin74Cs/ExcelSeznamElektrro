@@ -78,10 +78,11 @@ namespace Aplikace.Sdilene
             string Json = JsonConvert.SerializeObject(values, Nastaveni());
             //MessageBox.Show(Json);
             File.WriteAllText(cesta, Json);
+            Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
             return;
         }
 
-        /// <summary> načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
+        /// <summary> Načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
         public static List<T> LoadJsonList<T>(string cesta) where T : class
         {
             if (System.IO.File.Exists(cesta))
@@ -92,8 +93,18 @@ namespace Aplikace.Sdilene
             }
             return [];
         }
+        public static List<T> LoadJsonListEn<T>(string cesta) where T : class
+        {
+            if (System.IO.File.Exists(cesta))
+            {
+                string jsonString = System.IO.File.ReadAllText(cesta);
+                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
+                return moje;
+            }
+            return [];
+        }
 
-        /// <summary> načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
+        /// <summary> Načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika. </summary>
         public static T LoadJson<T>(string cesta) where T : new() 
         {
             if (System.IO.File.Exists(cesta))

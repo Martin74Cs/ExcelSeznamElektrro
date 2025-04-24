@@ -64,6 +64,12 @@ namespace WinForms
         {
             await Task.Run(() => LigthChem.VyvoritMotor());
         }
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            string cesta = Cesty.BasePath;
+            System.Diagnostics.Process.Start("explorer.exe", cesta);
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter

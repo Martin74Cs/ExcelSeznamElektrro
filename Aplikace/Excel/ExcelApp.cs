@@ -3,6 +3,7 @@ using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Exc = Microsoft.Office.Interop.Excel;
@@ -953,8 +954,6 @@ namespace Aplikace.Excel
             return Range;
         }
 
-
-
         public Exc.Range Nadpisy(IDictionary<int, string> Dir)
         {
             int col = 1;
@@ -1010,6 +1009,8 @@ namespace Aplikace.Excel
             //Tisk pole data
             foreach (var kvp in Dir)
             {
+                // Podmínka existence Property v Dictionary
+                if (!ppp.ContainsKey(kvp.Value)) continue;
                 //převod kvp na PropertyInfo
                 var prop = ppp[kvp.Value];
                 //var prop = properties.FirstOrDefault(p => p.Name == kvp.Value);
