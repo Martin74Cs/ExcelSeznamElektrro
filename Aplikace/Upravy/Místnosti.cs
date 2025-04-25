@@ -28,13 +28,29 @@ namespace Aplikace.Upravy
             Mistnost.SaveJsonList(Path.ChangeExtension(cesta, ".json"));
             //Prevod.SaveToCsv(Mistnost ,Path.ChangeExtension(cesta, ".txt"));
             return Mistnost;
-        } 
+        }
+
+        public static string Místnost { 
+            get {
+                var Místnosti =  Path.Combine(Cesty.BasePath, "Místnosti");
+                if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);
+                return Místnosti; 
+            } 
+        }
+        public static string Revit {
+            get  {
+                var Revit = Path.Combine(Cesty.BasePath, "revit");
+                if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
+                return Revit;
+            }
+        }
+        public static string CestaXLs => Path.Combine(Místnost, "Místnosti.celek.xlsx");
         public static void VytvoritSeznamy()
         {
-            var Místnosti = Path.Combine(Cesty.BasePath, "Místnosti");
-            if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);          
-            var Revit = Path.Combine(Místnosti, "revit");
-            if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
+            //var Místnosti = Path.Combine(Cesty.BasePath, "Místnosti");
+            //if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);          
+            //var Revit = Path.Combine(Místnosti, "revit");
+            //if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
 
             //Vstupní data
             var cesta = Path.Combine(Revit, "SO117", "Výkaz místností.csv");
@@ -49,15 +65,15 @@ namespace Aplikace.Upravy
             Misto.AddRange(Misto3);
 
             //Hlavní soubor
-            string cestaXLs = Path.Combine(Místnosti, "Místnosti.celek.xlsx");
-            Console.WriteLine(cestaXLs);
+            //string cestaXLs = Path.Combine(Místnost, "Místnosti.celek.xlsx");
+            Console.WriteLine(CestaXLs);
 
             //Soubory pro upravení
-            Misto.SaveJsonList(Path.ChangeExtension(cestaXLs, ".json"));
-            Misto.SaveToCsv(Path.ChangeExtension(cestaXLs, ".csv"));
+            Misto.SaveJsonList(Path.ChangeExtension(CestaXLs, ".json"));
+            Misto.SaveToCsv(Path.ChangeExtension(CestaXLs, ".csv"));
 
             //Vyvořit nebo otevřít excel
-            var ExcelApp = new ExcelApp(cestaXLs);
+            var ExcelApp = new ExcelApp(CestaXLs);
             ExcelApp.GetSheet("Místnosti");
             
             //Vytvoření nadpisů
@@ -67,7 +83,7 @@ namespace Aplikace.Upravy
             //Vytvoření dat
             ExcelApp.ClassToExcel(Row: 2, Misto, Slaboproudy.SloupceSpojit);
             //Uložení a ukončení
-            ExcelApp.ExcelQuit(cestaXLs);
+            ExcelApp.ExcelQuit(CestaXLs);
         }
     }
 }

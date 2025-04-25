@@ -95,12 +95,8 @@ namespace WinForms
         /// </summary>
         private async void MístnostiToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var Místnosti = Path.Combine(Cesty.BasePath, "Místnosti");
-            var Revit = Path.Combine(Místnosti, "revit");
-            //Hlavní soubor
-            string cestaXLs = Path.Combine(Místnosti, "Místnosti.celek.xlsx");
-                        
-            System.Diagnostics.Process.Start("explorer.exe", cestaXLs);
+            //použitá cesta z Místnosti.cs          
+            System.Diagnostics.Process.Start("explorer.exe", Místnosti.CestaXLs);
         }
 
         /// <summary>
