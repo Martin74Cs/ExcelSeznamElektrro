@@ -90,18 +90,14 @@ namespace WinForms
             }
         }
 
-        /// <summary>
-        /// Místnosti - otevřít seznam
-        /// </summary>
+        /// <summary> Místnosti - otevřít seznam </summary>
         private async void MístnostiToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //použitá cesta z Místnosti.cs          
             System.Diagnostics.Process.Start("explorer.exe", Místnosti.CestaXLs);
         }
 
-        /// <summary>
-        /// Místnosti - vytvoření seznamu
-        /// </summary>
+        /// <summary> Místnosti - vytvoření seznamu </summary>
         private async void generovatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await Task.Run(() => Místnosti.VytvoritSeznamy());
