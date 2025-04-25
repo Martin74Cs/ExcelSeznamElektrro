@@ -133,21 +133,13 @@ namespace Aplikace.Upravy
             Pridat.Soucet(ExcelApp, PoleData);
             
             //var Proces =  Soubory.GetExcelProcess(ExcelApp.App);
-            if (!File.Exists(cesta))
-                ExcelApp.Doc.SaveAs(cesta);
-            else
-            { 
-                ExcelApp.Doc.Save();
-                //if(!Soubory.IsFileLocked(cesta))
-                    // Zavření bez uložení
-                    //ExcelApp.Doc.Close(false);
-            }
+
             //ExcelApp.App.Quit();
 
             //if (File.Exists(cesta))
             //    File.Delete(cesta);
             //doc.SaveAs(cesta);
-            ExcelApp.ExcelQuit();
+            ExcelApp.ExcelQuit(cesta);
         }
 
         public static void AddVyvody()

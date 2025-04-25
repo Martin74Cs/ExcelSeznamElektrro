@@ -59,7 +59,7 @@ namespace Aplikace.Upravy
             ExcelApp.Doc.Save();
             //uzavření dokumentu bez uložení  
             //xlsc.Close();
-            ExcelApp.ExcelQuit();
+            ExcelApp.ExcelQuit(cestacelek);
         }
         static void Vypis(List<Item> item)
         {

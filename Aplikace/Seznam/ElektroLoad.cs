@@ -64,7 +64,8 @@ namespace Aplikace.Seznam
             var compareKeys = new HashSet<string>(compareList.Select(x => x[0]));
 
             // Najdeme položky v sourceList, které nejsou v compareKeys
-            return sourceList.Where(x => !compareKeys.Contains(x[0])).ToList();
+            //return sourceList.Where(x => !compareKeys.Contains(x[0])).ToList();
+            return [.. sourceList.Where(x => !compareKeys.Contains(x[0]))];
         }
 
         public static void NovyExcel()
@@ -79,13 +80,14 @@ namespace Aplikace.Seznam
                 basePath = @"D:\Tractebel\2024.09.03";
                 Doma = false;
             }
+            var cestaXls = Path.Combine(basePath, "Seznam.xlsx");
 
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
             //Exc.Worksheet Xls;
             //Exc.Workbook Doc;
-            Exc.Application App;
+            //Exc.Application App;
 
             //Načtení json z Milanového seznamu čerpadel
             var Pumps = new List<Pump>();
@@ -160,11 +162,10 @@ namespace Aplikace.Seznam
             else
             { 
                 //vytvoření nebo otevření dokumentu elekro
-                var cesta = Path.Combine(basePath, "Seznam.xlsx");
                 //(App, Doc, Xls) = ExcelApp.ExcelElektro(cesta);
                 //ExcelApp.ExcelElektro(cesta);
                 //doc = xls.Parent;
-                ExcelApp = new ExcelApp(cesta);
+                ExcelApp = new ExcelApp(cestaXls);
             }
 
             Console.WriteLine("Probíhá načítaní kabelů");
@@ -225,7 +226,7 @@ namespace Aplikace.Seznam
             ExcelApp.ExcelSaveTable(Soucet, 3);
 
             ExcelApp.Xls.Cells[Soucet.Count + 1, 4].Formula = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
-            ExcelApp.ExcelQuit();
+            ExcelApp.ExcelQuit(cestaXls);
         }
     }
 }

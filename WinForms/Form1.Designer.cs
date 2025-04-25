@@ -46,7 +46,10 @@
             souborToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
             seznamyToolStripMenuItem = new ToolStripMenuItem();
+            místnostiToolStripMenuItem = new ToolStripMenuItem();
+            místnostiToolStripMenuItem1 = new ToolStripMenuItem();
             pomocToolStripMenuItem = new ToolStripMenuItem();
+            generovatToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -211,7 +214,7 @@
             // menuStrip1
             // 
             menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, pomocToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, místnostiToolStripMenuItem, pomocToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1073, 29);
@@ -228,8 +231,8 @@
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(118, 26);
-            openToolStripMenuItem.Text = "Open";
+            openToolStripMenuItem.Size = new Size(176, 26);
+            openToolStripMenuItem.Text = "Otevřít složku";
             openToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
             // 
             // seznamyToolStripMenuItem
@@ -237,13 +240,34 @@
             seznamyToolStripMenuItem.Name = "seznamyToolStripMenuItem";
             seznamyToolStripMenuItem.Size = new Size(85, 25);
             seznamyToolStripMenuItem.Text = "Seznamy";
-            seznamyToolStripMenuItem.Click += seznamyToolStripMenuItem_Click;
+            seznamyToolStripMenuItem.Click += SeznamyToolStripMenuItem_Click;
+            // 
+            // místnostiToolStripMenuItem
+            // 
+            místnostiToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { místnostiToolStripMenuItem1, generovatToolStripMenuItem });
+            místnostiToolStripMenuItem.Name = "místnostiToolStripMenuItem";
+            místnostiToolStripMenuItem.Size = new Size(86, 25);
+            místnostiToolStripMenuItem.Text = "Místnosti";
+            // 
+            // místnostiToolStripMenuItem1
+            // 
+            místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
+            místnostiToolStripMenuItem1.Size = new Size(180, 26);
+            místnostiToolStripMenuItem1.Text = "Otevřít složku";
+            místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // pomocToolStripMenuItem
             // 
             pomocToolStripMenuItem.Name = "pomocToolStripMenuItem";
             pomocToolStripMenuItem.Size = new Size(69, 25);
             pomocToolStripMenuItem.Text = "Pomoc";
+            // 
+            // generovatToolStripMenuItem
+            // 
+            generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
+            generovatToolStripMenuItem.Size = new Size(180, 26);
+            generovatToolStripMenuItem.Text = "Generovat ";
+            generovatToolStripMenuItem.Click += generovatToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -296,5 +320,8 @@
         private ToolStripMenuItem seznamyToolStripMenuItem;
         private ToolStripMenuItem pomocToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
+        private ToolStripMenuItem místnostiToolStripMenuItem;
+        private ToolStripMenuItem místnostiToolStripMenuItem1;
+        private ToolStripMenuItem generovatToolStripMenuItem;
     }
 }

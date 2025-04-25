@@ -69,7 +69,7 @@ namespace WinForms
             System.Diagnostics.Process.Start("explorer.exe", cesta);
         }
 
-        private void seznamyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SeznamyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var vyvorit = new Vytvořit();
 
@@ -88,6 +88,27 @@ namespace WinForms
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }
+        }
+
+        /// <summary>
+        /// Místnosti - otevřít seznam
+        /// </summary>
+        private async void MístnostiToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var Místnosti = Path.Combine(Cesty.BasePath, "Místnosti");
+            var Revit = Path.Combine(Místnosti, "revit");
+            //Hlavní soubor
+            string cestaXLs = Path.Combine(Místnosti, "Místnosti.celek.xlsx");
+                        
+            System.Diagnostics.Process.Start("explorer.exe", cestaXLs);
+        }
+
+        /// <summary>
+        /// Místnosti - vytvoření seznamu
+        /// </summary>
+        private async void generovatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => Místnosti.VytvoritSeznamy());
         }
     }
 

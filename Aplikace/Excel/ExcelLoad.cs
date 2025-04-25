@@ -69,7 +69,7 @@ namespace Aplikace.Excel
             Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
             var Pole = ExcelApp.ExelTable(Radek,Tabulka);
 
-            ExcelApp.ExcelQuit();
+            ExcelApp.ExcelQuit(cesta);
             //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             if (Pole.Count > 1) Pole.SaveJsonList(json);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");
@@ -107,8 +107,9 @@ namespace Aplikace.Excel
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var random = new Random();
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+            //return new string(Enumerable.Repeat(chars, length)
+            //    .Select(s => s[random.Next(s.Length)]).ToArray());
+            return new string([.. Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)])]);
         }
     }
 }

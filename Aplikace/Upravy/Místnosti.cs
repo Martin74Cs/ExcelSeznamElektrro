@@ -26,23 +26,38 @@ namespace Aplikace.Upravy
                 Mistnost[i].Apid = ExcelLoad.Apid();
             }
             Mistnost.SaveJsonList(Path.ChangeExtension(cesta, ".json"));
-            Prevod.SaveToCsv(Mistnost ,Path.ChangeExtension(cesta, ".txt"));
+            //Prevod.SaveToCsv(Mistnost ,Path.ChangeExtension(cesta, ".txt"));
             return Mistnost;
         } 
         public static void VytvoritSeznamy()
         {
-            var cesta = Path.Combine(Cesty.BasePath, "revit", "SO117", "Výkaz místností.csv");
+            var Místnosti = Path.Combine(Cesty.BasePath, "Místnosti");
+            if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);          
+            var Revit = Path.Combine(Místnosti, "revit");
+            if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
+
+            //Vstupní data
+            var cesta = Path.Combine(Revit, "SO117", "Výkaz místností.csv");
             var Misto =  Vytvorit(cesta, "SO117");
 
-            cesta = Path.Combine(Cesty.BasePath, "revit", "SO119", "Výkaz místností.csv");
+            cesta = Path.Combine(Revit, "SO119", "Výkaz místností.csv");
             var Misto2 = Vytvorit(cesta, "SO119");
             Misto.AddRange(Misto2);
 
-            cesta = Path.Combine(Cesty.BasePath, "revit", "SO118", "Výkaz místností.csv");
+            cesta = Path.Combine(Revit, "SO118", "Výkaz místností.csv");
             var Misto3 = Vytvorit(cesta, "SO118");
             Misto.AddRange(Misto3);
 
-            var ExcelApp = new ExcelApp();
+            //Hlavní soubor
+            string cestaXLs = Path.Combine(Místnosti, "Místnosti.celek.xlsx");
+            Console.WriteLine(cestaXLs);
+
+            //Soubory pro upravení
+            Misto.SaveJsonList(Path.ChangeExtension(cestaXLs, ".json"));
+            Misto.SaveToCsv(Path.ChangeExtension(cestaXLs, ".csv"));
+
+            //Vyvořit nebo otevřít excel
+            var ExcelApp = new ExcelApp(cestaXLs);
             ExcelApp.GetSheet("Místnosti");
             
             //Vytvoření nadpisů
@@ -51,6 +66,8 @@ namespace Aplikace.Upravy
 
             //Vytvoření dat
             ExcelApp.ClassToExcel(Row: 2, Misto, Slaboproudy.SloupceSpojit);
+            //Uložení a ukončení
+            ExcelApp.ExcelQuit(cestaXLs);
         }
     }
 }

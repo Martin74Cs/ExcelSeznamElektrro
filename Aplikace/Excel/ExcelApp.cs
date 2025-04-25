@@ -33,7 +33,7 @@ namespace Aplikace.Excel
 
             if (File.Exists(Cesta))
             {
-                Console.WriteLine("\nOpem dokument Excel.");    
+                Console.WriteLine("Otevřít dokument Excel.");    
                 // Vytvoření nového sešitu
                 //Automatikcky se vytvoří nový List1
                 Doc = App.Workbooks.Add(Cesta);
@@ -43,12 +43,12 @@ namespace Aplikace.Excel
             }
             //Exc.Workbook Doc = App.Workbooks.Add();
 
-            Console.WriteLine("\nVytvořen prázný dokument Excel.");
+            Console.WriteLine("Vytvořen prázný dokument Excel.");
             //Automatikcky se vytvoří nový List1
             Doc = App.Workbooks.Add();
             Xls = Doc.Sheets[Doc.Sheets.Count];
             Xls.Activate();
-            Console.Write("\nVztvořený dokument nastaven Aktivní.");
+            Console.WriteLine("nVztvořený dokument nastaven Aktivní.");
             //return (App, Doc);
         }
 
@@ -159,7 +159,7 @@ namespace Aplikace.Excel
             //return xls;
         }
 
-        /// <summary> nastavení listu dle jeho jména</summary>
+        /// <summary> nastavení nebo vytvoření listu dle jeho jména</summary>
         public void GetSheet(string Nazev)
         {
             if (Doc == null)
@@ -199,12 +199,12 @@ namespace Aplikace.Excel
             //} 
 
             Console.Write("\nKontrolaOtevenehoNeboOtevreniSobroruExel - OK");
-            Doc = KontrolaOtevenehoNeboOtevreniSobroruExel(Cesta);
+            KontrolaOtevenehoNeboOtevreniSobroruExel(Cesta);
             //return (App, KontrolaOtevenehoNeboOtevreniSobroruExel(App, Cesta));
         }
 
         /// <summary>Kontrola otevřeného souboru v Excel</summary>
-        public Exc.Workbook KontrolaOtevenehoNeboOtevreniSobroruExel(string Cesta)
+        public void KontrolaOtevenehoNeboOtevreniSobroruExel(string Cesta)
         {
             Console.Write("\nMetoda Kontrola Oteveneho Nebo Otevreni Sobroru Exel");
             Console.Write("\nCesta" + Cesta.ToLowerInvariant());
@@ -213,9 +213,9 @@ namespace Aplikace.Excel
                 Console.Write("\nSoubor není otevřen kontrola ");
                 //return null;
                 //nefunuguje otevření souboru
-                return App.Workbooks.Open(Cesta.ToLowerInvariant());
+               Doc = App.Workbooks.Open(Cesta.ToLowerInvariant());
             }
-            return App.Workbooks.Add();
+            Doc = App.Workbooks.Add();
             //foreach (Exc.Workbook item in App.Workbooks)
             //{
             //    Console.Write("\nName=" + item.Name);
@@ -296,7 +296,7 @@ namespace Aplikace.Excel
             Console.Write("\nUkončení Excel");
             //Xls.Save();
             //Console.Write("\nSave OK");
-            ExcelQuit();
+            ExcelQuit(cesta);
             Console.Write("\nUkončení Excel");
             return Pole;
         }
@@ -461,11 +461,7 @@ namespace Aplikace.Excel
 
                 //if (i > 100 && obj.Tag.Length < 2) break;
             }
-            Console.Write("\nUkončení Excel");
-            //Xls.Save();
-            //Console.Write("\nSave OK");
-            ExcelQuit();
-            Console.Write("..... OK");
+            ExcelQuit(cesta);
             return Pole;
         }
 
@@ -532,7 +528,7 @@ namespace Aplikace.Excel
             Console.Write("\nSave OK");
             //Xls.Close();
             //ed.WriteMessage("\nClose OK");
-            ExcelQuit();
+            ExcelQuit(cesta);
             Console.Write("\nUkončení Excel");
             return;
         }
@@ -642,15 +638,7 @@ namespace Aplikace.Excel
                 { Console.Write("\nShoda buňky " + i); }
                 if (i > 500) break;
             }
-            Console.Write("\nUkončení Excel");
-            Doc.Save();
-
-            Console.Write("\nSave OK");
-            //Xls.Close();
-            //ed.WriteMessage("\nClose OK");
-            ExcelQuit();
-            Console.Write("\nUkončení Excel");
-            return;
+            ExcelQuit(cesta);
         }
 
         public void ExcelSaveT<T>(T[] pole, string Nazev)
@@ -1316,33 +1304,43 @@ namespace Aplikace.Excel
 
         
         ///<summary>Console.WriteLine("Zavřit dokument ");ukončení worksheet </summary>
-        public bool ExcelQuit(bool UkonceniApplikace = true)
+        public bool ExcelQuit(string cesta, bool UkonceniApplikace = true)
         {
+            Console.Write("\nUkončení Excel, ");
+            if (!File.Exists(cesta))
+                Doc.SaveAs(cesta);
+            else
+            {
+                Doc.Save();
+                //if(!Soubory.IsFileLocked(cesta))
+                // Zavření bez uložení
+                //ExcelApp.Doc.Close(false);
+            }
+            Console.Write("\nSave OK");
             //ukončení worksheet
             if (Doc == null) return false;
-            Console.WriteLine("Zavřit dokument "); 
-            //Uložení dokumentu
+            Console.WriteLine("Uložit a zavřit dokument.");
+            //Uložení Workbook
             Doc.Close();
 
-            if (UkonceniApplikace == true)
+            if (UkonceniApplikace)
             { 
                 // Ukončení aplikace Excel
-                Console.WriteLine("Zavřit dokument "); 
+                Console.WriteLine("Ukončit excel"); 
                 if (App == null) return false;
                 App.Quit();
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                {
+                    Marshal.ReleaseComObject(Doc);
+                    Marshal.ReleaseComObject(App);
+
+                    // Uvolněte paměť
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                }
+                Console.Write("..... OK");
+                Soubory.KillExcel(Process);
             }
-
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                Marshal.ReleaseComObject(Doc);
-                Marshal.ReleaseComObject(App);
-
-                // Uvolněte paměť
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            }
-            Soubory.KillExcel(Process);
-
             return true;
         }
 
