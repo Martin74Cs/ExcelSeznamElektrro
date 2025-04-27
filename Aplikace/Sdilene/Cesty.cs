@@ -25,25 +25,40 @@ namespace Aplikace.Sdilene
         public static string CuJson => Path.Combine(CestaSich , "Cu.Json");
         public static string AlJson => CestaSich + @"Al.Json";
 
-        public static string BasePath
-        {
-            get
-            {
+        public static string Lightchem => Path.Combine(BasePath , "Lightchem");
+        public static string BasePath {
+            get {
                 if (Environment.UserDomainName == "D10")
                     return @"c:\a\LightChem\Elektro\";
                 else
-                    return @"G:\Můj disk\Elektro";
+                    return @"G:\Můj disk\Elektro\";
             }
         }
-        public static string GooglePath
-        {
-            get
-            {
+        public static string GooglePath {
+            get {
                 if (Environment.UserDomainName == "D10")
-                    return @"E:\Můj disk\Elektro";
+                    return @"E:\Můj disk\Elektro\";
                 else
-                    return @"G:\Můj disk\Elektro";
+                    return @"G:\Můj disk\Elektro\";
             }
         }
+
+        public static string Místnost  {
+            get {
+                var Místnosti = Path.Combine(Lightchem, "Místnosti");
+                if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);
+                return Místnosti;
+            }
+        }
+        public static string Revit {
+            get {
+                var Revit = Path.Combine(Místnost, "revit");
+                if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
+                return Revit;
+            }
+        }
+
+        public static string MistnostiXLs => Path.Combine(Místnost, "Místnosti.celek.xlsx");
+        public static string MistnostiJson => Path.ChangeExtension(MistnostiXLs, ".json");
     }
 }

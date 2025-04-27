@@ -415,7 +415,7 @@ namespace Aplikace.Excel
                 }
                 Row++;
             }
-                for (int i = 1; i < 15; i++)
+                for (int i = 1; i < dirFiltered.Count; i++)
                     Xls.Columns[i].AutoFit();
             return;
         }
@@ -957,8 +957,8 @@ namespace Aplikace.Excel
             //    //currentType = currentType.BaseType;
             //}
 
-            currentType = typeof(Mistnost);
-            properties.AddRange(currentType.GetProperties(BindingFlags.Public | BindingFlags.Instance));
+            //currentType = typeof(Mistnost);
+            //properties.AddRange(currentType.GetProperties(BindingFlags.Public | BindingFlags.Instance));
             //while (currentType != null)
             //{
             //    //currentType = currentType.BaseType;
@@ -1311,17 +1311,17 @@ namespace Aplikace.Excel
                 Doc.SaveAs(cesta);
             else
             {
-                Doc.Save();
+                //Doc.Save();
                 //if(!Soubory.IsFileLocked(cesta))
                 // Zavření bez uložení
                 //ExcelApp.Doc.Close(false);
+                if (Doc == null) return false;
+                    Doc.Close(SaveChanges: true, cesta);
             }
             Console.Write("\nSave OK");
             //ukončení worksheet
-            if (Doc == null) return false;
             Console.WriteLine("Uložit a zavřit dokument.");
             //Uložení Workbook
-            Doc.Close();
 
             if (UkonceniApplikace)
             { 

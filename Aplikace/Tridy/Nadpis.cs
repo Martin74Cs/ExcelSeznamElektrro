@@ -13,7 +13,6 @@ namespace Aplikace.Tridy
     {
         public int Id { get; set; }
         public string Apid { get; set; } = string.Empty;
-
     }
 
     public class Nadpis : Entity

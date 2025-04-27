@@ -12,6 +12,7 @@ namespace Aplikace.Tridy
 {
     public class Mistnost : Entity
     {
+
         [Display(Name = "Číslo místnosti")]
         public string Číslo { get; set; } = string.Empty;
 
@@ -81,8 +82,32 @@ namespace Aplikace.Tridy
             .ToDictionary(x => x.Index, x => x.Name);
     }
 
-    public class Slaboproudy : Místnosti
+    public class Slaboproudy : Mistnost
     {
+        public static Slaboproudy CopyToParent(Mistnost child)
+        {
+            var parent = new Slaboproudy();
+            var childProps = typeof(Mistnost).GetProperties();
+    
+            foreach (var parentProp in typeof(Slaboproudy).GetProperties())
+            {
+         
+                // Najdeme odpovídající vlastnost v Child
+                var childProp = childProps.FirstOrDefault(p => p.Name == parentProp.Name && p.PropertyType == parentProp.PropertyType);
+                if (childProp != null)
+                {
+                    if (childProp.Name == "Sloupce") continue;
+                    var value = childProp.GetValue(child);
+                    parentProp.SetValue(parent, value);
+                }
+            }
+
+            return parent;
+        }
+
+        //[Display(Name = "Pokus")]
+        //public string Pokus { get; set; } = string.Empty;
+    
         [Display(Name = "Hlásič")]
         public string EpsHlasic { get; set; } = string.Empty;
 
@@ -118,7 +143,9 @@ namespace Aplikace.Tridy
             .Select((name, index) => new { Index = index + 1, Name = name })
             .ToDictionary(x => x.Index, x => x.Name);
 
+
         [JsonIgnore]
+        /// <summary>Sloupce pro zobrazení v tabulce, ze seznamu vytvoženy IDictionary čísla označují sloupce</summary>
         public static IDictionary<int, string> SloupceSpojit => Mistnost.Nadpis
                 .Concat(Nadpis)
                 .Select((name, index) => new { Index = index + 1, Name = name })

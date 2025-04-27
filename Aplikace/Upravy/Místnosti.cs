@@ -30,21 +30,6 @@ namespace Aplikace.Upravy
             return Mistnost;
         }
 
-        public static string Místnost { 
-            get {
-                var Místnosti =  Path.Combine(Cesty.BasePath, "Místnosti");
-                if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);
-                return Místnosti; 
-            } 
-        }
-        public static string Revit {
-            get  {
-                var Revit = Path.Combine(Cesty.BasePath, "revit");
-                if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
-                return Revit;
-            }
-        }
-        public static string CestaXLs => Path.Combine(Místnost, "Místnosti.celek.xlsx");
         public static void VytvoritSeznamy()
         {
             //var Místnosti = Path.Combine(Cesty.BasePath, "Místnosti");
@@ -52,28 +37,36 @@ namespace Aplikace.Upravy
             //var Revit = Path.Combine(Místnosti, "revit");
             //if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
 
-            //Vstupní data
-            var cesta = Path.Combine(Revit, "SO117", "Výkaz místností.csv");
-            var Misto =  Vytvorit(cesta, "SO117");
+            var Slabo = new List<Slaboproudy>();
 
-            cesta = Path.Combine(Revit, "SO119", "Výkaz místností.csv");
+            //Vstupní data
+            var cesta = Path.Combine(Cesty.Revit, "SO117", "Výkaz místností.csv");
+            var Misto = Vytvorit(cesta, "SO117");
+            var parents = Misto.Select(Slaboproudy.CopyToParent).ToList();
+            Slabo.AddRange(parents);
+
+            cesta = Path.Combine(Cesty.Revit, "SO119", "Výkaz místností.csv");
             var Misto2 = Vytvorit(cesta, "SO119");
             Misto.AddRange(Misto2);
+            var parents2 = Misto2.Select(x => Slaboproudy.CopyToParent(x)).ToList();
+            Slabo.AddRange(parents2);
 
-            cesta = Path.Combine(Revit, "SO118", "Výkaz místností.csv");
+            cesta = Path.Combine(Cesty.Revit, "SO118", "Výkaz místností.csv");
             var Misto3 = Vytvorit(cesta, "SO118");
             Misto.AddRange(Misto3);
+            var parents3 = Misto3.Select(x => Slaboproudy.CopyToParent(x)).ToList();
+            Slabo.AddRange(parents3);
 
             //Hlavní soubor
             //string cestaXLs = Path.Combine(Místnost, "Místnosti.celek.xlsx");
-            Console.WriteLine(CestaXLs);
+            Console.WriteLine(Cesty.MistnostiXLs);
 
             //Soubory pro upravení
-            Misto.SaveJsonList(Path.ChangeExtension(CestaXLs, ".json"));
-            Misto.SaveToCsv(Path.ChangeExtension(CestaXLs, ".csv"));
+            Slabo.SaveJsonList(Path.ChangeExtension(Cesty.MistnostiXLs, ".json"));
+            Slabo.SaveToCsv(Path.ChangeExtension(Cesty.MistnostiXLs, ".csv"));
 
             //Vyvořit nebo otevřít excel
-            var ExcelApp = new ExcelApp(CestaXLs);
+            var ExcelApp = new ExcelApp(Cesty.MistnostiXLs);
             ExcelApp.GetSheet("Místnosti");
             
             //Vytvoření nadpisů
@@ -81,9 +74,9 @@ namespace Aplikace.Upravy
             ExcelApp.Nadpisy(Slaboproudy.SloupceSpojit);
 
             //Vytvoření dat
-            ExcelApp.ClassToExcel(Row: 2, Misto, Slaboproudy.SloupceSpojit);
+            ExcelApp.ClassToExcel(Row: 2, Slabo, Slaboproudy.SloupceSpojit);
             //Uložení a ukončení
-            ExcelApp.ExcelQuit(CestaXLs);
+            ExcelApp.ExcelQuit(Cesty.MistnostiXLs);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Aplikace.Seznam
 {
     public class KabelList
     {
-        public static List<List<string>> Kabely(List<Zarizeni> PoleData)
+        public static List<List<string>> KabelyOld(List<Zarizeni> PoleData)
         {
             //string[] TextPole =     ["Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "Proud500", "HP", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC"];
             //int[] PouzitProTabulku1 = [3,   2,      7,      18,         1,              21,         59,     56,     60,         63,     64,     61,     62,         65,     66];
@@ -52,6 +52,107 @@ namespace Aplikace.Seznam
 
                 //7. proud
                 Data.Add(radek.PruzezMM2);
+
+                //8. Průřez
+                Data.Add(radek.PruzezMM2);
+
+                //9. zařízení
+                //Pokud začíná na P ne B jedná se  balenou jednotku
+                if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B'))
+                    Data.Add("Přívod");
+                else
+                    Data.Add("Motor");
+
+                //10. odkud tag
+                Data.Add(radek.Tag);
+
+                //11. odkud Mcc
+                Data.Add(radek.Rozvadec);
+
+                //12. Odkud číslo
+                Data.Add(radek.RozvadecCislo);
+
+                //13. Svorka rozvaděče
+                Data.Add("X 01");
+
+                //14. Mezera
+                Data.Add(" ");
+
+
+
+
+                //15. kam tag
+                Data.Add(radek.Tag);
+
+                //16. kam objekt nebo patro
+                Data.Add("SO 01");
+
+                //17.kam Zažizeni
+                //18.kam Svorka
+                if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B'))
+                {
+                    Data.Add(radek.BalenaJednotka);
+                    Data.Add("X 01");
+                }
+                else 
+                { 
+                    Data.Add("M 01");
+                    Data.Add("X 01");
+                }
+
+                //19. Delka m
+                Data.Add(radek.Delka.ToString());
+
+                //20 Delka ft
+                //Data.Add(radek.Delka);
+
+                //přidání řádku do pole
+                NovaData.Add(Data);
+
+                //Ovládací kabel PTC
+                if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
+                { 
+                  NovaData.Add(KabelPTC(radek));
+                  NovaData.Add(KabelOvladani(radek));
+                }
+            }
+            return NovaData;
+        }
+        public static List<List<string>> Kabely(List<Zarizeni> PoleData)
+        {
+            //uprava pole tabulky pro vypsaní
+            var NovaData = new List<List<string>>();
+            foreach (var radek in PoleData)
+            {
+                var Data = new List<string>
+                {
+                    //1. Kabel
+                    radek.Tag,
+
+                    //2. odkud Mcc
+                    radek.Rozvadec,
+
+                    //3. Odkud číslo
+                    radek.RozvadecCislo,
+
+                    //4. Kabel
+                    "WL 01"
+                };
+
+                //5. Jmeno kabelu
+                if (radek.Menic == "VSD")
+                    Data.Add("ÖLFLEX CLASSIC 110 CY");
+                else
+                    Data.Add("CYKY");
+
+                //6. Počet žil
+                if (radek.Menic == "VSD")
+                    Data.Add("4x");
+                else
+                    Data.Add("5x");             
+
+                //7. proud
+                Data.Add(radek.Proud);
 
                 //8. Průřez
                 Data.Add(radek.PruzezMM2);
