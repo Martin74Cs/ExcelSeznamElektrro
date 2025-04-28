@@ -54,7 +54,7 @@ namespace Aplikace.Upravy
             var ExcelApp = new ExcelApp(cestacelek);
             //ExcelApp.NovyExcelSablona(cestacelek);
             //Worksheet Xls = Doc.Worksheets[1];
-            ExcelApp.PridatNovyList("Seznam zažízení");
+            ExcelApp.GetSheet("Seznam zažízení");
             ExcelApp.ExcelSave([.. pokus]);
             ExcelApp.Doc.Save();
             //uzavření dokumentu bez uložení  

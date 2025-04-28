@@ -25,21 +25,26 @@ namespace Aplikace.Sdilene
         public static string CuJson => Path.Combine(CestaSich , "Cu.Json");
         public static string AlJson => CestaSich + @"Al.Json";
 
+        /// <summary>...LightChem\Elektro\Lightchem </summary>
         public static string Lightchem => Path.Combine(BasePath , "Lightchem");
+
+        /// <summary>...Můj disk\Elektro\Lightchem\Ëlektro </summary>
+        public static string Elektro => Path.Combine(Lightchem , "Elektro");
+
         public static string BasePath {
             get {
                 if (Environment.UserDomainName == "D10")
                     return @"c:\a\LightChem\Elektro\";
                 else
-                    return @"G:\Můj disk\Elektro\";
+                    return @"G:\Můj disk\Projekty\";
             }
         }
         public static string GooglePath {
             get {
                 if (Environment.UserDomainName == "D10")
-                    return @"E:\Můj disk\Elektro\";
+                    return @"E:\Můj disk\Projekty\";
                 else
-                    return @"G:\Můj disk\Elektro\";
+                    return @"G:\Můj disk\Projekty\";
             }
         }
 

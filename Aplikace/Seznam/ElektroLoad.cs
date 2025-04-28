@@ -180,13 +180,13 @@ namespace Aplikace.Seznam
             //PoleData = KabelList.Kabely(PoleData);
 
             //Nová záložka
-            ExcelApp.PridatNovyList("Kabely");
+            ExcelApp.GetSheet("Kabely");
 
             //doplnení nadpisu
             ExcelApp.ExcelSaveNadpis(PoleData);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
-            ExcelApp.ExcelSaveTable(PoleData, 3);
+            ExcelApp.KabelyToExcel(PoleData, 3);
 
             //vyzváření seznamu kabelů podle krytérii
             // Použití GroupBy k získání unikátních záznamů na základě tří kritérií
@@ -218,12 +218,12 @@ namespace Aplikace.Seznam
             Soucet.Add([.. xx1]);
 
             //nová záložka
-            ExcelApp.PridatNovyList("Seznam");
+            ExcelApp.GetSheet("Seznam");
             ExcelApp.Nadpis("A1:C1", "Označeni", Soucet);
             ExcelApp.Nadpis("D1:E1", "Délka", Soucet);
             ExcelApp.Xls.Range["D2"].Value = "[m]";
             ExcelApp.Xls.Range["E2"].Value = "[ft]";
-            ExcelApp.ExcelSaveTable(Soucet, 3);
+            ExcelApp.KabelyToExcel(Soucet, 3);
 
             ExcelApp.Xls.Cells[Soucet.Count + 1, 4].Formula = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
             ExcelApp.ExcelQuit(cestaXls);

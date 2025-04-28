@@ -48,8 +48,8 @@
             seznamyToolStripMenuItem = new ToolStripMenuItem();
             místnostiToolStripMenuItem = new ToolStripMenuItem();
             místnostiToolStripMenuItem1 = new ToolStripMenuItem();
-            pomocToolStripMenuItem = new ToolStripMenuItem();
             generovatToolStripMenuItem = new ToolStripMenuItem();
+            pomocToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -115,7 +115,7 @@
             button3.Name = "button3";
             button3.Size = new Size(167, 38);
             button3.TabIndex = 6;
-            button3.Text = "Doplň Csv -> Json";
+            button3.Text = "Úpravy Csv -> Json";
             button3.UseVisualStyleBackColor = true;
             button3.Click += Button3_Click;
             // 
@@ -252,22 +252,22 @@
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(180, 26);
+            místnostiToolStripMenuItem1.Size = new Size(176, 26);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
+            // 
+            // generovatToolStripMenuItem
+            // 
+            generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
+            generovatToolStripMenuItem.Size = new Size(176, 26);
+            generovatToolStripMenuItem.Text = "Generovat ";
+            generovatToolStripMenuItem.Click += generovatToolStripMenuItem_Click;
             // 
             // pomocToolStripMenuItem
             // 
             pomocToolStripMenuItem.Name = "pomocToolStripMenuItem";
             pomocToolStripMenuItem.Size = new Size(69, 25);
             pomocToolStripMenuItem.Text = "Pomoc";
-            // 
-            // generovatToolStripMenuItem
-            // 
-            generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(180, 26);
-            generovatToolStripMenuItem.Text = "Generovat ";
-            generovatToolStripMenuItem.Click += generovatToolStripMenuItem_Click;
             // 
             // Form1
             // 

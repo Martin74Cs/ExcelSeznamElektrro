@@ -153,11 +153,11 @@ namespace Aplikace.Excel
 
 
         /// <summary> Přidání nového listu do Excelového dokumentu </summary>
-        public void PridatNovyList(string NazevListu)
-        {
-            GetSheet(NazevListu);
-            //return xls;
-        }
+        //public void PridatNovyList(string NazevListu)
+        //{
+        //    GetSheet(NazevListu);
+        //    //return xls;
+        //}
 
         /// <summary> nastavení nebo vytvoření listu dle jeho jména</summary>
         public void GetSheet(string Nazev)
@@ -341,7 +341,6 @@ namespace Aplikace.Excel
                     //přeskočit prázdné buňky a nulové
                     if (string.IsNullOrEmpty(xxx) || xxx == "0")
                     { 
-                        //Console.WriteLine($"Radek {pocet++} - je prázdný");
                         continue;
                     }
 
@@ -352,12 +351,13 @@ namespace Aplikace.Excel
                 if (!string.IsNullOrEmpty(jeden.Prikon))
                 {
                     jeden.Apid = ExcelLoad.Apid();
+                    jeden.Id = pocet;
                     Pole.Add(jeden);
                     Console.WriteLine($"Radek {pocet++} - přídán");
                 }
                 else
                 {
-                    Console.WriteLine($"Radek {pocet++} - přeskočen, Příkon {jeden.Prikon} - není číslo");
+                    Console.WriteLine($"Radek {pocet} - přeskočen, Příkon {jeden.Prikon} - není číslo");
                 }
 
                 //if (!string.IsNullOrEmpty(Pole[1]) && Pole[1] != "0")
@@ -409,9 +409,26 @@ namespace Aplikace.Excel
                     int Col = kvp.Key;
                     string propName = kvp.Value;
 
-                    Exc.Range Pok = Xls.Cells[Row, Col];
+                    Exc.Range Zapis1 = Xls.Cells[Row, Col];
                     var prop = properties[propName];
-                    Pok.Value = prop.GetValue(item);
+                    //Zapis1.Value = prop.GetValue(item);
+                    string value = prop.GetValue(item).ToString();
+                    if (double.TryParse(value, out double cislo))
+                    {
+                        Zapis1.Value = cislo;
+
+                        // Formátovat jako číslo s 2 desetinnými místy
+                        Zapis1.NumberFormat = "#,##0.00";
+
+                        // Zarovnat doprava
+                        Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
+                    }
+                    else 
+                    {
+                         Zapis1.Value = value;
+                    }
+                         
+
                 }
                 Row++;
             }
@@ -1436,7 +1453,7 @@ namespace Aplikace.Excel
             return Data;
         }
 
-        public void ExcelSaveTable(List<List<string>> data, int Row)
+        public void KabelyToExcel(List<List<string>> data, int Row)
         {
             Row--;
             int j;
@@ -1450,12 +1467,20 @@ namespace Aplikace.Excel
                     if (double.TryParse(item, out double cislo))
                     {
                         Zapis1.Value = cislo;
+
+                        // Formátovat jako číslo s 2 desetinnými místy
+                        Zapis1.NumberFormat = "#,##0.00";
+
+                        // Zarovnat doprava
+                        Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
                     }
                     else 
                     {
                          Zapis1.Value = item;
                     }
                 }
+                for (int i = 1; i < radek.Count; i++)
+                    Xls.Columns[i].AutoFit();
             }
 
         }

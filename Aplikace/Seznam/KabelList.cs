@@ -127,7 +127,7 @@ namespace Aplikace.Seznam
                 var Data = new List<string>
                 {
                     //1. Kabel
-                    radek.Tag,
+                    radek.Tag.Replace("\n", " "),
 
                     //2. odkud Mcc
                     radek.Rozvadec,
@@ -151,11 +151,11 @@ namespace Aplikace.Seznam
                 else
                     Data.Add("5x");             
 
-                //7. proud
-                Data.Add(radek.Proud);
-
-                //8. Průřez
+                //7. Průřez
                 Data.Add(radek.PruzezMM2);
+
+                //8. 
+                Data.Add("");
 
                 //9. zařízení
                 //Pokud začíná na P ne B jedná se  balenou jednotku
@@ -165,7 +165,7 @@ namespace Aplikace.Seznam
                     Data.Add("Motor");
 
                 //10. odkud tag
-                Data.Add(radek.Tag);
+                Data.Add(radek.Tag.Replace("\n", " "));
 
                 //11. odkud Mcc
                 Data.Add(radek.Rozvadec);
@@ -183,10 +183,10 @@ namespace Aplikace.Seznam
 
 
                 //15. kam tag
-                Data.Add(radek.Tag);
+                Data.Add(radek.Tag.Replace("\n", " "));
 
                 //16. kam objekt nebo patro
-                Data.Add("SO 01");
+                Data.Add("Patro");
 
                 //17.kam Zažizeni
                 //18.kam Svorka
@@ -226,7 +226,7 @@ namespace Aplikace.Seznam
             var Data = new List<string>
             {
                 //1. Kabel tag
-                radek.Tag,
+                radek.Tag.Replace("\n", " "),
 
                 //2. Kabel MCC
                 radek.Rozvadec,
@@ -257,7 +257,7 @@ namespace Aplikace.Seznam
 
 
                 //10. odkud tag
-                radek.Tag,
+                radek.Tag.Replace("\n", " "),
 
                 //11. odkud Mcc
                 radek.Rozvadec,
@@ -273,10 +273,10 @@ namespace Aplikace.Seznam
 
 
                 //15. kam tag
-                radek.Tag,
+                radek.Tag.Replace("\n", " "),
 
                 //16. kam číslo
-                "SO 01",
+                "Patro",
 
                 //17. kam číslo
                 "M 01",
@@ -353,7 +353,7 @@ namespace Aplikace.Seznam
                 radek.Tag,
 
                 //16. kam číslo
-                "SO 01",
+                "Patro",
 
                 //17. kam číslo
                 "MX 01",

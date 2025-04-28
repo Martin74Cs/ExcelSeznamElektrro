@@ -54,7 +54,7 @@ namespace WinForms
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            string cesta = Path.Combine(Cesty.BasePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.csv");
+            string cesta = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.csv");
             System.Diagnostics.Process.Start("explorer.exe", cesta);
         }
 

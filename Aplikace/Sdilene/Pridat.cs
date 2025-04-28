@@ -49,16 +49,16 @@ namespace Aplikace.Sdilene
         }
 
         /// <summary>Pridání délky kabelu </summary>
-        public static List<Zarizeni> AddKabel(this List<Zarizeni> pole, double delka = 100)
+        public static void AddKabelDelka(this List<Zarizeni> pole, double delka = 100)
         {
             // Přidání vlastnosti "Proud" do každého zařízení
-            var nove = new List<Zarizeni>();
-            foreach (var item in pole)
+            //var nove = new List<Zarizeni>();
+            for (int i = 0; i < pole.Count; i++)
             {
-                item.Delka = delka;
-                nove.Add(item);
+                pole[i].Delka = delka;
+                pole[i].Delkaft = delka * 3.28;
             }
-            return nove;
+            //return pole;
         }
 
         public static void Soucet(ExcelApp ExcelApp, List<List<string>> PoleData)
@@ -93,11 +93,11 @@ namespace Aplikace.Sdilene
 
             //nová záložka
             //var ExcelApp = new ExcelApp();
-            ExcelApp.PridatNovyList("Seznam");
+            ExcelApp.GetSheet("Seznam");
             ExcelApp.Nadpis("A1:C1", "Označeni", Soucet);
             ExcelApp.Nadpis("D1:D1", "Délka", Soucet);
             ExcelApp.Xls.Range["D2"].Value = "[m]";
-            ExcelApp.ExcelSaveTable(Soucet, 3);
+            ExcelApp.KabelyToExcel(Soucet, 3);
 
             //xls.Cells[Soucet.Count + 1, 4].Formula = xxx může nastat chyba.
             ExcelApp.Xls.Cells[Soucet.Count + 1, 4].FormulaLocal = $"=SUMA(D3:D{Soucet.Count})"; // SUMAE{i}*500/480";
