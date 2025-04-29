@@ -302,20 +302,11 @@ namespace Aplikace.Excel
         }
 
         /// <summary> uložení dat do excel podle kriterii </summary>
-        public List<Zarizeni> ExelTable(int Radek, string Tabulka)
+        public List<Zarizeni> ExelTable(int Radek, string Tabulka, IDictionary<int, string> dir)
         {
             //Nastavení listu
             GetSheet(Tabulka);
 
-            //Sloupce Exel odpovídající názvům tříd.
-            var dir = new Dictionary<int, string>() {
-                {1, "Radek"     },
-                {2, "Tag"       },
-                {4, "Popis"     },
-                {11, "Menic"    },
-                {10, "Prikon"   },
-                {18, "BalenaJednotka"   },
-            };
             int pocet = 1;
             //string prikon = string.Empty;
             //var cteniPole = new List<string>();

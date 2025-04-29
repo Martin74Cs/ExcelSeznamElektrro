@@ -248,9 +248,9 @@ namespace Aplikace.Sdilene
 
         }
 
-        [DllImport("user32.dll", SetLastError = true)]
+        [LibraryImport("user32.dll", SetLastError = true)]
         //[LibraryImport("user32.dll", SetLastError = true)]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         //[LibraryImport("user32.dll", SetLastError = true)]
         //public static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);

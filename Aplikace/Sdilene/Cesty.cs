@@ -30,11 +30,13 @@ namespace Aplikace.Sdilene
 
         /// <summary>...Můj disk\Elektro\Lightchem\Ëlektro </summary>
         public static string Elektro => Path.Combine(Lightchem , "Elektro");
-
+        public static string ElektroDataCsv => Path.Combine(Elektro, "ElektroData.Csv");
+        public static string ElektroRozvaděčJson => Path.Combine(Elektro, "ElektroRozvaděč.Json");
+        
         public static string BasePath {
             get {
                 if (Environment.UserDomainName == "D10")
-                    return @"c:\a\LightChem\Elektro\";
+                    return @"c:\a\";
                 else
                     return @"G:\Můj disk\Projekty\";
             }

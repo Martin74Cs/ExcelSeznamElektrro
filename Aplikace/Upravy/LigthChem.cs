@@ -2,6 +2,7 @@
 using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Tridy;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -13,51 +14,48 @@ namespace Aplikace.Upravy
 {
     public class LigthChem
     {
-        public static void Hlavni()
+        /// <summary>Vytvořit z Seznamu strojů json a Csv pro další doplnění</summary>
+        public static void StrojniToJsonCsv()
         {
-            //var xxx = new Zarizeni();
-            //xxx.Vypis();
-
-            //string basePath;
-            //if (Environment.UserDomainName == "D10")
-            //{
-            //    Console.WriteLine("Jsem v práci");
-            //    basePath = @"c:\a\LightChem\Elektro\";
-            //}
-            //else { 
-            //    Console.WriteLine("Jsem doma na Terase");
-            //    basePath = @"G:\Můj disk\Elektro";
-            //}
-
             //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
-            string filename = "Seznam.xlsx";
+            
             if (!Directory.Exists(Cesty.Elektro))
                 Directory.CreateDirectory(Cesty.Elektro);
-            //string cesta1 = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx");
 
-            ////načtení základní infomací pro seznam Elektro dle čísel jednotlivých sloupců
-            //string[] TextPole =     ["Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "Proud500", "HP", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC"];
-            //int[] PouzitProTabulku1 = [3,   2,      7,      18,         1,              21,         59,     56,     60,         63,     64,     61,     62,         65,     66];
-            //var Stara = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku1, "M_equipment_list", 7, TextPole);
-
-            //string cesta1 = Path.Combine(basePath, @"N78020_Consumer_List.xls");
-            //var Stara = ExcelLoad.DataExcel(cesta1, "Seznam", 4);
             string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             var Stara = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
-
-            //Výpočet položky proud.
-            Stara.AddProud();
-
-            //Přidání typu kabelu.
-            AddKabel(Stara);
-
-            //Přidání délky kabelu.
-            Stara.AddKabelDelka();
 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             Stara.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
 
-             var cesta = Path.Combine(Cesty.Elektro, filename);
+            string cestaData = Path.Combine(Cesty.ElektroDataCsv);
+            if (!File.Exists(cestaData))
+            {
+                //vytvoření základu pro json jen pokud neexistuje.
+                Stara.SaveJsonList(Path.ChangeExtension(cestaData, ".json"));
+                //vytvoření csv pro doplnění
+                Stara.SaveToCsv(cestaData);
+            }
+
+        }
+
+        /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
+        public static void JsonToExcel()
+        {
+            string cestaData = Path.Combine(Cesty.ElektroRozvaděčJson);
+            var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
+
+            //Možná proud asi jen tam kde není.
+            Stara.AddProud();
+
+            //Přidání typu kabelu.
+            AddKabelCyky(Stara);
+
+            //Přidání délky kabelu.
+            Stara.AddKabelDelka();
+
+            string filename = "Seznam.xlsx";
+            var cesta = Path.Combine(Cesty.Elektro, filename);
             //vytvoření nebo otevření dokumentu elektro
             var ExcelApp = new ExcelApp(cesta);
 
@@ -69,17 +67,7 @@ namespace Aplikace.Upravy
             //Formátování nadpisů
             ExcelApp.NadpisSet(range);
 
-            //if (Stara.Count < 1)
-            //{
-            //Fake data
-            //toto je vzor pro vytvoření tabulky
-            //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
-            //var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-            //Stara.Add(["1",     "2",    "3",    "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]);
-            //}
-            //ExcelApp.ExcelSaveClass(xls, Stara);
-
-            //čísla sloupců a nazvy tříd. použíty pouze čísla do 15
+            //čísla sloupců a nazvy tříd. 
             var dir = new Dictionary<int, string>() {
                 {1,"Tag"},
                 {2,"Popis"},
@@ -102,52 +90,38 @@ namespace Aplikace.Upravy
                 //{106,"Radek"},
             };
             ExcelApp.ClassToExcel(Row: 3, Stara, dir);
-            //Doplnění vzorců doExel
-            //ExcelApp.ExcelSaveVzorce(xls, Stara.Count);
 
-            //else
-            //{ 
-            //    //vytvoření nebo otevření dokumentu elekro
-            //    cesta = Path.Combine(basePath, "Seznam.xlsx");
-            //    xls = ExcelApp.ExcelElektro(cesta);
-            //    doc = xls.Parent;
-            //}
-
-            //Načti seznam zařízení z vytvořeného seznamu zařízení elektro 
-            //TextPole = new string[] { "Tag", "PId" "Jmeno", "kW", "BalenaJednotka", "Menic" "Proud500",  "HP"  "Proud480", "mm2" , "AWG" , "Delkam",  Delkaft,     MCC ,  cisloMCC  };
-            //var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-
-            //v poli jsou čísla posunuty o jedničku
-            //var PoleData = ExcelApp.ExcelLoadWorksheet(xls, PouzitProTabulku);
-
-            //Úprava načteného listu seznamu zařízení elektro 
             Console.WriteLine("Probíhá načítaní kabelů");
-            //AddKabel(Stara);
-
-            //Vytvoření poole kabelů pro zápis do Excelu
+            //Vytvoření pole kabelů pro zápis do Excelu
             var PoleData = KabelList.Kabely(Stara);
 
-            //Nová záložka
+            //Nová záložka nebo nastav existující
             ExcelApp.GetSheet("Kabely");
 
             //Doplnení nadpisu a ramecku
             ExcelApp.ExcelSaveNadpis(PoleData);
 
             //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
-            //Dlouho dočasně vypnuto
             ExcelApp.KabelyToExcel(PoleData, 3);
 
-            //vyzváření seznamu kabelů podle krytérii
+            //Vyzváření seznamu kabelů podle krytérii
             Pridat.Soucet(ExcelApp, PoleData);
-            
-            //var Proces =  Soubory.GetExcelProcess(ExcelApp.App);
-
-            //ExcelApp.App.Quit();
-
-            //if (File.Exists(cesta))
-            //    File.Delete(cesta);
-            //doc.SaveAs(cesta);
+             
             ExcelApp.ExcelQuit(cesta);
+
+        }
+
+        public static void Hlavni()
+        {
+            string cesta = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            string json = Path.ChangeExtension(cesta, ".json");
+            if (!File.Exists(json))
+                return;
+
+            //var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
+            //Prevod.UpdateCsvToJson(Source, Target);
+
+
         }
 
         /// <summary>Seznam vývodů pro doplnění </summary>
@@ -214,16 +188,16 @@ namespace Aplikace.Upravy
         public static void AddKabely()
         {
             //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            string cesta1 = Path.Combine(Cesty.Lightchem, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
-            var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
+            string cesta1 = Path.Combine(Cesty.ElektroRozvaděčJson);
+            var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
 
-            AddKabel(Target);
+            AddKabelCyky(Target);
 
             Target.SaveJsonList(cesta1);
             Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
         }
 
-        public static List<Zarizeni> AddKabel(List<Zarizeni> Target)
+        public static List<Zarizeni> AddKabelCyky(List<Zarizeni> Target)
         {
             var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
                 .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
@@ -263,24 +237,24 @@ namespace Aplikace.Upravy
             return Target;
         }
 
-        public static void PrevodCsvToJson()
+        public static void DoplneniCsvToJson()
         {
-            //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
-            var Target = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
+            //Soubor kam bude doplněno
+            string cestaData = Path.Combine(Path.ChangeExtension(Cesty.ElektroDataCsv, ".json"));
+            var Target = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
-            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
-            string filename = @"N92120_Seznam_stroju_zarizeni_250311_250407.csv";
-            string cesta = Path.Combine(Cesty.Elektro, filename);
+            //Data pro doplnění
+            string cesta = Path.Combine(Cesty.ElektroDataCsv);
             if (!File.Exists(cesta)) return;
             var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
             
+            //Doplnění dat do Json.
             Prevod.UpdateCsvToJson(Source, Target );
 
-            Target.SaveJsonList(cesta1);
-            //Asi zrušit načítám změny s .csv
-            //Prevod.SaveToCsv(Target, Path.ChangeExtension(cesta1, ".csv"));
+            //uložit doplnění informace do Json
+            Target.SaveJsonList(cestaData);
         }
+
         public static void VyvoritFMKM()
         {
              //var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu

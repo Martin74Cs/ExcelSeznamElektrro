@@ -40,7 +40,7 @@ namespace Aplikace.Excel
             }
         }
 
-        /// <summary> Načtení dpkumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
+        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
         public static List<Zarizeni> DataExcel(string cesta, string Tabulka, int Radek)
         {
             Console.WriteLine("Probíná hačítání dat ... ");
@@ -50,14 +50,8 @@ namespace Aplikace.Excel
             //var Pole = new List<Zarizeni>();
             //string Soubor = Path.GetFileName(cesta);
             //string Adresar = Path.GetDirectoryName(cesta);
-            string json = Path.ChangeExtension(cesta, ".json");
-            if (File.Exists(json))
-            {
-                return Soubory.LoadJsonList<Zarizeni>(json);
-                //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-            }
 
-            if (!System.IO.File.Exists(cesta)) return [];
+            if (!File.Exists(cesta)) return [];
 
             var ExcelApp = new ExcelApp(cesta);
             //ExcelApp.DokumetExcel(cesta);
@@ -67,11 +61,22 @@ namespace Aplikace.Excel
 
             if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
             Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
-            var Pole = ExcelApp.ExelTable(Radek,Tabulka);
+
+            //Sloupce Exel odpovídající názvům tříd.
+            var dir = new Dictionary<int, string>() {
+                {1, "Radek"     },
+                {2, "Tag"       },
+                {4, "Popis"     },
+                {11, "Menic"    },
+                {10, "Prikon"   },
+                {18, "BalenaJednotka"   },
+            };
+
+            var Pole = ExcelApp.ExelTable(Radek,Tabulka, dir);
 
             ExcelApp.ExcelQuit(cesta);
             //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-            if (Pole.Count > 1) Pole.SaveJsonList(json);
+            if (Pole.Count > 1) Pole.SaveJsonList(Cesty.ElektroRozvaděčJson);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");
             return Pole;
             

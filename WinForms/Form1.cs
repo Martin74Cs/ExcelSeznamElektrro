@@ -13,10 +13,10 @@ namespace WinForms
             InitializeComponent();
         }
 
-        //Převod
+        //Převod stroju na JSON a CSV
         private async void Button2_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.Hlavni());
+            await Task.Run(() => LigthChem.StrojniToJsonCsv());
             //Console.SetOut(new ListBoxWriter(listBox1));
         }
 
@@ -39,7 +39,7 @@ namespace WinForms
 
         private async void Button3_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.PrevodCsvToJson());
+            await Task.Run(() => LigthChem.DoplneniCsvToJson());
         }
 
         private async void Button4_Click(object sender, EventArgs e)
@@ -54,8 +54,8 @@ namespace WinForms
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            string cesta = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.csv");
-            System.Diagnostics.Process.Start("explorer.exe", cesta);
+            string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
+            System.Diagnostics.Process.Start("explorer.exe", cestaData);
         }
 
         private async void Button9_Click(object sender, EventArgs e)
@@ -98,9 +98,14 @@ namespace WinForms
         }
 
         /// <summary> Místnosti - vytvoření seznamu </summary>
-        private async void generovatToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void GenerovatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await Task.Run(() => Místnosti.VytvoritSeznamy());
+        }
+
+        private async void Button6_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => LigthChem.JsonToExcel());
         }
     }
 

@@ -50,6 +50,8 @@
             místnostiToolStripMenuItem1 = new ToolStripMenuItem();
             generovatToolStripMenuItem = new ToolStripMenuItem();
             pomocToolStripMenuItem = new ToolStripMenuItem();
+            button6 = new Button();
+            label5 = new Label();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -93,7 +95,7 @@
             button2.Name = "button2";
             button2.Size = new Size(167, 38);
             button2.TabIndex = 3;
-            button2.Text = "Převod";
+            button2.Text = "Převod->json,csv";
             button2.UseVisualStyleBackColor = true;
             button2.Click += Button2_Click;
             // 
@@ -111,7 +113,7 @@
             // 
             button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button3.Font = new Font("Segoe UI", 12F);
-            button3.Location = new Point(709, 120);
+            button3.Location = new Point(709, 167);
             button3.Name = "button3";
             button3.Size = new Size(167, 38);
             button3.TabIndex = 6;
@@ -124,11 +126,11 @@
             label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F);
-            label2.Location = new Point(882, 129);
+            label2.Location = new Point(882, 176);
             label2.Name = "label2";
-            label2.Size = new Size(177, 21);
+            label2.Size = new Size(162, 21);
             label2.TabIndex = 5;
-            label2.Text = "Převod Strojů na Elektro";
+            label2.Text = "Doplnění  Dat do Json";
             // 
             // button4
             // 
@@ -157,7 +159,7 @@
             // 
             button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button5.Font = new Font("Segoe UI", 12F);
-            button5.Location = new Point(709, 204);
+            button5.Location = new Point(709, 251);
             button5.Name = "button5";
             button5.Size = new Size(167, 38);
             button5.TabIndex = 10;
@@ -170,7 +172,7 @@
             label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F);
-            label4.Location = new Point(882, 213);
+            label4.Location = new Point(882, 260);
             label4.Name = "label4";
             label4.Size = new Size(141, 21);
             label4.TabIndex = 9;
@@ -180,7 +182,7 @@
             // 
             button8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button8.Font = new Font("Segoe UI", 12F);
-            button8.Location = new Point(709, 76);
+            button8.Location = new Point(709, 123);
             button8.Name = "button8";
             button8.Size = new Size(167, 38);
             button8.TabIndex = 16;
@@ -192,7 +194,7 @@
             // 
             button9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button9.Font = new Font("Segoe UI", 12F);
-            button9.Location = new Point(709, 248);
+            button9.Location = new Point(709, 295);
             button9.Name = "button9";
             button9.Size = new Size(167, 38);
             button9.TabIndex = 18;
@@ -205,7 +207,7 @@
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 12F);
-            label7.Location = new Point(882, 257);
+            label7.Location = new Point(882, 304);
             label7.Name = "label7";
             label7.Size = new Size(149, 21);
             label7.TabIndex = 17;
@@ -261,7 +263,7 @@
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
             generovatToolStripMenuItem.Size = new Size(176, 26);
             generovatToolStripMenuItem.Text = "Generovat ";
-            generovatToolStripMenuItem.Click += generovatToolStripMenuItem_Click;
+            generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
             // pomocToolStripMenuItem
             // 
@@ -269,11 +271,36 @@
             pomocToolStripMenuItem.Size = new Size(69, 25);
             pomocToolStripMenuItem.Text = "Pomoc";
             // 
+            // button6
+            // 
+            button6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button6.Font = new Font("Segoe UI", 12F);
+            button6.Location = new Point(709, 352);
+            button6.Name = "button6";
+            button6.Size = new Size(167, 38);
+            button6.TabIndex = 20;
+            button6.Text = "Vytvořit Json->Excel";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += Button6_Click;
+            // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 12F);
+            label5.Location = new Point(882, 132);
+            label5.Name = "label5";
+            label5.Size = new Size(175, 21);
+            label5.TabIndex = 21;
+            label5.Text = "Úprava dat, kopie strojů";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1073, 668);
+            Controls.Add(label5);
+            Controls.Add(button6);
             Controls.Add(button9);
             Controls.Add(label7);
             Controls.Add(button8);
@@ -323,5 +350,7 @@
         private ToolStripMenuItem místnostiToolStripMenuItem;
         private ToolStripMenuItem místnostiToolStripMenuItem1;
         private ToolStripMenuItem generovatToolStripMenuItem;
+        private Button button6;
+        private Label label5;
     }
 }
