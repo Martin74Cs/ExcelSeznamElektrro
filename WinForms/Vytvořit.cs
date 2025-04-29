@@ -1,4 +1,5 @@
 ﻿using Aplikace.Sdilene;
+using Aplikace.Tridy;
 using Aplikace.Upravy;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,16 @@ namespace WinForms
 
         private async void Button6_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.VyvoritFMKM());
+            //Menic
+            //await Task.Run(() => LigthChem.VyvoritFM());
+            var FM1 = Soubory.LoadFromCsv<Menic>(CestaKM);
+            FM = new BindingList<Menic>(FM1);
+
+            dataGridView1.AutoGenerateColumns = true;
+            dataGridView1.DataSource = KM;
+            // Umožnit přidávání/smazání
+            dataGridView1.AllowUserToAddRows = true;
+            dataGridView1.AllowUserToDeleteRows = true;
         }
 
         private void Button2_Click(object sender, EventArgs e)
@@ -77,15 +87,46 @@ namespace WinForms
         private void button4_Click(object sender, EventArgs e)
         {
             //Stykače open
-            string cesta = Cesty.BasePath;
-            cesta = System.IO.Path.Combine(cesta, "Data", "KM.csv");
-            System.Diagnostics.Process.Start("explorer.exe", cesta);
+            System.Diagnostics.Process.Start("explorer.exe", CestaKM);
         }
 
-        private async void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             //Stykače prevo
-            await Task.Run(() => LigthChem.VyvoritFMKM());
+            //await Task.Run(() => LigthChem.VyvoritKM());
+
+            var KM1 = Soubory.LoadFromCsv<Stykac>(CestaKM);
+            KM = new BindingList<Stykac>(KM1);
+
+            dataGridView1.AutoGenerateColumns = true;
+            dataGridView1.DataSource = KM;
+
+            // Umožnit přidávání/smazání
+            dataGridView1.AllowUserToAddRows = true;
+            dataGridView1.AllowUserToDeleteRows = true;
+        }
+
+        private BindingList<Stykac> KM = [];
+        private readonly string CestaKM = Path.Combine(Cesty.BasePath, "Data", "KM.csv");
+
+        private BindingList<Menic> FM = [];
+        private readonly string CestaFM = Path.Combine(Cesty.BasePath, "Data", "FM.csv");
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine($"Stykače uloženy jako Json a CSV");
+            KM.ToList().SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
+            KM.ToList().SaveToCsv(CestaKM);
+            dataGridView1.DataSource = null;
+        }
+
+        private void Button9_Click(object sender, EventArgs e)
+        {
+            //save FM
+            Console.WriteLine($"Menice uloženy jako Json a CSV");
+            KM.ToList().SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
+            KM.ToList().SaveToCsv(CestaKM);
+            dataGridView1.DataSource = null;
         }
     }
 }

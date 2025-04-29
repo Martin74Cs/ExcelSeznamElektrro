@@ -4,6 +4,7 @@ using Aplikace.Seznam;
 using Aplikace.Tridy;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using static Aplikace.Tridy.Motor;
@@ -290,6 +291,8 @@ namespace Aplikace.Upravy
             Console.WriteLine($"Stykače uloženy jako Json");
         }
 
+
+        private BindingList<Stykac> osoby = new BindingList<Stykac>();
         /// <summary>
         /// Převod seznamu stykačů na Json
         /// </summary>
