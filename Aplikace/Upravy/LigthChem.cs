@@ -42,7 +42,7 @@ namespace Aplikace.Upravy
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
         public static void JsonToExcel()
         {
-            string cestaData = Path.Combine(Cesty.ElektroRozvaděčJson);
+            string cestaData = Cesty.ElektroDataJson;
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
             //Možná proud asi jen tam kde není.
@@ -50,9 +50,6 @@ namespace Aplikace.Upravy
 
             //Přidání typu kabelu.
             AddKabelCyky(Stara);
-
-            //Přidání délky kabelu.
-            Stara.AddKabelDelka();
 
             string filename = "Seznam.xlsx";
             var cesta = Path.Combine(Cesty.Elektro, filename);
@@ -120,16 +117,26 @@ namespace Aplikace.Upravy
 
             //var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
             //Prevod.UpdateCsvToJson(Source, Target);
-
-
         }
+
+        public static void AddProud()
+        {
+            string cestaData = Cesty.ElektroDataJson;
+            var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
+
+            //Možná proud asi jen tam kde není.
+            var Add = Stara.AddProud();
+            Add.SaveJsonList(cestaData);
+        }
+
+
 
         /// <summary>Seznam vývodů pro doplnění </summary>
         public static void AddVyvody()
         {
             //Aktualní seznam vývodů
-            string cesta = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.json");
-            var Target = ExcelLoad.DataExcel(cesta, "Seznam", 8);
+            string cesta = Cesty.ElektroDataJson;
+            var Target = Soubory.LoadJsonList<Zarizeni>(cesta);
 
             //Seznam vývodů pro doplnění
             var Add = new List<Zarizeni>();
@@ -143,7 +150,7 @@ namespace Aplikace.Upravy
                 return;
             }
 
-            //Načtení vývodů
+            //Načtení vývodů pro doplnnění 
             Add = Soubory.LoadFromCsv<Zarizeni>(cesta1);
             bool zmena = false;
             for (int i = 0; i < Add.Count; i++)
@@ -160,41 +167,46 @@ namespace Aplikace.Upravy
             //Mělo by přídat proud
             Add.AddProud();
 
+            //pokud nexistuje Apid tak přepsat Json
             if (zmena)
             { 
                 //Prevod.SaveToCsv(Add, cesta1);
-                Add.SaveToCsv(cesta1);
+                //Add.SaveToCsv(cesta1);
                 Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             }
 
             int pocet = Target.Count + 1;
             foreach (var item in Add)
             {
+                //hledej existeci podle Apid
                 var Toto = Target.FirstOrDefault(x => x.Apid == item.Apid);
-                //existuje tak ho smaž
+
+                //Existuje tak ho smaž
                 if (Toto != null) //continue;
                     Target.Remove(Toto);
 
-                //objekt
+                //znovu přidat
                 item.Radek = pocet++;
                 Target.Add(item);
             }
 
+            //uložit upravená data do Json
             Target.SaveJsonList(cesta);
-            Target.SaveToCsv(Path.ChangeExtension(cesta, ".csv"));
+
+            //Target.SaveToCsv(Path.ChangeExtension(cesta, ".csv"));
             //Target.SaveJsonList(Path.ChangeExtension(cesta, ".txt"));
         }
 
         public static void AddKabely()
         {
             //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            string cesta1 = Path.Combine(Cesty.ElektroRozvaděčJson);
+            string cesta1 = Path.Combine(Cesty.ElektroDataJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
 
             AddKabelCyky(Target);
 
             Target.SaveJsonList(cesta1);
-            Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
+            //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
         }
 
         public static List<Zarizeni> AddKabelCyky(List<Zarizeni> Target)
@@ -240,7 +252,7 @@ namespace Aplikace.Upravy
         public static void DoplneniCsvToJson()
         {
             //Soubor kam bude doplněno
-            string cestaData = Path.Combine(Path.ChangeExtension(Cesty.ElektroDataCsv, ".json"));
+            string cestaData = Path.Combine(Cesty.ElektroDataJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
             //Data pro doplnění

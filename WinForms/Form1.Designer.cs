@@ -1,4 +1,6 @@
-﻿namespace WinForms
+﻿using System.Threading.Tasks;
+
+namespace WinForms
 {
     partial class Form1
     {
@@ -26,7 +28,7 @@
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
+        private async Task InitializeComponent()
         {
             button1 = new Button();
             label1 = new Label();
@@ -52,6 +54,8 @@
             pomocToolStripMenuItem = new ToolStripMenuItem();
             button6 = new Button();
             label5 = new Label();
+            button7 = new Button();
+            label6 = new Label();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -294,11 +298,36 @@
             label5.TabIndex = 21;
             label5.Text = "Úprava dat, kopie strojů";
             // 
+            // button7
+            // 
+            button7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button7.Font = new Font("Segoe UI", 12F);
+            button7.Location = new Point(709, 211);
+            button7.Name = "button7";
+            button7.Size = new Size(167, 38);
+            button7.TabIndex = 22;
+            button7.Text = "Přidat Proud ";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += Button7_Click;
+            // 
+            // label6
+            // 
+            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 12F);
+            label6.Location = new Point(882, 220);
+            label6.Name = "label6";
+            label6.Size = new Size(182, 21);
+            label6.TabIndex = 23;
+            label6.Text = "Dle příkonu přidat proud";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1073, 668);
+            Controls.Add(label6);
+            Controls.Add(button7);
             Controls.Add(label5);
             Controls.Add(button6);
             Controls.Add(button9);
@@ -352,5 +381,7 @@
         private ToolStripMenuItem generovatToolStripMenuItem;
         private Button button6;
         private Label label5;
+        private Button button7;
+        private Label label6;
     }
 }

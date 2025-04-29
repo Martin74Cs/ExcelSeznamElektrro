@@ -107,6 +107,11 @@ namespace WinForms
         {
             await Task.Run(() => LigthChem.JsonToExcel());
         }
+
+        private async void Button7_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => LigthChem.AddProud());
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter

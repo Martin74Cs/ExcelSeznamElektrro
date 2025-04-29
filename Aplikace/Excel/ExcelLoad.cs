@@ -76,7 +76,7 @@ namespace Aplikace.Excel
 
             ExcelApp.ExcelQuit(cesta);
             //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-            if (Pole.Count > 1) Pole.SaveJsonList(Cesty.ElektroRozvaděčJson);
+            //if (Pole.Count > 1) Pole.SaveJsonList(Cesty.ElektroRozvaděčJson);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");
             return Pole;
             
