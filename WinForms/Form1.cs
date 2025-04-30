@@ -1,5 +1,7 @@
 ﻿using Aplikace.Sdilene;
+using Aplikace.Tridy;
 using Aplikace.Upravy;
+using System.ComponentModel;
 using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.DataFormats;
@@ -73,13 +75,7 @@ namespace WinForms
         {
             var vyvorit = new Vytvořit();
 
-            // Vypočteme střed Form1 a posuneme Form2 tam
-            int x = this.Location.X + (this.Width - vyvorit.Width) / 2;
-            int y = this.Location.Y + (this.Height - vyvorit.Height) / 2;
-
-            // Nastavíme pozici druhého formuláře
-            vyvorit.StartPosition = FormStartPosition.Manual;
-            vyvorit.Location = new Point(x, y);
+            SetTable(vyvorit);
 
             // Zobrazíme druhý formulář jako modální dialog
             var result = vyvorit.ShowDialog();
@@ -88,6 +84,18 @@ namespace WinForms
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }
+        }
+
+        /// <summary>Nastavení pomocného okna </summary>
+        private void SetTable(Form form)
+        {
+            // Vypočteme střed Form1 a posuneme Form2 tam
+            int x = this.Location.X + (this.Width - form.Width) / 2;
+            int y = this.Location.Y + (this.Height - form.Height) / 2;
+
+            // Nastavíme pozici druhého formuláře
+            form.StartPosition = FormStartPosition.Manual;
+            form.Location = new Point(x, y);
         }
 
         /// <summary> Místnosti - otevřít seznam </summary>
@@ -111,6 +119,43 @@ namespace WinForms
         private async void Button7_Click(object sender, EventArgs e)
         {
             await Task.Run(() => LigthChem.AddProud());
+        }
+
+        private void Button10_Click(object sender, EventArgs e)
+        {
+            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+            var table = new Table(Data);
+
+            // Zobrazíme druhý formulář jako modální dialog
+            var result = table.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Data.SaveJsonList(Cesty.ElektroDataJson);
+                if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    Data.SaveToCsv(Cesty.ElektroDataCsv);
+                // Zde můžete provést další akce po zavření dialogu
+                // Například načíst data nebo aktualizovat UI
+            }
+        }
+
+        private void Button11_Click(object sender, EventArgs e)
+        {
+            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
+            var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
+            //var DataBind = new BindingList<Zarizeni>(Data);
+            var table = new Table(Data);
+            //table.Initialize();
+
+            // Zobrazíme druhý formulář jako modální dialog
+            var result = table.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Data.SaveToCsv(Vývody);
+                //if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                //    Data.SaveToCsv(Cesty.ElektroDataCsv);
+                // Zde můžete provést další akce po zavření dialogu
+                // Například načíst data nebo aktualizovat UI
+            }
         }
     }
 

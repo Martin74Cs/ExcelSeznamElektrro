@@ -1447,7 +1447,7 @@ namespace Aplikace.Excel
         public void KabelyToExcel(List<List<string>> data, int Row)
         {
             Row--;
-            int j;
+            int j=15;
             foreach (var radek in data)
             {
                 Console.WriteLine("Radek " + Row);
@@ -1455,25 +1455,25 @@ namespace Aplikace.Excel
                 foreach (var item in radek)
                 {
                     Exc.Range Zapis1 = Xls.Cells[Row, j++];
-                    if (double.TryParse(item, out double cislo))
-                    {
-                        Zapis1.Value = cislo;
+                    Zapis1.Value = item;
+                    //if (double.TryParse(item, out double cislo))
+                    //{
+                    //    Zapis1.Value = cislo;
 
-                        // Formátovat jako číslo s 2 desetinnými místy
-                        Zapis1.NumberFormat = "#,##0.00";
+                    //    // Formátovat jako číslo s 2 desetinnými místy
+                    //    Zapis1.NumberFormat = "#,##0.00";
 
-                        // Zarovnat doprava
-                        Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
-                    }
-                    else 
-                    {
-                         Zapis1.Value = item;
-                    }
+                    //    // Zarovnat doprava
+                    //    Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
+                    //}
+                    //else 
+                    //{
+                    //     Zapis1.Value = item;
+                    //}
                 }
-                for (int i = 1; i < radek.Count; i++)
-                    Xls.Columns[i].AutoFit();
             }
-
+            for (int i = 1; i < j; i++)
+                Xls.Columns[i].AutoFit();
         }
 
         public void ExcelSaveNadpis(List<List<string>> Ramecek)

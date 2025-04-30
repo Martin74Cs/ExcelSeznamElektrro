@@ -85,53 +85,44 @@ namespace Aplikace.Sdilene
         /// <summary> Načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
         public static List<T> LoadJsonList<T>(string cesta) where T : class
         {
-            if (System.IO.File.Exists(cesta))
-            {
-                string jsonString = System.IO.File.ReadAllText(cesta);
-                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, Nastaveni()) ?? [];
-                return moje;
-            }
-            return [];
+            if (!System.IO.File.Exists(cesta)) return [];
+            string jsonString = System.IO.File.ReadAllText(cesta);
+            List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, Nastaveni()) ?? [];
+            return moje;
         }
+
         public static List<T> LoadJsonListEn<T>(string cesta) where T : class
         {
-            if (System.IO.File.Exists(cesta))
-            {
-                string jsonString = System.IO.File.ReadAllText(cesta);
-                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
-                return moje;
-            }
-            return [];
+            if (!System.IO.File.Exists(cesta)) return [];
+            string jsonString = System.IO.File.ReadAllText(cesta);
+            List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
+            return moje;
+
         }
 
         /// <summary> Načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika. </summary>
         public static T LoadJson<T>(string cesta) where T : new() 
         {
-            if (System.IO.File.Exists(cesta))
-            {
-                string jsonString = System.IO.File.ReadAllText(cesta);
-                T moje = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, Nastaveni()) ?? new();
-                return moje;
-            }
-            return new();
+            if (!System.IO.File.Exists(cesta)) return new();
+            string jsonString = System.IO.File.ReadAllText(cesta);
+            T moje = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, Nastaveni()) ?? new();
+            return moje;
         }
 
         /// <summary> načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika </summary>
         public static List<T> LoadJsonEn<T>(string cesta) where T : new()
         {
-            if (System.IO.File.Exists(cesta))
-            {
-                string jsonString = System.IO.File.ReadAllText(cesta);
-                //List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString);
-                List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
-                return moje;
-            }
-            return [];
+            if (!System.IO.File.Exists(cesta)) return [];
+            string jsonString = System.IO.File.ReadAllText(cesta);
+            //List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString);
+            List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
+            return moje;
         }
 
 
         public static List<T> LoadFromCsv<T>(string file ) where T : new()
         {
+            if (!File.Exists(file)) return [];
             var list = new List<T>();
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

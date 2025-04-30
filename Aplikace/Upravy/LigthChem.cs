@@ -13,7 +13,7 @@ using Exc = Microsoft.Office.Interop.Excel;
 
 namespace Aplikace.Upravy
 {
-    public class LigthChem
+    public static class LigthChem
     {
         /// <summary>Vytvořit z Seznamu strojů json a Csv pro další doplnění</summary>
         public static void StrojniToJsonCsv()
@@ -47,10 +47,10 @@ namespace Aplikace.Upravy
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
             //Možná proud asi jen tam kde není.
-            Stara.AddProud();
+            //Stara.AddProud();
 
             //Přidání typu kabelu.
-            AddKabelCyky(Stara);
+            Stara.AddKabelCyky(1.5);
 
             string filename = "Seznam.xlsx";
             var cesta = Path.Combine(Cesty.Elektro, filename);
@@ -204,13 +204,13 @@ namespace Aplikace.Upravy
             string cesta1 = Path.Combine(Cesty.ElektroDataJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
 
-            AddKabelCyky(Target);
+            Target.AddKabelCyky(1.5);
 
             Target.SaveJsonList(cesta1);
             //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
         }
 
-        public static List<Zarizeni> AddKabelCyky(List<Zarizeni> Target)
+        public static List<Zarizeni> AddKabelCyky(this List<Zarizeni> Target, double rezerva = 1.5)
         {
             var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
                 .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
@@ -237,7 +237,7 @@ namespace Aplikace.Upravy
                 {
                     //var value = prop.GetValue(target);
                     var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
-                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * 1.5);
+                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * rezerva);
                     if (JedenKabel == null) continue;
 
                     //prop.SetValue(target, value);
@@ -270,15 +270,13 @@ namespace Aplikace.Upravy
 
         public static void VyvoritFMKM()
         {
-             //var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
+            //var cesta = Environment.ProcessPath;            // Získá úplnou cestu ke spuštěnému procesu
             //var dir = Path.GetDirectoryName(cesta);         // Získá adresář, kde je spustitelný soubor
             VyvoritFM();
             VyvoritKM();
         }
 
-        /// <summary>
-        /// Převod seznamu frekvenčních měničů na Json
-        /// </summary>
+        /// <summary> Převod seznamu frekvenčních měničů na Json </summary>
         public static void VyvoritFM()
         {
             string basePath = Path.Combine(Cesty.BasePath, "Data");
@@ -291,11 +289,7 @@ namespace Aplikace.Upravy
             Console.WriteLine($"Stykače uloženy jako Json");
         }
 
-
-        private BindingList<Stykac> osoby = new BindingList<Stykac>();
-        /// <summary>
-        /// Převod seznamu stykačů na Json
-        /// </summary>
+        /// <summary> Převod seznamu stykačů na Json </summary>
         public static void VyvoritKM()
         {
             string basePath = Path.Combine(Cesty.BasePath, "Data");
@@ -308,12 +302,10 @@ namespace Aplikace.Upravy
             Console.WriteLine($"Stykače uloženy jako Json");
         }
 
-        /// <summary>
-        /// Převod seznamu motorů a motorů3000 na jeden Json
-        /// </summary>
+        /// <summary> Převod seznamu motorů a motorů3000 na jeden Json </summary>
         public static void VyvoritMotor()
         {
-            string basePath = Path.Combine(Cesty.GooglePath, "Data" , "Motory");
+            string basePath = Path.Combine(Cesty.Data, "Motory");
             string CestaMotor = Path.Combine(basePath, "Motory.csv");
             var Motor = Soubory.LoadFromCsv<Motor>(CestaMotor);
             Console.WriteLine($"Pocet motorů: {Motor.Count}");

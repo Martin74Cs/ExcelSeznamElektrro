@@ -56,6 +56,10 @@ namespace WinForms
             label5 = new Label();
             button7 = new Button();
             label6 = new Label();
+            button10 = new Button();
+            label8 = new Label();
+            button11 = new Button();
+            label9 = new Label();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -198,11 +202,11 @@ namespace WinForms
             // 
             button9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button9.Font = new Font("Segoe UI", 12F);
-            button9.Location = new Point(709, 295);
+            button9.Location = new Point(709, 339);
             button9.Name = "button9";
             button9.Size = new Size(167, 38);
             button9.TabIndex = 18;
-            button9.Text = "Přidat Vývody";
+            button9.Text = "Přidat Vývody.csv ";
             button9.UseVisualStyleBackColor = true;
             button9.Click += Button9_Click;
             // 
@@ -279,7 +283,7 @@ namespace WinForms
             // 
             button6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button6.Font = new Font("Segoe UI", 12F);
-            button6.Location = new Point(709, 352);
+            button6.Location = new Point(709, 387);
             button6.Name = "button6";
             button6.Size = new Size(167, 38);
             button6.TabIndex = 20;
@@ -321,11 +325,61 @@ namespace WinForms
             label6.TabIndex = 23;
             label6.Text = "Dle příkonu přidat proud";
             // 
+            // button10
+            // 
+            button10.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button10.Font = new Font("Segoe UI", 12F);
+            button10.Location = new Point(709, 79);
+            button10.Name = "button10";
+            button10.Size = new Size(167, 38);
+            button10.TabIndex = 24;
+            button10.Text = "Otevřít Json";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += Button10_Click;
+            // 
+            // label8
+            // 
+            label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 12F);
+            label8.Location = new Point(886, 88);
+            label8.Name = "label8";
+            label8.Size = new Size(102, 21);
+            label8.TabIndex = 25;
+            label8.Text = "Aktualní Json";
+            // 
+            // button11
+            // 
+            button11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button11.Font = new Font("Segoe UI", 12F);
+            button11.Location = new Point(709, 295);
+            button11.Name = "button11";
+            button11.Size = new Size(167, 38);
+            button11.TabIndex = 26;
+            button11.Text = "Otevřít Vývody.csv";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += Button11_Click;
+            // 
+            // label9
+            // 
+            label9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 12F);
+            label9.Location = new Point(882, 348);
+            label9.Name = "label9";
+            label9.Size = new Size(172, 21);
+            label9.TabIndex = 27;
+            label9.Text = "Přidat do aktualno Json";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1073, 668);
+            Controls.Add(label9);
+            Controls.Add(button11);
+            Controls.Add(label8);
+            Controls.Add(button10);
             Controls.Add(label6);
             Controls.Add(button7);
             Controls.Add(label5);
@@ -383,5 +437,9 @@ namespace WinForms
         private Label label5;
         private Button button7;
         private Label label6;
+        private Button button10;
+        private Label label8;
+        private Button button11;
+        private Label label9;
     }
 }

@@ -43,48 +43,55 @@ namespace WinForms
         //    }
         //}
 
+        public void SetListBox()
+        {
+            dataGridView1.AutoGenerateColumns = true;
+
+            // Umožnit přidávání/smazání
+            dataGridView1.AllowUserToAddRows = true;
+            dataGridView1.AllowUserToDeleteRows = true;
+        }
+
         private void Button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             //Close();
         }
 
-        private async void Button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.VyvoritMotor());
+            //Open motory
+            //await Task.Run(() => LigthChem.VyvoritMotor());
+
+            var Motory1 = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            Motor = new BindingList<Motor>(Motory1);
+            dataGridView1.DataSource = Motor;
+            SetListBox();
         }
 
-        private async void Button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
-            //Menic
+            //Open Menic
             //await Task.Run(() => LigthChem.VyvoritFM());
-            var FM1 = Soubory.LoadFromCsv<Menic>(CestaKM);
+            var FM1 = Soubory.LoadFromCsv<Menic>(CestaFM);
             FM = new BindingList<Menic>(FM1);
-
-            dataGridView1.AutoGenerateColumns = true;
-            dataGridView1.DataSource = KM;
-            // Umožnit přidávání/smazání
-            dataGridView1.AllowUserToAddRows = true;
-            dataGridView1.AllowUserToDeleteRows = true;
+            SetListBox();
+            dataGridView1.DataSource = FM;
         }
 
         private void Button2_Click(object sender, EventArgs e)
         {
             //Motory open
-            string cesta = Cesty.BasePath;
-            cesta = System.IO.Path.Combine(cesta, "Data", "Motory");
-            System.Diagnostics.Process.Start("explorer.exe", cesta);
+            System.Diagnostics.Process.Start("explorer.exe", CestaMotor);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             //Frekvenční měniče open
-            string cesta = Cesty.BasePath;
-            cesta = System.IO.Path.Combine(cesta, "Data", "FM.csv");
-            System.Diagnostics.Process.Start("explorer.exe", cesta);
+            System.Diagnostics.Process.Start("explorer.exe", CestaFM);
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             //Stykače open
             System.Diagnostics.Process.Start("explorer.exe", CestaKM);
@@ -92,28 +99,26 @@ namespace WinForms
 
         private void Button5_Click(object sender, EventArgs e)
         {
-            //Stykače prevo
+            //Stykače opem
             //await Task.Run(() => LigthChem.VyvoritKM());
-
             var KM1 = Soubory.LoadFromCsv<Stykac>(CestaKM);
             KM = new BindingList<Stykac>(KM1);
-
-            dataGridView1.AutoGenerateColumns = true;
+            SetListBox();
             dataGridView1.DataSource = KM;
-
-            // Umožnit přidávání/smazání
-            dataGridView1.AllowUserToAddRows = true;
-            dataGridView1.AllowUserToDeleteRows = true;
         }
 
         private BindingList<Stykac> KM = [];
-        private readonly string CestaKM = Path.Combine(Cesty.BasePath, "Data", "KM.csv");
+        private readonly string CestaKM = Path.Combine(Cesty.Lightchem, "Data", "KM.csv");
 
         private BindingList<Menic> FM = [];
-        private readonly string CestaFM = Path.Combine(Cesty.BasePath, "Data", "FM.csv");
+        private readonly string CestaFM = Path.Combine(Cesty.Lightchem, "Data", "FM.csv");
+
+        private BindingList<Motor> Motor = [];
+        private readonly string CestaMotor = Path.Combine(Cesty.Lightchem, "Data", "Motory", "Motory.csv");
 
         private void Button8_Click(object sender, EventArgs e)
         {
+            //save Stykače
             Console.WriteLine($"Stykače uloženy jako Json a CSV");
             KM.ToList().SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
             KM.ToList().SaveToCsv(CestaKM);
@@ -126,6 +131,15 @@ namespace WinForms
             Console.WriteLine($"Menice uloženy jako Json a CSV");
             KM.ToList().SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
             KM.ToList().SaveToCsv(CestaKM);
+            dataGridView1.DataSource = null;
+        }
+
+        private void Button10_Click(object sender, EventArgs e)
+        {
+            //save motory
+            Console.WriteLine($"Menice uloženy jako Json a CSV");
+            KM.ToList().SaveJsonList(Path.ChangeExtension(CestaMotor, ".json"));
+            KM.ToList().SaveToCsv(CestaMotor);
             dataGridView1.DataSource = null;
         }
     }

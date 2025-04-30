@@ -136,7 +136,7 @@
             button3.TabIndex = 24;
             button3.Text = "Otevřít FM";
             button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            button3.Click += Button3_Click;
             // 
             // button4
             // 
@@ -148,7 +148,7 @@
             button4.TabIndex = 25;
             button4.Text = "Otevřít KM";
             button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
+            button4.Click += Button4_Click;
             // 
             // button5
             // 
@@ -204,6 +204,7 @@
             Button10.TabIndex = 30;
             Button10.Text = "Save M";
             Button10.UseVisualStyleBackColor = true;
+            Button10.Click += Button10_Click;
             // 
             // Vytvořit
             // 

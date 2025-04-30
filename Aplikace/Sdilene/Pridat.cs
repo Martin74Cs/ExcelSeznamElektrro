@@ -15,7 +15,7 @@ namespace Aplikace.Sdilene
         /// <summary>výpočet proudu </summary>
         public static List<Zarizeni> AddProud(this List<Zarizeni> pole)
         {
-            string Cesta = Path.Combine(Cesty.BasePath, "Data", "Motory", "Motory.json");
+            string Cesta = Path.Combine(Cesty.MotoryJson);
             var Motory = Soubory.LoadJsonList<Motor>(Cesta).OrderBy(x => x.Vykon50).ToList();
 
             // Přidání vlastnosti "Proud" do každého zařízení
