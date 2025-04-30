@@ -125,7 +125,7 @@ namespace WinForms
             button3.Name = "button3";
             button3.Size = new Size(167, 38);
             button3.TabIndex = 6;
-            button3.Text = "Úpravy Csv -> Json";
+            button3.Text = "Přidat Csv -> Json";
             button3.UseVisualStyleBackColor = true;
             button3.Click += Button3_Click;
             // 
@@ -262,14 +262,14 @@ namespace WinForms
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(176, 26);
+            místnostiToolStripMenuItem1.Size = new Size(180, 26);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // generovatToolStripMenuItem
             // 
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(176, 26);
+            generovatToolStripMenuItem.Size = new Size(180, 26);
             generovatToolStripMenuItem.Text = "Generovat ";
             generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
@@ -333,7 +333,7 @@ namespace WinForms
             button10.Name = "button10";
             button10.Size = new Size(167, 38);
             button10.TabIndex = 24;
-            button10.Text = "Otevřít Json";
+            button10.Text = "Otevřít hlavni Json";
             button10.UseVisualStyleBackColor = true;
             button10.Click += Button10_Click;
             // 

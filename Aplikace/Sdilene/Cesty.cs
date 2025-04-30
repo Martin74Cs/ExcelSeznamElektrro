@@ -55,7 +55,7 @@ namespace Aplikace.Sdilene
 
         public static string Místnost  {
             get {
-                var Místnosti = Path.Combine(Lightchem, "Místnosti");
+                var Místnosti = Path.Combine(Elektro, "Místnosti");
                 if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);
                 return Místnosti;
             }

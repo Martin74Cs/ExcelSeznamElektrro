@@ -63,7 +63,7 @@ namespace Aplikace.Tridy
         [JsonIgnore]
         [Display(Name = "Příkon")]
         [Jednotky("[hp]")]
-        public double HP => Math.Pow(double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0, 2); // Převod textu na číslo a na koně
+        public double HP => Math.Round(double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0, 2); // Převod textu na číslo a na koně
 
         [Display(Name = "Proud")]
         [Jednotky("[A]")]
