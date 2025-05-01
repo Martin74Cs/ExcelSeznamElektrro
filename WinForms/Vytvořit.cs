@@ -64,6 +64,7 @@ namespace WinForms
             //await Task.Run(() => LigthChem.VyvoritMotor());
 
             var Motory1 = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            label2.Text = "Cesta = " + CestaMotor;
             Motor = new BindingList<Motor>(Motory1);
             dataGridView1.DataSource = Motor;
             SetListBox();
@@ -74,6 +75,7 @@ namespace WinForms
             //Open Menic
             //await Task.Run(() => LigthChem.VyvoritFM());
             var FM1 = Soubory.LoadFromCsv<Menic>(CestaFM);
+            label2.Text = "Cesta = " + CestaFM;
             FM = new BindingList<Menic>(FM1);
             SetListBox();
             dataGridView1.DataSource = FM;
@@ -102,19 +104,20 @@ namespace WinForms
             //Stykače opem
             //await Task.Run(() => LigthChem.VyvoritKM());
             var KM1 = Soubory.LoadFromCsv<Stykac>(CestaKM);
+            label2.Text = "Cesta = " + CestaKM;
             KM = new BindingList<Stykac>(KM1);
             SetListBox();
             dataGridView1.DataSource = KM;
         }
 
         private BindingList<Stykac> KM = [];
-        private readonly string CestaKM = Path.Combine(Cesty.Lightchem, "Data", "KM.csv");
+        private readonly string CestaKM = Path.Combine(Cesty.Data, "KM.csv");
 
         private BindingList<Menic> FM = [];
-        private readonly string CestaFM = Path.Combine(Cesty.Lightchem, "Data", "FM.csv");
+        private readonly string CestaFM = Path.Combine(Cesty.Data, "FM.csv");
 
         private BindingList<Motor> Motor = [];
-        private readonly string CestaMotor = Path.Combine(Cesty.Lightchem, "Data", "Motory", "Motory.csv");
+        private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "Motory.csv");
 
         private void Button8_Click(object sender, EventArgs e)
         {

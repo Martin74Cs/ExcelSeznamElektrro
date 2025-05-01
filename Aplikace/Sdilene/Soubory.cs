@@ -160,8 +160,7 @@ namespace Aplikace.Sdilene
                                 object? convertedValue = Convert.ChangeType(values[i], property.PropertyType);
                                 property.SetValue(obj, convertedValue);
                             }
-                            catch { // Pokud převod selže, můžeš logovat nebo nastavit výchozí hodnotu
-                                    }
+                            catch {  }
                         }
                     }
                      list.Add(obj);

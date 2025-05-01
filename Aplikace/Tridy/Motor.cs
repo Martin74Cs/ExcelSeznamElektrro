@@ -20,10 +20,10 @@ namespace Aplikace.Tridy
         public string Material { get; set; } = string.Empty;
 
         [Display(Name = "Jmenovitý výkon při 50 Hz Pn50 [kW]")]
-        public float Vykon50 { get; set; }
+        public double Vykon50 { get; set; }
 
         [Display(Name = "Jmenovitý výkon při 60 Hz Pn60 [kW]")]
-        public float Vykon60 { get; set; }
+        public double Vykon60 { get; set; }
 
         [Display(Name = "Velikost")]
         public string Velikost { get; set; } = string.Empty;
@@ -35,34 +35,34 @@ namespace Aplikace.Tridy
         public double Moment50 { get; set; }
 
         [Display(Name = "Účinosti 4/4 nN [%]")]
-        public float Ucinnost44 { get; set; }
+        public double Ucinnost44 { get; set; }
 
         [Display(Name = "Účinosti 3/4 nN [%]")]
-        public float Ucinnost34 { get; set; }
+        public double Ucinnost34 { get; set; }
 
         [Display(Name = "Účinosti 2/4 nN [%]")]
-        public float Ucinnost24 { get; set; }
+        public double Ucinnost24 { get; set; }
 
         [Display(Name = "Účiník při 50 Hz 4/4 nN [%] Cos(fi)")]
-        public float Ucinik50 { get; set; }
+        public double Ucinik50 { get; set; }
 
         [Display(Name = "Jmenovitý proud při 400V [A]")]
-        public float? Proud400 { get; set; }
+        public double Proud400 { get; set; }
 
         [Display(Name = "Záběrný moment Ma/Mn [-]")]
-        public float MaMn { get; set; }
+        public double MaMn { get; set; }
 
         [Display(Name = "Záběrný proud Ia/In [-]")]
-        public float IaIn { get; set; }
+        public double IaIn { get; set; }
 
         [Display(Name = "Maximální moment Mk/Mn [-]")]
-        public float MkMn { get; set; }
+        public double MkMn { get; set; }
 
         [Display(Name = "Hladina akustického tlaku při 50 Hz Lpfa [dB(A)]")]
-        public float Lpfa { get; set; }
+        public double Lpfa { get; set; }
 
         [Display(Name = "Hladina akustického výkonu při 50 Hz Lwa [db(A)]")]
-        public float LWA { get; set; }
+        public double LWA { get; set; }
 
         [Display(Name = "Objednací číslo Trojůhelnik/Hvězda [V]")]
         public string ObjednaciCislo { get; set; } = string.Empty;
@@ -77,13 +77,13 @@ namespace Aplikace.Tridy
         public string Termistory { get; set; } = string.Empty;
 
         [Display(Name = "Hmotnost při tvaru Mimb3 [kg]")]
-        public float Hmotnost { get; set; }
+        public double Hmotnost { get; set; }
 
         [Display(Name = "Moment setrvačnosti J [kgm3]")]
-        public float MomentSetrvacnosti { get; set; }
+        public double MomentSetrvacnosti { get; set; }
 
         [Display(Name = "Momentová třída")]
-        public float MomentovaTrida { get; set; }
+        public double MomentovaTrida { get; set; }
 
         [Display(Name = "Počet polů")]
         public int Poly { get; set; }
@@ -112,10 +112,10 @@ namespace Aplikace.Tridy
         public string TeplotniTrida { get; set; } = string.Empty;
 
         [Display(Name = "Třída účinosti IE [-]")]
-        public string Trida50 { get; set; }
+        public string Trida50 { get; set; }= string.Empty;
 
         [Display(Name = "Třída účinosti IE [-]")]
-        public string Trida60 { get; set; }
+        public string Trida60 { get; set; }= string.Empty;
 
         [Display(Name = "Material kostry")]
         public string Kostra { get; set; } = string.Empty;

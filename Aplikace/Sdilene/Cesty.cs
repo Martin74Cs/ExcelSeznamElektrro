@@ -30,7 +30,7 @@ namespace Aplikace.Sdilene
 
         /// <summary>...Můj disk\Elektro\Lightchem\Ëlektro </summary>
         public static string Elektro => Path.Combine(Lightchem , "Elektro");
-        public static string Data => Path.Combine(Lightchem, "Data");
+        public static string Data => Path.Combine(BasePath, "Data");
         public static string MotoryJson => Path.Combine(Data, "Motory", "Motory.Json");
         public static string ElektroDataCsv => Path.Combine(Elektro, "ElektroData.Csv");
         public static string ElektroDataJson => Path.Combine(Elektro, "ElektroData.Json");
@@ -44,8 +44,11 @@ namespace Aplikace.Sdilene
                     return @"G:\Můj disk\Projekty\";
             }
         }
-        public static string GooglePath {
-            get {
+
+        public static string GooglePath
+        {
+            get
+            {
                 if (Environment.UserDomainName == "D10")
                     return @"E:\Můj disk\Projekty\";
                 else

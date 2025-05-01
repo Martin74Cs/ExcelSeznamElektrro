@@ -37,6 +37,10 @@ namespace Aplikace.Upravy
                 //vytvoření csv pro doplnění
                 Stara.SaveToCsv(cestaData);
             }
+            else
+            {
+                Console.WriteLine($"Vyvoření kopie {Path.GetFileName(cestaData)} přeskočeno");
+            }
 
         }
 

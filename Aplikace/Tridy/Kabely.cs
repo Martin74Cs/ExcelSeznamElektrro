@@ -118,7 +118,7 @@ namespace Aplikace.Tridy
 
         //https://home.zcu.cz/~hejtman/PEC/Prednasky/pred4.pdf
 
-        public static double DeltaU1f(KabelVse kabel, float proud, float delka, double uhel)
+        public static double DeltaU1f(KabelVse kabel, double proud, double delka, double uhel)
         {
             //Ubytek ve fazí
             var du = proud * ((kabel.RLOhmkm * Math.Cos(uhel)) + (kabel.XLOhmkm * Math.Sin(uhel)));
@@ -128,7 +128,7 @@ namespace Aplikace.Tridy
             return (du + duPen) / 1000 * delka;
         }
 
-        public static double DeltaU3f(KabelVse kabel, float proud, float delka, double uhel)
+        public static double DeltaU3f(KabelVse kabel, double proud, double delka, double uhel)
         {
             var odpor = (kabel.RLOhmkm * Math.Cos(uhel)) + (kabel.XLOhmkm * Math.Sin(uhel));
             var odporpe = (kabel.RPENOhmkm * Math.Cos(uhel)) + (kabel.XPENOhmkm * Math.Sin(uhel));
@@ -137,7 +137,7 @@ namespace Aplikace.Tridy
             return v;
         }
 
-        public static double ProcentaU3f(KabelVse kabel, float napeti, float proud, float delka, double uhel)
+        public static double ProcentaU3f(KabelVse kabel, double napeti, double proud, double delka, double uhel)
         {
             return DeltaU3f(kabel, proud, delka, uhel) / napeti * 100;
         }
@@ -145,10 +145,10 @@ namespace Aplikace.Tridy
 
     public static class Extension
     {
-        public static double DeltaU3f(this KabelVse kabel, float proud, float delka, double uhel) =>
+        public static double DeltaU3f(this KabelVse kabel, double proud, double delka, double uhel) =>
            KabelVse.DeltaU3f(kabel, proud, delka, uhel);
 
-        public static double UProcenta(this KabelVse kabel, float napeti, float proud, float delka, double uhel) =>
+        public static double UProcenta(this KabelVse kabel, double napeti, double proud, double delka, double uhel) =>
             KabelVse.ProcentaU3f(kabel, napeti, proud, delka, uhel);
     }
 

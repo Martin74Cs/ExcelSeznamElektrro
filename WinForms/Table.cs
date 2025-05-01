@@ -2,6 +2,7 @@
 using Aplikace.Tridy;
 using Aplikace.Upravy;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,13 +18,16 @@ namespace WinForms
     public partial class Table : Form
     {
         private List<Zarizeni> Pole { get; set; } // obecný typ, nebo použij generický s omezením
-
+        //private SortableBindingList<Zarizeni> DataBind;
+        //private BindingSource SourceBind = new BindingSource();
         public Table(List<Zarizeni> Pole)
         {
             this.Pole = Pole;
             InitializeComponent();
             SetListBox();
-            var DataBind = new BindingList<Zarizeni>(Pole);
+            //upravená třída BindingList na SortableBindingList
+            var DataBind = new SortableBindingList<Zarizeni>(Pole);
+            //SourceBind.DataSource = DataBind;
             dataGridView1.DataSource = DataBind;
         }
         public void SetListBox()
@@ -66,5 +70,46 @@ namespace WinForms
             Pole.AddKabelCyky(1.5);
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
+
     }
+}
+
+public class SortableBindingList<T> : BindingList<T>
+{
+    public SortableBindingList() : base() { }
+
+    public SortableBindingList(IList<T> list) : base(list) { }
+
+    private bool isSorted;
+    private ListSortDirection sortDirection;
+    private PropertyDescriptor sortProperty;
+
+    protected override bool SupportsSortingCore => true;
+    protected override bool IsSortedCore => isSorted;
+
+    protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
+    {
+        var items = (List<T>)Items;
+        items.Sort((x, y) =>
+        {
+            var xValue = prop.GetValue(x);
+            var yValue = prop.GetValue(y);
+            return direction == ListSortDirection.Ascending
+                ? Comparer.DefaultInvariant.Compare(xValue, yValue)
+                : Comparer.DefaultInvariant.Compare(yValue, xValue);
+        });
+
+        sortDirection = direction;
+        sortProperty = prop;
+        isSorted = true;
+        OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+    }
+
+    protected override void RemoveSortCore()
+    {
+        isSorted = false;
+    }
+
+    protected override PropertyDescriptor SortPropertyCore => sortProperty;
+    protected override ListSortDirection SortDirectionCore => sortDirection;
 }

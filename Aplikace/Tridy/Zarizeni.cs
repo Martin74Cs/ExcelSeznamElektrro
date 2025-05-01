@@ -93,6 +93,8 @@ namespace Aplikace.Tridy
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
         public string Druh { get; set; } = string.Empty;
         public string Napeti { get; set; } = "400";
+
+        /// <summary>Odpovídá radku strojního zařízení</summary>
         public int Radek { get; set; }  
         public string Deleni { get; set; } = string.Empty;
 

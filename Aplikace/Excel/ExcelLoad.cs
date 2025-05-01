@@ -57,8 +57,7 @@ namespace Aplikace.Excel
             //ExcelApp.DokumetExcel(cesta);
             ExcelApp.GetSheet(Tabulka);
             if (ExcelApp.Xls == null) return [];
-            Console.WriteLine("Dokument excel - Otevřen");
-
+            
             if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
             Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
 

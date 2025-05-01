@@ -28,7 +28,7 @@ namespace Aplikace.Tridy
         public float Pump__densityAtOperatingTemperature { get; set; }
         public string Pump__viscosityAtOperatingTemperature { get; set; } = string.Empty;
         //public float _Pump__relativeVaporDensity { get; set; } = string.Empty;
-        public float Pump__relativeVaporDensity { get; set; }
+        public double Pump__relativeVaporDensity { get; set; }
         public string Pump__designVolumeFlowrate { get; set; } = string.Empty;
         public string Pump__normalVolumeFlowrate { get; set; } = string.Empty;
         public string Pump__minimumVolumeFlowrate { get; set; } = string.Empty;

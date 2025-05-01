@@ -42,6 +42,7 @@
             Button8 = new Button();
             Button9 = new Button();
             Button10 = new Button();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -206,11 +207,21 @@
             Button10.UseVisualStyleBackColor = true;
             Button10.Click += Button10_Click;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(14, 431);
+            label2.Name = "label2";
+            label2.Size = new Size(10, 15);
+            label2.TabIndex = 31;
+            label2.Text = ".";
+            // 
             // Vytvořit
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1003, 598);
+            Controls.Add(label2);
             Controls.Add(Button10);
             Controls.Add(Button9);
             Controls.Add(Button8);
@@ -249,5 +260,6 @@
         private Button Button8;
         private Button Button9;
         private Button Button10;
+        private Label label2;
     }
 }

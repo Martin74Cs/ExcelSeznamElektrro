@@ -167,9 +167,10 @@ namespace Aplikace.Excel
             foreach (Exc.Worksheet item in Doc.Sheets)
             {
                 if (item.Name == Nazev)
-                {
+                {   
                     Xls = item;
                     Xls.Activate();
+                    Console.WriteLine($"List {item.Name} - Nastaven");
                     return;
                 }
             }
@@ -178,6 +179,7 @@ namespace Aplikace.Excel
             Xls = Doc.Sheets.Add(After: Doc.Sheets[listy]);
             Xls.Name = Nazev;
             Xls.Activate();
+            Console.WriteLine($"List {Nazev} - Přádán");
             //return null;
         }
 
@@ -306,6 +308,7 @@ namespace Aplikace.Excel
         {
             //Nastavení listu
             GetSheet(Tabulka);
+            var key = dir.FirstOrDefault(x => x.Value == "Prikon").Key;
 
             int pocet = 1;
             //string prikon = string.Empty;
@@ -319,14 +322,20 @@ namespace Aplikace.Excel
                 //čteniPole = [];
                 //čtení jednotlivých řádků excelu
                 var jeden = new Zarizeni();
-                for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
+                //načtení jednotlivých řádků excelu dle sloupců ze dir
+                foreach (var j in dir.Keys.ToArray())
+                //for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
                 {
-                    //přeskok příkon prazdný
-                    var prikon = Convert.ToString(Xls.Cells[i, 10].Value);
-                    if (string.IsNullOrEmpty(prikon) || prikon == "0") { jeden.Prikon = ""; break; } 
+                    //var prikon = Convert.ToString(Xls.Cells[i, key].Value);
+                    //přeskok pokud je příkon prazdný
+                    //if (string.IsNullOrEmpty(prikon) || prikon == "0") { jeden.Prikon = ""; break; } 
 
                     //Čtení buňky
                     Exc.Range Pok = Xls.Cells[i, j];
+                    if(Pok.MergeCells)  {
+                        Console.WriteLine("Buňka je součástí sloučených buněk.");
+                        break;
+                    }
                     string xxx = Convert.ToString(Pok.Value);
 
                     //přeskočit prázdné buňky a nulové
@@ -336,20 +345,26 @@ namespace Aplikace.Excel
                     }
 
                     //ukladnní infomací do třídy dle jejího názvu parametru
-                    if (dir.TryGetValue(j, out var value))
-                        jeden[value] = xxx; 
+                    //if (dir.TryGetValue(j, out var value))
+                    jeden[dir[j]] = xxx; 
                 }
-                if (!string.IsNullOrEmpty(jeden.Prikon))
-                {
-                    jeden.Apid = ExcelLoad.Apid();
-                    jeden.Id = pocet;
-                    Pole.Add(jeden);
-                    Console.WriteLine($"Radek {pocet++} - přídán");
-                }
-                else
-                {
-                    Console.WriteLine($"Radek {pocet} - přeskočen, Příkon {jeden.Prikon} - není číslo");
-                }
+                //Vždy přidat
+                jeden.Apid = ExcelLoad.Apid();
+                jeden.Id = pocet;
+                Pole.Add(jeden);
+                Console.WriteLine($"Radek {pocet++} - přídán");
+
+                //if (!string.IsNullOrEmpty(jeden.Prikon))
+                //{
+                //    jeden.Apid = ExcelLoad.Apid();
+                //    jeden.Id = pocet;
+                //    Pole.Add(jeden);
+                //    Console.WriteLine($"Radek {pocet++} - přídán");
+                //}
+                //else
+                //{
+                //    Console.WriteLine($"Radek {pocet} - přeskočen, Příkon {jeden.Prikon} - není číslo");
+                //}
 
                 //if (!string.IsNullOrEmpty(Pole[1]) && Pole[1] != "0")
                 //{

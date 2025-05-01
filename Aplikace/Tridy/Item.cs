@@ -21,9 +21,9 @@ namespace Aplikace.Tridy
         public string Type { get; set; } = string.Empty;
 
         public List<Fluids> Fluid { get; set; } = [];
-        public float DimensionX { get; set; }
-        public float DimensionY { get; set; }
-        public float DimensionZ { get; set; }
+        public double DimensionX { get; set; }
+        public double DimensionY { get; set; }
+        public double DimensionZ { get; set; }
         public string Material { get; set; } = string.Empty;
         public string Heating { get; set; } = string.Empty;
         public string Mass { get; set; } = string.Empty;
@@ -48,8 +48,8 @@ namespace Aplikace.Tridy
     public class Fluids
     {
         public string Fluid { get; set; }
-        public float Volume { get; set; }
-        public float Flowrate { get; set; }
+        public double Volume { get; set; }
+        public double Flowrate { get; set; }
         public Parameter Parameter { get; set; } = new();
     }
 
