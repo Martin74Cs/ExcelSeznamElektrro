@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,9 +28,29 @@ namespace WinForms
             SetListBox();
             //upravená třída BindingList na SortableBindingList
             var DataBind = new SortableBindingList<Zarizeni>(Pole);
+            dataGridView1.CellFormatting += dataGridView1_CellFormatting;
             //SourceBind.DataSource = DataBind;
             dataGridView1.DataSource = DataBind;
         }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            var dgv = sender as DataGridView;
+            if (dgv == null || dgv.Rows[e.RowIndex].DataBoundItem == null)
+                return;
+
+            Type type = typeof(Zarizeni);
+            PropertyInfo[]vlastnosti = type.GetProperties();
+            
+            var Text = vlastnosti.Select(x => x.Name).ToArray();
+
+            if (Text.Contains(dgv.Columns[e.ColumnIndex].Name) && !type.GetProperty(dgv.Columns[e.ColumnIndex].Name).CanWrite) // název sloupce ve zdroji dat
+            {
+                e.CellStyle.BackColor = Color.LightGray;
+                dgv.Columns[dgv.Columns[e.ColumnIndex].Name].ReadOnly = true;
+            }
+        }
+
         public void SetListBox()
         {
             dataGridView1.AutoGenerateColumns = true;

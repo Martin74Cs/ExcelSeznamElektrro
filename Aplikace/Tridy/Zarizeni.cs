@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Aplikace.Tridy
@@ -104,6 +106,20 @@ namespace Aplikace.Tridy
         [JsonIgnore]
         public Motor Motor { get; set; } = new();
 
+        public string Patro { get; set; } = string.Empty;
+        public string Vykres { get; set; } = string.Empty;
+        /// <summary>false=neexistuje</summary>
+        public bool IsExist { get; set; } = false;
+
+        [JsonConverter(typeof(PointToStringConverter))]
+        public string Bod { get; set;} // = MyPoint3d.Origin;
+
+        /// <summary>Definice bloku elektro</summary>
+        public bool IsExistElektro { get; set; } = false;
+
+        [JsonConverter(typeof(PointToStringConverter))]
+        public string BodElektro { get;  set;} // = MyPoint3d.Origin;
+
         // Vypsání hodnot záznamů podle názvů parametrů
         /// <summary>Rozvaděč</summary>
         public void Vypis()
@@ -187,4 +203,72 @@ namespace Aplikace.Tridy
             }
         }
     }
+
+    public class MyPoint3d
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
+
+        public MyPoint3d(double x, double y, double z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }          
+        
+        public static MyPoint3d Origin = new MyPoint3d(0.0, 0.0, 0.0);
+    }
+
+    public class PointToStringConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            // Převádíme JSON objekt na string v modelu
+            return objectType == typeof(string);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            var token = JToken.Load(reader);
+
+            if (token.Type == JTokenType.Object)
+            {
+                var x = token["X"]?.Value<double>() ?? 0.0;
+                var y = token["Y"]?.Value<double>() ?? 0.0;
+                var z = token["Z"]?.Value<double>() ?? 0.0;
+
+                return $"X={x:0.00},Y={y:0.00},Z={z:0.00}";
+            }
+
+            return token.ToString();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            var text = value?.ToString() ?? "";
+
+            // Pokus o parsování zpět na objekt, pokud se bude serializovat zpět
+            var parts = text.Split(',');
+            try
+            {
+                var obj = new JObject();
+                foreach (var part in parts)
+                {
+                    var kv = part.Split('=');
+                    if (kv.Length == 2)
+                        obj[kv[0].Trim()] = double.Parse(kv[1]);
+                }
+
+                obj.WriteTo(writer);
+            }
+            catch
+            {
+                writer.WriteValue(value);
+            }
+        }
+    }
+
 }
+
+
