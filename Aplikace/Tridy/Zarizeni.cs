@@ -50,6 +50,7 @@ namespace Aplikace.Tridy
         /// <summary>Označení zařízení </summary>
         public string Tag { get; set; } = string.Empty;
         public string PID { get; set; } = string.Empty;
+        public int Pocet  { get; set; } 
 
         /// <summary>Popis zařízení</summary>
         [Display(Name = "Jméno zařízení")]

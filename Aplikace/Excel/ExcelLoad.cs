@@ -64,6 +64,7 @@ namespace Aplikace.Excel
             //Sloupce Exel odpovídající názvům tříd.
             var dir = new Dictionary<int, string>() {
                 {1, "Radek"     },
+                {3, "Pocet"     },
                 {2, "Tag"       },
                 {4, "Popis"     },
                 {11, "Menic"    },

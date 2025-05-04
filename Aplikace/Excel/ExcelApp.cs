@@ -346,12 +346,30 @@ namespace Aplikace.Excel
 
                     //ukladnní infomací do třídy dle jejího názvu parametru
                     //if (dir.TryGetValue(j, out var value))
+                    if(int.TryParse(xxx, out int value))
+                        jeden[dir[j]] = value; 
                     jeden[dir[j]] = xxx; 
                 }
                 //Vždy přidat
                 jeden.Apid = ExcelLoad.Apid();
                 jeden.Id = pocet;
-                Pole.Add(jeden);
+                if (jeden.Pocet > 1)
+                {
+                    //je uvedeno více než 1 zezřízení , Bude rozděleno formou kopii
+                    var deleni = jeden.Tag.Split('\n').ToList();
+                    foreach (var item in deleni)
+                    {
+                        var json = System.Text.Json.JsonSerializer.Serialize(jeden);
+                        var kopie = System.Text.Json.JsonSerializer.Deserialize<Zarizeni>(json)!;
+                        kopie.Apid = ExcelLoad.Apid();
+                        kopie.Pocet = 1;
+                        kopie.Tag = item.Trim();
+                        Pole.Add(kopie);
+                        Console.WriteLine($"Tag {kopie.Tag}");
+                    }
+                }
+                else
+                    Pole.Add(jeden);
                 Console.WriteLine($"Radek {pocet++} - přídán");
 
                 //if (!string.IsNullOrEmpty(jeden.Prikon))
