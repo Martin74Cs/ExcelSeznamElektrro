@@ -109,19 +109,28 @@ namespace Aplikace.Tridy
         //public string Pokus { get; set; } = string.Empty;
     
         [Display(Name = "Hlásič")]
-        public string EpsHlasic { get; set; } = string.Empty;
+        public int EpsHlasic { get; set; } 
 
         [Display(Name = "Siréna")]
-        public string EpsSirena { get; set; } = string.Empty;
-        
+        public int EpsSirena { get; set; }
+
+        [Display(Name = "Tlačítko")]
+        public int EpsTlacitko { get; set; }
+
         [Display(Name = "Plynový detekce")]
         public string GDS { get; set; } = string.Empty;
 
-        [Display(Name = "Ethernet")]
-        public string Ethernet { get; set; } = string.Empty;
+        [Display(Name = "Ethernet počet")]
+        public int Ethernet { get; set; }
+
+        [Display(Name = "Ethernet popis")]
+        public string EthernetPopis { get; set; } = string.Empty;
 
         [Display(Name = "Kamerový systém")]
-        public string Kamera { get; set; } = string.Empty;
+        public int Kamera { get; set; } 
+
+        [Display(Name = "Kamerový systém popis")]
+        public string KameraPopis { get; set; } = string.Empty;
 
         [Display(Name = "Přístupový systém")]
         public string ACS { get; set; } = string.Empty;
@@ -131,9 +140,12 @@ namespace Aplikace.Tridy
         [
             "EpsHlasic",
             "EpsSirena",
+            "EpsTlacitko",
             "GDS",
-            "Ethernet",
-            "Kamera",
+            "EthernetPočet",
+            "EthernetPopis",
+            "KameraPočet",
+            "KameraPopis",
             "ACS",
             "Pokus"
         ];

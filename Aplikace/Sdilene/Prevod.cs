@@ -42,7 +42,7 @@ namespace Aplikace.Sdilene
         public static string JsonToCsv<T>(this List<T> json)
         {
             //string Json = JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
-            return JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
+            return JsonConvert.SerializeObject(json, Soubory.Nastaveni());
             //JsonToCsv(Json, file);
         }
         public static void SaveToCsv<T>(this List<T> Class, string file)
@@ -57,11 +57,11 @@ namespace Aplikace.Sdilene
             JArray jsonArray = JArray.Parse(json);
 
             // Get property names from the first object (they will be used as headers)
-            var headers = ((JObject)jsonArray[0]).Properties().Select(p => p.Name).ToArray();
+            var Vlastnosti = ((JObject)jsonArray[0]).Properties();
+            var headers = Vlastnosti.Select(p => p.Name).ToArray();
 
-            if(Soubory.IsFileLocked(file))
-            {
-                Console.WriteLine($"Soubor {file} je zamčený.");
+            if(Soubory.IsFileLocked(file)) {
+                Console.WriteLine($"Soubor {file} je zamčený."); 
                 return;
             }
 

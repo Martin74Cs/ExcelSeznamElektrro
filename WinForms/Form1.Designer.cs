@@ -60,6 +60,7 @@ namespace WinForms
             label8 = new Label();
             button11 = new Button();
             label9 = new Label();
+            button12 = new Button();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -262,14 +263,14 @@ namespace WinForms
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(180, 26);
+            místnostiToolStripMenuItem1.Size = new Size(176, 26);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // generovatToolStripMenuItem
             // 
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(180, 26);
+            generovatToolStripMenuItem.Size = new Size(176, 26);
             generovatToolStripMenuItem.Text = "Generovat ";
             generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
@@ -371,11 +372,24 @@ namespace WinForms
             label9.TabIndex = 27;
             label9.Text = "Přidat do aktualno Json";
             // 
+            // button12
+            // 
+            button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button12.Font = new Font("Segoe UI", 12F);
+            button12.Location = new Point(709, 574);
+            button12.Name = "button12";
+            button12.Size = new Size(167, 38);
+            button12.TabIndex = 28;
+            button12.Text = "Průzkumník";
+            button12.UseVisualStyleBackColor = true;
+            button12.Click += Button12_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1073, 668);
+            Controls.Add(button12);
             Controls.Add(label9);
             Controls.Add(button11);
             Controls.Add(label8);
@@ -441,5 +455,6 @@ namespace WinForms
         private Label label8;
         private Button button11;
         private Label label9;
+        private Button button12;
     }
 }

@@ -88,7 +88,7 @@ namespace WinForms
             //průřez
             if (Pole == null) return;
             //Pole.AddProud();
-            Pole.AddKabelCyky(1.5);
+            Pole.AddKabelCyky(1.6);
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 

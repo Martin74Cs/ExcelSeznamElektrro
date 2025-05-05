@@ -150,6 +150,8 @@ namespace WinForms
             var result = table.ShowDialog();
             if (result == DialogResult.OK)
             {
+                //přidat prázdný záznam
+                if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveToCsv(Vývody);
                 //if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 //    Data.SaveToCsv(Cesty.ElektroDataCsv);
@@ -157,6 +159,13 @@ namespace WinForms
                 // Například načíst data nebo aktualizovat UI
             }
         }
+
+
+        private void Button12_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("explorer.exe", Cesty.Elektro);
+        }
+        
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter

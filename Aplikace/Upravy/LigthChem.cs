@@ -54,7 +54,7 @@ namespace Aplikace.Upravy
             //Stara.AddProud();
 
             //Přidání typu kabelu.
-            Stara.AddKabelCyky(1.5);
+            Stara.AddKabelCyky(1.6);
 
             string filename = "Seznam.xlsx";
             var cesta = Path.Combine(Cesty.Elektro, filename);
@@ -208,7 +208,7 @@ namespace Aplikace.Upravy
             string cesta1 = Path.Combine(Cesty.ElektroDataJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
 
-            Target.AddKabelCyky(1.5);
+            Target.AddKabelCyky(1.6);
 
             Target.SaveJsonList(cesta1);
             //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
