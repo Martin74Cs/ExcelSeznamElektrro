@@ -18,6 +18,7 @@ namespace WinForms
         //Převod stroju na JSON a CSV
         private async void Button2_Click(object sender, EventArgs e)
         {
+            //Převod->json,csv
             await Task.Run(() => LigthChem.StrojniToJsonCsv());
             //Console.SetOut(new ListBoxWriter(listBox1));
         }

@@ -40,7 +40,7 @@ namespace Aplikace.Excel
             }
         }
 
-        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
+        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List List string z a vytvořejí JSON</summary>
         public static List<Zarizeni> DataExcel(string cesta, string Tabulka, int Radek)
         {
             Console.WriteLine("Probíná hačítání dat ... ");
@@ -61,11 +61,11 @@ namespace Aplikace.Excel
             if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
             Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
 
-            //Sloupce Exel odpovídající názvům tříd.
+            //Sloupce které se mají načíst z Excelu do názvů tříd. Myslím že třída musí existovat
             var dir = new Dictionary<int, string>() {
                 {1, "Radek"     },
-                {3, "Pocet"     },
                 {2, "Tag"       },
+                {3, "Pocet"     },
                 {4, "Popis"     },
                 {11, "Menic"    },
                 {10, "Prikon"   },

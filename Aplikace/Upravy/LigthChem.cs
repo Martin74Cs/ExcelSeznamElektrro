@@ -18,8 +18,9 @@ namespace Aplikace.Upravy
         /// <summary>Vytvořit z Seznamu strojů json a Csv pro další doplnění</summary>
         public static void StrojniToJsonCsv()
         {
-            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
+            //Převod->json,csv
             
+            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             if (!Directory.Exists(Cesty.Elektro))
                 Directory.CreateDirectory(Cesty.Elektro);
 

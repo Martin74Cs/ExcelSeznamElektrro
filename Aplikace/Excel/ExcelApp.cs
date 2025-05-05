@@ -359,6 +359,7 @@ namespace Aplikace.Excel
                     var deleni = jeden.Tag.Split('\n').ToList();
                     foreach (var item in deleni)
                     {
+                        //vytvoření kopie třídy jinak se jedná o stále stejný ukazatel
                         var json = System.Text.Json.JsonSerializer.Serialize(jeden);
                         var kopie = System.Text.Json.JsonSerializer.Deserialize<Zarizeni>(json)!;
                         kopie.Apid = ExcelLoad.Apid();
