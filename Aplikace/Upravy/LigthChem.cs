@@ -242,7 +242,8 @@ namespace Aplikace.Upravy
                 {
                     //var value = prop.GetValue(target);
                     var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
-                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * rezerva);
+                    //var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * rezerva);
+                    var JedenKabel = KabelCu.FirstOrDefault(x => x.IzAGvod > proud * rezerva);
                     if (JedenKabel == null) continue;
 
                     //prop.SetValue(target, value);

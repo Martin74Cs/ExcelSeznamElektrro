@@ -52,16 +52,16 @@ namespace Aplikace.Tridy
         [Display(Name = "průřez PEN vodiče")]
         public double SPENmm2 { get; set; }
 
-        //proudové zatížení ve vzduchu svisle
+        /// <summary>proudové zatížení ve vzduchu svisle</summary>
         public double IzAGsvis { get; set; }
 
-        //proudové zatížení ve vzduchu vovorovně 
+        /// <summary>proudové zatížení ve vzduchu vovorovně </summary>
         public double IzAGvod { get; set; }
 
-        //proudové zatížení ve vzduchu vedle sebe
+        /// <summary>proudové zatížení ve vzduchu vedle sebe</summary>
         public double IzAFlin { get; set; }
 
-        //proudové zatížení ve  vzduchu trojůhelnik
+        /// <summary>proudové zatížení ve  vzduchu trojůhelnik</summary>
         public double IzAFtroj { get; set; }
 
         //proudové zatížení v zemi
