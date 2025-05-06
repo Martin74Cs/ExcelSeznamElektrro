@@ -1,7 +1,9 @@
-﻿using Aplikace.Sdilene;
+﻿using Aplikace.Excel;
+using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Aplikace.Upravy;
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.DataFormats;
@@ -166,7 +168,49 @@ namespace WinForms
         {
             System.Diagnostics.Process.Start("explorer.exe", Cesty.Elektro);
         }
-        
+
+        private void Button13_Click(object sender, EventArgs e)
+        {
+            string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
+            
+            var Elektro = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+
+            foreach (var item in Elektro.ToHashSet())
+            {
+                var ShodaTag = Data.Where(x => x.Tag == item.Tag).ToList();
+                if (ShodaTag.Count() == 1)
+                {
+                    var Jeden = ShodaTag.First();
+                    Console.WriteLine($"Shoda je jedna");
+                    //var index = Data.IndexOf(Data.FirstOrDefault(x => x.Tag == item.Tag));
+                    //if (index >= 0)
+                    //{
+                    item.Prikon = Jeden.Prikon;
+                    item.Menic = Jeden.Menic;
+                    item.BalenaJednotka = Jeden.BalenaJednotka;
+                    item.Pocet = Jeden.Pocet;
+                    item.Popis = Jeden.Popis;
+                    item.Radek = Jeden.Radek;
+                    item.Tag = Jeden.Tag;
+                    item.Napeti = Jeden.Napeti;
+
+                    //Elektro[index].Pocet = item.Pocet;
+                    //Elektro[index].Popis = item.Popis;
+                    //Elektro[index].Menic = item.Menic;
+                    //Elektro[index].Prikon = item.Prikon;
+                    //Elektro[index].BalenaJednotka = item.BalenaJednotka;
+                    //}
+                }
+                else
+                { 
+                    Console.WriteLine($"Kontrola - počet shod {ShodaTag.Count}");
+                    item.Popis = $"KONTROLA - počet shod {ShodaTag.Count} ";
+                }
+            }
+            Elektro.SaveJsonList(Cesty.ElektroDataJson);
+
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter

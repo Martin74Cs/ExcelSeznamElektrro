@@ -30,18 +30,18 @@ namespace Aplikace.Upravy
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             Stara.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
 
-            string cestaData = Path.Combine(Cesty.ElektroDataCsv);
-            if (!File.Exists(cestaData))
-            {
-                //vytvoření základu pro json jen pokud neexistuje.
-                Stara.SaveJsonList(Path.ChangeExtension(cestaData, ".json"));
-                //vytvoření csv pro doplnění
-                Stara.SaveToCsv(cestaData);
-            }
-            else
-            {
-                Console.WriteLine($"Vyvoření kopie {Path.GetFileName(cestaData)} přeskočeno");
-            }
+            //string cestaData = Path.Combine(Cesty.ElektroDataCsv);
+            //if (!File.Exists(cestaData))
+            //{
+            //    //vytvoření základu pro json jen pokud neexistuje.
+            //    Stara.SaveJsonList(Path.ChangeExtension(cestaData, ".json"));
+            //    //vytvoření csv pro doplnění
+            //    Stara.SaveToCsv(cestaData);
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"Vyvoření kopie {Path.GetFileName(cestaData)} přeskočeno");
+            //}
 
         }
 

@@ -17,24 +17,29 @@ namespace Aplikace.Sdilene
         {
             string Cesta = Path.Combine(Cesty.MotoryJson);
             var Motory = Soubory.LoadJsonList<Motor>(Cesta).OrderBy(x => x.Vykon50).ToList();
-
+            if (Motory.Count < 1) 
+            {
+                Console.WriteLine($"Nebyly nanačteny motory z {Cesta}");
+                return pole;
+            }
             // Přidání vlastnosti "Proud" do každého zařízení
-            var nove = new List<Zarizeni>();
+            //var nove = new List<Zarizeni>();
             double Cos = 0.95;
             double Pomoc;
-            foreach (var item in pole)
+            foreach (var item in pole.ToHashSet())
             {
                 if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
-                { 
+                {
                     var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 > kW && x.Otacky50 == 3000);
-                    if (JedenMotor != null) { 
+                    if (JedenMotor != null)
+                    {
                         Cos = JedenMotor.Ucinik50;
                         //přidání motoru do třídy
                         item.Motor = JedenMotor;
                     }
                     //Pokud je napětí větší než 250V, použijeme vzorec pro třífázový proud
                     if (U > 250)
-                        Pomoc = kW * 1000 / (Math.Sqrt(3) * U * Cos); 
+                        Pomoc = kW * 1000 / (Math.Sqrt(3) * U * Cos);
                     else
                         Pomoc = kW * 1000 / (U * Cos);
 
@@ -43,9 +48,13 @@ namespace Aplikace.Sdilene
                     var CosString = Pomoc.ToString("F2");
                     Console.WriteLine($"Proud: {item.Proud}, cos: {CosString}");
                 }
-                nove.Add(item);
+                else
+                { 
+                    Console.WriteLine($"Na {item.Radek} Chybí napětí nabo příkon - Apid={item.Apid}");
+                }
+                //nove.Add(item);
             }
-            return nove;
+            return pole;
         }
 
         /// <summary>Pridání délky kabelu </summary>
