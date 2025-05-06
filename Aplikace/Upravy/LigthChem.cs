@@ -248,7 +248,7 @@ namespace Aplikace.Upravy
                     //prop.SetValue(target, value);
                     //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
                     Target[i].PruzezMM2 = JedenKabel.SLmm2.ToString();
-                    Target[i].Deleni = JedenKabel.Deleni;
+                    Target[i].Vodice = JedenKabel.Deleni;
                     Target[i].Kabel = JedenKabel;
                 }
             }

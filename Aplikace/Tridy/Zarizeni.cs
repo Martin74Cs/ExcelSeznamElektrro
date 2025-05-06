@@ -99,7 +99,7 @@ namespace Aplikace.Tridy
 
         /// <summary>Odpovídá radku strojního zařízení</summary>
         public int Radek { get; set; }  
-        public string Deleni { get; set; } = string.Empty;
+        public string Vodice { get; set; } = string.Empty;
 
         [JsonIgnore]
         public Kabel Kabel { get; set; } = new();
@@ -113,13 +113,13 @@ namespace Aplikace.Tridy
         public bool IsExist { get; set; } = false;
 
         [JsonConverter(typeof(PointToStringConverter))]
-        public string Bod { get; set;} // = MyPoint3d.Origin;
+        public string Bod { get; set;} = string.Empty; // = MyPoint3d.Origin;
 
         /// <summary>Definice bloku elektro</summary>
         public bool IsExistElektro { get; set; } = false;
 
         [JsonConverter(typeof(PointToStringConverter))]
-        public string BodElektro { get;  set;} // = MyPoint3d.Origin;
+        public string BodElektro { get;  set;} = string.Empty; // = MyPoint3d.Origin;
 
         // Vypsání hodnot záznamů podle názvů parametrů
         /// <summary>Rozvaděč</summary>

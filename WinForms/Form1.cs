@@ -182,18 +182,32 @@ namespace WinForms
                 if (ShodaTag.Count() == 1)
                 {
                     var Jeden = ShodaTag.First();
-                    Console.WriteLine($"Shoda je jedna");
+                    Console.WriteLine($"Shoda je jedna - Doplněny pouze prázdné bunky ");
                     //var index = Data.IndexOf(Data.FirstOrDefault(x => x.Tag == item.Tag));
                     //if (index >= 0)
                     //{
-                    item.Prikon = Jeden.Prikon;
-                    item.Menic = Jeden.Menic;
-                    item.BalenaJednotka = Jeden.BalenaJednotka;
-                    item.Pocet = Jeden.Pocet;
-                    item.Popis = Jeden.Popis;
-                    item.Radek = Jeden.Radek;
-                    item.Tag = Jeden.Tag;
-                    item.Napeti = Jeden.Napeti;
+                    item.Prikon = string.IsNullOrEmpty(item.Prikon) ? Jeden.Prikon : item.Prikon;
+                    item.Menic = string.IsNullOrEmpty(item.Menic) ? Jeden.Menic : item.Menic;
+                    item.BalenaJednotka = string.IsNullOrEmpty(item.BalenaJednotka) ? Jeden.BalenaJednotka : item.BalenaJednotka;
+                    item.Pocet = item.Pocet == 0 ? Jeden.Pocet : item.Pocet;
+                    item.Popis = string.IsNullOrEmpty(item.Popis) ? Jeden.Popis : item.Popis;
+                    item.Radek = item.Radek == 0 ? Jeden.Radek : item.Radek;
+                    item.Tag = string.IsNullOrEmpty(item.Tag) ? Jeden.Tag : item.Tag;
+                    item.Napeti = string.IsNullOrEmpty(item.Napeti) ? Jeden.Napeti : item.Napeti;
+
+                    //if (string.IsNullOrEmpty(item.Menic))  item.Menic = Jeden.Menic;
+                    //if(string.IsNullOrEmpty(item.BalenaJednotka)) item.BalenaJednotka = Jeden.BalenaJednotka;
+                    //if(item.Pocet == 0) item.Pocet = Jeden.Pocet;
+                    //if(string.IsNullOrEmpty(item.Popis)) item.Popis = Jeden.Popis;
+                    //if(item.Radek == 0) item.Radek = Jeden.Radek;
+                    //if(string.IsNullOrEmpty(item.Tag)) item.Tag = Jeden.Tag;
+                    //if(string.IsNullOrEmpty(item.Napeti)) item.Napeti = Jeden.Napeti;
+
+                    //item.Pocet = Jeden.Pocet;
+                    //item.Popis = Jeden.Popis;
+                    //item.Radek = Jeden.Radek;
+                    //item.Tag = Jeden.Tag;
+                    //item.Napeti = Jeden.Napeti;
 
                     //Elektro[index].Pocet = item.Pocet;
                     //Elektro[index].Popis = item.Popis;

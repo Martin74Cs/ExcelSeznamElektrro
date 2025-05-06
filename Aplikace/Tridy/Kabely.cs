@@ -40,7 +40,10 @@ namespace Aplikace.Tridy
         //public string Proud { get; set; } = string.Empty;
 
         public string Name { get; set; } = string.Empty;
-        public string Proud { get; set; }
+        public string Proud { get; set; } = string.Empty;
+
+        /// <summary>Počet vodičů</summary>
+        [Display(Name = "Vodiče")]
         public string Deleni { get; set; } = string.Empty;
 
         public double SLmm2 { get; set; }
