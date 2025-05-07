@@ -10,7 +10,7 @@ using Exc = Microsoft.Office.Interop.Excel;
 
 namespace Aplikace.Excel
 {
-    public class ExcelApp
+    public class ExcelApp 
     {
         public Exc.Application App { get; set; } 
         public Exc.Workbook Doc { get; set; }
