@@ -48,6 +48,8 @@ namespace Aplikace.Sdilene
         }
         public static void SaveToCsv<T>(this List<T> Class, string file)
         {
+            //kontrola počtu záznamů
+            if (Class.Count < 1) return; 
             string json = JsonToCsv(Class);
             SaveToCsv(json, file);
         }
@@ -57,6 +59,7 @@ namespace Aplikace.Sdilene
             // Deserialize JSON to JArray
             JArray jsonArray = JArray.Parse(json);
 
+            //záznam musí obsahovat elespon jeden zázam.
             // Get property names from the first object (they will be used as headers)
             var Vlastnosti = ((JObject)jsonArray[0]).Properties();
             var headers = Vlastnosti.Select(p => p.Name).ToArray();

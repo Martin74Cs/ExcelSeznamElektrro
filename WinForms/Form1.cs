@@ -133,6 +133,7 @@ namespace WinForms
             var result = table.ShowDialog();
             if (result == DialogResult.OK)
             {
+                if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveJsonList(Cesty.ElektroDataJson);
                 if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     Data.SaveToCsv(Cesty.ElektroDataCsv);
