@@ -39,17 +39,7 @@ namespace Aplikace.Sdilene
         public static string BasePath {
             get {
                 if (Environment.UserDomainName == "D10")
-                    return @"c:\a\";
-                else
-                    return @"G:\Můj disk\Projekty\";
-            }
-        }
-
-        public static string GooglePath
-        {
-            get
-            {
-                if (Environment.UserDomainName == "D10")
+                    //return @":\a\";
                     return @"E:\Můj disk\Projekty\";
                 else
                     return @"G:\Můj disk\Projekty\";
