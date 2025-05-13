@@ -49,6 +49,7 @@ namespace Aplikace.Tridy
 
         /// <summary>Označení zařízení </summary>
         public string Tag { get; set; } = string.Empty;
+        public string Predmet { get; set; } = string.Empty;
         public string PID { get; set; } = string.Empty;
         public int Pocet  { get; set; } 
 
@@ -92,7 +93,7 @@ namespace Aplikace.Tridy
         /// <summary>Označení celého rozvaděče</summary>
         [JsonIgnore]
         public string RozvadecOznačení => Rozvadec + " " + RozvadecCislo;
-
+        public string Vyvod { get; set; } = string.Empty;
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
         public string Druh { get; set; } = string.Empty;
         public string Napeti { get; set; } = "400";
