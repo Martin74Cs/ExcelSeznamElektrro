@@ -122,6 +122,8 @@ namespace Aplikace.Tridy
         [JsonConverter(typeof(PointToStringConverter))]
         public string BodElektro { get;  set;} = string.Empty; // = MyPoint3d.Origin;
 
+        public double Otoceni { get; set; }
+
         // Vypsání hodnot záznamů podle názvů parametrů
         /// <summary>Rozvaděč</summary>
         public void Vypis()
@@ -182,9 +184,7 @@ namespace Aplikace.Tridy
 
         /// <summary> List vlastností třídy </summary>
         [JsonIgnore]
-        public List<string> Vlastnosti => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                      .Select(p => p.Name)
-                       .ToList();
+        public List<string> Vlastnosti => [.. GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => p.Name)];
 
         public static void Vypis(List<Zarizeni> zaznamy)
         {
@@ -206,20 +206,13 @@ namespace Aplikace.Tridy
         }
     }
 
-    public class MyPoint3d
+    public class MyPoint3d(double x, double y, double z)
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        public double X { get; set; } = x;
+        public double Y { get; set; } = y;
+        public double Z { get; set; } = z;
 
-        public MyPoint3d(double x, double y, double z)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-        }          
-        
-        public static MyPoint3d Origin = new MyPoint3d(0.0, 0.0, 0.0);
+        public static MyPoint3d Origin => new(0.0, 0.0, 0.0);
     }
 
     public class PointToStringConverter : JsonConverter
