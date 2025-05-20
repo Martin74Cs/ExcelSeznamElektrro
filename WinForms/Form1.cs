@@ -172,55 +172,43 @@ namespace WinForms
         private void Button13_Click(object sender, EventArgs e)
         {
             string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
+            var Strojni = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
             
             var Elektro = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
-
-            foreach (var item in Elektro.ToHashSet())
+            var table = new Shoda(Strojni, Elektro);
+            var result = table.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                var ShodaTag = Data.Where(x => x.Tag == item.Tag).ToList();
-                if (ShodaTag.Count() == 1)
-                {
-                    var Jeden = ShodaTag.First();
-                    Console.WriteLine($"Shoda je jedna - Doplněny pouze prázdné bunky ");
-                    //var index = Data.IndexOf(Data.FirstOrDefault(x => x.Tag == item.Tag));
-                    //if (index >= 0)
-                    //{
-                    item.Prikon = string.IsNullOrEmpty(item.Prikon) ? Jeden.Prikon : item.Prikon;
-                    item.Menic = string.IsNullOrEmpty(item.Menic) ? Jeden.Menic : item.Menic;
-                    item.BalenaJednotka = string.IsNullOrEmpty(item.BalenaJednotka) ? Jeden.BalenaJednotka : item.BalenaJednotka;
-                    item.Pocet = item.Pocet == 0 ? Jeden.Pocet : item.Pocet;
-                    item.Popis = string.IsNullOrEmpty(item.Popis) ? Jeden.Popis : item.Popis;
-                    item.Radek = item.Radek == 0 ? Jeden.Radek : item.Radek;
-                    item.Tag = string.IsNullOrEmpty(item.Tag) ? Jeden.Tag : item.Tag;
-                    item.Napeti = string.IsNullOrEmpty(item.Napeti) ? Jeden.Napeti : item.Napeti;
+                // Zde můžete provést další akce po zavření dialogu
+                // Například načíst data nebo aktualizovat UI
+                Elektro.SaveJsonList(Cesty.ElektroDataJson);
+            }
 
-                    //if (string.IsNullOrEmpty(item.Menic))  item.Menic = Jeden.Menic;
-                    //if(string.IsNullOrEmpty(item.BalenaJednotka)) item.BalenaJednotka = Jeden.BalenaJednotka;
-                    //if(item.Pocet == 0) item.Pocet = Jeden.Pocet;
-                    //if(string.IsNullOrEmpty(item.Popis)) item.Popis = Jeden.Popis;
-                    //if(item.Radek == 0) item.Radek = Jeden.Radek;
-                    //if(string.IsNullOrEmpty(item.Tag)) item.Tag = Jeden.Tag;
-                    //if(string.IsNullOrEmpty(item.Napeti)) item.Napeti = Jeden.Napeti;
-
-                    //item.Pocet = Jeden.Pocet;
-                    //item.Popis = Jeden.Popis;
-                    //item.Radek = Jeden.Radek;
-                    //item.Tag = Jeden.Tag;
-                    //item.Napeti = Jeden.Napeti;
-
-                    //Elektro[index].Pocet = item.Pocet;
-                    //Elektro[index].Popis = item.Popis;
-                    //Elektro[index].Menic = item.Menic;
-                    //Elektro[index].Prikon = item.Prikon;
-                    //Elektro[index].BalenaJednotka = item.BalenaJednotka;
-                    //}
-                }
-                else
-                { 
-                    Console.WriteLine($"Kontrola - počet shod {ShodaTag.Count}");
-                    item.Popis = $"KONTROLA - počet shod {ShodaTag.Count} ";
-                }
+            foreach (var itemEl in Elektro.ToHashSet())
+            {
+                 //funguje potom zapnout
+                //var ShodaTag = Data.Where(x => x.Tag == item.Tag).ToList();
+                //if (ShodaTag.Count() == 1)
+                //{
+                //    var Jeden = ShodaTag.First();
+                //    Console.WriteLine($"Shoda je jedna - Doplněny pouze prázdné bunky ");
+                //    //var index = Data.IndexOf(Data.FirstOrDefault(x => x.Tag == item.Tag));
+                //    //if (index >= 0)
+                //    //{
+                //    item.Prikon = string.IsNullOrEmpty(item.Prikon) ? Jeden.Prikon : item.Prikon;
+                //    item.Menic = string.IsNullOrEmpty(item.Menic) ? Jeden.Menic : item.Menic;
+                //    item.BalenaJednotka = string.IsNullOrEmpty(item.BalenaJednotka) ? Jeden.BalenaJednotka : item.BalenaJednotka;
+                //    item.Pocet = item.Pocet == 0 ? Jeden.Pocet : item.Pocet;
+                //    item.Popis = string.IsNullOrEmpty(item.Popis) ? Jeden.Popis : item.Popis;
+                //    item.Radek = item.Radek == 0 ? Jeden.Radek : item.Radek;
+                //    item.Tag = string.IsNullOrEmpty(item.Tag) ? Jeden.Tag : item.Tag;
+                //    item.Napeti = string.IsNullOrEmpty(item.Napeti) ? Jeden.Napeti : item.Napeti;
+                //}
+                //else
+                //{ 
+                //    Console.WriteLine($"Kontrola - počet shod {ShodaTag.Count}");
+                //    item.Popis = $"KONTROLA - počet shod {ShodaTag.Count} ";
+                //}
             }
             Elektro.SaveJsonList(Cesty.ElektroDataJson);
 

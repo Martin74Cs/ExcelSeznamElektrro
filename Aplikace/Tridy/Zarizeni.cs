@@ -2,9 +2,11 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,8 +21,38 @@ namespace Aplikace.Tridy
         public string Text { get; } = text;
     }
 
-    public class Zarizeni : Entity
+    public class Zarizeni : Entity , INotifyPropertyChanged
     {
+        private string tag = string.Empty;
+        private string prikon = string.Empty;
+        private string balenaJednotka = string.Empty;
+        private string menic = string.Empty;
+        private string nic = string.Empty;
+        private string proud = string.Empty;
+        private string pruzezMM2 = string.Empty;
+        private string pID = string.Empty;
+        private int pocet;
+        private string popis = string.Empty;
+        private string aWG = string.Empty;
+        private double delka = 100;
+        private double delkaft;
+        private string rozvadec = string.Empty;
+        private string rozvadecCislo = string.Empty;
+        private string druh = string.Empty;
+        private string napeti = "400";
+        private int radek;
+        private string vodice = string.Empty;
+        private Kabel kabel = new();
+        private Motor motor = new();
+        private string patro = string.Empty;
+        private string vykres = string.Empty;
+        private bool isExist = false;
+        private string bod = string.Empty;
+        private bool isExistElektro = false;
+        private string bodElektro = string.Empty;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         //public Zarizeni() { }
 
         //public Zarizeni(string Tag, string PID, string Popis, string Prikon ,string BalenaJednotka, string Menic , string Nic, string HPstr , string Proud, string PruzezMM2, string AWG, 
@@ -48,21 +80,19 @@ namespace Aplikace.Tridy
         //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
 
         /// <summary>Označení zařízení </summary>
-        public string Tag { get; set; } = string.Empty;
-        public string PID { get; set; } = string.Empty;
-        public int Pocet  { get; set; } 
+        public string Tag { get => tag; set => SetProperty(ref tag , value); }
+        public string PID { get => pID; set => SetProperty(ref pID, value); }
+        public int Pocet { get => pocet; set => SetProperty(ref pocet, value); }
 
         /// <summary>Popis zařízení</summary>
         [Display(Name = "Jméno zařízení")]
-        public string Popis { get; set; } = string.Empty;
-
+        public string Popis { get => popis; set => SetProperty(ref popis, value); }
         [Display(Name = "Příkon")]
         [Jednotky("[kW]")]
-        public string Prikon { get; set; } = string.Empty;
-        public string BalenaJednotka { get; set; } = string.Empty;
-        public string Menic { get; set; } = string.Empty;
-        public string Nic { get; set; } = string.Empty;
-
+        public string Prikon { get => prikon; set => SetProperty(ref prikon , value); }
+        public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
+        public string Menic { get => menic; set => SetProperty(ref menic, value); }
+        public string Nic { get => nic; set => SetProperty(ref nic, value); }
         [JsonIgnore]
         [Display(Name = "Příkon")]
         [Jednotky("[hp]")]
@@ -70,57 +100,44 @@ namespace Aplikace.Tridy
 
         [Display(Name = "Proud")]
         [Jednotky("[A]")]
-        public string Proud { get; set; } = string.Empty;
-
+        public string Proud { get => proud; set => SetProperty(ref proud, value); }
         [Display(Name = "Průřez")]
         [Jednotky("[mm2]")]
-        public string PruzezMM2 { get; set; } = string.Empty;
-        public string AWG { get; set; } = string.Empty;
-
+        public string PruzezMM2 { get => pruzezMM2; set => SetProperty(ref pruzezMM2, value); }
+        public string AWG { get => aWG; set => SetProperty(ref aWG, value); }
         [Display(Name = "Délka")]
         [Jednotky("[m]")]
-        public double Delka { get; set; } = 100;
-
+        public double Delka { get => delka; set => SetProperty(ref delka, value); }
         [Display(Name = "Délka")]
         [Jednotky("[ft]")]
 
-        public double Delkaft { get; set; } 
+        public double Delkaft { get => delkaft; set => SetProperty(ref delkaft, value); }
 
-        public string Rozvadec { get; set; } = string.Empty;
-        public string RozvadecCislo { get; set; } = string.Empty;
-
+        public string Rozvadec { get => rozvadec; set => SetProperty(ref rozvadec, value); }
+        public string RozvadecCislo { get => rozvadecCislo; set => SetProperty(ref rozvadecCislo, value); }
         /// <summary>Označení celého rozvaděče</summary>
         [JsonIgnore]
         public string RozvadecOznačení => Rozvadec + " " + RozvadecCislo;
 
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
-        public string Druh { get; set; } = string.Empty;
-        public string Napeti { get; set; } = "400";
-
+        public string Druh { get => druh; set => SetProperty(ref druh, value); }
+        public string Napeti { get => napeti; set => SetProperty(ref napeti, value); }
         /// <summary>Odpovídá radku strojního zařízení</summary>
-        public int Radek { get; set; }  
-        public string Vodice { get; set; } = string.Empty;
-
+        public int Radek { get => radek; set => SetProperty(ref radek, value); }
+        public string Vodice { get => vodice; set => SetProperty(ref vodice, value); }
         [JsonIgnore]
-        public Kabel Kabel { get; set; } = new();
-
+        public Kabel Kabel { get => kabel; set => SetProperty(ref kabel, value); }
         [JsonIgnore]
-        public Motor Motor { get; set; } = new();
-
-        public string Patro { get; set; } = string.Empty;
-        public string Vykres { get; set; } = string.Empty;
-        /// <summary>false=neexistuje</summary>
-        public bool IsExist { get; set; } = false;
-
+        public Motor Motor { get => motor; set => SetProperty(ref motor, value); }
+        public string Patro { get => patro; set => SetProperty(ref patro, value); }
+        public string Vykres { get => vykres; set => SetProperty(ref vykres, value); }         /// <summary>false=neexistuje</summary>
+        public bool IsExist { get => isExist; set => SetProperty(ref isExist, value); }
         [JsonConverter(typeof(PointToStringConverter))]
-        public string Bod { get; set;} = string.Empty; // = MyPoint3d.Origin;
-
+        public string Bod { get => bod; set => SetProperty(ref bod, value); }
         /// <summary>Definice bloku elektro</summary>
-        public bool IsExistElektro { get; set; } = false;
-
+        public bool IsExistElektro { get => isExistElektro; set => SetProperty(ref isExistElektro, value); }
         [JsonConverter(typeof(PointToStringConverter))]
-        public string BodElektro { get;  set;} = string.Empty; // = MyPoint3d.Origin;
-
+        public string BodElektro { get => bodElektro; set => SetProperty(ref bodElektro, value); }
         // Vypsání hodnot záznamů podle názvů parametrů
         /// <summary>Rozvaděč</summary>
         public void Vypis()
@@ -202,6 +219,13 @@ namespace Aplikace.Tridy
                 }
                 Console.WriteLine();
             }
+        }
+        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (Equals(field, value)) return false;
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
         }
     }
 
