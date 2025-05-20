@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.DataFormats;
 
 namespace WinForms
@@ -128,11 +129,13 @@ namespace WinForms
         {
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
             var table = new Table(Data);
+            SetTable(table);
 
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
             if (result == DialogResult.OK)
             {
+                if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveJsonList(Cesty.ElektroDataJson);
                 if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     Data.SaveToCsv(Cesty.ElektroDataCsv);
@@ -212,6 +215,26 @@ namespace WinForms
             }
             Elektro.SaveJsonList(Cesty.ElektroDataJson);
 
+        }
+
+        private void Button14_Click(object sender, EventArgs e)
+        {
+            string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
+
+            var table = new Table(Data);
+            SetTable(table);
+
+            // Zobrazíme druhý formulář jako modální dialog
+            var result = table.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (Data.Count < 1) Data.Add(new Zarizeni());
+                Data.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+
+                // Zde můžete provést další akce po zavření dialogu
+                // Například načíst data nebo aktualizovat UI
+            }
         }
     }
 

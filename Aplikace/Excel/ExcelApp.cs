@@ -10,7 +10,7 @@ using Exc = Microsoft.Office.Interop.Excel;
 
 namespace Aplikace.Excel
 {
-    public class ExcelApp
+    public class ExcelApp 
     {
         public Exc.Application App { get; set; } 
         public Exc.Workbook Doc { get; set; }
@@ -431,29 +431,22 @@ namespace Aplikace.Excel
             {
                 foreach (var kvp in dirFiltered)
                 {
-                    int Col = kvp.Key;
-                    string propName = kvp.Value;
-
-                    Exc.Range Zapis1 = Xls.Cells[Row, Col];
-                    var prop = properties[propName];
+                    Exc.Range Zapis1 = Xls.Cells[Row, kvp.Key];
+                    var prop = properties[kvp.Value];
                     //Zapis1.Value = prop.GetValue(item);
                     string value = prop.GetValue(item).ToString();
                     if (double.TryParse(value, out double cislo))
                     {
                         Zapis1.Value = cislo;
 
-                        // Formátovat jako číslo s 2 desetinnými místy
+                        //Formátovat jako číslo s 2 desetinnými místy
                         Zapis1.NumberFormat = "#,##0.00";
 
-                        // Zarovnat doprava
+                        //Zarovnat doprava
                         Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
                     }
                     else 
-                    {
                          Zapis1.Value = value;
-                    }
-                         
-
                 }
                 Row++;
             }

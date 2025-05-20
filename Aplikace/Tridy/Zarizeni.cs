@@ -118,7 +118,7 @@ namespace Aplikace.Tridy
         /// <summary>Označení celého rozvaděče</summary>
         [JsonIgnore]
         public string RozvadecOznačení => Rozvadec + " " + RozvadecCislo;
-
+        public string Vyvod { get; set; } = string.Empty;
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
         public string Druh { get => druh; set => SetProperty(ref druh, value); }
         public string Napeti { get => napeti; set => SetProperty(ref napeti, value); }
@@ -137,7 +137,8 @@ namespace Aplikace.Tridy
         /// <summary>Definice bloku elektro</summary>
         public bool IsExistElektro { get => isExistElektro; set => SetProperty(ref isExistElektro, value); }
         [JsonConverter(typeof(PointToStringConverter))]
-        public string BodElektro { get => bodElektro; set => SetProperty(ref bodElektro, value); }
+        public string BodElektro { get;  set;} = string.Empty; // = MyPoint3d.Origin;
+
         // Vypsání hodnot záznamů podle názvů parametrů
         /// <summary>Rozvaděč</summary>
         public void Vypis()
@@ -198,9 +199,7 @@ namespace Aplikace.Tridy
 
         /// <summary> List vlastností třídy </summary>
         [JsonIgnore]
-        public List<string> Vlastnosti => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                      .Select(p => p.Name)
-                       .ToList();
+        public List<string> Vlastnosti => [.. GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => p.Name)];
 
         public static void Vypis(List<Zarizeni> zaznamy)
         {
@@ -229,20 +228,13 @@ namespace Aplikace.Tridy
         }
     }
 
-    public class MyPoint3d
+    public class MyPoint3d(double x, double y, double z)
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        public double X { get; set; } = x;
+        public double Y { get; set; } = y;
+        public double Z { get; set; } = z;
 
-        public MyPoint3d(double x, double y, double z)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-        }          
-        
-        public static MyPoint3d Origin = new MyPoint3d(0.0, 0.0, 0.0);
+        public static MyPoint3d Origin => new(0.0, 0.0, 0.0);
     }
 
     public class PointToStringConverter : JsonConverter

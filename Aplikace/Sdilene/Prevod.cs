@@ -11,6 +11,7 @@ using System.Data;
 using System.Text.Json.Nodes;
 using Aplikace.Tridy;
 using System.Reflection;
+using System.Drawing;
 
 namespace Aplikace.Sdilene
 {
@@ -47,6 +48,8 @@ namespace Aplikace.Sdilene
         }
         public static void SaveToCsv<T>(this List<T> Class, string file)
         {
+            //kontrola počtu záznamů
+            if (Class.Count < 1) return; 
             string json = JsonToCsv(Class);
             SaveToCsv(json, file);
         }
@@ -56,6 +59,7 @@ namespace Aplikace.Sdilene
             // Deserialize JSON to JArray
             JArray jsonArray = JArray.Parse(json);
 
+            //záznam musí obsahovat elespon jeden zázam.
             // Get property names from the first object (they will be used as headers)
             var Vlastnosti = ((JObject)jsonArray[0]).Properties();
             var headers = Vlastnosti.Select(p => p.Name).ToArray();
@@ -96,8 +100,7 @@ namespace Aplikace.Sdilene
             Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
         }
 
-
-        //od umělé inteligence
+        //Od umělé inteligence
         public static string JsonToXmlAI(string json)
         {
             // Zabalíme JSON, pokud začíná polem
