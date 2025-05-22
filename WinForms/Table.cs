@@ -18,7 +18,7 @@ namespace WinForms
 {
     public partial class Table : Form
     {
-        private List<Zarizeni> Pole { get; set; } // obecný typ, nebo použij generický s omezením
+        private List<Zarizeni> Pole { get; set; } 
         //private SortableBindingList<Zarizeni> DataBind;
         //private BindingSource SourceBind = new BindingSource();
         public Table(List<Zarizeni> Pole)
@@ -29,7 +29,6 @@ namespace WinForms
             //upravená třída BindingList na SortableBindingList
             var DataBind = new SortableBindingList<Zarizeni>(Pole);
             dataGridView1.CellFormatting += dataGridView1_CellFormatting;
-            //SourceBind.DataSource = DataBind;
             dataGridView1.DataSource = DataBind;
         }
 

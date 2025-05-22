@@ -183,13 +183,13 @@ namespace Aplikace.Sdilene
             var type = typeof(T);
             //najdi vlastnost Apid
             var keyProp = type.GetProperty(keyProperty) ?? throw new ArgumentException($"Property '{keyProperty}' not found.");
+            
             // vytvoř slovník pro rychlé hledání dle klíče Apid
             var sourceDict = sourceList.ToDictionary(
                 item => keyProp.GetValue(item)?.ToString() ?? string.Empty
             );
 
             // všechny veřejné zapisovatelné vlastnosti kromě klíče a Item
-            //item nevím co to je
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                  .Where(p => p.CanWrite && p.Name != keyProperty && p.Name != "Item")
                                  .ToList();

@@ -54,8 +54,13 @@ namespace Aplikace.Upravy
             //Možná proud asi jen tam kde není.
             //Stara.AddProud();
 
-            //Přidání typu kabelu.
-            Stara.AddKabelCyky(1.6);
+            //Přidání typu kabelu pokud chybí .
+            var prazdne = Stara.Where(x => x.Kabel == null).ToList();
+            prazdne.AddKabelCyky(1.6);
+
+            // Spojení původních neprázdných s doplněnými – Concat vytvoří novou spojenou kolekci
+            //Stara = Stara.Where(x => x.Kabel != null).Concat(prazdne).ToList();
+            Stara = [.. Stara.Where(x => x.Kabel != null), .. prazdne];
 
             string filename = "Seznam.xlsx";
             var cesta = Path.Combine(Cesty.Elektro, filename);
@@ -135,94 +140,94 @@ namespace Aplikace.Upravy
             Add.SaveJsonList(cestaData);
         }
 
-
-
         /// <summary>Seznam vývodů pro doplnění </summary>
         public static void AddVyvody()
         {
-            //Aktualní seznam vývodů
-            string cesta = Cesty.ElektroDataJson;
-            var Target = Soubory.LoadJsonList<Zarizeni>(cesta);
+            ////Aktualní seznam vývodů
+            //string cesta = Cesty.ElektroDataJson;
+            //var Target = Soubory.LoadJsonList<Zarizeni>(cesta);
 
-            //Seznam vývodů pro doplnění
-            var Add = new List<Zarizeni>();
-            string cesta1 = Path.Combine(Cesty.Elektro, @"Vývody.csv");
-            if (!File.Exists(cesta1))
-            {
-                //Pokud neexistuje tak vytvoř
-                Add.Add(new Zarizeni());
-                Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
-                Add.SaveToCsv(cesta1);
-                return;
-            }
+            ////Seznam vývodů pro doplnění
+            //var Add = new List<Zarizeni>();
+            //string cesta1 = Path.Combine(Cesty.Elektro, @"Vývody.csv");
+            //if (!File.Exists(cesta1))
+            //{
+            //    //Pokud neexistuje tak vytvoř
+            //    Add.Add(new Zarizeni());
+            //    Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+            //    Add.SaveToCsv(cesta1);
+            //    return;
+            //}
 
-            //Načtení vývodů pro doplnnění 
-            Add = Soubory.LoadFromCsv<Zarizeni>(cesta1);
-            bool zmena = false;
-            for (int i = 0; i < Add.Count; i++)
-            {
-                //přidat identifikátor
-                if (string.IsNullOrEmpty(Add[i].Apid))
-                { 
-                    Add[i].Apid = ExcelLoad.Apid();
-                    zmena = true;
-                }
-                //
-            }
+            ////Načtení vývodů pro doplnnění 
+            //Add = Soubory.LoadFromCsv<Zarizeni>(cesta1);
+            //bool zmena = false;
+            //for (int i = 0; i < Add.Count; i++)
+            //{
+            //    //přidat identifikátor
+            //    if (string.IsNullOrEmpty(Add[i].Apid))
+            //    { 
+            //        Add[i].Apid = ExcelLoad.Apid();
+            //        zmena = true;
+            //    }
+            //    //
+            //}
 
-            //Mělo by přídat proud
-            Add.AddProud();
+            ////Mělo by přídat proud
+            //Add.AddProud();
 
-            //pokud nexistuje Apid tak přepsat Json
-            if (zmena)
-            { 
-                //Prevod.SaveToCsv(Add, cesta1);
-                //Add.SaveToCsv(cesta1);
-                Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
-            }
+            ////pokud nexistuje Apid tak přepsat Json
+            //if (zmena)
+            //{ 
+            //    //Prevod.SaveToCsv(Add, cesta1);
+            //    //Add.SaveToCsv(cesta1);
+            //    Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
+            //}
 
-            int pocet = Target.Count + 1;
-            foreach (var item in Add)
-            {
-                //hledej existeci podle Apid
-                var Toto = Target.FirstOrDefault(x => x.Apid == item.Apid);
+            //int pocet = Target.Count + 1;
+            //foreach (var item in Add)
+            //{
+            //    //hledej existeci podle Apid
+            //    var Toto = Target.FirstOrDefault(x => x.Apid == item.Apid);
 
-                //Existuje tak ho smaž
-                if (Toto != null) //continue;
-                    Target.Remove(Toto);
+            //    //Existuje tak ho smaž
+            //    if (Toto != null) //continue;
+            //        Target.Remove(Toto);
 
-                //znovu přidat
-                item.Radek = pocet++;
-                Target.Add(item);
-            }
+            //    //znovu přidat
+            //    item.Radek = pocet++;
+            //    Target.Add(item);
+            //}
 
-            //uložit upravená data do Json
-            Target.SaveJsonList(cesta);
+            ////uložit upravená data do Json
+            //Target.SaveJsonList(cesta);
 
-            //Target.SaveToCsv(Path.ChangeExtension(cesta, ".csv"));
-            //Target.SaveJsonList(Path.ChangeExtension(cesta, ".txt"));
+            ////Target.SaveToCsv(Path.ChangeExtension(cesta, ".csv"));
+            ////Target.SaveJsonList(Path.ChangeExtension(cesta, ".txt"));
         }
 
-        public static void AddKabely()
-        {
-            //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            string cesta1 = Path.Combine(Cesty.ElektroDataJson);
-            var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
+        //public static void AddKabely()
+        //{
+        //    //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+        //    string cesta1 = Path.Combine(Cesty.ElektroDataJson);
+        //    var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
 
-            Target.AddKabelCyky(1.6);
+        //    Target.AddKabelCyky(1.6);
 
-            Target.SaveJsonList(cesta1);
-            //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
-        }
+        //    Target.SaveJsonList(cesta1);
+        //    //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
+        //}
 
         public static List<Zarizeni> AddKabelCyky(this List<Zarizeni> Target, double rezerva = 1.5)
         {
             var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
                 .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
                 .OrderBy(x => x.IzAE).ToList();
-
             //vymazaní položek ze seznam
             KabelCu.RemoveAll(x => x.SLmm2 < 2.5);
+
+            if(KabelCu.Count < 1) Console.WriteLine("Chyba hledání kabelů Cu");
+            else Console.WriteLine($"Kabelů Cu je {KabelCu.Count}");
 
             //Kontrola
             //KabelCu.SaveJsonList(Path.ChangeExtension(cesta1, ".txt"));
@@ -230,20 +235,23 @@ namespace Aplikace.Upravy
             var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.IzAE ).ToList(); 
             //vymazaní položek ze seznam
             KabelAL.RemoveAll(x => x.SLmm2 < 16);
+            if(KabelAL.Count < 1) Console.WriteLine("Chyba hledání kabelů Al");
+            else Console.WriteLine($"Kabelů Al je {KabelAL.Count}");
 
-            //item nevím co to je
             var properties = typeof(Zarizeni).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                  .Where(p => p.CanWrite && p.Name != "Item")
                                  .ToList();
 
-            for (int i = 0; i < Target.Count; i++)
+            for(int i = 0; i < Target.Count; i++)
             {
                 foreach (var prop in properties)
                 {
                     //var value = prop.GetValue(target);
                     var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
-                    //var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * rezerva);
-                    var JedenKabel = KabelCu.FirstOrDefault(x => x.IzAGvod > proud * rezerva);
+                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
+                    if (JedenKabel == null) 
+                        JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * rezerva);
+                    //var JedenKabel = KabelCu.FirstOrDefault(x => x.IzAGvod > proud * rezerva);
                     if (JedenKabel == null) continue;
 
                     //prop.SetValue(target, value);

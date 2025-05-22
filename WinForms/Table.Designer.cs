@@ -115,7 +115,7 @@
 
         #endregion
 
-        private DataGridView dataGridView1;
+        public DataGridView dataGridView1;
         private Button Button1;
         private Button Button2;
         private Button button3;

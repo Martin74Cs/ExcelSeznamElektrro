@@ -119,6 +119,16 @@ namespace Aplikace.Tridy
             }
         }
 
+        public double MaxProudVzduch
+        {
+            get
+            {
+                double[] Poudy = [IzAGsvis, IzAGvod, IzAFlin, IzAFtroj];
+                return Poudy.Max();
+            }
+        }
+
+
         //https://home.zcu.cz/~hejtman/PEC/Prednasky/pred4.pdf
 
         public static double DeltaU1f(KabelVse kabel, double proud, double delka, double uhel)

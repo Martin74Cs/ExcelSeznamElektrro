@@ -60,8 +60,8 @@ namespace WinForms
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
-            System.Diagnostics.Process.Start("explorer.exe", cestaData);
+            //string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
+            System.Diagnostics.Process.Start("explorer.exe", Cesty.Elektro);
         }
 
         private async void Button9_Click(object sender, EventArgs e)
@@ -120,10 +120,6 @@ namespace WinForms
             await Task.Run(() => LigthChem.JsonToExcel());
         }
 
-        private async void Button7_Click(object sender, EventArgs e)
-        {
-            await Task.Run(() => LigthChem.AddProud());
-        }
 
         private void Button10_Click(object sender, EventArgs e)
         {
@@ -146,24 +142,61 @@ namespace WinForms
 
         private void Button11_Click(object sender, EventArgs e)
         {
-            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
-            var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
+            //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
+            //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
+
+            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+            var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
+
             //var DataBind = new BindingList<Zarizeni>(Data);
             var table = new Table(Data);
-            //table.Initialize();
-
+            SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
             if (result == DialogResult.OK)
             {
                 //přidat prázdný záznam
                 if (Data.Count < 1) Data.Add(new Zarizeni());
-                Data.SaveToCsv(Vývody);
+
+                //Data.SaveToCsv(Vývody);
+                Data.SaveJsonList(Vývody);
+
                 //if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 //    Data.SaveToCsv(Cesty.ElektroDataCsv);
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }
+        }
+
+        private void SkrytSloupce(DataGridView data) {
+            //skryje sloupce, které nechceme zobrazit
+            data.Columns["Patro"].Visible = false;
+            data.Columns["HP"].Visible = false;
+            data.Columns["Delka"].Visible = false;
+            data.Columns["IsExist"].Visible = false;
+            data.Columns["IsExistElektro"].Visible = false;
+            data.Columns["Bod"].Visible = false;
+            data.Columns["BodElektro"].Visible = false;
+            data.Columns["PID"].Visible = false;
+            data.Columns["Pocet"].Visible = false;
+            data.Columns["Radek"].Visible = false;
+            data.Columns["Id"].Visible = false;
+            data.Columns["Otoceni"].Visible = false;
+
+            data.Columns["Nic"].Visible = false;
+            data.Columns["AWG"].Visible = false;
+            data.Columns["Delkaft"].Visible = false;
+
+            //data.Columns["PruzezMM2"].Visible = false;
+            //data.Columns["Rozvadec"].Visible = false;
+            //data.Columns["RozvadecCislo"].Visible = false;
+            //data.Columns["RozvadecOznačení"].Visible = false;
+            //data.Columns["Kabel"].Visible = false;
+            //data.Columns["Motor"].Visible = false;
+
+            //data.Columns["Vykres"].Visible = false;
+            //data.Columns["Vodice"].Visible = false;
+            //data.Columns["Motor"].Visible = false;
         }
 
 

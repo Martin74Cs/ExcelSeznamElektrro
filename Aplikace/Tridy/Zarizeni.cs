@@ -24,6 +24,7 @@ namespace Aplikace.Tridy
     public class Zarizeni : Entity , INotifyPropertyChanged
     {
         private string tag = string.Empty;
+        private string predmet = string.Empty;
         private string prikon = string.Empty;
         private string balenaJednotka = string.Empty;
         private string menic = string.Empty;
@@ -81,6 +82,7 @@ namespace Aplikace.Tridy
 
         /// <summary>Označení zařízení </summary>
         public string Tag { get => tag; set => SetProperty(ref tag , value); }
+        public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
         public string PID { get => pID; set => SetProperty(ref pID, value); }
         public int Pocet { get => pocet; set => SetProperty(ref pocet, value); }
 
@@ -93,6 +95,7 @@ namespace Aplikace.Tridy
         public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
         public string Menic { get => menic; set => SetProperty(ref menic, value); }
         public string Nic { get => nic; set => SetProperty(ref nic, value); }
+
         [JsonIgnore]
         [Display(Name = "Příkon")]
         [Jednotky("[hp]")]
@@ -101,10 +104,13 @@ namespace Aplikace.Tridy
         [Display(Name = "Proud")]
         [Jednotky("[A]")]
         public string Proud { get => proud; set => SetProperty(ref proud, value); }
+
         [Display(Name = "Průřez")]
         [Jednotky("[mm2]")]
         public string PruzezMM2 { get => pruzezMM2; set => SetProperty(ref pruzezMM2, value); }
+
         public string AWG { get => aWG; set => SetProperty(ref aWG, value); }
+
         [Display(Name = "Délka")]
         [Jednotky("[m]")]
         public double Delka { get => delka; set => SetProperty(ref delka, value); }
@@ -124,18 +130,26 @@ namespace Aplikace.Tridy
         public string Napeti { get => napeti; set => SetProperty(ref napeti, value); }
         /// <summary>Odpovídá radku strojního zařízení</summary>
         public int Radek { get => radek; set => SetProperty(ref radek, value); }
+
+        /// <summary>Odpovídá počtu silových vodičů </summary>
         public string Vodice { get => vodice; set => SetProperty(ref vodice, value); }
-        [JsonIgnore]
+
+        //[JsonIgnore]
         public Kabel Kabel { get => kabel; set => SetProperty(ref kabel, value); }
-        [JsonIgnore]
+        //[JsonIgnore]
         public Motor Motor { get => motor; set => SetProperty(ref motor, value); }
         public string Patro { get => patro; set => SetProperty(ref patro, value); }
         public string Vykres { get => vykres; set => SetProperty(ref vykres, value); }         /// <summary>false=neexistuje</summary>
         public bool IsExist { get => isExist; set => SetProperty(ref isExist, value); }
+
         [JsonConverter(typeof(PointToStringConverter))]
         public string Bod { get => bod; set => SetProperty(ref bod, value); }
+
         /// <summary>Definice bloku elektro</summary>
         public bool IsExistElektro { get => isExistElektro; set => SetProperty(ref isExistElektro, value); }
+
+        public double Otoceni { get; set; } = 0.0;
+
         [JsonConverter(typeof(PointToStringConverter))]
         public string BodElektro { get;  set;} = string.Empty; // = MyPoint3d.Origin;
 
