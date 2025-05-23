@@ -244,22 +244,32 @@ namespace Aplikace.Upravy
 
             for(int i = 0; i < Target.Count; i++)
             {
-                foreach (var prop in properties)
+                int pocet = 1;
+                bool volba = true;
+                while (volba)
                 {
-                    //var value = prop.GetValue(target);
-                    var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
-                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
-                    if (JedenKabel == null) 
-                        JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProud > proud * rezerva);
-                    //var JedenKabel = KabelCu.FirstOrDefault(x => x.IzAGvod > proud * rezerva);
-                    if (JedenKabel == null) continue;
+                    foreach (var prop in properties)
+                    {
+                        //var value = prop.GetValue(target);
+                        var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
+                        var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
+                        if (JedenKabel == null) 
+                            JedenKabel = KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
+                        //var JedenKabel = KabelCu.FirstOrDefault(x => x.IzAGvod > proud * rezerva);
+                        if (JedenKabel == null) continue;
 
-                    //prop.SetValue(target, value);
-                    //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-                    Target[i].PruzezMM2 = JedenKabel.SLmm2.ToString();
-                    Target[i].Vodice = JedenKabel.Deleni;
-                    Target[i].Kabel = JedenKabel;
+                        //prop.SetValue(target, value);
+                        //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
+                        if(pocet > 1) Target[i].PruzezMM2 = pocet.ToString() + "x"+ JedenKabel.SLmm2.ToString();
+                        else Target[i].PruzezMM2 = JedenKabel.SLmm2.ToString();
+                        Target[i].Vodice = JedenKabel.Deleni;
+                        Target[i].Kabel = JedenKabel;
+                        volba = false;
+                        break;
+                    }
+                    pocet++;
                 }
+
             }
             return Target;
         }

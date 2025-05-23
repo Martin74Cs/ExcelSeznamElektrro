@@ -53,10 +53,10 @@ namespace WinForms
             await Task.Run(() => Soubory.KillExcel());
         }
 
-        private async void Button5_Click(object sender, EventArgs e)
-        {
-            await Task.Run(() => LigthChem.AddKabely());
-        }
+        //private async void Button5_Click(object sender, EventArgs e)
+        //{
+        //    await Task.Run(() => LigthChem.AddKabely());
+        //}
 
         private void Button8_Click(object sender, EventArgs e)
         {
@@ -220,8 +220,8 @@ namespace WinForms
                 Elektro.SaveJsonList(Cesty.ElektroDataJson);
             }
 
-            foreach (var itemEl in Elektro.ToHashSet())
-            {
+            //foreach (var itemEl in Elektro.ToHashSet())
+            //{
                  //funguje potom zapnout
                 //var ShodaTag = Data.Where(x => x.Tag == item.Tag).ToList();
                 //if (ShodaTag.Count() == 1)
@@ -245,9 +245,8 @@ namespace WinForms
                 //    Console.WriteLine($"Kontrola - počet shod {ShodaTag.Count}");
                 //    item.Popis = $"KONTROLA - počet shod {ShodaTag.Count} ";
                 //}
-            }
+            //}
             Elektro.SaveJsonList(Cesty.ElektroDataJson);
-
         }
 
         private void Button14_Click(object sender, EventArgs e)
