@@ -26,8 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             dataGridView1 = new DataGridView();
             Button1 = new Button();
             Button2 = new Button();
@@ -45,6 +44,9 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(1055, 641);
             dataGridView1.TabIndex = 0;
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dataGridView1.CellMouseUp += dataGridView1_CellMouseUp;
+            dataGridView1.CurrentCellChanged += dataGridView1_CurrentCellChanged;
             // 
             // Button1
             // 

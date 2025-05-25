@@ -240,6 +240,21 @@ namespace Aplikace.Tridy
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             return true;
         }
+
+        public enum DruhZarizeni
+        {
+            Motor,
+            Cerpadlo,
+            Trafo,
+            Jine
+        }
+
+        public enum Druhy
+        {
+            Přívod,
+            Motor,
+            Rozvadeč,
+        }
     }
 
     public class MyPoint3d(double x, double y, double z)
