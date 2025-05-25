@@ -107,8 +107,8 @@ namespace WinForms
             //dataGridView1.Columns.Add(comboBoxColumn);
 
             // Umožnit přidávání/smazání
-            //dataGridView1.AllowUserToAddRows = true;
-            dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
+            dataGridView1.AllowUserToAddRows = true;
+            //dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
 
             dataGridView1.AllowUserToDeleteRows = true;
             dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
