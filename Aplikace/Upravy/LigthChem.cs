@@ -360,6 +360,7 @@ namespace Aplikace.Upravy
             Console.WriteLine($"\nPočet rozvaděčů : {PocetRozvadecu}");
 
             foreach (var skupina in skupiny) {
+                //prvni položka skupiny
                 var Jedna = skupina.ElementAtOrDefault(1) ?? new Zarizeni();
 
                 // Převod stringu na enum
@@ -368,6 +369,7 @@ namespace Aplikace.Upravy
                 //Srovnání podle enumu
                 var Pole = skupina.OrderBy(x => x.DruhEnum).ToList();
 
+                //Součet příkonů
                 var SumaPrikon = Pole.Where(x => x.DruhEnum != Druhy.Přívod)
                     .Sum(x => double.TryParse(x.Prikon, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : 0.0);
 
@@ -375,7 +377,7 @@ namespace Aplikace.Upravy
                 foreach(var item in Pole) {
                     //Console.WriteLine($"Rozvaděč: {skupina.Key}, Tag: {item.Tag}, Popis: {item.Popis}");
                     if(item.DruhEnum == Druhy.Přívod)
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-15}, SumaPříkon: {SumaPrikon,-15}");
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-15}, SumaPříkon: {SumaPrikon:F2,-15}");
                     else
                         Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-15}, Příkon: {item.Prikon,-15}");
                 }
