@@ -40,6 +40,7 @@ namespace Aplikace.Tridy
         private string rozvadec = string.Empty;
         private string rozvadecCislo = string.Empty;
         private string druh = string.Empty;
+        private Druhy druhenum = Druhy.Rozvadeč; // Výchozí hodnota pro enum Druhy
         private string napeti = "400";
         private int radek;
         private string vodice = string.Empty;
@@ -127,6 +128,9 @@ namespace Aplikace.Tridy
         public string Vyvod { get; set; } = string.Empty;
         /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
         public string Druh { get => druh; set => SetProperty(ref druh, value); }
+
+        [JsonIgnore]
+        public Druhy DruhEnum { get => druhenum; set => SetProperty(ref druhenum, value); }
         public string Napeti { get => napeti; set => SetProperty(ref napeti, value); }
         /// <summary>Odpovídá radku strojního zařízení</summary>
         public int Radek { get => radek; set => SetProperty(ref radek, value); }
@@ -252,8 +256,9 @@ namespace Aplikace.Tridy
         public enum Druhy
         {
             Přívod,
-            Motor,
             Rozvadeč,
+            Motor,
+            Nic,
         }
     }
 

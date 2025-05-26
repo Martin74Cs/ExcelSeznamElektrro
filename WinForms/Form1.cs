@@ -66,7 +66,8 @@ namespace WinForms
 
         private async void Button9_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.AddVyvody());
+            //await Task.Run(() => LigthChem.AddVyvody());
+            await Task.Run(() => LigthChem.Rozvadec());
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)

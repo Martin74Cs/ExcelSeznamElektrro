@@ -21,7 +21,10 @@ using Exc = Microsoft.Office.Interop.Excel;
 //LigthChem.Hlavni();
 
 //Mistnoti
-Místnosti.VytvoritSeznamy();
+//Místnosti.VytvoritSeznamy();
+
+//Rozvaděč
+LigthChem.Rozvadec();
 
 
 ////Třdění jdenotlivých PS

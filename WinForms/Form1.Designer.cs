@@ -183,7 +183,7 @@ namespace WinForms
             button9.Name = "button9";
             button9.Size = new Size(167, 38);
             button9.TabIndex = 18;
-            button9.Text = "Přidat Vývody.csv ";
+            button9.Text = "Test Rozvaděče";
             button9.UseVisualStyleBackColor = true;
             button9.Click += Button9_Click;
             // 

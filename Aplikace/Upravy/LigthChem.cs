@@ -5,9 +5,11 @@ using Aplikace.Tridy;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using static Aplikace.Tridy.Motor;
+using static Aplikace.Tridy.Zarizeni;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Exc = Microsoft.Office.Interop.Excel;
 
@@ -343,6 +345,54 @@ namespace Aplikace.Upravy
 
             Motor.SaveJsonList(Path.ChangeExtension(CestaMotor, ".json"));
             Console.WriteLine($"Motory uloženy jako Json");
+        }
+
+        public static void Rozvadec() {
+            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+            var Data2 = Soubory.LoadJsonList<Zarizeni>(Vývody);
+
+            Data = [.. Data, .. Data2];
+
+            //rozdělení podle rozvaděče
+            var skupiny = Data.GroupBy(x => x.RozvadecOznačení);
+            int PocetRozvadecu = skupiny.Count();
+            Console.WriteLine($"\nPočet rozvaděčů : {PocetRozvadecu}");
+
+            foreach (var skupina in skupiny) {
+                var Jedna = skupina.ElementAtOrDefault(1) ?? new Zarizeni();
+
+                // Převod stringu na enum
+                StringToEnum(skupina);
+
+                //Srovnání podle enumu
+                var Pole = skupina.OrderBy(x => x.DruhEnum).ToList();
+
+                var SumaPrikon = Pole.Where(x => x.DruhEnum != Druhy.Přívod)
+                    .Sum(x => double.TryParse(x.Prikon, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : 0.0);
+
+                Console.WriteLine($"Rozvaděč: {skupina.Key}");
+                foreach(var item in Pole) {
+                    //Console.WriteLine($"Rozvaděč: {skupina.Key}, Tag: {item.Tag}, Popis: {item.Popis}");
+                    if(item.DruhEnum == Druhy.Přívod)
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-15}, SumaPříkon: {SumaPrikon,-15}");
+                    else
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-15}, Příkon: {item.Prikon,-15}");
+                }
+
+            }
+        }
+
+        /// <summary>Převod stringu na enum</summary>
+        private static void StringToEnum(IGrouping<string, Zarizeni> skupina) {
+            foreach(var ukol in skupina) {
+                if(Enum.TryParse<Druhy>(ukol.Druh, true, out var priorita)) {
+                    ukol.DruhEnum = priorita;
+                }
+                else {
+                    ukol.DruhEnum = Druhy.Nic; // nebo jiná výchozí hodnota
+                }
+            }
         }
     }
 }
