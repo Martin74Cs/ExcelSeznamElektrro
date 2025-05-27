@@ -22,12 +22,16 @@ namespace Aplikace.Tridy
         public string Prurezmm2 { get; set; } = string.Empty;   //Zarizeni.PruzezMM2
         public string PrurezFt { get; set; } = string.Empty; //nepoužito
 
-
         public string Druh { get; set; } = string.Empty;
+
+        //Opakovani Tag
         public string OdkudSvokra { get; set; } = string.Empty;
         public string Mezera { get; set; } = string.Empty;
+        public string Patro { get; set; } = string.Empty;
+        public string Predmet { get; set; } = string.Empty;
+        public string Svokra { get; set; } = string.Empty;
 
-        public string Delka { get; set; } = string.Empty;
+        public double Delka { get; set; } = 0.0;
         /// <summary>Rozvaděč</summary>
 
         //převod enumu na pole stringů 

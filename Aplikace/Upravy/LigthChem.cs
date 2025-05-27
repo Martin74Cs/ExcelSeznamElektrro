@@ -104,6 +104,7 @@ namespace Aplikace.Upravy
             Console.WriteLine("Probíhá načítaní kabelů");
             //Vytvoření pole kabelů pro zápis do Excelu
             var PoleData = KabelList.Kabely(Stara);
+            //var PoleData = KabelList.Kabely(Stara);
 
             //Nová záložka nebo nastav existující
             ExcelApp.GetSheet("Kabely");
