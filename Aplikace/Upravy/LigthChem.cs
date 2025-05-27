@@ -377,9 +377,9 @@ namespace Aplikace.Upravy
                 foreach(var item in Pole) {
                     //Console.WriteLine($"Rozvaděč: {skupina.Key}, Tag: {item.Tag}, Popis: {item.Popis}");
                     if(item.DruhEnum == Druhy.Přívod)
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-15}, SumaPříkon: {SumaPrikon:F2,-15}");
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-10}, Balena: {item.BalenaJednotka,-15}, SumaPříkon: {SumaPrikon,-15:F2}");
                     else
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-15}, Příkon: {item.Prikon,-15}");
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-10}, Balena: {item.BalenaJednotka,-15}, Příkon: {item.Prikon,-15}");
                 }
 
             }

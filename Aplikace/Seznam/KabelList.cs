@@ -3,6 +3,7 @@ using Aplikace.Tridy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -118,88 +119,88 @@ namespace Aplikace.Seznam
             }
             return NovaData;
         }
+        
+        
         public static List<List<string>> Kabely(List<Zarizeni> PoleData)
         {
             //uprava pole tabulky pro vypsaní
             var NovaData = new List<List<string>>();
+            Trasa trasa = new Trasa(); //použití nové třídy pro trasy
             foreach (var radek in PoleData)
             {
-                var Data = new List<string>
-                {
-                    //1. Kabel
-                    radek.Tag.Replace("\n", " "),
+                var Tag = radek.Tag.Replace("\n", " "); //1. Kabel
+                var Rozvadec = radek.Rozvadec; //2. odkud Mcc
+                var Cislo = radek.RozvadecCislo; //3. Odkud číslo
+                string Oznaceni = "WL 01"; //4. Kabel
 
-                    //2. odkud Mcc
-                    radek.Rozvadec,
-
-                    //3. Odkud číslo
-                    radek.RozvadecCislo,
-
-                    //4. Kabel
-                    "WL 01"
+                trasa.Tag = radek.Tag.Replace("\n", " "); 
+                trasa.Rozvadec = Rozvadec;
+                trasa.RozvadecCislo = Cislo;
+                trasa.Oznaceni = Cislo;
+                
+                var Data = new List<string>  {
+                    Tag,        //1. Kabel
+                    Rozvadec,   //2. odkud Mcc
+                    Cislo,      //3. Odkud číslo
+                    Oznaceni,   //4. Kabel
                 };
 
-                //5. Jmeno kabelu
+                string Kabel;    //5. Jmeno kabelu
+                string PocetZil; //6. Počet žil
                 if (radek.Menic == "VSD")
-                    Data.Add("ÖLFLEX CLASSIC 110 CY");
-                else
-                    Data.Add("CYKY");
+                {
+                    Kabel = "ÖLFLEX CLASSIC 110 CY";
+                    PocetZil = "4x";
+                }
+                else { 
+                    Kabel = radek.Kabel.Označení ?? "";
+                    PocetZil = "5x";
+                }
+                string PruzezMM2 = radek.PruzezMM2; //7. Průřez
+                string PrurezFt = ""; //8. 
 
-                //6. Počet žil
-                if (radek.Menic == "VSD")
-                    Data.Add("4x");
-                else
-                    Data.Add("5x");             
+                trasa.Kabel = Kabel;
+                trasa.PocetZil = PocetZil;
+                trasa.Prurezmm2 = PruzezMM2;
+                trasa.PrurezFt = PrurezFt;
 
-                //7. Průřez
-                Data.Add(radek.PruzezMM2);
+                var Data2 = new List<string>  {
+                    Kabel,      //5.
+                    PocetZil,   //6.
+                    PruzezMM2,  //7.
+                    PrurezFt,   //8.
+                };
+                Data.AddRange(Data2);
 
-                //8. 
-                Data.Add("");
+                trasa.Druh = radek.Druh; //9. zařízení
+                Data.Add(radek.Druh);
 
-                //9. zařízení
-                //Pokud začíná na P ne B jedná se  balenou jednotku
-                if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B'))
-                    Data.Add("Přívod");
-                else
-                    Data.Add("Motor");
-
-                //10. odkud tag
-                Data.Add(radek.Tag.Replace("\n", " "));
-
-                //11. odkud Mcc
-                Data.Add(radek.Rozvadec);
-
-                //12. Odkud číslo
-                Data.Add(radek.RozvadecCislo);
-
+                //10.11.12.13
+                //dtto trasa - trasa.Tag; 
+                Data.Add(radek.Tag);    //10. odkud tag
+                //dtto trasa - trasa.Rozvadec; 
+                Data.Add(trasa.Rozvadec);   //11. odkud Mcc
+                //dtto trasa - trasa.RozvadecCislo; 
+                Data.Add(radek.RozvadecCislo);  //12. Odkud číslo
                 //13. Svorka rozvaděče
-                Data.Add("X 01");
+                trasa.OdkudSvokra = "X 01"; 
+                Data.Add(trasa.OdkudSvokra);
 
                 //14. Mezera
-                Data.Add(" ");
+                trasa.Mezera = "";
+                Data.Add(trasa.Mezera);
 
-
-
-
+                //15.16.17.18
                 //15. kam tag
-                Data.Add(radek.Tag.Replace("\n", " "));
+                Data.Add(trasa.Tag);
 
                 //16. kam objekt nebo patro
-                Data.Add("Patro");
+                Data.Add(radek.Patro);
 
                 //17.kam Zažizeni
                 //18.kam Svorka
-                if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B'))
-                {
-                    Data.Add(radek.BalenaJednotka);
-                    Data.Add("X 01");
-                }
-                else 
-                { 
-                    Data.Add("M 01");
-                    Data.Add("X 01");
-                }
+                Data.Add(radek.Predmet);
+                Data.Add("X 01");
 
                 //19. Delka m
                 Data.Add(radek.Delka.ToString());
@@ -223,6 +224,25 @@ namespace Aplikace.Seznam
         public static List<string> KabelPTC(Zarizeni radek)
         {
             //Ovládací kabel PTC
+            Trasa trasa = new Trasa(); //Použití nové třídy pro trasy
+
+            var Tag = radek.Tag.Replace("\n", " "); //1. Kabel
+            var Rozvadec = radek.Rozvadec; //2. odkud Mcc
+            var Cislo = radek.RozvadecCislo; //3. Odkud číslo
+            string Oznaceni = "WL 01"; //4. Kabel
+
+            trasa.Tag = radek.Tag.Replace("\n", " ");
+            trasa.Rozvadec = Rozvadec;
+            trasa.RozvadecCislo = Cislo;
+            trasa.Oznaceni = Cislo;
+
+            var Data = new List<string>  {
+                    Tag,        //1. Kabel
+                    Rozvadec,   //2. odkud Mcc
+                    Cislo,      //3. Odkud číslo
+                    Oznaceni,   //4. Kabel
+                };
+
             var Data = new List<string>
             {
                 //1. Kabel tag

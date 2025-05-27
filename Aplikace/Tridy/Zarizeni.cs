@@ -256,6 +256,7 @@ namespace Aplikace.Tridy
         public enum Druhy
         {
             Přívod,
+            Spojka,
             Rozvadeč,
             Motor,
             Nic,

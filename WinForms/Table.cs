@@ -61,33 +61,46 @@ namespace WinForms
             //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
 
             // Po připojení datového zdroje nahradíme sloupec Stav za ComboBox
-            dataGridView1.DataSourceChanged += (s, e) => {
+            dataGridView1.DataSourceChanged += (s, e) =>
+            {
+                var DruhColumn = dataGridView1.Columns["Druh"];
+                DruhColumn.Visible = false;
+                dataGridView1.Columns["DruhEnum"].Visible = false;
+                //int index = stavColumn?.Index ?? 0;
+
                 // Najdeme existující sloupec Stav
-                var stavColumn = dataGridView1.Columns["Druh"];
-                if(stavColumn != null) {
+                //var stavColumn = dataGridView1.Columns["DruhEnum"];
+                if (DruhColumn != null)
+                {
                     // Získáme index sloupce
-                    int columnIndex = stavColumn.Index;
+                    int columnIndex = DruhColumn.Index;
 
                     // Odstraníme původní sloupec
-                    dataGridView1.Columns.Remove(stavColumn);
+                    //dataGridView1.Columns.Remove(stavColumn);
 
                     // Vytvoříme seznam pro ComboBox s popisy
-                    var stavList = Enum.GetValues(typeof(Zarizeni.Druhy)).Cast<Zarizeni.Druhy>().Select(s => new {
+                    var Vyber = Enum.GetValues(typeof(Zarizeni.Druhy))
+                    .Cast<Zarizeni.Druhy>().Select(s => new
+                    {
+                        //Value = s.ToString(), // Ukládáme jako string
+                        //Value = s, // Ukládáme jako string
                         Value = s.ToString(), // Ukládáme jako string
                         Display = GetEnumDescription(s) // Zobrazujeme popis
                     }).ToList();
 
                     // Vytvoříme nový ComboBox sloupec
-                    DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn {
-                        HeaderText = "Druh",
-                        Name = "Druh",
-                        DataPropertyName = "Druh", // Propojení s vlastností Stav v Zarizeni
+                    DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn
+                    {
+                        HeaderText = "Vyber",
+                        Name = "Vyber",
+                        DataPropertyName = "Druh", // Propojení s vlastností Druh v Zarizeni
                         //DataSource = Enum.GetValues(typeof(Zarizeni.Druhy)), // Naplní ComboBox hodnotami z enumu
-                        //ValueType = typeof(Zarizeni.Druhy) // Zajistí správný typ hodnot
-                        DataSource = stavList,
-                        ValueMember = "Value", // String hodnota pro vlastnost Stav
+                        DataSource = Vyber,
+
+                        ValueMember = "Value", // String hodnota pro vlastnost Druh
                         DisplayMember = "Display", // Zobrazení popisu
                         ValueType = typeof(string)
+                        //ValueType = typeof(Zarizeni.Druhy), // Zajistí správný typ hodnot
                     };
 
                     // Vložíme ComboBox sloupec na původní pozici

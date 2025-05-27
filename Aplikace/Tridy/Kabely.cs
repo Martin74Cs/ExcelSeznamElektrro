@@ -10,33 +10,45 @@ namespace Aplikace.Tridy
 {
     public class Trasa
     {
-        public string Tag { get; set; } = string.Empty;
-        /// <summary>Jméno zařízení</summary>
-        public string MCC { get; set; } = string.Empty;
-        public string CisloMCC { get; set; } = string.Empty;
-        public string Oznaceni { get; set; } = string.Empty;
+        private string tag = string.Empty;
 
-        public string Kabel { get; set; } = string.Empty;
-        public string PocetZil { get; set; } = string.Empty;
-        public string Prurezmm2 { get; set; } = string.Empty;
-        public string PrurezFt { get; set; } = string.Empty;
+        public string Tag { get => tag; set => tag = value.Replace("\n", ""); } /// <summary>Jméno zařízení</summary>
+        public string Rozvadec { get; set; } = string.Empty; //Zarizeni.Rozvadec
+        public string RozvadecCislo { get; set; } = string.Empty; //Zarizeni.RozvadecCislo
+        public string Oznaceni { get; set; } = string.Empty;    //"WL 01"
+
+        public string Kabel { get; set; } = string.Empty;   //ozvaděčení kabelu
+        public string PocetZil { get; set; } = string.Empty; //Zarizeni.vodice
+        public string Prurezmm2 { get; set; } = string.Empty;   //Zarizeni.PruzezMM2
+        public string PrurezFt { get; set; } = string.Empty; //nepoužito
+
 
         public string Druh { get; set; } = string.Empty;
-
         public string OdkudSvokra { get; set; } = string.Empty;
+        public string Mezera { get; set; } = string.Empty;
 
         public string Delka { get; set; } = string.Empty;
         /// <summary>Rozvaděč</summary>
 
-        // Seznam názvů parametrů (vlastností), které chceme vypsat
-        //public static string[] PoleVstup = ["Jmeno", "Vek", "Mesto"];
-
+        //převod enumu na pole stringů 
+        public string[] KabelZnačkaPole => Enum.GetNames(typeof(KabelZnačka));
     }
+
+    public enum KabelZnačka
+    {
+        WH,
+        WL,
+        WS,
+        WC,
+    }
+
+    
 
     public class Kabel : Entity
     {
         //public string Deleni { get; set; } = string.Empty;
-        //public string Označení { get; set; } = string.Empty;
+        public string Označení { get; set; } = string.Empty;
+        
         //public string Proud { get; set; } = string.Empty;
 
         public string Name { get; set; } = string.Empty;
