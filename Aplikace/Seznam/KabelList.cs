@@ -3,8 +3,10 @@ using Aplikace.Tridy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -124,7 +126,7 @@ namespace Aplikace.Seznam
         {
             //uprava pole tabulky pro vypsaní
             var NovaData = new List<List<string>>();
-            Trasa trasa = new Trasa(); //použití nové třídy pro trasy
+            Trasa trasa = new(); //použití nové třídy pro trasy
             foreach (var radek in PoleData)
             {
                 var Tag = radek.Tag.Replace("\n", " "); //1. Kabel
@@ -222,25 +224,6 @@ namespace Aplikace.Seznam
         public static List<string> KabelPTC(Zarizeni radek)
         {
             //Ovládací kabel PTC
-            Trasa trasa = new Trasa(); //Použití nové třídy pro trasy
-
-            var Tag = radek.Tag.Replace("\n", " "); //1. Kabel
-            var Rozvadec = radek.Rozvadec; //2. odkud Mcc
-            var Cislo = radek.RozvadecCislo; //3. Odkud číslo
-            string Oznaceni = "WL 01"; //4. Kabel
-
-            trasa.Tag = radek.Tag.Replace("\n", " ");
-            trasa.Rozvadec = Rozvadec;
-            trasa.RozvadecCislo = Cislo;
-            trasa.Oznaceni = Cislo;
-
-            var Data = new List<string>  {
-                    Tag,        //1. Kabel
-                    Rozvadec,   //2. odkud Mcc
-                    Cislo,      //3. Odkud číslo
-                    Oznaceni,   //4. Kabel
-                };
-
             var Data = new List<string>
             {
                 //1. Kabel tag
@@ -271,8 +254,6 @@ namespace Aplikace.Seznam
 
                 //9. Počet žil
                 "Ptc",
-
-
 
                 //10. odkud tag
                 radek.Tag.Replace("\n", " "),
@@ -389,17 +370,16 @@ namespace Aplikace.Seznam
             return Data;
         }
 
-
-        public static List<Trasa> KabelyTrida(List<Zarizeni> PoleData)
+        public static List<List<string>> KabelyTridaToString(List<Trasa> Data)
         {
+            //uprava pole tabulky pro vypsaní
             var dir = new Dictionary<int, string>() {
-                //jmeno kaeblu
-                {0,"Tag"},
+                //Označnení kaeblu
                 {1,"Tag"},
                 {2,"Rozvadec"},
                 {3,"RozvadecCislo"},
                 {4,"Oznaceni"},
-                //kabel
+                //Druh kabel
                 {5,"Kabel"},
                 {6,"PocetZil"},
                 {7,"Prurezmm2"},
@@ -410,22 +390,40 @@ namespace Aplikace.Seznam
                 {10,"Tag"},
                 {11,"Rozvadec"},
                 {12,"RozvadecCislo"},
-                {13,"Oznaceni"},
-
-                {14,"Oznaceni"},
+                {13,"OdkudSvokra"},
+                //mezera
+                {14,"Nic"},
                 //Kabel Kam
                 {15,"Tag"},
                 {16,"Predmet"},
-                {17,"Rozvadec"},
-                {18,"RozvadecCislo"},
+                {17,"Patro"},
+                {18,"Svokra"},
+
+                {19,"Delka"},
 
             };
+            var Pole = new List<List<string>>();
+            foreach (var item in Data)
+            {
+                var result = dir.OrderBy(kvp => kvp.Key) // Seřadíme podle int klíče
+                    .Select(kvp => {
+                        var prop = item.GetType().GetProperty(kvp.Value);
+                        return prop != null ? prop.GetValue(item)?.ToString() ?? "" : "";
+                    })
+                    .ToList();
+                Pole.Add(result);
+            }
+            return Pole;
+        }
 
+
+        public static List<Trasa> KabelyTrida(List<Zarizeni> PoleData)
+        {
             //uprava pole tabulky pro vypsaní
             var NovaData = new List<Trasa>();
-            Trasa trasa = new Trasa(); //použití nové třídy pro trasy
             foreach (var radek in PoleData)
             {
+                Trasa trasa = new(); 
                 trasa.Tag = radek.Tag.Replace("\n", " "); //1. Kabel
                 trasa.Rozvadec = radek.Rozvadec;          //2. odkud Mcc
                 trasa.RozvadecCislo = radek.RozvadecCislo;//3. Odkud číslo
@@ -435,17 +433,25 @@ namespace Aplikace.Seznam
                 string PocetZil; //6. Počet žil
                 if (radek.Menic == "VSD")
                 {
-                    trasa.Kabel = "ÖLFLEX CLASSIC 110 CY";
-                    trasa.PocetZil = "4x";
+                    trasa.Kabel = "ÖLFLEX CLASSIC 110 CY";  //5. Kabel
+                    trasa.PocetZil = "4x";                  //6. Kabel PocetZil
                 }
                 else { 
-                    trasa.Kabel = radek.Kabel.Označení ?? "";
-                    trasa.PocetZil = "5x";
+                    trasa.Kabel = radek.Kabel.Označení ?? "";  //5. Kabel
+                    trasa.PocetZil = "5x";                     //6. Kabel PocetZil
                 }
                 trasa.Prurezmm2 = radek.PruzezMM2; //7. Průřez
                 trasa.PrurezFt = "";               //8. Prozatím nepoužito
 
-                trasa.Druh = radek.Druh; //9. zařízení
+                if (string.IsNullOrEmpty(radek.Druh))
+                {
+                    if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B') || radek.BalenaJednotka.StartsWith('x'))
+                        trasa.Druh = "Odhad" + "Motor"; //9. zařízení
+                    else
+                        trasa.Druh = "Odhad" + "Rozvaděč"; //9. zařízení
+                }
+                else
+                    trasa.Druh = radek.Druh; //9. zařízení
 
                 //10.11.12.13
                 trasa.Tag = trasa.Tag;             //10. odkud tag
@@ -461,8 +467,8 @@ namespace Aplikace.Seznam
                 trasa.Predmet = radek.Predmet;  //17.kam Zažizeni
                 trasa.Svokra = "X 01";          //18.kam Svorka
                 
-                trasa.Delka = radek.Delka;      //19. Delka m
-                trasa.PrurezFt = (radek.Delka * (1/0.3)).ToString(); //20 Delka ft
+                trasa.Delka = (radek.Delka/1000).ToString("F2");      //19. Delka m
+                //trasa.PrurezFt = (radek.Delka * (1/0.3)).ToString(); //20 Delka ft
 
                 //přidání řádku do pole
                 NovaData.Add(trasa);
@@ -479,170 +485,71 @@ namespace Aplikace.Seznam
         public static Trasa KabelPTCTrida(Zarizeni radek)
         {
             //Ovládací kabel PTC
-            Trasa trasa = new Trasa(); //Použití nové třídy pro trasy
+            Trasa trasa = new(); //Použití nové třídy pro trasy
 
-            var Tag = radek.Tag.Replace("\n", " "); //1. Kabel
-            var Rozvadec = radek.Rozvadec; //2. odkud Mcc
-            var Cislo = radek.RozvadecCislo; //3. Odkud číslo
-            string Oznaceni = "WL 01"; //4. Kabel
+            trasa.Tag = radek.Tag.Replace("\n", " "); //1. Kabel
+            trasa.Rozvadec = radek.Rozvadec;          //2. odkud Mcc
+            trasa.RozvadecCislo = radek.RozvadecCislo;//3. Odkud číslo
+            trasa.Oznaceni = "WS 01";                 //4. Kabel
 
-            trasa.Tag = radek.Tag.Replace("\n", " ");
-            trasa.Rozvadec = Rozvadec;
-            trasa.RozvadecCislo = Cislo;
-            trasa.Oznaceni = Cislo;
+            trasa.Kabel = "ÖLFLEX CLASSIC 100 ";    //5. Kabel
+            trasa.PocetZil = "2x";                  //6. Kabel PocetZil
+            trasa.Prurezmm2 = "2,5";                //7. Průřez
+            trasa.PrurezFt = "";                    //8. Prozatím nepoužito
 
-            var Data = new List<string>  {
-                    Tag,        //1. Kabel
-                    Rozvadec,   //2. odkud Mcc
-                    Cislo,      //3. Odkud číslo
-                    Oznaceni,   //4. Kabel
-                };
+            trasa.Druh = "Ptc";                    //9. Druh
 
-            var Data = new List<string>
-            {
-                //1. Kabel tag
-                radek.Tag.Replace("\n", " "),
+            //Odkud
+            //Tag                   10
+            //Rozvadec              11
+            //RozvadecCislo         12
+            trasa.OdkudSvokra = "X 02"; //13. Svorka rozvaděče
+           
+            trasa.Mezera = "";                //14. Mezera
 
-                //2. Kabel MCC
-                radek.Rozvadec,
+            //Kam 15.16.17.18
+            trasa.Tag = radek.Tag;          //15. kam tag
+            trasa.Patro = radek.Patro;      //16. kam objekt nebo patro
+            trasa.Predmet = radek.Predmet;  //17.kam Zažizeni
+            trasa.Svokra = "X 01";          //18.kam Svorka
 
-                //3. Kabel MCC cislo
-                radek.RozvadecCislo,
-
-                //4. Kabel
-                "WS 01",
-
-
-                //5. Kabel
-                "ÖLFLEX CLASSIC 100 ",
-
-                //6. Počet žil
-                "2x",
-
-                //7. Průřez mm2
-                "2,5",
-
-                //8. Průřez awg
-                //"13",
-                "",
-
-                //9. Počet žil
-                "Ptc",
-
-
-
-                //10. odkud tag
-                radek.Tag.Replace("\n", " "),
-
-                //11. odkud Mcc
-                radek.Rozvadec,
-
-                //12. Odkud číslo
-                radek.RozvadecCislo,
-
-                //13. Odkud Svorka
-                "X 02",
-
-                //14. Mezera
-                " ",
-
-
-                //15. kam tag
-                radek.Tag.Replace("\n", " "),
-
-                //16. kam číslo
-                "Patro",
-
-                //17. kam číslo
-                "M 01",
-
-                //18. kam Svorka
-                "X 02",
-
-                //19. Delka m
-                radek.Delka.ToString(),
-
-                //20. Delka ft
-                //radek.Delka
-            };
-                
+            trasa.Delka = (radek.Delka / 1000).ToString("F2");                 //19. Delka m
             
-            return Data;
+            return trasa;
         }
         public static Trasa KabelOvladaniTrida(Zarizeni radek)
         {
-            Trasa trasa = new Trasa(); //použití nové třídy pro trasy
-            //Ovládací kabel PTC
-            var Data = new List<string>
-            {
-                //1. Kabel tag
-                radek.Tag,
+            Trasa trasa = new(); //Použití nové třídy pro trasy
 
-                //2. odkud Mcc
-                radek.Rozvadec,
+            trasa.Tag = radek.Tag.Replace("\n", " "); //1. Kabel
+            trasa.Rozvadec = radek.Rozvadec;          //2. odkud Mcc
+            trasa.RozvadecCislo = radek.RozvadecCislo;//3. Odkud číslo
+            trasa.Oznaceni = "WS 02";                 //4. Kabel
 
-                //3. Odkud číslo
-                radek.RozvadecCislo,
+            trasa.Kabel = "CYKY ";    //5. Kabel
+            trasa.PocetZil = "12x";                  //6. Kabel PocetZil
+            trasa.Prurezmm2 = "2,5";                //7. Průřez
+            trasa.PrurezFt = "";                    //8. Prozatím nepoužito
 
-                //4. Kabel
-                "WS 02",
+            trasa.Druh = "Ovládání";                    //9. Druh
 
-                //5. Kabel
-                "CYKY",
+            //Odkud
+            //Tag                   10
+            //Rozvadec              11
+            //RozvadecCislo         12
+            trasa.Svokra = "X 03"; //13. Svorka rozvaděče
 
-                //6. Počet žil
-                "12x",
+            trasa.Mezera = "";                //14. Mezera
 
-                //7. Průřez mm2
-                "2,5",
+            //Kam 15.16.17.18
+            trasa.Tag = radek.Tag;        //15. kam tag
+            trasa.Patro = radek.Patro;    //16. kam objekt nebo patro
+            trasa.Predmet = "MX 01";      //17.kam Zažizeni
+            trasa.Svokra = "X 01";        //18.kam Svorka
 
-                //8. Průřez awg
-                //"13",
-                "",
+            trasa.Delka = (radek.Delka / 1000).ToString("F2");                 //19. Delka m
 
-                //9. Počet žil
-                "Ovládání",
-
-
-
-                //10. odkud tag
-                radek.Tag,
-
-                //11. odkud Mcc
-                radek.Rozvadec,
-
-                //12. Odkud číslo
-                radek.RozvadecCislo,
-
-                //13. Odkud Svorka
-                "X 03",
-
-                //14. Mezera
-                " ",
-
-
-
-                //15. kam tag
-                radek.Tag,
-
-                //16. kam číslo
-                "Patro",
-
-                //17. kam číslo
-                "MX 01",
-
-                //18. kam Svorka
-                "X 01",
-
-                //19. Delka m
-                radek.Delka.ToString(),
-
-                //20. Delka ft
-                //radek.Delka
-            };
-
-
-            return Data;
+            return trasa;
         }
     }
 }

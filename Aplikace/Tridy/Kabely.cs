@@ -31,11 +31,11 @@ namespace Aplikace.Tridy
         public string Predmet { get; set; } = string.Empty;
         public string Svokra { get; set; } = string.Empty;
 
-        public double Delka { get; set; } = 0.0;
+        public string Delka { get; set; } = string.Empty;
         /// <summary>Rozvaděč</summary>
 
         //převod enumu na pole stringů 
-        public string[] KabelZnačkaPole => Enum.GetNames(typeof(KabelZnačka));
+        public static string[] KabelZnačkaPole => Enum.GetNames<KabelZnačka>();
     }
 
     public enum KabelZnačka

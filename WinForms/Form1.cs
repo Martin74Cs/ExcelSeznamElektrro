@@ -169,7 +169,7 @@ namespace WinForms
             }
         }
 
-        private void SkrytSloupce(DataGridView data) {
+        private static void SkrytSloupce(DataGridView data) {
             //skryje sloupce, které nechceme zobrazit
             data.Columns["Patro"].Visible = false;
             data.Columns["HP"].Visible = false;

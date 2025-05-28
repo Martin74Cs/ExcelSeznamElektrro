@@ -90,7 +90,8 @@ namespace Aplikace.Sdilene
                     .Sum(sum => double.TryParse(sum[18], out double hodnota) ? hodnota : 0); // Převod textu na číslo a součet
 
                 Console.Write($"\nzaznamu: {item[4]},{item[5]},{item[6]}, Soucet = {soucet}");
-                string[] xx = [item[4], item[5], item[6], soucet.ToString(), (soucet * 3.29).ToString()];
+                //přepočet metry na stopa a formátování na dvě desetinná místa
+                string[] xx = [item[4], item[5], item[6], soucet.ToString("F2"), (soucet * 3.29).ToString("F2")];
                 Soucet.Add([.. xx]);
             }
 
@@ -103,9 +104,14 @@ namespace Aplikace.Sdilene
             //nová záložka
             //var ExcelApp = new ExcelApp();
             ExcelApp.GetSheet("Seznam");
-            ExcelApp.Nadpis("A1:C1", "Označeni", Soucet);
-            ExcelApp.Nadpis("D1:D1", "Délka", Soucet);
-            ExcelApp.Xls.Range["D2"].Value = "[m]";
+            ExcelApp.Nadpis("A1:C1", "Označeni", Soucet.Count);
+            
+            ExcelApp.Nadpis("D1:D1", "Délka", Soucet.Count);
+            ExcelApp.Nadpis("D2", "[m]");
+
+            ExcelApp.Nadpis("E1:E1", "Délka", Soucet.Count);
+            ExcelApp.Nadpis("E2", "[ft]");
+
             ExcelApp.KabelyToExcel(Soucet, 3);
 
             //xls.Cells[Soucet.Count + 1, 4].Formula = xxx může nastat chyba.

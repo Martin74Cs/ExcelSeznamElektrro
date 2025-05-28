@@ -91,6 +91,7 @@ namespace Aplikace.Upravy
                 {10,"Delka"},
                 {11,"Rozvadec"},
                 {12,"RozvadecCislo"},
+                {13,"Predmet"},
 
                 //{100,"PID"},
                 //{101,"Nic"},
@@ -103,7 +104,8 @@ namespace Aplikace.Upravy
 
             Console.WriteLine("Probíhá načítaní kabelů");
             //Vytvoření pole kabelů pro zápis do Excelu
-            var PoleData = KabelList.Kabely(Stara);
+            var DataTrida = KabelList.KabelyTrida(Stara);
+            var PoleData = KabelList.KabelyTridaToString(DataTrida);
             //var PoleData = KabelList.Kabely(Stara);
 
             //Nová záložka nebo nastav existující
@@ -117,7 +119,7 @@ namespace Aplikace.Upravy
 
             //Vyzváření seznamu kabelů podle krytérii
             Pridat.Soucet(ExcelApp, PoleData);
-             
+
             ExcelApp.ExcelQuit(cesta);
 
         }
@@ -255,10 +257,9 @@ namespace Aplikace.Upravy
                     {
                         //var value = prop.GetValue(target);
                         var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
+                        //var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva) ?? KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
                         var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
-                        if (JedenKabel == null) 
-                            JedenKabel = KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
-                        //var JedenKabel = KabelCu.FirstOrDefault(x => x.IzAGvod > proud * rezerva);
+                        JedenKabel ??= KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
                         if (JedenKabel == null) continue;
 
                         //prop.SetValue(target, value);

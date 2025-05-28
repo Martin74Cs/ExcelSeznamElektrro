@@ -219,8 +219,8 @@ namespace Aplikace.Seznam
 
             //nová záložka
             ExcelApp.GetSheet("Seznam");
-            ExcelApp.Nadpis("A1:C1", "Označeni", Soucet);
-            ExcelApp.Nadpis("D1:E1", "Délka", Soucet);
+            ExcelApp.Nadpis("A1:C1", "Označeni", Soucet.Count);
+            ExcelApp.Nadpis("D1:E1", "Délka", Soucet.Count);
             ExcelApp.Xls.Range["D2"].Value = "[m]";
             ExcelApp.Xls.Range["E2"].Value = "[ft]";
             ExcelApp.KabelyToExcel(Soucet, 3);

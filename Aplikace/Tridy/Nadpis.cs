@@ -53,7 +53,8 @@ namespace Aplikace.Tridy
                 new Nadpis {Id=9, Name = "Kabel",       Jednotky="[mm2]" },
                 new Nadpis {Id=10, Name = "Délka",       Jednotky="[m]" },
                 new Nadpis {Id=11, Name = "Rozvaděč",    Jednotky="" },
-                new Nadpis {Id=12, Name = "číslo",       Jednotky="" },
+                new Nadpis {Id=12, Name = "Číslo",       Jednotky="" },
+                new Nadpis {Id=12, Name = "Umístění",    Jednotky="" },
             ];
         }
         /// <summary>Volání parametru jako string např. Nadpis[Name]  </summary>
@@ -72,9 +73,7 @@ namespace Aplikace.Tridy
         }
 
         /// <summary> List vlastností třídy </summary>
-        public List<string> Vlastnosti => GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                      .Select(p => p.Name)
-                      .ToList();
+        public List<string> Vlastnosti => [.. GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => p.Name)];
 
     }
 }

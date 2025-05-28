@@ -1502,30 +1502,80 @@ namespace Aplikace.Excel
             for (int i = 1; i < j; i++)
                 Xls.Columns[i].AutoFit();
         }
+        public void KabelyToExcel(List<string> data, int Row)
+        {
+            Row--;
+            int j = 15;
+            foreach (var radek in data)
+            {
+                Console.WriteLine("Radek " + Row);
+                Row++; j = 1;
+                foreach (var item in radek)
+                {
+                    Exc.Range Zapis1 = Xls.Cells[Row, j++];
+                    Zapis1.Value = item;
+                    //if (double.TryParse(item, out double cislo))
+                    //{
+                    //    Zapis1.Value = cislo;
 
-        public void ExcelSaveNadpis(List<List<string>> Ramecek)
+                    //    // Formátovat jako číslo s 2 desetinnými místy
+                    //    Zapis1.NumberFormat = "#,##0.00";
+
+                    //    // Zarovnat doprava
+                    //    Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
+                    //}
+                    //else 
+                    //{
+                    //     Zapis1.Value = item;
+                    //}
+                }
+            }
+            for (int i = 1; i < j; i++)
+                Xls.Columns[i].AutoFit();
+        }
+        public void ExcelSaveNadpis<T>(List<T> Ramecek)
         {
             Xls.Activate();
-            Nadpis("A1:D1", "Označeni", Ramecek);
-            Nadpis("E1:H1", "Kabel", Ramecek);
-            Nadpis("I1:I1", "Zařízení", Ramecek);
-            Nadpis("J1:M1", "Odkud", Ramecek);
-            Nadpis("N1:N1", "", Ramecek);
-            Nadpis("O1:R1", "Kam", Ramecek);
-            Nadpis("S1:S1", "Delka", Ramecek);
+            var VelikostTabulky = Ramecek.Count;
+            Nadpis("A1:D1", "Označeni", VelikostTabulky);
+            Nadpis("E1:H1", "Kabel", VelikostTabulky);
+            Nadpis("I1:I1", "Zařízení", VelikostTabulky);
+            Nadpis("J1:M1", "Odkud", VelikostTabulky);
+            Nadpis("N1:N1", "", VelikostTabulky);
+            Nadpis("O1:R1", "Kam", VelikostTabulky);
+            Nadpis("S1:S1", "Delka", VelikostTabulky);
 
-            //xls.Range["G2"].Value = "[mm2]";
+            Xls.Range["A2"].Value = "Tag";
+            Xls.Range["B2"].Value = "MCC";
+            Xls.Range["D2"].Value = "Číslo";
+
+            Xls.Range["E2"].Value = "Kabel";
+            Xls.Range["F2"].Value = "Vodic";
+            Xls.Range["G2"].Value = "[mm2]";
             //xls.Range["H2"].Value = "[AWG]";
-            //xls.Range["S2"].Value = "[m]";
+
+            Xls.Range["J2"].Value = "Tag";
+            Xls.Range["K2"].Value = "MCC";
+            Xls.Range["M2"].Value = "Svorka";
+
+            Xls.Range["O2"].Value = "Tag";
+            Xls.Range["P2"].Value = "Predmet";
+            Xls.Range["P2"].Value = "Patro";
+            Xls.Range["R2"].Value = "Svorka";
+
+            Xls.Range["S2"].Value = "[m]";
             //xls.Range["T2"].Value = "[ft]";
         }
 
-        public void Nadpis(string pole, string Text)
-        {
-            Nadpis(pole, Text, []);
+        public void Nadpis(string pole, string Text)  {
+            Nadpis(pole, Text, 1);
         }
 
-        public void Nadpis(string pole, string Text, List<List<string>> PoleData)
+        /// <summary> Nadpisy  </summary>
+        /// <param name="pole"></param>
+        /// <param name="Text"></param>
+        /// <param name="PoleData">Je delka abych nakreslil rameček</param>
+        public void Nadpis(string pole, string Text, int VelikostTabulky)
         {
             // Sloučení buněk od A1 do C1
             var range = Xls.Range[pole];
@@ -1559,7 +1609,7 @@ namespace Aplikace.Excel
             // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
             //Exc.Range range = xls.Range[xls.Cells[3, 1], xls.Cells[PoleData.Count(), PoleData.First().Count()]];
 
-            string v = string.Concat(pole[..^1], (PoleData.Count + 2).ToString());
+            string v = string.Concat(pole[..^1], (VelikostTabulky + 2).ToString());
             range = Xls.Range[v];
             Ramecek(range.Borders);
         }
