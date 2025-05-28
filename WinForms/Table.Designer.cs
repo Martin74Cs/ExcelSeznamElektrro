@@ -32,6 +32,7 @@
             Button2 = new Button();
             button3 = new Button();
             Button4 = new Button();
+            button5 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -96,11 +97,24 @@
             Button4.UseVisualStyleBackColor = true;
             Button4.Click += Button4_Click;
             // 
+            // button5
+            // 
+            button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            button5.Location = new Point(1078, 251);
+            button5.Margin = new Padding(4);
+            button5.Name = "button5";
+            button5.Size = new Size(96, 32);
+            button5.TabIndex = 5;
+            button5.Text = "Rozvaděč";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1197, 711);
+            Controls.Add(button5);
             Controls.Add(Button4);
             Controls.Add(button3);
             Controls.Add(Button2);
@@ -122,5 +136,6 @@
         private Button Button2;
         private Button button3;
         private Button Button4;
+        private Button button5;
     }
 }

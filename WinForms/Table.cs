@@ -5,15 +5,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Aplikace.Tridy.Zarizeni;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using static WinForms.Table;
 
 namespace WinForms
@@ -61,8 +67,7 @@ namespace WinForms
             //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
 
             // Po připojení datového zdroje nahradíme sloupec Stav za ComboBox
-            dataGridView1.DataSourceChanged += (s, e) =>
-            {
+            dataGridView1.DataSourceChanged += (s, e) => {
                 var DruhColumn = dataGridView1.Columns["Druh"];
                 DruhColumn.Visible = false;
                 dataGridView1.Columns["DruhEnum"].Visible = false;
@@ -70,8 +75,7 @@ namespace WinForms
 
                 // Najdeme existující sloupec Stav
                 //var stavColumn = dataGridView1.Columns["DruhEnum"];
-                if (DruhColumn != null)
-                {
+                if(DruhColumn != null) {
                     // Získáme index sloupce
                     int columnIndex = DruhColumn.Index;
 
@@ -80,8 +84,7 @@ namespace WinForms
 
                     // Vytvoříme seznam pro ComboBox s popisy
                     var Vyber = Enum.GetValues(typeof(Zarizeni.Druhy))
-                    .Cast<Zarizeni.Druhy>().Select(s => new
-                    {
+                    .Cast<Zarizeni.Druhy>().Select(s => new {
                         //Value = s.ToString(), // Ukládáme jako string
                         //Value = s, // Ukládáme jako string
                         Value = s.ToString(), // Ukládáme jako string
@@ -89,8 +92,7 @@ namespace WinForms
                     }).ToList();
 
                     // Vytvoříme nový ComboBox sloupec
-                    DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn
-                    {
+                    DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn {
                         HeaderText = "Vyber",
                         Name = "Vyber",
                         DataPropertyName = "Druh", // Propojení s vlastností Druh v Zarizeni
@@ -178,31 +180,55 @@ namespace WinForms
 
         private void dataGridView1_CurrentCellChanged(object sender, EventArgs e) {
             var dgv = sender as DataGridView;
-            if (dgv == null || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
+            if(dgv == null || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
                 return;
 
             // Najdeme index sloupce "Stav"
             int stavColumnIndex = -1;
-            foreach (DataGridViewColumn column in dgv.Columns)
-            {
-                if (column.Name == "Druh")
-                {
+            foreach(DataGridViewColumn column in dgv.Columns) {
+                if(column.Name == "Druh") {
                     stavColumnIndex = column.Index;
                     break;
                 }
             }
 
-            if (stavColumnIndex >= 0)
-            {
+            if(stavColumnIndex >= 0) {
                 // Nastavíme aktuální buňku na sloupec "Stav" v aktuálním řádku
                 //dgv.CurrentCell = dgv[stavColumnIndex, dgv.CurrentCell.RowIndex];
                 dgv.BeginEdit(true);
 
-                if (dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox)
-                {
+                if(dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox) {
                     comboBox.DroppedDown = true;
                 }
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e) {
+            //Skrýtsloupce
+            dataGridView1.Columns["PID"].Visible = false; 
+            dataGridView1.Columns["Pocet"].Visible = false; 
+            dataGridView1.Columns["Nic"].Visible = false; 
+            dataGridView1.Columns["Proud"].Visible = false; 
+            dataGridView1.Columns["PruzezMM2"].Visible = false; 
+            dataGridView1.Columns["AWG"].Visible = false; 
+            dataGridView1.Columns["Delka"].Visible = false; 
+            dataGridView1.Columns["Delkaft"].Visible = false; 
+            dataGridView1.Columns["Vyvod"].Visible = false; 
+            dataGridView1.Columns["Druh"].Visible = false; 
+            dataGridView1.Columns["Napeti"].Visible = false; 
+            dataGridView1.Columns["Radek"].Visible = false; 
+            dataGridView1.Columns["Vodice"].Visible = false; 
+            dataGridView1.Columns["Kabel"].Visible = false; 
+            dataGridView1.Columns["Motor"].Visible = false; 
+            dataGridView1.Columns["Patro"].Visible = false; 
+            dataGridView1.Columns["Vykres"].Visible = false; 
+            dataGridView1.Columns["IsExist"].Visible = false; 
+            dataGridView1.Columns["Bod"].Visible = false; 
+            dataGridView1.Columns["IsExistElektro"].Visible = false; 
+            dataGridView1.Columns["Otoceni"].Visible = false; 
+            dataGridView1.Columns["BodElektro"].Visible = false; 
+            dataGridView1.Columns["HP"].Visible = false; 
+            dataGridView1.Columns["Id"].Visible = false; 
         }
     }
 }
