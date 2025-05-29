@@ -369,19 +369,20 @@ namespace Aplikace.Upravy
                 StringToEnum(skupina);
 
                 //Srovnání podle enumu
-                var Pole = skupina.OrderBy(x => x.DruhEnum).ToList();
+                var Pole = skupina.OrderByDescending(x => double.TryParse(x.Prikon, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : 0.0)
+                    .OrderBy(x => x.DruhEnum).ToList();
 
                 //Součet příkonů
                 var SumaPrikon = Pole.Where(x => x.DruhEnum != Druhy.Přívod)
                     .Sum(x => double.TryParse(x.Prikon, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : 0.0);
-
-                Console.WriteLine($"Rozvaděč: {skupina.Key}");
+                Console.WriteLine($" ");
+                Console.WriteLine($"\nRozvaděč: {skupina.Key}");
                 foreach(var item in Pole) {
                     //Console.WriteLine($"Rozvaděč: {skupina.Key}, Tag: {item.Tag}, Popis: {item.Popis}");
                     if(item.DruhEnum == Druhy.Přívod)
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-10}, Balena: {item.BalenaJednotka,-15}, SumaPříkon: {SumaPrikon,-15:F2}");
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n"," "),-20}, Druh: {item.Druh,-15}, Popis: {item.Popis,-50}, SumaPříkon: {SumaPrikon,-15:F2}");
                     else
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-15}, Druh: {item.Druh,-10}, Balena: {item.BalenaJednotka,-15}, Příkon: {item.Prikon,-15}");
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-20}, Druh: {item.Druh,-15}, Popis: {item.Popis,-50}, Příkon: {item.Prikon,-15}");
                 }
 
             }
