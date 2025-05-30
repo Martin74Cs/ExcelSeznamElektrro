@@ -429,8 +429,6 @@ namespace Aplikace.Seznam
                 trasa.RozvadecCislo = radek.RozvadecCislo;//3. Odkud číslo
                 trasa.Oznaceni = "WL 01";                 //4. Kabel
 
-                string Kabel;    //5. Jmeno kabelu
-                string PocetZil; //6. Počet žil
                 if (radek.Menic == "VSD")
                 {
                     trasa.Kabel = "ÖLFLEX CLASSIC 110 CY";  //5. Kabel

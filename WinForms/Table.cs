@@ -208,14 +208,14 @@ namespace WinForms
             dataGridView1.Columns["PID"].Visible = false; 
             dataGridView1.Columns["Pocet"].Visible = false; 
             dataGridView1.Columns["Nic"].Visible = false; 
-            dataGridView1.Columns["Proud"].Visible = false; 
+            //dataGridView1.Columns["Proud"].Visible = false; 
             dataGridView1.Columns["PruzezMM2"].Visible = false; 
             dataGridView1.Columns["AWG"].Visible = false; 
             dataGridView1.Columns["Delka"].Visible = false; 
             dataGridView1.Columns["Delkaft"].Visible = false; 
             dataGridView1.Columns["Vyvod"].Visible = false; 
             dataGridView1.Columns["Druh"].Visible = false; 
-            dataGridView1.Columns["Napeti"].Visible = false; 
+            //dataGridView1.Columns["Napeti"].Visible = false; 
             dataGridView1.Columns["Radek"].Visible = false; 
             dataGridView1.Columns["Vodice"].Visible = false; 
             dataGridView1.Columns["Kabel"].Visible = false; 

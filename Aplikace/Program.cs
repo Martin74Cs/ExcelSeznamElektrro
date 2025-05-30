@@ -29,7 +29,6 @@ LigthChem.Rozvadec();
 //Oez
 //Priklad.Main();
 
-
 ////Třdění jdenotlivých PS
 //var Filtr = pokus.GroupBy(x => x.cunit.pfx + " " + x.cunit.num)
 //    .Select(group => group).ToArray();

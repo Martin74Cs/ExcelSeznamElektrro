@@ -46,7 +46,7 @@ namespace Aplikace.Tridy
         public string Objekt { get; set; } = string.Empty;
 
         [JsonIgnore]
-        internal static string[] Nadpis =>
+        public static string[] Nadpis =>
         [
             "Apid",
             "Objekt",

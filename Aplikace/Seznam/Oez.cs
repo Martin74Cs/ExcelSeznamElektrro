@@ -144,37 +144,37 @@ public class Oez
     public class Product
     {
         // Základní vlastnosti z CSV
-        public string Kod { get; set; }
-        public string Skupina { get; set; }
-        public string Jmeno { get; set; }
-        public string Popis { get; set; } // Původní popis pro referenci
-        public string Rabat { get; set; }
+        public string Kod { get; set; } = string.Empty;
+        public string Skupina { get; set; } = string.Empty;
+        public string Jmeno { get; set; } = string.Empty;
+        public string Popis { get; set; } = string.Empty;// Původní popis pro referenci
+        public string Rabat { get; set; } = string.Empty;
         public decimal ZakladniCena { get; set; }
-        public string Jednotka { get; set; }
-        public string EAN { get; set; }
-        public double Objem { get; set; }
-        public double Hmotnost { get; set; }
-        public double Vyska { get; set; }
-        public double Sirka { get; set; }
-        public double Delka { get; set; }
-        public string CustomsCode { get; set; }
-        public string ZemePuvodu { get; set; }
-        public string AL { get; set; }
-        public string ECCN { get; set; }
+        public string Jednotka { get; set; } = string.Empty;
+        public string EAN { get; set; } = string.Empty;
+        public double? Objem { get; set; }
+        public double? Hmotnost { get; set; }
+        public double? Vyska { get; set; }
+        public double? Sirka { get; set; }
+        public double? Delka { get; set; }
+        public string CustomsCode { get; set; } = string.Empty;
+        public string ZemePuvodu { get; set; } = string.Empty;
+        public string AL { get; set; } = string.Empty;
+        public string ECCN { get; set; } = string.Empty;
         public double? KusyBaleni { get; set; }
-        public double KusyMin { get; set; }
+        public double? KusyMin { get; set; }
 
         // Rozparsované atributy z Popis
-        public double? InA { get; set; } // In (proud, např. 10 A)
-        public string Ue { get; set; } // Ue (napětí, např. AC 230 V)
-        public string Characteristic { get; set; } // Charakteristika (např. B, C)
-        public double? Idn { get; set; } // Idn (zbytkový proud, např. 30 mA)
-        public string Poly { get; set; } // Počet pólů (např. 1+N-pól, 1pól)
-        public double? Moduly { get; set; } // Šířka v modulech
-        public double? Icn { get; set; } // Jmenovitá zkratová schopnost (např. 6 kA)
-        public string Type { get; set; } // Typ (např. A, AC, A-G)
-        public string Vlozka { get; set; } // pro válcové pojistkové vložky 14x51
-        public string Signalizace { get; set; } // pro válcové pojistkové vložky 14x51
+        public double InA { get; set; } // In (proud, např. 10 A)
+        public string Ue { get; set; } = string.Empty;// Ue (napětí, např. AC 230 V)
+        public string Characteristic { get; set; } = string.Empty; // Charakteristika (např. B, C)
+        public double Idn { get; set; } // Idn (zbytkový proud, např. 30 mA)
+        public string Poly { get; set; } = string.Empty;// Počet pólů (např. 1+N-pól, 1pól)
+        public double Moduly { get; set; } // Šířka v modulech
+        public double Icn { get; set; } // Jmenovitá zkratová schopnost (např. 6 kA)
+        public string Type { get; set; } = string.Empty;// Typ (např. A, AC, A-G)
+        public string Vlozka { get; set; } = string.Empty;// pro válcové pojistkové vložky 14x51
+        public string Signalizace { get; set; } = string.Empty;// pro válcové pojistkové vložky 14x51
     }
 
 }
@@ -186,13 +186,12 @@ public class Priklad
         string voltageUe = null, 
         string characteristic = null, 
         string type = null) {
-        return products
+        return [.. products
             .Where(p => p.Jmeno.Contains("Jistič") || p.Jmeno.Contains("Jističochránič"))
             .Where(p => currentInA == null || p.InA == currentInA)
             .Where(p => voltageUe == null || p.Ue == voltageUe)
             .Where(p => characteristic == null || p.Characteristic == characteristic)
-            .Where(p => type == null || p.Type == type)
-            .ToList();
+            .Where(p => type == null || p.Type == type)];
     }
 
     public static void Main()
@@ -201,16 +200,27 @@ public class Priklad
         string Cesta = Path.Combine(Cesty.Data, "Jištení" , file);
         List<Product> products = LoadProductsFromCsv(Cesta);
 
-        var Pole = products.GroupBy(x => x.Skupina).OrderBy(x => x.Key);
-        foreach(var item in Pole) 
-            //Console.WriteLine(item.Key);
+        List<string> Druhy = [.. products.Select(x => x.Skupina).Distinct()];
+        Druhy.SaveJsonList(Path.Combine(Cesty.Data, "Jištení", "Druhy.json"));
 
-        Console.WriteLine("\nDalší");
+        var Pole = products.GroupBy(x => x.Skupina).OrderBy(x => x.Key);
+        //foreach(var item in Pole) 
+        //    Console.WriteLine(item.Key);
+
+        foreach (var item in Pole.Where(x => x.Key.Contains("Pojist")))
+        {
+            Console.WriteLine(item.Key);
+            var Data = Pole.Where(x => x.Key.Contains(item.Key)).SelectMany(g => g).ToList();
+            Data.SaveJsonList(Path.Combine(Cesty.Data, "Jištení", "Dělení", $"{item.Key.Replace("/"," ")}.json"));
+            Data.SaveToCsv(Path.Combine(Cesty.Data, "Jištení", "Dělení", $"{item.Key}.csv"));
+        }
+
+        Console.WriteLine("\n" + "Pojistková vložka");
         var Pojistka = Pole.Where(x => x.Key.Contains("Pojistková vložka")).SelectMany(g => g).ToList();
         foreach (var item in Pojistka)
-            //Console.WriteLine(item.Jmeno);
+            Console.WriteLine(item.Jmeno);
 
-        Console.WriteLine("\nDalší");
+        Console.WriteLine("\n" + "Pojistkový odpínač");
         var PojOdpínač = Pole.Where(x => x.Key.Contains("Pojistkový odpínač")).SelectMany(g => g).ToList();
         foreach (var item in PojOdpínač)
             Console.WriteLine(item.Jmeno);

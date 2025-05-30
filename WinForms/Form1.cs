@@ -104,7 +104,7 @@ namespace WinForms
         }
 
         /// <summary> Místnosti - otevřít seznam </summary>
-        private async void MístnostiToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void MístnostiToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //použitá cesta z Místnosti.cs          
             System.Diagnostics.Process.Start("explorer.exe", Cesty.MistnostiXLs);

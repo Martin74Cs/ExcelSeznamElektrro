@@ -373,16 +373,16 @@ namespace Aplikace.Upravy
                     .OrderBy(x => x.DruhEnum).ToList();
 
                 //Součet příkonů
-                var SumaPrikon = Pole.Where(x => x.DruhEnum != Druhy.Přívod)
+                var SumaPrikon = Pole.Where(x => x.DruhEnum != Druhy.Přívod && x.DruhEnum != Druhy.Spojka)
                     .Sum(x => double.TryParse(x.Prikon, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : 0.0);
                 Console.WriteLine($" ");
                 Console.WriteLine($"\nRozvaděč: {skupina.Key}");
                 foreach(var item in Pole) {
                     //Console.WriteLine($"Rozvaděč: {skupina.Key}, Tag: {item.Tag}, Popis: {item.Popis}");
                     if(item.DruhEnum == Druhy.Přívod)
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n"," "),-20}, Druh: {item.Druh,-15}, Popis: {item.Popis,-50}, SumaPříkon: {SumaPrikon,-15:F2}");
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n"," "),-12}, Druh: {item.Druh,-12}, Popis: {item.Popis,-35}, SumaPříkon: {SumaPrikon,-15:F2}");
                     else
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-20}, Druh: {item.Druh,-15}, Popis: {item.Popis,-50}, Příkon: {item.Prikon,-15}");
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-12}, Druh: {item.Druh,-12}, Popis: {item.Popis,-35}, Příkon: {item.Prikon,-15}");
                 }
 
             }
