@@ -365,11 +365,10 @@ namespace Aplikace.Seznam
                 //20. Delka ft
                 //radek.Delka
             };
-
-
             return Data;
         }
 
+        /// <summary>Převod ListTrasa do Listu rádku a  Listu sloupců pro zadaní do excel </summary>
         public static List<List<string>> KabelyTridaToString(List<Trasa> Data)
         {
             //uprava pole tabulky pro vypsaní
@@ -417,12 +416,16 @@ namespace Aplikace.Seznam
         }
 
 
-        public static List<Trasa> KabelyTrida(List<Zarizeni> PoleData)
+        /// <summary> Vytvoření pole kabelů pro zápis do Excelu </summary>
+        // public static List<Trasa> KabelyTrida(List<Zarizeni> PoleData)
+        public static List<Kabely> KabelyTrida(List<Zarizeni> PoleData)
         {
+            var Kabely = new List<Kabely>();
             //uprava pole tabulky pro vypsaní
             var NovaData = new List<Trasa>();
             foreach (var radek in PoleData)
             {
+                var Kabel = new Kabely();
                 Trasa trasa = new(); 
                 trasa.Tag = radek.Tag.Replace("\n", " "); //1. Kabel
                 trasa.Rozvadec = radek.Rozvadec;          //2. odkud Mcc
@@ -470,16 +473,25 @@ namespace Aplikace.Seznam
 
                 //přidání řádku do pole
                 NovaData.Add(trasa);
-
+                Kabel.Hlavni = trasa; //přiřazení hlavní trasy do kabelu
+                                      //
                 //Ovládací kabel PTC
                 if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
-                { 
-                  NovaData.Add(KabelPTCTrida(radek));
-                  NovaData.Add(KabelOvladaniTrida(radek));
+                {
+                    var PTC = KabelPTCTrida(radek);
+                    NovaData.Add(PTC);
+                    Kabel.PTC = PTC; //přiřazení PTC trasy do kabelu
+
+                    var Ovladani = KabelOvladaniTrida(radek);
+                    NovaData.Add(Ovladani);
+                    Kabel.Ovladani = Ovladani; //přiřazení ovládací trasy do kabelu
                 }
+                Kabely.Add(Kabel); //přidání kabelu do seznamu kabelů   
             }
-            return NovaData;
+            //return NovaData;
+            return Kabely;
         }
+
         public static Trasa KabelPTCTrida(Zarizeni radek)
         {
             //Ovládací kabel PTC

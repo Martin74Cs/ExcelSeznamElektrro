@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +39,12 @@ namespace Aplikace.Tridy
         public static string[] KabelZnačkaPole => Enum.GetNames<KabelZnačka>();
     }
 
+    public class Kabely {
+        public Trasa Hlavni { get; set; } 
+        public Trasa PTC { get; set; }
+        public Trasa Ovladani{ get; set; }
+    }
+    
     public enum KabelZnačka
     {
         WH,

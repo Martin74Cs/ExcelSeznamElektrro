@@ -205,30 +205,35 @@ namespace WinForms
 
         private void button5_Click(object sender, EventArgs e) {
             //Skrýtsloupce
-            dataGridView1.Columns["PID"].Visible = false; 
-            dataGridView1.Columns["Pocet"].Visible = false; 
-            dataGridView1.Columns["Nic"].Visible = false; 
+            dataGridView1.Columns["PID"].Visible = false;
+            dataGridView1.Columns["Pocet"].Visible = false;
+            dataGridView1.Columns["Nic"].Visible = false;
             //dataGridView1.Columns["Proud"].Visible = false; 
-            dataGridView1.Columns["PruzezMM2"].Visible = false; 
-            dataGridView1.Columns["AWG"].Visible = false; 
-            dataGridView1.Columns["Delka"].Visible = false; 
-            dataGridView1.Columns["Delkaft"].Visible = false; 
-            dataGridView1.Columns["Vyvod"].Visible = false; 
-            dataGridView1.Columns["Druh"].Visible = false; 
+            dataGridView1.Columns["PruzezMM2"].Visible = false;
+            dataGridView1.Columns["AWG"].Visible = false;
+            dataGridView1.Columns["Delka"].Visible = false;
+            dataGridView1.Columns["Delkaft"].Visible = false;
+            dataGridView1.Columns["Vyvod"].Visible = false;
+            dataGridView1.Columns["Druh"].Visible = false;
             //dataGridView1.Columns["Napeti"].Visible = false; 
-            dataGridView1.Columns["Radek"].Visible = false; 
-            dataGridView1.Columns["Vodice"].Visible = false; 
-            dataGridView1.Columns["Kabel"].Visible = false; 
-            dataGridView1.Columns["Motor"].Visible = false; 
-            dataGridView1.Columns["Patro"].Visible = false; 
-            dataGridView1.Columns["Vykres"].Visible = false; 
-            dataGridView1.Columns["IsExist"].Visible = false; 
-            dataGridView1.Columns["Bod"].Visible = false; 
-            dataGridView1.Columns["IsExistElektro"].Visible = false; 
-            dataGridView1.Columns["Otoceni"].Visible = false; 
-            dataGridView1.Columns["BodElektro"].Visible = false; 
-            dataGridView1.Columns["HP"].Visible = false; 
-            dataGridView1.Columns["Id"].Visible = false; 
+            dataGridView1.Columns["Radek"].Visible = false;
+            dataGridView1.Columns["Vodice"].Visible = false;
+            dataGridView1.Columns["Kabel"].Visible = false;
+            dataGridView1.Columns["Motor"].Visible = false;
+            dataGridView1.Columns["Patro"].Visible = false;
+            dataGridView1.Columns["Vykres"].Visible = false;
+            dataGridView1.Columns["IsExist"].Visible = false;
+            dataGridView1.Columns["Bod"].Visible = false;
+            dataGridView1.Columns["IsExistElektro"].Visible = false;
+            dataGridView1.Columns["Otoceni"].Visible = false;
+            dataGridView1.Columns["BodElektro"].Visible = false;
+            dataGridView1.Columns["HP"].Visible = false;
+            dataGridView1.Columns["Id"].Visible = false;
+        }
+
+        private void button6_Click(object sender, EventArgs e) {
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+                column.Visible = true;
         }
     }
 }

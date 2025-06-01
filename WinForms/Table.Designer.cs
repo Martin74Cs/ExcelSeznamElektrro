@@ -33,6 +33,8 @@
             button3 = new Button();
             Button4 = new Button();
             button5 = new Button();
+            button6 = new Button();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -43,7 +45,7 @@
             dataGridView1.Location = new Point(15, 59);
             dataGridView1.Margin = new Padding(4);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(1055, 641);
+            dataGridView1.Size = new Size(1077, 613);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             dataGridView1.CellMouseUp += dataGridView1_CellMouseUp;
@@ -52,7 +54,7 @@
             // Button1
             // 
             Button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Button1.Location = new Point(1078, 668);
+            Button1.Location = new Point(1100, 640);
             Button1.Margin = new Padding(4);
             Button1.Name = "Button1";
             Button1.Size = new Size(96, 32);
@@ -64,7 +66,7 @@
             // Button2
             // 
             Button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Button2.Location = new Point(1078, 628);
+            Button2.Location = new Point(1100, 600);
             Button2.Margin = new Padding(4);
             Button2.Name = "Button2";
             Button2.Size = new Size(96, 32);
@@ -76,7 +78,7 @@
             // button3
             // 
             button3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button3.Location = new Point(1078, 428);
+            button3.Location = new Point(1100, 400);
             button3.Margin = new Padding(4);
             button3.Name = "button3";
             button3.Size = new Size(96, 32);
@@ -88,7 +90,7 @@
             // Button4
             // 
             Button4.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Button4.Location = new Point(1078, 468);
+            Button4.Location = new Point(1100, 440);
             Button4.Margin = new Padding(4);
             Button4.Name = "Button4";
             Button4.Size = new Size(96, 32);
@@ -99,8 +101,8 @@
             // 
             // button5
             // 
-            button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button5.Location = new Point(1078, 251);
+            button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button5.Location = new Point(1100, 101);
             button5.Margin = new Padding(4);
             button5.Name = "button5";
             button5.Size = new Size(96, 32);
@@ -109,11 +111,34 @@
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
+            // button6
+            // 
+            button6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button6.Location = new Point(1100, 59);
+            button6.Margin = new Padding(4);
+            button6.Name = "button6";
+            button6.Size = new Size(96, 32);
+            button6.TabIndex = 6;
+            button6.Text = "Vše";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(1100, 375);
+            label1.Name = "label1";
+            label1.Size = new Size(73, 21);
+            label1.TabIndex = 7;
+            label1.Text = "Výpočet :";
+            // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1197, 711);
+            ClientSize = new Size(1219, 683);
+            Controls.Add(label1);
+            Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(Button4);
             Controls.Add(button3);
@@ -127,6 +152,7 @@
             Load += Table_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -137,5 +163,7 @@
         private Button button3;
         private Button Button4;
         private Button button5;
+        private Button button6;
+        private Label label1;
     }
 }

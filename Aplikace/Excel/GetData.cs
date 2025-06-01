@@ -9,9 +9,7 @@ namespace Aplikace.Excel
 {
     //public class GetData
     //{
-    //    /// <summary>
-    //    /// Načtení dat z Excelu Formátování a text
-    //    /// </summary>
+    //    /// <summary> Načtení dat z Excelu Formátování a text </summary>
     //    public void Data(string Cesta)
     //    {
     //        if (string.IsNullOrEmpty(Cesta))

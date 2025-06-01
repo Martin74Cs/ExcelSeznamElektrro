@@ -13,7 +13,7 @@ namespace Aplikace.Excel
     public class ExcelLoad
     {
 
-        /// <summary> Načtení dpkumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
+        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
         public static List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek)
         {
             Console.Write("\nProbíná hačítání dat ... ");
@@ -82,7 +82,7 @@ namespace Aplikace.Excel
             
         }
 
-        /// <summary> Načtení dpkumentu Ecxel do pole Třídy z a vytvořejí JSON</summary>
+        /// <summary> Načtení dokumentu Ecxel do pole Třídy z a vytvořejí JSON</summary>
         public static List<Zarizeni> LoadDataExcelTrida(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
         {
             if (!System.IO.File.Exists(cesta)) return [];

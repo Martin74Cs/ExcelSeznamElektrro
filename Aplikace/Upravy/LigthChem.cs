@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using static Aplikace.Tridy.Motor;
@@ -53,6 +54,13 @@ namespace Aplikace.Upravy
             string cestaData = Cesty.ElektroDataJson;
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
+            //Vývody pro doplnění
+            var cestaVývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+            var Vývody = Soubory.LoadJsonList<Zarizeni>(cestaVývody);
+
+            //Spojení původních s doplněnými
+            Stara.Concat(Vývody);
+
             //Možná proud asi jen tam kde není.
             //Stara.AddProud();
 
@@ -60,7 +68,7 @@ namespace Aplikace.Upravy
             var prazdne = Stara.Where(x => x.Kabel == null).ToList();
             prazdne.AddKabelCyky(1.6);
 
-            // Spojení původních neprázdných s doplněnými – Concat vytvoří novou spojenou kolekci
+            // Spojení původních neprázdných s doplněnými kabely – Concat vytvoří novou spojenou kolekci
             //Stara = Stara.Where(x => x.Kabel != null).Concat(prazdne).ToList();
             Stara = [.. Stara.Where(x => x.Kabel != null), .. prazdne];
 
@@ -103,9 +111,23 @@ namespace Aplikace.Upravy
             ExcelApp.ClassToExcel(Row: 3, Stara, dir);
 
             Console.WriteLine("Probíhá načítaní kabelů");
+
             //Vytvoření pole kabelů pro zápis do Excelu
             var DataTrida = KabelList.KabelyTrida(Stara);
-            var PoleData = KabelList.KabelyTridaToString(DataTrida);
+
+            var Change = new List<Trasa>();
+            foreach (var kabel in DataTrida)
+            {
+                if(kabel.Hlavni != null) 
+                    Change.Add(kabel.Hlavni);
+                if(kabel.PTC != null)
+                    Change.Add(kabel.PTC);
+                if(kabel.Ovladani != null)
+                    Change.Add(kabel.Ovladani);
+            }
+
+            //pole kabelů zapsat do Excel tabulky 
+            var PoleData = KabelList.KabelyTridaToString(Change);
             //var PoleData = KabelList.Kabely(Stara);
 
             //Nová záložka nebo nastav existující
@@ -114,7 +136,7 @@ namespace Aplikace.Upravy
             //Doplnení nadpisu a ramecku
             ExcelApp.ExcelSaveNadpis(PoleData);
 
-            //do Excel vyplní od radku 3 data data z PoleData mělo by se jednat o seznam kabelů
+            //Do Excel vyplní od radku 3 data z PoleData mělo by se jednat o seznam kabelů
             ExcelApp.KabelyToExcel(PoleData, 3);
 
             //Vyzváření seznamu kabelů podle krytérii
