@@ -81,6 +81,38 @@ namespace Aplikace.Excel
             return Pole;
             
         }
+        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List Zarizeni z a vytvořejí JSON</summary>
+        public static List<Zarizeni> DwgDataExcel(string cesta, string Tabulka, int Radek)
+        {
+            Console.WriteLine("Probíná hačítání dat ... ");
+            if (!File.Exists(cesta)) return [];
+
+            var ExcelApp = new ExcelApp(cesta);
+            ExcelApp.GetSheet(Tabulka);
+            if (ExcelApp.Xls == null) return [];
+            
+            if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+            Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
+
+            //Sloupce které se mají načíst z Excelu do názvů tříd. Myslím že třída musí existovat
+            //DOPLNIT SLOUPCE PRO DWG
+            var dir = new Dictionary<int, string>() {
+                {1, "Radek"     },
+                {2, "Tag"       },
+                {3, "Pocet"     },
+                {4, "Popis"     },
+                {11, "Menic"    },
+                {10, "Prikon"   },
+                {18, "BalenaJednotka"   },
+            };
+
+            var Pole = ExcelApp.ExelTable(Radek,Tabulka, dir);
+
+            ExcelApp.ExcelQuit(cesta);
+            Console.WriteLine($"Načeno {Pole.Count} záznamů.");
+            return Pole;
+            
+        }
 
         /// <summary> Načtení dokumentu Ecxel do pole Třídy z a vytvořejí JSON</summary>
         public static List<Zarizeni> LoadDataExcelTrida(string cesta, int[] Sloupce, string Tabulka , int Radek, string[] TextPole)
