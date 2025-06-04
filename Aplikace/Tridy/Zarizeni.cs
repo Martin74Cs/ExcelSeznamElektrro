@@ -23,6 +23,7 @@ namespace Aplikace.Tridy
 
     public class Zarizeni : Entity , INotifyPropertyChanged
     {
+        private string tagStroj = string.Empty;
         private string tag = string.Empty;
         private string predmet = string.Empty;
         private string prikon = string.Empty;
@@ -40,6 +41,8 @@ namespace Aplikace.Tridy
         private string rozvadec = string.Empty;
         private string rozvadecCislo = string.Empty;
         private string druh = string.Empty;
+        private string typ = string.Empty;
+        private string faze = string.Empty;
         private Druhy druhenum = Druhy.Rozvadeč; // Výchozí hodnota pro enum Druhy
         private string napeti = "400";
         private int radek;
@@ -82,6 +85,7 @@ namespace Aplikace.Tridy
         //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
 
         /// <summary>Označení zařízení </summary>
+        public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
         public string Tag { get => tag; set => SetProperty(ref tag , value); }
         public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
         public string PID { get => pID; set => SetProperty(ref pID, value); }
@@ -126,8 +130,13 @@ namespace Aplikace.Tridy
         [JsonIgnore]
         public string RozvadecOznačení => Rozvadec + " " + RozvadecCislo;
         public string Vyvod { get; set; } = string.Empty;
-        /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
+
+        /// <summary>Druh Motor, Přívod, Spojka, Rozvaěděč</summary>
         public string Druh { get => druh; set => SetProperty(ref druh, value); }
+
+        /// <summary>Druh zařízení čerpadlo, vývěva, Míchadlo</summary>
+        public string Typ { get => typ; set => SetProperty(ref typ, value); }
+        public string Faze { get => faze; set => SetProperty(ref faze, value); }
 
         [JsonIgnore]
         public Druhy DruhEnum { get => druhenum; set => SetProperty(ref druhenum, value); }

@@ -4,6 +4,7 @@ using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,13 +98,20 @@ namespace Aplikace.Excel
             //Sloupce které se mají načíst z Excelu do názvů tříd. Myslím že třída musí existovat
             //DOPLNIT SLOUPCE PRO DWG
             var dir = new Dictionary<int, string>() {
-                {1, "Radek"     },
-                {2, "Tag"       },
-                {3, "Pocet"     },
-                {4, "Popis"     },
-                {11, "Menic"    },
-                {10, "Prikon"   },
-                {18, "BalenaJednotka"   },
+                //{1, "Radek"   },
+                {6, "Tag"       },
+                {7, "PID"       },
+                //{3, "Pocet"   },
+                {8, "Popis"     },
+                {9, "Druh"      },
+                {10, "Typ"      },
+                {21, "TagStroj" },
+                {24, "Menic"    },
+                {26, "Prikon"   },
+                {25, "Faze"     },
+                {27, "Patro"    },
+
+                //{18, "BalenaJednotka"   },
             };
 
             var Pole = ExcelApp.ExelTable(Radek,Tabulka, dir);

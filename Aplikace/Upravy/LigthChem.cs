@@ -54,8 +54,8 @@ namespace Aplikace.Upravy
             if (!Directory.Exists(Cesty.Elektro))
                 Directory.CreateDirectory(Cesty.Elektro);
 
-            string cesta1 = Path.Combine(Cesty.Elektro, @"DOPLNIT");
-            var Stara = ExcelLoad.DwgDataExcel(cesta1, "SUMARY", 8);
+            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.005.xlsm");
+            var Stara = ExcelLoad.DwgDataExcel(cesta1, "Summary", 990);
 
             //Převod->json,csv 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
