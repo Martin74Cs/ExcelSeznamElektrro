@@ -23,7 +23,7 @@ namespace Aplikace.Tridy
 
     public class Zarizeni : Entity , INotifyPropertyChanged
     {
-        private string tagStroj = string.Empty;
+        //private string tagStroj = string.Empty;
         private string tag = string.Empty;
         private string predmet = string.Empty;
         private string prikon = string.Empty;
@@ -32,7 +32,7 @@ namespace Aplikace.Tridy
         private string nic = string.Empty;
         private string proud = string.Empty;
         private string pruzezMM2 = string.Empty;
-        private string pID = string.Empty;
+        private string pid = string.Empty;
         private int pocet;
         private string popis = string.Empty;
         private string aWG = string.Empty;
@@ -42,7 +42,7 @@ namespace Aplikace.Tridy
         private string rozvadecCislo = string.Empty;
         private string druh = string.Empty;
         private string typ = string.Empty;
-        private string faze = string.Empty;
+        private string etapa = string.Empty;
         private Druhy druhenum = Druhy.Rozvadeč; // Výchozí hodnota pro enum Druhy
         private string napeti = "400";
         private int radek;
@@ -85,10 +85,10 @@ namespace Aplikace.Tridy
         //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
 
         /// <summary>Označení zařízení </summary>
-        public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
+        //public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
         public string Tag { get => tag; set => SetProperty(ref tag , value); }
         public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
-        public string PID { get => pID; set => SetProperty(ref pID, value); }
+        public string PID { get => pid; set => SetProperty(ref pid, value); }
         public int Pocet { get => pocet; set => SetProperty(ref pocet, value); }
 
         /// <summary>Popis zařízení</summary>
@@ -136,7 +136,9 @@ namespace Aplikace.Tridy
 
         /// <summary>Druh zařízení čerpadlo, vývěva, Míchadlo</summary>
         public string Typ { get => typ; set => SetProperty(ref typ, value); }
-        public string Faze { get => faze; set => SetProperty(ref faze, value); }
+
+        /// <summary> Fáze výstavba </summary>
+        public string Etapa { get => etapa; set => SetProperty(ref etapa, value); }
 
         [JsonIgnore]
         public Druhy DruhEnum { get => druhenum; set => SetProperty(ref druhenum, value); }

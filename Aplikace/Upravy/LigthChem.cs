@@ -45,7 +45,6 @@ namespace Aplikace.Upravy
             //{
             //    Console.WriteLine($"Vyvoření kopie {Path.GetFileName(cestaData)} přeskočeno");
             //}
-
         }
 
         /// <summary>Převod extrahovaných dat z Dwg do Xls s následným převodem do Json</summary>
@@ -54,8 +53,10 @@ namespace Aplikace.Upravy
             if (!Directory.Exists(Cesty.Elektro))
                 Directory.CreateDirectory(Cesty.Elektro);
 
-            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.005.xlsm");
+            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
             var Stara = ExcelLoad.DwgDataExcel(cesta1, "Summary", 990);
+
+            Console.WriteLine($"Načteno {Stara.Count} záznamů z {cesta1}");
 
             //Převod->json,csv 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));

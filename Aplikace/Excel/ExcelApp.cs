@@ -2,6 +2,7 @@
 using Aplikace.Tridy;
 using Microsoft.Office.Interop.Excel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -322,10 +323,20 @@ namespace Aplikace.Excel
                 //čteniPole = [];
                 //čtení jednotlivých řádků excelu
                 var jeden = new Zarizeni();
+                bool Prerusit = true;
                 //načtení jednotlivých řádků excelu dle sloupců ze dir
                 foreach (var j in dir.Keys.ToArray())
                 //for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
                 {
+                    //Podmínka pro sloupec 5 který je Tag - musí být "M"
+                    string tagstr = Xls.Cells[i, 5].Value;
+                    //Pokud neobsahuje "M", "MOB", "MOP" přeskočit řádek
+                    if (!new[] { "M", "MOB", "MOP" }.Contains(tagstr))
+                    { 
+                        Prerusit = false;
+                        break;
+                    }
+
                     //var prikon = Convert.ToString(Xls.Cells[i, key].Value);
                     //přeskok pokud je příkon prazdný
                     //if (string.IsNullOrEmpty(prikon) || prikon == "0") { jeden.Prikon = ""; break; } 
@@ -338,15 +349,13 @@ namespace Aplikace.Excel
                     }
                     string xxx = Convert.ToString(Pok.Value);
 
-                    //přeskočit prázdné buňky a nulové
+                    //Přeskočit prázdné buňky a nulové
                     if (string.IsNullOrEmpty(xxx) || xxx == "0")
-                    { 
                         continue;
-                    }
 
                     //ukladnní infomací do třídy dle jejího názvu parametru
                     //if (dir.TryGetValue(j, out var value))
-                    if(int.TryParse(xxx, out int value))
+                    if (int.TryParse(xxx, out int value))
                         jeden[dir[j]] = value; 
                     jeden[dir[j]] = xxx; 
                 }
@@ -370,7 +379,8 @@ namespace Aplikace.Excel
                     }
                 }
                 else
-                    Pole.Add(jeden);
+                    if(Prerusit)
+                        Pole.Add(jeden);
                 Console.WriteLine($"Radek {pocet++} - přídán");
 
                 //if (!string.IsNullOrEmpty(jeden.Prikon))
