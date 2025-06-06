@@ -49,7 +49,7 @@ namespace Aplikace.Upravy
 
         /// <summary>Převod extrahovaných dat z Dwg do Xls s následným převodem do Json</summary>
         public static void DwgXlsToJsonCsv()
-        {
+        { 
             if (!Directory.Exists(Cesty.Elektro))
                 Directory.CreateDirectory(Cesty.Elektro);
 
