@@ -54,7 +54,7 @@ namespace Aplikace.Upravy
                 Directory.CreateDirectory(Cesty.Elektro);
 
             string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
-            var Stara = ExcelLoad.DwgDataExcel(cesta1, "Summary", 990);
+            var Stara = ExcelLoad.DwgDataExcel(cesta1, "Summary", 3);
 
             Console.WriteLine($"Načteno {Stara.Count} záznamů z {cesta1}");
 

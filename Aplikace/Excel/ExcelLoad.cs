@@ -106,6 +106,7 @@ namespace Aplikace.Excel
                 {9, "Druh"      },
                 {10, "Typ"      },
                 {21, "Tag"      },
+                {23, "TagStroj" },
                 {24, "Menic"    },
                 {26, "Prikon"   },
                 {25, "Etapa"    },

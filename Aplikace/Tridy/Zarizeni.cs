@@ -23,7 +23,7 @@ namespace Aplikace.Tridy
 
     public class Zarizeni : Entity , INotifyPropertyChanged
     {
-        //private string tagStroj = string.Empty;
+        private string tagStroj = string.Empty;
         private string tag = string.Empty;
         private string predmet = string.Empty;
         private string prikon = string.Empty;
@@ -85,7 +85,7 @@ namespace Aplikace.Tridy
         //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
 
         /// <summary>Označení zařízení </summary>
-        //public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
+        public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
         public string Tag { get => tag; set => SetProperty(ref tag , value); }
         public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
         public string PID { get => pid; set => SetProperty(ref pid, value); }
