@@ -205,7 +205,7 @@ namespace WinForms
 
         private void button5_Click(object sender, EventArgs e) {
             //Skrýtsloupce
-            dataGridView1.Columns["PID"].Visible = false;
+            //dataGridView1.Columns["PID"].Visible = false;
             dataGridView1.Columns["Pocet"].Visible = false;
             dataGridView1.Columns["Nic"].Visible = false;
             //dataGridView1.Columns["Proud"].Visible = false; 
