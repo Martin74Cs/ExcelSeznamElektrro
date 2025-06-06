@@ -85,7 +85,6 @@ namespace Aplikace.Tridy
         //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
 
         /// <summary>Označení zařízení </summary>
-        public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
         public string Tag { get => tag; set => SetProperty(ref tag , value); }
         public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
         public string PID { get => pid; set => SetProperty(ref pid, value); }
@@ -100,7 +99,7 @@ namespace Aplikace.Tridy
         public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
         public string Menic { get => menic; set => SetProperty(ref menic, value); }
         public string Nic { get => nic; set => SetProperty(ref nic, value); }
-
+        public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
         [JsonIgnore]
         [Display(Name = "Příkon")]
         [Jednotky("[hp]")]
