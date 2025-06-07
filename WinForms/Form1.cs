@@ -250,6 +250,11 @@ namespace WinForms
             //Převod extrahovaných dat z Dwg do Xls s následným převodem do Json
             await Task.Run(() => LigthChem.DwgXlsToJsonCsv());
         }
+
+        private void PropojeniToolStripMenuItem_Click(object sender, EventArgs e) {
+            var table = new Rozvaděč();
+            var result = table.ShowDialog();
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter

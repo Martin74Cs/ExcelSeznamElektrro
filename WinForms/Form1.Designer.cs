@@ -49,6 +49,8 @@ namespace WinForms
             místnostiToolStripMenuItem1 = new ToolStripMenuItem();
             generovatToolStripMenuItem = new ToolStripMenuItem();
             pomocToolStripMenuItem = new ToolStripMenuItem();
+            atributyToolStripMenuItem = new ToolStripMenuItem();
+            expotrToolStripMenuItem = new ToolStripMenuItem();
             button6 = new Button();
             label5 = new Label();
             button10 = new Button();
@@ -60,8 +62,8 @@ namespace WinForms
             label10 = new Label();
             button14 = new Button();
             label4 = new Label();
-            atributyToolStripMenuItem = new ToolStripMenuItem();
-            expotrToolStripMenuItem = new ToolStripMenuItem();
+            rozvaděčToolStripMenuItem = new ToolStripMenuItem();
+            propojeniToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -203,7 +205,7 @@ namespace WinForms
             // menuStrip1
             // 
             menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, místnostiToolStripMenuItem, pomocToolStripMenuItem, atributyToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, místnostiToolStripMenuItem, pomocToolStripMenuItem, atributyToolStripMenuItem, rozvaděčToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1073, 29);
@@ -220,7 +222,7 @@ namespace WinForms
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 26);
+            openToolStripMenuItem.Size = new Size(176, 26);
             openToolStripMenuItem.Text = "Otevřít složku";
             openToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
             // 
@@ -241,14 +243,14 @@ namespace WinForms
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(180, 26);
+            místnostiToolStripMenuItem1.Size = new Size(176, 26);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // generovatToolStripMenuItem
             // 
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(180, 26);
+            generovatToolStripMenuItem.Size = new Size(176, 26);
             generovatToolStripMenuItem.Text = "Generovat ";
             generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
@@ -257,6 +259,20 @@ namespace WinForms
             pomocToolStripMenuItem.Name = "pomocToolStripMenuItem";
             pomocToolStripMenuItem.Size = new Size(69, 25);
             pomocToolStripMenuItem.Text = "Pomoc";
+            // 
+            // atributyToolStripMenuItem
+            // 
+            atributyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { expotrToolStripMenuItem });
+            atributyToolStripMenuItem.Name = "atributyToolStripMenuItem";
+            atributyToolStripMenuItem.Size = new Size(78, 25);
+            atributyToolStripMenuItem.Text = "Atributy";
+            // 
+            // expotrToolStripMenuItem
+            // 
+            expotrToolStripMenuItem.Name = "expotrToolStripMenuItem";
+            expotrToolStripMenuItem.Size = new Size(207, 26);
+            expotrToolStripMenuItem.Text = "Expotr DwG -> Xls";
+            expotrToolStripMenuItem.Click += ExpotrToolStripMenuItem_Click;
             // 
             // button6
             // 
@@ -385,19 +401,19 @@ namespace WinForms
             label4.TabIndex = 32;
             label4.Text = "z elektro vytvořit Excel";
             // 
-            // atributyToolStripMenuItem
+            // rozvaděčToolStripMenuItem
             // 
-            atributyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { expotrToolStripMenuItem });
-            atributyToolStripMenuItem.Name = "atributyToolStripMenuItem";
-            atributyToolStripMenuItem.Size = new Size(78, 25);
-            atributyToolStripMenuItem.Text = "Atributy";
+            rozvaděčToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propojeniToolStripMenuItem });
+            rozvaděčToolStripMenuItem.Name = "rozvaděčToolStripMenuItem";
+            rozvaděčToolStripMenuItem.Size = new Size(88, 25);
+            rozvaděčToolStripMenuItem.Text = "Rozvaděč";
             // 
-            // expotrToolStripMenuItem
+            // propojeniToolStripMenuItem
             // 
-            expotrToolStripMenuItem.Name = "expotrToolStripMenuItem";
-            expotrToolStripMenuItem.Size = new Size(207, 26);
-            expotrToolStripMenuItem.Text = "Expotr DwG -> Xls";
-            expotrToolStripMenuItem.Click += ExpotrToolStripMenuItem_Click;
+            propojeniToolStripMenuItem.Name = "propojeniToolStripMenuItem";
+            propojeniToolStripMenuItem.Size = new Size(180, 26);
+            propojeniToolStripMenuItem.Text = "Propojeni";
+            propojeniToolStripMenuItem.Click += PropojeniToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -473,5 +489,7 @@ namespace WinForms
         private Label label4;
         private ToolStripMenuItem atributyToolStripMenuItem;
         private ToolStripMenuItem expotrToolStripMenuItem;
+        private ToolStripMenuItem rozvaděčToolStripMenuItem;
+        private ToolStripMenuItem propojeniToolStripMenuItem;
     }
 }
