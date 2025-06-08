@@ -56,6 +56,29 @@ namespace Aplikace.Upravy
             string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
             var Stara = ExcelLoad.DwgDataExcel(cesta1, "Summary", 3);
 
+            foreach (var Data in Stara)
+            {
+                switch(Data.Patro) {
+                    case "1":
+                        Data.Vykres = "Xref.EM.1NP.dwg";
+                        break;
+                    case "2":
+                        Data.Vykres = "Xref.EM.2NP.dwg";
+                        break;
+                    case "3":
+                        Data.Vykres = "Xref.EM.3NP.dwg";
+                        break;
+                    case "4":
+                        Data.Vykres = "Xref.EM.4NP.dwg";
+                        break;
+                    case "5":
+                        Data.Vykres = "Xref.EM.5NP.dwg";
+                        break;
+
+                    default:
+                        break;
+                }
+            }
             Console.WriteLine($"Načteno {Stara.Count} záznamů z {cesta1}");
 
             //Převod->json,csv 
