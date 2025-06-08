@@ -127,7 +127,7 @@ namespace Aplikace.Tridy
         public string RozvadecCislo { get => rozvadecCislo; set => SetProperty(ref rozvadecCislo, value); }
         /// <summary>Označení celého rozvaděče</summary>
         [JsonIgnore]
-        public string RozvadecOznačení => Rozvadec + " " + RozvadecCislo;
+        public string RozvadecOznačení => Rozvadec + RozvadecCislo;
         public string Vyvod { get; set; } = string.Empty;
 
         /// <summary>Druh Motor, Přívod, Spojka, Rozvaěděč</summary>
