@@ -78,6 +78,7 @@ namespace Aplikace.Upravy
                     default:
                         break;
                 }
+                Data.Rozvadec = "RM";
             }
             Console.WriteLine($"Načteno {Stara.Count} záznamů z {cesta1}");
 
