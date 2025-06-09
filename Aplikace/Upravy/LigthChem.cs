@@ -204,7 +204,7 @@ namespace Aplikace.Upravy
 
             //Možná proud asi jen tam kde není.
             var Add = Stara.AddProud();
-            Add.SaveJsonList(cestaData);
+            Add.ToList().SaveJsonList(cestaData);
         }
 
         /// <summary>Seznam vývodů pro doplnění </summary>
@@ -285,8 +285,10 @@ namespace Aplikace.Upravy
         //    //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
         //}
 
-        public static List<Zarizeni> AddKabelCyky(this List<Zarizeni> Target, double rezerva = 1.5)
+        public static IEnumerable<Zarizeni> AddKabelCyky(this IEnumerable<Zarizeni> target, double rezerva = 1.5)
         {
+            var Target = target.ToList(); // převod na List, abys mohl indexovat
+
             var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
                 .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
                 .OrderBy(x => x.IzAE).ToList();
@@ -309,7 +311,7 @@ namespace Aplikace.Upravy
                                  .Where(p => p.CanWrite && p.Name != "Item")
                                  .ToList();
 
-            for(int i = 0; i < Target.Count; i++)
+            for(int i = 0; i < Target.Count(); i++)
             {
                 int pocet = 1;
                 bool volba = true;

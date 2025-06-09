@@ -13,7 +13,7 @@ namespace Aplikace.Sdilene
     public static class Pridat
     {
         /// <summary>výpočet proudu </summary>
-        public static List<Zarizeni> AddProud(this List<Zarizeni> pole)
+        public static IEnumerable<Zarizeni> AddProud(this IEnumerable<Zarizeni> pole)
         {
             string Cesta = Path.Combine(Cesty.MotoryJson);
             var Motory = Soubory.LoadJsonList<Motor>(Cesta).OrderBy(x => x.Vykon50).ToList();

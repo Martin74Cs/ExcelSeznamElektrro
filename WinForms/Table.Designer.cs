@@ -26,7 +26,8 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             dataGridView1 = new DataGridView();
             Button1 = new Button();
             Button2 = new Button();
@@ -35,6 +36,8 @@
             button5 = new Button();
             button6 = new Button();
             label1 = new Label();
+            comboBox1 = new ComboBox();
+            BtnAdd = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -50,6 +53,7 @@
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             dataGridView1.CellMouseUp += dataGridView1_CellMouseUp;
             dataGridView1.CurrentCellChanged += dataGridView1_CurrentCellChanged;
+            dataGridView1.RowsAdded += dataGridView1_RowsAdded;
             // 
             // Button1
             // 
@@ -132,11 +136,35 @@
             label1.TabIndex = 7;
             label1.Text = "Výpočet :";
             // 
+            // comboBox1
+            // 
+            comboBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(1100, 514);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(96, 29);
+            comboBox1.TabIndex = 8;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // 
+            // BtnAdd
+            // 
+            BtnAdd.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            BtnAdd.Location = new Point(1100, 560);
+            BtnAdd.Margin = new Padding(4);
+            BtnAdd.Name = "BtnAdd";
+            BtnAdd.Size = new Size(96, 32);
+            BtnAdd.TabIndex = 9;
+            BtnAdd.Text = "Přidat";
+            BtnAdd.UseVisualStyleBackColor = true;
+            BtnAdd.Click += BtnAdd_Click;
+            // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1219, 683);
+            Controls.Add(BtnAdd);
+            Controls.Add(comboBox1);
             Controls.Add(label1);
             Controls.Add(button6);
             Controls.Add(button5);
@@ -149,6 +177,7 @@
             Margin = new Padding(4);
             Name = "Table";
             Text = "Table";
+            FormClosing += Table_FormClosing;
             Load += Table_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
@@ -165,5 +194,7 @@
         private Button button5;
         private Button button6;
         private Label label1;
+        private ComboBox comboBox1;
+        private Button BtnAdd;
     }
 }
