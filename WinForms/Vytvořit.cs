@@ -63,7 +63,8 @@ namespace WinForms
             //Open motory
             //await Task.Run(() => LigthChem.VyvoritMotor());
 
-            var Motory1 = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            //var Motory1 = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            var Motory1 = Soubory.LoadJsonList<Motor>(CestaMotor);
             label2.Text = "Cesta = " + CestaMotor;
             Motor = new BindingList<Motor>(Motory1);
             dataGridView1.DataSource = Motor;
@@ -117,8 +118,9 @@ namespace WinForms
         private readonly string CestaFM = Path.Combine(Cesty.Data, "FM.csv");
 
         private BindingList<Motor> Motor = [];
-        private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "Motory.csv");
-
+        //private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "Motory.csv");
+        private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "MotoryList.json");
+        
         private void Button8_Click(object sender, EventArgs e)
         {
             //save Stykače

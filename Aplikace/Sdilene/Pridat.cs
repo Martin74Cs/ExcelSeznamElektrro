@@ -16,7 +16,7 @@ namespace Aplikace.Sdilene
         public static List<Zarizeni> AddProud(this List<Zarizeni> pole)
         {
             string Cesta = Path.Combine(Cesty.MotoryJson);
-            var Motory = Soubory.LoadJsonList<Motor>(Cesta).OrderBy(x => x.Vykon50).ToList();
+            var Motory = Soubory.LoadJsonList<Motor>(Cesta).Where(x => x.Otacky50 > 2800).OrderBy(x => x.Vykon50).ToList();
             if (Motory.Count < 1) 
             {
                 Console.WriteLine($"Nebyly nanačteny motory z {Cesta}");
@@ -30,12 +30,14 @@ namespace Aplikace.Sdilene
             {
                 if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
                 {
-                    var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 > kW && x.Otacky50 == 3000);
+                    var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 >= kW);
                     if (JedenMotor != null)
                     {
                         Cos = JedenMotor.Ucinik50;
                         //přidání motoru do třídy
                         item.Motor = JedenMotor;
+                        //Uprava příkonu dle velikosti motoru
+                        item.Prikon = JedenMotor.Vykon50.ToString("F2");
                     }
                     //Pokud je napětí větší než 250V, použijeme vzorec pro třífázový proud
                     if (U > 250)
