@@ -50,10 +50,10 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(1077, 613);
             dataGridView1.TabIndex = 0;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
-            dataGridView1.CellMouseUp += dataGridView1_CellMouseUp;
-            dataGridView1.CurrentCellChanged += dataGridView1_CurrentCellChanged;
-            dataGridView1.RowsAdded += dataGridView1_RowsAdded;
+            dataGridView1.CellContentClick += DataGridView1_CellContentClick;
+            dataGridView1.CellMouseUp += DataGridView1_CellMouseUp;
+            dataGridView1.CurrentCellChanged += DataGridView1_CurrentCellChanged;
+            dataGridView1.RowsAdded += DataGridView1_RowsAdded;
             // 
             // Button1
             // 
@@ -113,7 +113,7 @@
             button5.TabIndex = 5;
             button5.Text = "Rozvaděč";
             button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
+            button5.Click += Button5_Click;
             // 
             // button6
             // 
@@ -125,7 +125,7 @@
             button6.TabIndex = 6;
             button6.Text = "Vše";
             button6.UseVisualStyleBackColor = true;
-            button6.Click += button6_Click;
+            button6.Click += Button6_Click;
             // 
             // label1
             // 
@@ -144,7 +144,7 @@
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(96, 29);
             comboBox1.TabIndex = 8;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             // 
             // BtnAdd
             // 

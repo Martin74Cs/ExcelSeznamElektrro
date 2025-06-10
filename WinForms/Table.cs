@@ -2,26 +2,10 @@
 using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Aplikace.Upravy;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static Aplikace.Tridy.Zarizeni;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
-using static WinForms.Table;
 
 namespace WinForms
 {
@@ -41,7 +25,7 @@ namespace WinForms
             SetListBox();
             //upravená třída BindingList na SortableBindingList
             var DataBind = new SortableBindingList<Zarizeni>(Pole);
-            dataGridView1.CellFormatting += dataGridView1_CellFormatting;
+            dataGridView1.CellFormatting += DataGridView1_CellFormatting;
             dataGridView1.DataSource = DataBind;
 
             var zaklad = Pole.Select(z => z.Patro).Distinct().OrderBy(x => x).ToList();
@@ -49,10 +33,9 @@ namespace WinForms
             comboBox1.DataSource = zaklad; comboBox1.SelectedIndex = zaklad.Count - 1;
         }
 
-        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            var dgv = sender as DataGridView;
-            if (dgv == null || dgv.Rows[e.RowIndex].DataBoundItem == null)
+            if (sender is not DataGridView dgv || dgv.Rows[e.RowIndex].DataBoundItem == null)
                 return;
 
             Type type = typeof(Zarizeni);
@@ -68,7 +51,7 @@ namespace WinForms
         }
 
         // Pomocná metoda pro získání popisu z enumu
-        private string GetEnumDescription(Enum value)
+        private static string GetEnumDescription(Enum value)
         {
             var field = value.GetType().GetField(value.ToString());
             var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
@@ -99,7 +82,7 @@ namespace WinForms
                     //dataGridView1.Columns.Remove(stavColumn);
 
                     // Vytvoříme seznam pro ComboBox s popisy
-                    var Vyber = Enum.GetValues(typeof(Zarizeni.Druhy))
+                    var Vyber = Enum.GetValues<Zarizeni.Druhy>()
                     .Cast<Zarizeni.Druhy>().Select(s => new
                     {
                         //Value = s.ToString(), // Ukládáme jako string
@@ -109,7 +92,7 @@ namespace WinForms
                     }).ToList();
 
                     // Vytvoříme nový ComboBox sloupec
-                    DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn
+                    var comboBoxColumn = new DataGridViewComboBoxColumn
                     {
                         HeaderText = "Vyber",
                         Name = "Vyber",
@@ -140,8 +123,8 @@ namespace WinForms
             //dataGridView1.Columns.Add(comboBoxColumn);
 
             // Umožnit přidávání/smazání
-            dataGridView1.AllowUserToAddRows = true;
-            //dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
+            //dataGridView1.AllowUserToAddRows = true;
+            dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
 
             dataGridView1.AllowUserToDeleteRows = true;
             dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
@@ -179,7 +162,7 @@ namespace WinForms
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             //var dgv = sender as DataGridView;
             //if(dgv == null || e.RowIndex < 0 || e.ColumnIndex < 0)
@@ -198,15 +181,14 @@ namespace WinForms
             //}
         }
 
-        private void dataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
 
         }
 
-        private void dataGridView1_CurrentCellChanged(object sender, EventArgs e)
+        private void DataGridView1_CurrentCellChanged(object sender, EventArgs e)
         {
-            var dgv = sender as DataGridView;
-            if (dgv == null || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
+            if (sender is not DataGridView dgv || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
                 return;
 
             // Najdeme index sloupce "Stav"
@@ -233,7 +215,7 @@ namespace WinForms
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void Button5_Click(object sender, EventArgs e)
         {
             //Skrýtsloupce
             //dataGridView1.Columns["PID"].Visible = false;
@@ -262,13 +244,13 @@ namespace WinForms
             dataGridView1.Columns["Id"].Visible = false;
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void Button6_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewColumn column in dataGridView1.Columns)
                 column.Visible = true;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox1.Text == "All")
             {
@@ -298,7 +280,7 @@ namespace WinForms
 
         }
 
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             // Ošetření, aby to neprobíhalo při načtení všech řádků znovu
             //if (e.RowIndex >= 0 && e.RowCount == 1)
