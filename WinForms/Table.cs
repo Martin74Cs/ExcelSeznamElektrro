@@ -1,46 +1,41 @@
-﻿using Aplikace.Sdilene;
+﻿using Aplikace.Excel;
+using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Aplikace.Upravy;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static Aplikace.Tridy.Zarizeni;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
-using static WinForms.Table;
 
 namespace WinForms
 {
-    public partial class Table: Form {
+    public partial class Table : Form
+    {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public List<Zarizeni> PoleOut { get; set; }
+
         private List<Zarizeni> Pole { get; set; }
+
         //private SortableBindingList<Zarizeni> DataBind;
         //private BindingSource SourceBind = new BindingSource();
-        public Table(List<Zarizeni> Pole) {
+        public Table(List<Zarizeni> Pole)
+        {
             this.Pole = Pole;
             InitializeComponent();
             SetListBox();
             //upravená třída BindingList na SortableBindingList
             var DataBind = new SortableBindingList<Zarizeni>(Pole);
-            dataGridView1.CellFormatting += dataGridView1_CellFormatting;
+            dataGridView1.CellFormatting += DataGridView1_CellFormatting;
             dataGridView1.DataSource = DataBind;
+
+            var zaklad = Pole.Select(z => z.Patro).Distinct().OrderBy(x => x).ToList();
+            zaklad.Add("All");
+            comboBox1.DataSource = zaklad; comboBox1.SelectedIndex = zaklad.Count - 1;
         }
 
-        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
-            var dgv = sender as DataGridView;
-            if(dgv == null || dgv.Rows[e.RowIndex].DataBoundItem == null)
+        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (sender is not DataGridView dgv || dgv.Rows[e.RowIndex].DataBoundItem == null)
                 return;
 
             Type type = typeof(Zarizeni);
@@ -48,7 +43,7 @@ namespace WinForms
 
             var Text = vlastnosti.Select(x => x.Name).ToArray();
 
-            if(Text.Contains(dgv.Columns[e.ColumnIndex].Name) && !type.GetProperty(dgv.Columns[e.ColumnIndex].Name).CanWrite) // název sloupce ve zdroji dat
+            if (Text.Contains(dgv.Columns[e.ColumnIndex].Name) && !type.GetProperty(dgv.Columns[e.ColumnIndex].Name).CanWrite) // název sloupce ve zdroji dat
             {
                 e.CellStyle.BackColor = Color.LightGray;
                 dgv.Columns[dgv.Columns[e.ColumnIndex].Name].ReadOnly = true;
@@ -56,18 +51,21 @@ namespace WinForms
         }
 
         // Pomocná metoda pro získání popisu z enumu
-        private string GetEnumDescription(Enum value) {
+        private static string GetEnumDescription(Enum value)
+        {
             var field = value.GetType().GetField(value.ToString());
             var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
             return attribute == null ? value.ToString() : attribute.Description;
         }
 
-        public void SetListBox() {
+        public void SetListBox()
+        {
             dataGridView1.AutoGenerateColumns = true;
             //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
 
             // Po připojení datového zdroje nahradíme sloupec Stav za ComboBox
-            dataGridView1.DataSourceChanged += (s, e) => {
+            dataGridView1.DataSourceChanged += (s, e) =>
+            {
                 var DruhColumn = dataGridView1.Columns["Druh"];
                 DruhColumn.Visible = false;
                 dataGridView1.Columns["DruhEnum"].Visible = false;
@@ -75,7 +73,8 @@ namespace WinForms
 
                 // Najdeme existující sloupec Stav
                 //var stavColumn = dataGridView1.Columns["DruhEnum"];
-                if(DruhColumn != null) {
+                if (DruhColumn != null)
+                {
                     // Získáme index sloupce
                     int columnIndex = DruhColumn.Index;
 
@@ -83,8 +82,9 @@ namespace WinForms
                     //dataGridView1.Columns.Remove(stavColumn);
 
                     // Vytvoříme seznam pro ComboBox s popisy
-                    var Vyber = Enum.GetValues(typeof(Zarizeni.Druhy))
-                    .Cast<Zarizeni.Druhy>().Select(s => new {
+                    var Vyber = Enum.GetValues<Zarizeni.Druhy>()
+                    .Cast<Zarizeni.Druhy>().Select(s => new
+                    {
                         //Value = s.ToString(), // Ukládáme jako string
                         //Value = s, // Ukládáme jako string
                         Value = s.ToString(), // Ukládáme jako string
@@ -92,7 +92,8 @@ namespace WinForms
                     }).ToList();
 
                     // Vytvoříme nový ComboBox sloupec
-                    DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn {
+                    var comboBoxColumn = new DataGridViewComboBoxColumn
+                    {
                         HeaderText = "Vyber",
                         Name = "Vyber",
                         DataPropertyName = "Druh", // Propojení s vlastností Druh v Zarizeni
@@ -122,41 +123,47 @@ namespace WinForms
             //dataGridView1.Columns.Add(comboBoxColumn);
 
             // Umožnit přidávání/smazání
-            dataGridView1.AllowUserToAddRows = true;
-            //dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
+            //dataGridView1.AllowUserToAddRows = true;
+            dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
 
             dataGridView1.AllowUserToDeleteRows = true;
             dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
         }
 
-        private void Button1_Click(object sender, EventArgs e) {
+        private void Button1_Click(object sender, EventArgs e)
+        {
             this.DialogResult = DialogResult.Cancel;
         }
 
-        private void Button2_Click(object sender, EventArgs e) {
+        private void Button2_Click(object sender, EventArgs e)
+        {
             this.DialogResult = DialogResult.OK;
         }
 
-        private void Table_Load(object sender, EventArgs e) {
+        private void Table_Load(object sender, EventArgs e)
+        {
 
         }
 
-        private void Button3_Click(object sender, EventArgs e) {
+        private void Button3_Click(object sender, EventArgs e)
+        {
             //Proud
-            if(Pole == null) return;
+            if (Pole == null) return;
             Pole.AddProud();
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 
-        private void Button4_Click(object sender, EventArgs e) {
+        private void Button4_Click(object sender, EventArgs e)
+        {
             //průřez
-            if(Pole == null) return;
+            if (Pole == null) return;
             //Strojni.AddProud();
             Pole.AddKabelCyky(1.6);
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
             //var dgv = sender as DataGridView;
             //if(dgv == null || e.RowIndex < 0 || e.ColumnIndex < 0)
             //    return;
@@ -174,36 +181,42 @@ namespace WinForms
             //}
         }
 
-        private void dataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e) {
+        private void DataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
 
         }
 
-        private void dataGridView1_CurrentCellChanged(object sender, EventArgs e) {
-            var dgv = sender as DataGridView;
-            if(dgv == null || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
+        private void DataGridView1_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (sender is not DataGridView dgv || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
                 return;
 
             // Najdeme index sloupce "Stav"
             int stavColumnIndex = -1;
-            foreach(DataGridViewColumn column in dgv.Columns) {
-                if(column.Name == "Druh") {
+            foreach (DataGridViewColumn column in dgv.Columns)
+            {
+                if (column.Name == "Druh")
+                {
                     stavColumnIndex = column.Index;
                     break;
                 }
             }
 
-            if(stavColumnIndex >= 0) {
+            if (stavColumnIndex >= 0)
+            {
                 // Nastavíme aktuální buňku na sloupec "Stav" v aktuálním řádku
                 //dgv.CurrentCell = dgv[stavColumnIndex, dgv.CurrentCell.RowIndex];
                 dgv.BeginEdit(true);
 
-                if(dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox) {
+                if (dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox)
+                {
                     comboBox.DroppedDown = true;
                 }
             }
         }
 
-        private void button5_Click(object sender, EventArgs e) {
+        private void Button5_Click(object sender, EventArgs e)
+        {
             //Skrýtsloupce
             //dataGridView1.Columns["PID"].Visible = false;
             dataGridView1.Columns["Pocet"].Visible = false;
@@ -231,49 +244,114 @@ namespace WinForms
             dataGridView1.Columns["Id"].Visible = false;
         }
 
-        private void button6_Click(object sender, EventArgs e) {
+        private void Button6_Click(object sender, EventArgs e)
+        {
             foreach (DataGridViewColumn column in dataGridView1.Columns)
                 column.Visible = true;
         }
-    }
-}
 
-public class SortableBindingList<T> : BindingList<T>
-{
-    public SortableBindingList() : base() { }
-
-    public SortableBindingList(IList<T> list) : base(list) { }
-
-    private bool isSorted;
-    private ListSortDirection sortDirection;
-    private PropertyDescriptor sortProperty;
-
-    protected override bool SupportsSortingCore => true;
-    protected override bool IsSortedCore => isSorted;
-
-    protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
-    {
-        var items = (List<T>)Items;
-        items.Sort((x, y) =>
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var xValue = prop.GetValue(x);
-            var yValue = prop.GetValue(y);
-            return direction == ListSortDirection.Ascending
-                ? Comparer.DefaultInvariant.Compare(xValue, yValue)
-                : Comparer.DefaultInvariant.Compare(yValue, xValue);
-        });
+            if (comboBox1.Text == "All")
+            {
+                //dataGridView1.DataSource = new SortableBindingList<ZarizeniView>(Pole);
+                dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
+                return;
+            }
 
-        sortDirection = direction;
-        sortProperty = prop;
-        isSorted = true;
-        OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            string vybranePatro = comboBox1.SelectedItem.ToString();
+
+            var filtrovanaData = Pole
+                .Where(z => z.Patro == vybranePatro)
+                .ToList();
+
+            //dataGridView1.DataSource = new SortableBindingList<ZarizeniView>(filtrovanaData);
+            dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+        }
+
+        private void Table_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (dataGridView1.IsCurrentRowDirty)
+            {
+                dataGridView1.EndEdit();        // Ukončí editaci buňky
+                dataGridView1.CurrentCell = null; // Vynutí commit řádku
+                BindingContext[dataGridView1.DataSource].EndCurrentEdit(); // Vynutí uložení do seznamu
+            }
+
+        }
+
+        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            // Ošetření, aby to neprobíhalo při načtení všech řádků znovu
+            //if (e.RowIndex >= 0 && e.RowCount == 1)
+            //{
+            //    // Pokud přidání pochází od uživatele (ne automaticky), můžeme zachytit poslední řádek
+            //    var posledni = dataGridView1.Rows[e.RowIndex];
+
+            //    // Zde můžeš ověřit nebo vynutit uložení změn
+            //    dataGridView1.EndEdit();
+
+            //    // Můžeš například projít všechny řádky, nebo přistoupit k PoleDataBind a zkontrolovat, že nový řádek přibyl
+            //    // nebo jen ohlásit změnu
+            //    Console.WriteLine("Přidán nový řádek.");
+
+            //    //pridat radek do pole
+            //    Pole.Add(new Zarizeni());
+
+            //    dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
+            //}
+        }
+
+        private void BtnAdd_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z)
+            {
+                z.Apid = ExcelLoad.Apid(); // Přidá nový prázdný záznam do seznamu
+                Pole.Add(z);
+                
+            }
+            dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole); // Obnoví datový zdroj pro zobrazení nového záznamu
+
+        }
     }
 
-    protected override void RemoveSortCore()
+    public class SortableBindingList<T> : BindingList<T>
     {
-        isSorted = false;
-    }
+        public SortableBindingList() : base() { }
 
-    protected override PropertyDescriptor SortPropertyCore => sortProperty;
-    protected override ListSortDirection SortDirectionCore => sortDirection;
+        public SortableBindingList(IList<T> list) : base(list) { }
+
+        private bool isSorted;
+        private ListSortDirection sortDirection;
+        private PropertyDescriptor sortProperty;
+
+        protected override bool SupportsSortingCore => true;
+        protected override bool IsSortedCore => isSorted;
+
+        protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
+        {
+            var items = (List<T>)Items;
+            items.Sort((x, y) =>
+            {
+                var xValue = prop.GetValue(x);
+                var yValue = prop.GetValue(y);
+                return direction == ListSortDirection.Ascending
+                    ? Comparer.DefaultInvariant.Compare(xValue, yValue)
+                    : Comparer.DefaultInvariant.Compare(yValue, xValue);
+            });
+
+            sortDirection = direction;
+            sortProperty = prop;
+            isSorted = true;
+            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
+
+        protected override void RemoveSortCore()
+        {
+            isSorted = false;
+        }
+
+        protected override PropertyDescriptor SortPropertyCore => sortProperty;
+        protected override ListSortDirection SortDirectionCore => sortDirection;
+    }
 }
