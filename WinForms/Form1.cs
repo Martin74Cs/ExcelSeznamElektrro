@@ -150,22 +150,22 @@ namespace WinForms
 
         private static void SkrytSloupce(DataGridView data) {
             //skryje sloupce, které nechceme zobrazit
-            data.Columns["Patro"].Visible = false;
-            data.Columns["HP"].Visible = false;
-            data.Columns["Delka"].Visible = false;
-            data.Columns["IsExist"].Visible = false;
-            data.Columns["IsExistElektro"].Visible = false;
-            data.Columns["Bod"].Visible = false;
-            data.Columns["BodElektro"].Visible = false;
-            data.Columns["PID"].Visible = false;
-            data.Columns["Pocet"].Visible = false;
-            data.Columns["Radek"].Visible = false;
-            data.Columns["Id"].Visible = false;
-            data.Columns["Otoceni"].Visible = false;
+            data.Columns["Patro"]?.Visible = false;
+            data.Columns["HP"]?.Visible = false;
+            data.Columns["Delka"]?.Visible = false;
+            data.Columns["IsExist"]?.Visible = false;
+            data.Columns["IsExistElektro"]?.Visible = false;
+            data.Columns["Bod"]?.Visible = false;
+            data.Columns["BodElektro"]?.Visible = false;
+            data.Columns["PID"]?.Visible = false;
+            data.Columns["Pocet"]?.Visible = false;
+            data.Columns["Radek"]?.Visible = false;
+            data.Columns["Id"]?.Visible = false;
+            data.Columns["Otoceni"]?.Visible = false;
 
-            data.Columns["Nic"].Visible = false;
-            data.Columns["AWG"].Visible = false;
-            data.Columns["Delkaft"].Visible = false;
+            data.Columns["Nic"]?.Visible = false;
+            data.Columns["AWG"]?.Visible = false;
+            data.Columns["Delkaft"]?.Visible = false;
 
             //data.Columns["PruzezMM2"].Visible = false;
             //data.Columns["Rozvadec"].Visible = false;

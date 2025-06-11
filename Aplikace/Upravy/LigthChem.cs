@@ -101,18 +101,20 @@ namespace Aplikace.Upravy
             var Nove = new List<Zarizeni>();
             foreach (var item in Stroj)
             {
-                var Jeden = Data.FirstOrDefault(x => x.Apid == item.Apid);
+                var Jeden = Data.FirstOrDefault(x => x.Popis == item.Popis);
                 if (Jeden == null)
                 {
                     //zeznam nebyl nelezen pravděpodobně chybí
                     //záznam bude ze strojů doplněn
+                    item.Nic = "Nove";
                     Nove.Add(item);
                 }
                 else {
                     //zaznam existuje - bude přídán již existující záznam.
-                    //Nove.Add(item);
+                    Nove.Add(item);
                 }
             }
+            Nove.SaveToCsv(Path.Combine(Cesty.Elektro, "Pid", "Test.csv"));
         }
 
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
