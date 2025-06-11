@@ -47,18 +47,14 @@ namespace Aplikace.Upravy
             //}
         }
 
-        /// <summary>Převod extrahovaných dat z Dwg do Xls s následným převodem do Json</summary>
-        public static void DwgXlsToJsonCsv()
-        { 
-            if (!Directory.Exists(Cesty.Elektro))
-                Directory.CreateDirectory(Cesty.Elektro);
-
-            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
+        public static List<Zarizeni> DwgToJson(string cesta1)
+        {
             var Stara = ExcelLoad.DwgDataExcel(cesta1, "Summary", 3);
 
             foreach (var Data in Stara)
             {
-                switch(Data.Patro) {
+                switch (Data.Patro)
+                {
                     case "1":
                         Data.Vykres = "Xref.EM.1NP.dwg";
                         break;
@@ -81,12 +77,43 @@ namespace Aplikace.Upravy
                 Data.Rozvadec = "RM";
             }
             Console.WriteLine($"Načteno {Stara.Count} záznamů z {cesta1}");
+            return Stara;
+        }
+        /// <summary>Převod extrahovaných dat z Dwg do Xls s následným převodem do Json</summary>
+        public static void DwgXlsToJsonCsv()
+        {
+            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
+            var Stara = DwgToJson(cesta1);
 
             //Převod->json,csv 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             Stara.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
         }
 
+        public static void DoplněníDat()
+        {
+            string cestaData = Cesty.ElektroDataJson;
+            var Data = Soubory.LoadJsonList<Zarizeni>(cestaData);
+
+            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
+            var Stroj = DwgToJson(cesta1);
+
+            var Nove = new List<Zarizeni>();
+            foreach (var item in Stroj)
+            {
+                var Jeden = Data.FirstOrDefault(x => x.Apid == item.Apid);
+                if (Jeden == null)
+                {
+                    //zeznam nebyl nelezen pravděpodobně chybí
+                    //záznam bude ze strojů doplněn
+                    Nove.Add(item);
+                }
+                else {
+                    //zaznam existuje - bude přídán již existující záznam.
+                    //Nove.Add(item);
+                }
+            }
+        }
 
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
         public static void JsonToExcel()
@@ -451,7 +478,18 @@ namespace Aplikace.Upravy
 
             }
         }
+        public static void SpojitSeznamy()
+        {
+            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+            Data = [.. Data.Where(x => x.Etapa == "FAZE 1")];
 
+            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
+            var Data2 = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
+            Data2 = [.. Data2.Where(x => x.Etapa == "FAZE 2")];
+
+            Data = [.. Data, .. Data2];
+            Data.SaveJsonList(Path.Combine(Cesty.Elektro, "Pid", @"Test.json" ));
+        }
         /// <summary>Převod stringu na enum</summary>
         private static void StringToEnum(IGrouping<string, Zarizeni> skupina) {
             foreach(var ukol in skupina) {

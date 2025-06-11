@@ -20,16 +20,19 @@ namespace Aplikace.Sdilene
         public static string ProgramFiles { get => Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles); }
 
         public static string UserProfile { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
-        public static string Cesta { get =>  Path.Combine(UserProfile , @"AppData\Roaming\Autodesk\ApplicationPlugins\Elektro.bundle"); }
-        public static string CestaSich => Path.Combine(Cesta , "Sichr");
-        public static string CuJson => Path.Combine(CestaSich , "Cu.Json");
+        public static string Cesta { get => Path.Combine(UserProfile, @"AppData\Roaming\Autodesk\ApplicationPlugins\Elektro.bundle"); }
+        public static string CestaSich => Path.Combine(Cesta, "Sichr");
+        public static string CuJson => Path.Combine(CestaSich, "Cu.Json");
         public static string AlJson => CestaSich + @"Al.Json";
 
         /// <summary>...LightChem\Elektro\Lightchem </summary>
-        public static string Lightchem => Path.Combine(BasePath , "Lightchem");
+        public static string Lightchem => Path.Combine(BasePath, "Lightchem");
 
         /// <summary>...Můj disk\Elektro\Lightchem\Ëlektro </summary>
-        public static string Elektro => Path.Combine(Lightchem , "Elektro");
+        public static string Elektro { get {
+                //if (!Directory.Exists(Cesty.Elektro))
+                //    Directory.CreateDirectory(Cesty.Elektro);
+                return Path.Combine(Lightchem, "Elektro"); } }  
         public static string Data => Path.Combine(BasePath, "Data");
         public static string MotoryJson => Path.Combine(Data, "Motory", "Motory.Json");
         public static string ElektroDataCsv => Path.Combine(Elektro, "ElektroData.Csv");

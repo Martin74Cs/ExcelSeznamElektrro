@@ -324,7 +324,7 @@ namespace Aplikace.Excel
                 //čtení jednotlivých řádků excelu
                 var jeden = new Zarizeni();
                 bool Prerusit = true;
-                //načtení jednotlivých řádků excelu dle sloupců ze dir
+                //Načtení jednotlivých řádků excelu dle sloupců ze dir
                 foreach (var j in dir.Keys.ToArray())
                 //for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
                 {

@@ -24,7 +24,13 @@ using Exc = Microsoft.Office.Interop.Excel;
 //Místnosti.VytvoritSeznamy();
 
 //Rozvaděč
-LigthChem.Rozvadec();
+//LigthChem.Rozvadec();
+
+//Etapa2
+//LigthChem.SpojitSeznamy();
+
+//Dopln strojni
+LigthChem.DoplněníDat();
 
 //Oez
 //Priklad.Main();
