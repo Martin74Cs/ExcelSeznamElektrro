@@ -269,6 +269,7 @@ namespace Aplikace.Tridy
             Spojka,
             Rozvadeč,
             Motor,
+            Otop,
             Nic,
         }
     }

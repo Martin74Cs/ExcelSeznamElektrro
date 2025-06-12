@@ -38,6 +38,8 @@
             label1 = new Label();
             comboBox1 = new ComboBox();
             BtnAdd = new Button();
+            button7 = new Button();
+            comboBox2 = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -82,7 +84,7 @@
             // button3
             // 
             button3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button3.Location = new Point(1100, 400);
+            button3.Location = new Point(1100, 394);
             button3.Margin = new Padding(4);
             button3.Name = "button3";
             button3.Size = new Size(96, 32);
@@ -94,7 +96,7 @@
             // Button4
             // 
             Button4.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Button4.Location = new Point(1100, 440);
+            Button4.Location = new Point(1100, 434);
             Button4.Margin = new Padding(4);
             Button4.Name = "Button4";
             Button4.Size = new Size(96, 32);
@@ -130,7 +132,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(1100, 375);
+            label1.Location = new Point(1100, 369);
             label1.Name = "label1";
             label1.Size = new Size(73, 21);
             label1.TabIndex = 7;
@@ -140,7 +142,7 @@
             // 
             comboBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(1100, 514);
+            comboBox1.Location = new Point(1099, 483);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(96, 29);
             comboBox1.TabIndex = 8;
@@ -149,7 +151,7 @@
             // BtnAdd
             // 
             BtnAdd.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            BtnAdd.Location = new Point(1100, 560);
+            BtnAdd.Location = new Point(1099, 519);
             BtnAdd.Margin = new Padding(4);
             BtnAdd.Name = "BtnAdd";
             BtnAdd.Size = new Size(96, 32);
@@ -158,11 +160,35 @@
             BtnAdd.UseVisualStyleBackColor = true;
             BtnAdd.Click += BtnAdd_Click;
             // 
+            // button7
+            // 
+            button7.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            button7.Location = new Point(1099, 560);
+            button7.Margin = new Padding(4);
+            button7.Name = "button7";
+            button7.Size = new Size(96, 32);
+            button7.TabIndex = 10;
+            button7.Text = "Delete";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += Button7_Click;
+            // 
+            // comboBox2
+            // 
+            comboBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Location = new Point(1099, 149);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(96, 29);
+            comboBox2.TabIndex = 11;
+            comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged;
+            // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1219, 683);
+            Controls.Add(comboBox2);
+            Controls.Add(button7);
             Controls.Add(BtnAdd);
             Controls.Add(comboBox1);
             Controls.Add(label1);
@@ -196,5 +222,7 @@
         private Label label1;
         private ComboBox comboBox1;
         private Button BtnAdd;
+        private Button button7;
+        private ComboBox comboBox2;
     }
 }

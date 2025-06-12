@@ -31,6 +31,10 @@ namespace WinForms
             var zaklad = Pole.Select(z => z.Patro).Distinct().OrderBy(x => x).ToList();
             zaklad.Add("All");
             comboBox1.DataSource = zaklad; comboBox1.SelectedIndex = zaklad.Count - 1;
+
+            var Etapa = Pole.Select(z => z.Etapa).Distinct().OrderBy(x => x).ToList();
+            Etapa.Add("All");
+            comboBox2.DataSource = Etapa; comboBox2.SelectedIndex = Etapa.Count - 1;
         }
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -58,7 +62,7 @@ namespace WinForms
             return attribute == null ? value.ToString() : attribute.Description;
         }
 
-        public void SetListBox()
+        public void SetListBoxOld()
         {
             dataGridView1.AutoGenerateColumns = true;
             //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
@@ -68,7 +72,7 @@ namespace WinForms
             {
                 var DruhColumn = dataGridView1.Columns["Druh"];
                 DruhColumn.Visible = false;
-                dataGridView1.Columns["DruhEnum"].Visible = false;
+                dataGridView1.Columns["DruhEnum"]?.Visible = false;
                 //int index = stavColumn?.Index ?? 0;
 
                 // Najdeme existující sloupec Stav
@@ -121,6 +125,30 @@ namespace WinForms
             //    ValueType = typeof(Zarizeni.Druhy) // Zajistí správný typ hodnot
             //};
             //dataGridView1.Columns.Add(comboBoxColumn);
+
+            // Umožnit přidávání/smazání
+            //dataGridView1.AllowUserToAddRows = true;
+            dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
+
+            dataGridView1.AllowUserToDeleteRows = true;
+            dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
+        }
+        public void SetListBox()
+        {
+            dataGridView1.AutoGenerateColumns = true;
+            //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
+
+            // Po připojení datového zdroje nahradíme sloupec Stav za ComboBox
+            dataGridView1.DataSourceChanged += (s, e) =>
+            {
+                // Odstranit všechny sloupce, které nepotřebuješ
+                var namesToRemove = new[] { "Druh", "DruhEnum", "Tag" };
+                foreach (var name in namesToRemove)
+                {
+                    if (dataGridView1.Columns.Contains(name))
+                        dataGridView1.Columns.Remove(name);
+                }
+            };
 
             // Umožnit přidávání/smazání
             //dataGridView1.AllowUserToAddRows = true;
@@ -217,31 +245,40 @@ namespace WinForms
 
         private void Button5_Click(object sender, EventArgs e)
         {
-            //Skrýtsloupce
-            //dataGridView1.Columns["PID"].Visible = false;
-            dataGridView1.Columns["Pocet"].Visible = false;
-            dataGridView1.Columns["Nic"].Visible = false;
-            //dataGridView1.Columns["Proud"].Visible = false; 
-            dataGridView1.Columns["PruzezMM2"].Visible = false;
-            dataGridView1.Columns["AWG"].Visible = false;
-            dataGridView1.Columns["Delka"].Visible = false;
-            dataGridView1.Columns["Delkaft"].Visible = false;
-            dataGridView1.Columns["Vyvod"].Visible = false;
-            dataGridView1.Columns["Druh"].Visible = false;
-            //dataGridView1.Columns["Napeti"].Visible = false; 
-            dataGridView1.Columns["Radek"].Visible = false;
-            dataGridView1.Columns["Vodice"].Visible = false;
-            dataGridView1.Columns["Kabel"].Visible = false;
-            dataGridView1.Columns["Motor"].Visible = false;
-            dataGridView1.Columns["Patro"].Visible = false;
-            dataGridView1.Columns["Vykres"].Visible = false;
-            dataGridView1.Columns["IsExist"].Visible = false;
-            dataGridView1.Columns["Bod"].Visible = false;
-            dataGridView1.Columns["IsExistElektro"].Visible = false;
-            dataGridView1.Columns["Otoceni"].Visible = false;
-            dataGridView1.Columns["BodElektro"].Visible = false;
-            dataGridView1.Columns["HP"].Visible = false;
-            dataGridView1.Columns["Id"].Visible = false;
+            string[] columnsToHide = 
+            ["Pocet", "Nic", "PruzezMM2", "AWG", "Delka", "Delkaft", "Vyvod", "Druh", "Radek", "Vodice", "Kabel", 
+            "Motor", "Patro", "Vykres", "IsExist", "Bod", "IsExistElektro", "Otoceni", "BodElektro", "HP", "Id" ];
+
+            foreach (string columnName in columnsToHide)
+            {
+                if (dataGridView1.Columns.Contains(columnName))
+                    dataGridView1.Columns[columnName]?.Visible = false;
+            }
+            ////Skrýtsloupce
+            ////dataGridView1.Columns["PID"].Visible = false;
+            //dataGridView1.Columns["Pocet"]?.Visible = false;
+            //dataGridView1.Columns["Nic"]?.Visible = false;
+            ////dataGridView1.Columns["Proud"].Visible = false; 
+            //dataGridView1.Columns["PruzezMM2"]?.Visible = false;
+            //dataGridView1.Columns["AWG"]?.Visible = false;
+            //dataGridView1.Columns["Delka"]?.Visible = false;
+            //dataGridView1.Columns["Delkaft"]?.Visible = false;
+            //dataGridView1.Columns["Vyvod"]?.Visible = false;
+            //dataGridView1.Columns["Druh"]?.Visible = false;
+            ////dataGridView1.Columns["Napeti"].Visible = false; 
+            //dataGridView1.Columns["Radek"]?.Visible = false;
+            //dataGridView1.Columns["Vodice"]?.Visible = false;
+            //dataGridView1.Columns["Kabel"]?.Visible = false;
+            //dataGridView1.Columns["Motor"]?.Visible = false;
+            //dataGridView1.Columns["Patro"]?.Visible = false;
+            //dataGridView1.Columns["Vykres"]?.Visible = false;
+            //dataGridView1.Columns["IsExist"]?.Visible = false;
+            //dataGridView1.Columns["Bod"]?.Visible = false;
+            //dataGridView1.Columns["IsExistElektro"]?.Visible = false;
+            //dataGridView1.Columns["Otoceni"]?.Visible = false;
+            //dataGridView1.Columns["BodElektro"]?.Visible = false;
+            //dataGridView1.Columns["HP"]?.Visible = false;
+            //dataGridView1.Columns["Id"]?.Visible = false;
         }
 
         private void Button6_Click(object sender, EventArgs e)
@@ -302,16 +339,42 @@ namespace WinForms
             //}
         }
 
+        //Přidat
         private void BtnAdd_Click(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z)
             {
                 z.Apid = ExcelLoad.Apid(); // Přidá nový prázdný záznam do seznamu
                 Pole.Add(z);
-                
+
             }
             dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole); // Obnoví datový zdroj pro zobrazení nového záznamu
+        }
 
+        //Delete
+        private void Button7_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+            var source = (BindingList<Zarizeni>)dataGridView1.DataSource;
+            source.RemoveAt(dataGridView1.SelectedRows[0].Index);
+        }
+
+        private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox2.Text == "All")
+            {
+                //dataGridView1.DataSource = new SortableBindingList<ZarizeniView>(Pole);
+                dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
+                return;
+            }
+            string vybranePatro = comboBox2.SelectedItem.ToString();
+
+            var filtrovanaData = Pole
+                .Where(z => z.Etapa == vybranePatro)
+                .ToList();
+
+            //dataGridView1.DataSource = new SortableBindingList<ZarizeniView>(filtrovanaData);
+            dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
         }
     }
 

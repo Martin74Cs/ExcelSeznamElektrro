@@ -101,7 +101,8 @@ namespace Aplikace.Upravy
             var Nove = new List<Zarizeni>();
             foreach (var item in Stroj)
             {
-                var Jeden = Data.FirstOrDefault(x => x.Popis == item.Popis);
+                //var Jeden = Data.FirstOrDefault(x => x.Popis == item.Popis);
+                var Jeden = Data.FirstOrDefault(x => x.Etapa == "FAZE 2");
                 if (Jeden == null)
                 {
                     //zeznam nebyl nelezen pravděpodobně chybí
@@ -114,7 +115,10 @@ namespace Aplikace.Upravy
                     Nove.Add(item);
                 }
             }
+            //testovací verze
             Nove.SaveToCsv(Path.Combine(Cesty.Elektro, "Pid", "Test.csv"));
+            //Verze přepsání původního Jsonu
+            //Nove.SaveJsonList(cestaData);
         }
 
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
@@ -340,7 +344,7 @@ namespace Aplikace.Upravy
                                  .Where(p => p.CanWrite && p.Name != "Item")
                                  .ToList();
 
-            for(int i = 0; i < Target.Count(); i++)
+            for(int i = 0; i < Target.Count; i++)
             {
                 int pocet = 1;
                 bool volba = true;
