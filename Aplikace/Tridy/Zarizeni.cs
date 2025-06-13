@@ -272,6 +272,26 @@ namespace Aplikace.Tridy
             Otop,
             Nic,
         }
+
+        public static T Clone<T>(T source) where T : new()
+        {
+            if (source == null) return default;
+
+            T copy = new T();
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                      .Where(p => p.CanRead && p.CanWrite)
+                                      .Where(p => !p.PropertyType.IsEnum) // vyloučí enumy
+                                      .Where(p => p.Name != "Vlastnosti") // vyloučí konkrétní název
+             .Where(p => !Attribute.IsDefined(p, typeof(JsonIgnoreAttribute))); // vyloučí [JsonIgnore]
+
+            foreach (var prop in properties)
+            {
+                var value = prop.GetValue(source);
+                prop.SetValue(copy, value);
+            }
+
+            return copy;
+        }
     }
 
     public class MyPoint3d(double x, double y, double z)
@@ -330,6 +350,7 @@ namespace Aplikace.Tridy
                 writer.WriteValue(value);
             }
         }
+
     }
 
 }

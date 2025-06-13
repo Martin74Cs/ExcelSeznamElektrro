@@ -99,20 +99,22 @@ namespace Aplikace.Upravy
             var Stroj = DwgToJson(cesta1);
 
             var Nove = new List<Zarizeni>();
+            var Zmeny = new List<Zarizeni>();
             foreach (var item in Stroj)
             {
-                //var Jeden = Data.FirstOrDefault(x => x.Popis == item.Popis);
-                var Jeden = Data.FirstOrDefault(x => x.Etapa == "FAZE 2");
+                var Jeden = Data.FirstOrDefault(x => x.Popis == item.Popis);
+                //var Jeden = Data.FirstOrDefault(x => x.Etapa == "FAZE 2");
                 if (Jeden == null)
                 {
                     //zeznam nebyl nelezen pravděpodobně chybí
                     //záznam bude ze strojů doplněn
                     item.Nic = "Nove";
                     Nove.Add(item);
+                    Zmeny.Add(item);
                 }
                 else {
                     //zaznam existuje - bude přídán již existující záznam.
-                    Nove.Add(item);
+                    Nove.Add(Jeden);
                 }
             }
             //testovací verze
@@ -494,7 +496,9 @@ namespace Aplikace.Upravy
             Data2 = [.. Data2.Where(x => x.Etapa == "FAZE 2")];
 
             Data = [.. Data, .. Data2];
-            Data.SaveJsonList(Path.Combine(Cesty.Elektro, "Pid", @"Test.json" ));
+            //Data.SaveJsonList(Path.Combine(Cesty.Elektro, "Pid", @"Test.json" ));
+            //Data.SaveToCsv(Path.Combine(Cesty.Elektro, "Pid", @"Test.csv"));
+            Data.SaveJsonList(Cesty.ElektroDataJson);
         }
         /// <summary>Převod stringu na enum</summary>
         private static void StringToEnum(IGrouping<string, Zarizeni> skupina) {
@@ -506,6 +510,17 @@ namespace Aplikace.Upravy
                     ukol.DruhEnum = Druhy.Nic; // nebo jiná výchozí hodnota
                 }
             }
+        }
+
+        internal static void Duplicity()
+        {
+            string cestaData = Cesty.ElektroDataJson;
+            var Data = Soubory.LoadJsonList<Zarizeni>(cestaData);
+            Console.WriteLine($"Pocet záznamů: {Data.Count}");
+            Data = Data.DistinctBy(x => x.Apid).ToList();
+
+            //Verze přepsání původního Jsonu
+            Data.SaveJsonList(cestaData);
         }
     }
 }

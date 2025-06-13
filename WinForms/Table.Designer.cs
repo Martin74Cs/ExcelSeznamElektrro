@@ -40,6 +40,8 @@
             BtnAdd = new Button();
             button7 = new Button();
             comboBox2 = new ComboBox();
+            comboBox3 = new ComboBox();
+            comboBox4Pid = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -108,7 +110,7 @@
             // button5
             // 
             button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button5.Location = new Point(1100, 101);
+            button5.Location = new Point(1100, 99);
             button5.Margin = new Padding(4);
             button5.Name = "button5";
             button5.Size = new Size(96, 32);
@@ -131,6 +133,7 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Location = new Point(1100, 369);
             label1.Name = "label1";
@@ -147,6 +150,7 @@
             comboBox1.Size = new Size(96, 29);
             comboBox1.TabIndex = 8;
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
+            comboBox1.MouseClick += ComboBox1_MouseClick;
             // 
             // BtnAdd
             // 
@@ -176,17 +180,42 @@
             // 
             comboBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(1099, 149);
+            comboBox2.Location = new Point(1099, 196);
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(96, 29);
             comboBox2.TabIndex = 11;
             comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged;
+            comboBox2.MouseClick += ComboBox2_MouseClick;
+            // 
+            // comboBox3
+            // 
+            comboBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBox3.FormattingEnabled = true;
+            comboBox3.Location = new Point(1100, 260);
+            comboBox3.Name = "comboBox3";
+            comboBox3.Size = new Size(96, 29);
+            comboBox3.TabIndex = 12;
+            comboBox3.SelectedIndexChanged += ComboBox3_SelectedIndexChanged;
+            comboBox3.MouseClick += ComboBox3_MouseClick;
+            // 
+            // comboBox4Pid
+            // 
+            comboBox4Pid.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBox4Pid.FormattingEnabled = true;
+            comboBox4Pid.Location = new Point(1100, 151);
+            comboBox4Pid.Name = "comboBox4Pid";
+            comboBox4Pid.Size = new Size(96, 29);
+            comboBox4Pid.TabIndex = 13;
+            comboBox4Pid.SelectedIndexChanged += comboBox4Pid_SelectedIndexChanged;
+            comboBox4Pid.MouseClick += comboBox4Pid_MouseClick;
             // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1219, 683);
+            Controls.Add(comboBox4Pid);
+            Controls.Add(comboBox3);
             Controls.Add(comboBox2);
             Controls.Add(button7);
             Controls.Add(BtnAdd);
@@ -224,5 +253,7 @@
         private Button BtnAdd;
         private Button button7;
         private ComboBox comboBox2;
+        private ComboBox comboBox3;
+        private ComboBox comboBox4Pid;
     }
 }

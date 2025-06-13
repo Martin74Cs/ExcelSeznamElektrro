@@ -27,10 +27,13 @@ using Exc = Microsoft.Office.Interop.Excel;
 //LigthChem.Rozvadec();
 
 //Etapa2
-//LigthChem.SpojitSeznamy();
+LigthChem.SpojitSeznamy();
 
 //Dopln strojni
-LigthChem.DoplněníDat();
+//LigthChem.DoplněníDat();
+
+//Duplicity
+//LigthChem.Duplicity();
 
 //Oez
 //Priklad.Main();

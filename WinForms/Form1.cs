@@ -253,7 +253,8 @@ namespace WinForms
 
         private void PropojeniToolStripMenuItem_Click(object sender, EventArgs e) {
             var table = new Rozvaděč();
-            var result = table.ShowDialog();
+            //var result = table.ShowDialog();
+            table.ShowDialog();
         }
     }
 
