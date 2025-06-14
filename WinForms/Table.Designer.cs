@@ -54,7 +54,7 @@
             dataGridView1.Size = new Size(1077, 613);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
-            dataGridView1.CellFormatting += dataGridView1_CellFormatting;
+            dataGridView1.CellFormatting += DataGridView1_CellFormatting;
             dataGridView1.CellMouseUp += DataGridView1_CellMouseUp;
             dataGridView1.CurrentCellChanged += DataGridView1_CurrentCellChanged;
             dataGridView1.RowsAdded += DataGridView1_RowsAdded;

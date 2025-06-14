@@ -26,8 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             button1 = new Button();
             button7 = new Button();
             label6 = new Label();
@@ -43,6 +42,8 @@
             Button9 = new Button();
             Button10 = new Button();
             label2 = new Label();
+            button11 = new Button();
+            button12 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -216,11 +217,37 @@
             label2.TabIndex = 31;
             label2.Text = ".";
             // 
+            // button11
+            // 
+            button11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button11.Font = new Font("Segoe UI", 12F);
+            button11.Location = new Point(529, 451);
+            button11.Name = "button11";
+            button11.Size = new Size(128, 38);
+            button11.TabIndex = 32;
+            button11.Text = "Open OEZ 3VA";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += Button11_Click;
+            // 
+            // button12
+            // 
+            button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button12.Font = new Font("Segoe UI", 12F);
+            button12.Location = new Point(663, 451);
+            button12.Name = "button12";
+            button12.Size = new Size(89, 38);
+            button12.TabIndex = 33;
+            button12.Text = "Save M";
+            button12.UseVisualStyleBackColor = true;
+            button12.Click += Button12_Click;
+            // 
             // Vytvořit
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1003, 598);
+            Controls.Add(button12);
+            Controls.Add(button11);
             Controls.Add(label2);
             Controls.Add(Button10);
             Controls.Add(Button9);
@@ -238,6 +265,7 @@
             Controls.Add(button1);
             Name = "Vytvořit";
             Text = "Vytvořit";
+            FormClosing += Vytvořit_FormClosing;
             Load += Vytvořit_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
@@ -261,5 +289,7 @@
         private Button Button9;
         private Button Button10;
         private Label label2;
+        private Button button11;
+        private Button button12;
     }
 }

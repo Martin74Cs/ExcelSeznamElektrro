@@ -480,40 +480,40 @@ namespace WinForms
             box?.DroppedDown = true;
         }
 
- // --- Událost pro obarvení řádku ---
-    private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-    {
-        // Zkontrolujeme, zda máme nějaké APID k zvýraznění a zda je index řádku platný
-        if (!string.IsNullOrEmpty(_highlightedApid) && e.RowIndex >= 0)
-        {
-            //// Získáme objekt, ke kterému je aktuální řádek vázán
-            if (dataGridView1.Rows[e.RowIndex].DataBoundItem is Zarizeni rowZarizeni)
-            {
-            //    // Porovnáme APID řádku s APID, které chceme zvýraznit
-                if (rowZarizeni.Apid == _highlightedApid)
-                {
-                    e.CellStyle.BackColor = Color.LightGreen; // Barva pro zvýrazněný řádek
-                    e.FormattingApplied = true; // Řekne DataGridView, že jsme barvu aplikovali
-                }
-            //    else
-            //    {
-            //        // Pokud řádek NENÍ ten, který má být obarven, resetujeme jeho barvu na výchozí
-            //        e.CellStyle.BackColor = Color.Empty; // Reset na výchozí barvu (transparentní)
-            //        e.FormattingApplied = true;
-            //    }
-            }
-        }
-        else
-        {
-            // Pokud _highlightedApid je null (nebo neplatný RowIndex),
-            // ujistěte se, že žádný řádek není obarven a je nastaven na výchozí barvu.
-            //if (e.RowIndex >= 0)
-            //{
-            //    e.CellStyle.BackColor = Color.Empty;
-            //    e.FormattingApplied = true;
-            //}
-        }
-    }
+    // --- Událost pro obarvení řádku ---
+    //private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    //{
+    //    // Zkontrolujeme, zda máme nějaké APID k zvýraznění a zda je index řádku platný
+    //    if (!string.IsNullOrEmpty(_highlightedApid) && e.RowIndex >= 0)
+    //    {
+    //        //// Získáme objekt, ke kterému je aktuální řádek vázán
+    //        if (dataGridView1.Rows[e.RowIndex].DataBoundItem is Zarizeni rowZarizeni)
+    //        {
+    //        //    // Porovnáme APID řádku s APID, které chceme zvýraznit
+    //            if (rowZarizeni.Apid == _highlightedApid)
+    //            {
+    //                e.CellStyle.BackColor = Color.LightGreen; // Barva pro zvýrazněný řádek
+    //                e.FormattingApplied = true; // Řekne DataGridView, že jsme barvu aplikovali
+    //            }
+    //        //    else
+    //        //    {
+    //        //        // Pokud řádek NENÍ ten, který má být obarven, resetujeme jeho barvu na výchozí
+    //        //        e.CellStyle.BackColor = Color.Empty; // Reset na výchozí barvu (transparentní)
+    //        //        e.FormattingApplied = true;
+    //        //    }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // Pokud _highlightedApid je null (nebo neplatný RowIndex),
+    //        // ujistěte se, že žádný řádek není obarven a je nastaven na výchozí barvu.
+    //        //if (e.RowIndex >= 0)
+    //        //{
+    //        //    e.CellStyle.BackColor = Color.Empty;
+    //        //    e.FormattingApplied = true;
+    //        //}
+    //    }
+    //}
 
     // Metoda pro explicitní odstranění zvýraznění (např. po uložení)
     public void ResetHighlight()
