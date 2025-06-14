@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace WinForms {
     public partial class Rozvaděč: Form {
-        List<Zarizeni> Data = new();
+        private List<Zarizeni> Data = [];
         public Rozvaděč() {
             InitializeComponent();
             //Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
@@ -26,22 +26,25 @@ namespace WinForms {
             list.View = View.Details;
             list.FullRowSelect = true;
             list.GridLines = true;
+            list.Columns.Add("Rozvadeč", 60);
+            list.Columns.Add("Popis", 200);
             list.Columns.Add("Tag", 60);
-            list.Columns.Add("Popis", 120);
-            list.Columns.Add("Rozvadeč", 120);
         }
 
         private void Rozvaděč_Load(object sender, EventArgs e) {
-            foreach(var dat in Data) {
-                var item = new ListViewItem(dat.Tag);
-                item.SubItems.Add(dat.Popis);
-                item.SubItems.Add(dat.RozvadecOznačení);
-                item.Tag = dat; // Ulož celou instanci pro pozdější použití
+
+            foreach(var dat in Data.DistinctBy(x => x.RozvadecOznačení)) {
+                var item = new ListViewItem(dat.RozvadecOznačení) {
+                    //item.SubItems.Add(dat.RozvadecOznačení);
+                    //item.SubItems.Add(dat.Popis);
+                    //item.SubItems.Add(dat.Tag);
+                    Tag = dat // Ulož celou instanci pro pozdější použití
+                };
                 listViewCategories.Items.Add(item);
             }
         }
 
-        private void listViewCategories_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ListViewCategories_SelectedIndexChanged(object sender, EventArgs e) {
             if (listViewCategories.SelectedItems.Count > 0)
             {
                 var item = listViewCategories.SelectedItems[0];
@@ -52,9 +55,10 @@ namespace WinForms {
                     
                     listViewProducts.Items.Clear();
                     foreach(var dat in vvv) {
-                        var lll = new ListViewItem(dat.Tag);
+                        var lll = new ListViewItem(dat.RozvadecOznačení);
+                        //lll.SubItems.Add(dat.RozvadecOznačení);
                         lll.SubItems.Add(dat.Popis);
-                        lll.SubItems.Add(dat.RozvadecOznačení);
+                        lll.SubItems.Add(dat.Tag);
                         lll.Tag = dat; // Ulož celou instanci pro pozdější použití
                         listViewProducts.Items.Add(lll);
                     }

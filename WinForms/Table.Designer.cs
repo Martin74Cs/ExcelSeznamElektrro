@@ -26,8 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             dataGridView1 = new DataGridView();
             Button1 = new Button();
             Button2 = new Button();
@@ -55,6 +54,7 @@
             dataGridView1.Size = new Size(1077, 613);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
+            dataGridView1.CellFormatting += dataGridView1_CellFormatting;
             dataGridView1.CellMouseUp += DataGridView1_CellMouseUp;
             dataGridView1.CurrentCellChanged += DataGridView1_CurrentCellChanged;
             dataGridView1.RowsAdded += DataGridView1_RowsAdded;
@@ -206,8 +206,8 @@
             comboBox4Pid.Name = "comboBox4Pid";
             comboBox4Pid.Size = new Size(96, 29);
             comboBox4Pid.TabIndex = 13;
-            comboBox4Pid.SelectedIndexChanged += comboBox4Pid_SelectedIndexChanged;
-            comboBox4Pid.MouseClick += comboBox4Pid_MouseClick;
+            comboBox4Pid.SelectedIndexChanged += ComboBox4Pid_SelectedIndexChanged;
+            comboBox4Pid.MouseClick += ComboBox4Pid_MouseClick;
             // 
             // Table
             // 

@@ -517,7 +517,7 @@ namespace Aplikace.Upravy
             string cestaData = Cesty.ElektroDataJson;
             var Data = Soubory.LoadJsonList<Zarizeni>(cestaData);
             Console.WriteLine($"Pocet záznamů: {Data.Count}");
-            Data = Data.DistinctBy(x => x.Apid).ToList();
+            Data = [.. Data.DistinctBy(x => x.Apid)];
 
             //Verze přepsání původního Jsonu
             Data.SaveJsonList(cestaData);

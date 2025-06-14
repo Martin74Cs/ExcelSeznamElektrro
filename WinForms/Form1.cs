@@ -256,6 +256,25 @@ namespace WinForms
             //var result = table.ShowDialog();
             table.ShowDialog();
         }
+
+        //Vývody stavba
+        private void Button5_Click(object sender, EventArgs e) {
+
+            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
+            var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
+
+            var table = new Table(Data);
+            SkrytSloupce(table.dataGridView1);
+            // Zobrazíme druhý formulář jako modální dialog
+            var result = table.ShowDialog();
+            if(result == DialogResult.OK) {
+                //přidat prázdný záznam
+                if(Data.Count < 1) Data.Add(new Zarizeni());
+
+                Data.SaveJsonList(Vývody);
+
+                }
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter

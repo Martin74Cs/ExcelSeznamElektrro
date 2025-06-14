@@ -34,7 +34,7 @@
             listViewCategories.Size = new Size(331, 383);
             listViewCategories.TabIndex = 2;
             listViewCategories.UseCompatibleStateImageBehavior = false;
-            listViewCategories.SelectedIndexChanged += listViewCategories_SelectedIndexChanged;
+            listViewCategories.SelectedIndexChanged += ListViewCategories_SelectedIndexChanged;
             // 
             // listViewProducts
             // 
