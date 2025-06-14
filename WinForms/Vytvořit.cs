@@ -142,7 +142,9 @@ namespace WinForms
 
         private void Button11_Click(object sender, EventArgs e) {
             //Open oEz 3VA
-            var FA1 = Soubory.LoadFromCsv<Jistic>(CestaJistic);
+            //var FA1 = Soubory.LoadFromCsv<Jistic>(CestaJistic);
+            var FA1 = Soubory.LoadJsonList<Jistic>(Path.ChangeExtension(CestaJistic , ".json"));
+
             label2.Text = "Cesta = " + CestaJistic;
             FA = new BindingList<Jistic>(FA1);
             SetListBox();
