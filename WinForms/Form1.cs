@@ -127,6 +127,7 @@ namespace WinForms
             //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
 
             var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+            if (!File.Exists(Vývody)) { Console.WriteLine("Soubor nebyl nalezen " + Vývody); return; }
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
 
             //var DataBind = new BindingList<Zarizeni>(Data);
@@ -259,7 +260,6 @@ namespace WinForms
 
         //Vývody stavba
         private void Button5_Click(object sender, EventArgs e) {
-
             var Vývody = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
 

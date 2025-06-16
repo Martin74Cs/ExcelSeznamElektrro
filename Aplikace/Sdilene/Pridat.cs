@@ -30,14 +30,26 @@ namespace Aplikace.Sdilene
             {
                 if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
                 {
-                    var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 >= kW);
-                    if (JedenMotor != null)
+
+                    if (item.Druh == Zarizeni.Druhy.Rozvadeč.ToString() || item.Druh == Zarizeni.Druhy.Přívod.ToString())
                     {
-                        Cos = JedenMotor.Ucinik50;
-                        //přidání motoru do třídy
-                        item.Motor = JedenMotor;
-                        //Uprava příkonu dle velikosti motoru
-                        item.Prikon = JedenMotor.Vykon50.ToString("F2");
+                        Cos = 1.00;
+                    }
+                    else { 
+                        var JedenMotor = Motory.FirstOrDefault(x => (double)x.Vykon50 >= kW);
+                        if (JedenMotor != null)
+                        {
+                            Cos = JedenMotor.Ucinik50;
+                        
+                            //přidání motoru do třídy
+                            item.Motor = JedenMotor;
+
+                            //přidání příkonu motoru do třídy
+                            item.PrikonStroj = item.Prikon;
+
+                            //Uprava příkonu dle velikosti motoru
+                            item.Prikon = JedenMotor.Vykon50.ToString("F2");   
+                        }
                     }
                     //Pokud je napětí větší než 250V, použijeme vzorec pro třífázový proud
                     if (U > 250)

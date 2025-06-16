@@ -382,7 +382,7 @@ namespace Aplikace.Upravy
             //Soubor kam bude doplněno
             string cestaData = Path.Combine(Cesty.ElektroDataJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cestaData);
-
+            
             //Data pro doplnění
             string cesta = Path.Combine(Cesty.ElektroDataCsv);
             if (!File.Exists(cesta)) return;

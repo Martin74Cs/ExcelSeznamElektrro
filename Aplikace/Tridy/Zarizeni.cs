@@ -27,6 +27,7 @@ namespace Aplikace.Tridy
         private string tag = string.Empty;
         private string predmet = string.Empty;
         private string prikon = string.Empty;
+        private string prikonStroj = string.Empty;
         private string balenaJednotka = string.Empty;
         private string menic = string.Empty;
         private string nic = string.Empty;
@@ -93,13 +94,19 @@ namespace Aplikace.Tridy
         /// <summary>Popis zařízení</summary>
         [Display(Name = "Jméno zařízení")]
         public string Popis { get => popis; set => SetProperty(ref popis, value); }
+
         [Display(Name = "Příkon")]
         [Jednotky("[kW]")]
         public string Prikon { get => prikon; set => SetProperty(ref prikon , value); }
+
+        [Display(Name = "Příkon")]
+        [Jednotky("[kW]")]
+        public string PrikonStroj { get => prikonStroj; set => SetProperty(ref prikonStroj, value); }
         public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
         public string Menic { get => menic; set => SetProperty(ref menic, value); }
         public string Nic { get => nic; set => SetProperty(ref nic, value); }
         public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
+
         [JsonIgnore]
         [Display(Name = "Příkon")]
         [Jednotky("[hp]")]
