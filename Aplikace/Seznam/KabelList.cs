@@ -440,7 +440,8 @@ namespace Aplikace.Seznam
                     trasa.PocetZil = "4x";                  //6. Kabel PocetZil
                 }
                 else { 
-                    trasa.Kabel = radek.Kabel.Označení ?? "";  //5. Kabel
+                    //trasa.Kabel = radek.Kabel.Označení ?? "";  //5. Kabel
+                    trasa.Kabel = "PraflaDur";  //5. Kabel
                     trasa.PocetZil = "5x";                     //6. Kabel PocetZil
                 }
                 //7.8
