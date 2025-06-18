@@ -24,20 +24,33 @@ namespace Aplikace.Tridy
         public string Jednotky { get; set; } = string.Empty;
 
         public static List<Nadpis> DataEn() { return [
-                new Nadpis {Id=1,  Name = "Equipment\nnumber",              Jednotky=""  },
-                new Nadpis {Id=2,  Name = "P&ID\nNumber",                   Jednotky="" },
-                new Nadpis {Id=3,  Name = "Equipment name",                 Jednotky="" },
-                new Nadpis {Id=4,  Name = "Power(electric)\n(EU Units)",    Jednotky="[kW]" },
-                new Nadpis {Id=5,  Name = "Package unit Power",             Jednotky="" },
-                new Nadpis {Id=6,  Name = "Variable speed drive",           Jednotky="" },
-                new Nadpis {Id=7,  Name = "PROUD Z TAB. PRO 500V",          Jednotky="[A]" },
-                new Nadpis {Id=8,  Name = "Power(electric)\n(US Units)",    Jednotky="[HP]" },
-                new Nadpis {Id=9,  Name = "CURRENT FOR 480V",               Jednotky="[A]" },
-                new Nadpis {Id=10, Name = "COPPER CABLE SIZE\n(EU Units)",  Jednotky="[mm2]" },
-                new Nadpis {Id=11, Name = "COPPER CABLE SIZE\n(US Units)",  Jednotky="" },
-                new Nadpis {Id=12, Name = "CABLE LENGHT",                   Jednotky="[m]" },
-                new Nadpis {Id=13, Name = "DISTRIBUTOR EA/MCC",             Jednotky="" },
-                new Nadpis {Id=14, Name = "DISTRIBUTOR NUMBER",             Jednotky="" },
+                new Nadpis {Id=1,  Name = "TAG\nNUMBER",        Jednotky=""  },
+                new Nadpis {Id=2,  Name = "EQUIPMENT NAME",     Jednotky="" },
+                new Nadpis {Id=3,  Name = "POWER\n(ELECTRIC)",    Jednotky="[kW]" },
+                new Nadpis {Id=4,  Name = "VOLTAGE",            Jednotky="[V]" },
+                new Nadpis {Id=5,  Name = "CURRENT",            Jednotky="[A]" },
+                new Nadpis {Id=6,  Name = "TYPE",               Jednotky="" },
+                new Nadpis {Id=7,  Name = "VARIABLE SPEED",     Jednotky="" },
+                new Nadpis {Id=8,  Name = "PACKAGE",            Jednotky="" },
+                new Nadpis {Id=9, Name =  "COPPER CABLE\nSIZE",  Jednotky="[mm2]" },
+                new Nadpis {Id=10, Name = "CABLE LENGHT",       Jednotky="[m]" },
+                new Nadpis {Id=11, Name = "DISTRIBUTOR ",       Jednotky="" },
+                new Nadpis {Id=12, Name = "POSITION ",          Jednotky="" },
+
+                //new Nadpis {Id=1,  Name = "Equipment\nnumber",              Jednotky=""  },
+                //new Nadpis {Id=2,  Name = "P&ID\nNumber",                   Jednotky="" },
+                //new Nadpis {Id=3,  Name = "Equipment name",                 Jednotky="" },
+                //new Nadpis {Id=4,  Name = "Power(electric)\n(EU Units)",    Jednotky="[kW]" },
+                //new Nadpis {Id=5,  Name = "Package unit Power",             Jednotky="" },
+                //new Nadpis {Id=6,  Name = "Variable speed drive",           Jednotky="" },
+                //new Nadpis {Id=7,  Name = "PROUD Z TAB. PRO 500V",          Jednotky="[A]" },
+                //new Nadpis {Id=8,  Name = "Power(electric)\n(US Units)",    Jednotky="[HP]" },
+                //new Nadpis {Id=9,  Name = "CURRENT FOR 480V",               Jednotky="[A]" },
+                //new Nadpis {Id=10, Name = "COPPER CABLE SIZE\n(EU Units)",  Jednotky="[mm2]" },
+                //new Nadpis {Id=11, Name = "COPPER CABLE SIZE\n(US Units)",  Jednotky="" },
+                //new Nadpis {Id=12, Name = "CABLE LENGHT",                   Jednotky="[m]" },
+                //new Nadpis {Id=13, Name = "DISTRIBUTOR EA/MCC",             Jednotky="" },
+                //new Nadpis {Id=14, Name = "DISTRIBUTOR NUMBER",             Jednotky="" },
             ];
         }
 
@@ -53,7 +66,7 @@ namespace Aplikace.Tridy
                 new Nadpis {Id=9, Name = "Kabel",       Jednotky="[mm2]" },
                 new Nadpis {Id=10, Name = "Délka",       Jednotky="[m]" },
                 new Nadpis {Id=11, Name = "Rozvaděč",    Jednotky="" },
-                new Nadpis {Id=12, Name = "Číslo",       Jednotky="" },
+                //new Nadpis {Id=12, Name = "Číslo",       Jednotky="" },
                 new Nadpis {Id=12, Name = "Umístění",    Jednotky="" },
             ];
         }

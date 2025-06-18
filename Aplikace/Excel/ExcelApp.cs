@@ -447,8 +447,9 @@ namespace Aplikace.Excel
                     string value = prop.GetValue(item).ToString();
                     if (double.TryParse(value, out double cislo))
                     {
+                        if (prop.Name == "Delka")
+                            cislo = cislo / 1000;
                         Zapis1.Value = cislo;
-
                         //Formátovat jako číslo s 2 desetinnými místy
                         Zapis1.NumberFormat = "#,##0.00";
 
@@ -983,7 +984,8 @@ namespace Aplikace.Excel
             //Xls.Range["A1:M1"].WrapText = true;
             var Range = Xls.Range[Xls.Cells[1, 1], Xls.Cells[2, col - 1]];
             //polovlit zalamování
-            Range.WrapText = false;
+            //Range.WrapText = false;
+            Range.WrapText = true;
             return Range;
         }
 
@@ -1484,7 +1486,7 @@ namespace Aplikace.Excel
         public void KabelyToExcel(List<List<string>> data, int Row)
         {
             Row--;
-            int j=15;
+            int j = 15;
             foreach (var radek in data)
             {
                 Console.WriteLine("Radek " + Row);
@@ -1576,7 +1578,39 @@ namespace Aplikace.Excel
             Xls.Range["S2"].Value = "[m]";
             //xls.Range["T2"].Value = "[ft]";
         }
+        public void ExcelSaveNadpisEn<T>(List<T> Ramecek)
+        {
+            Xls.Activate();
+            var VelikostTabulky = Ramecek.Count;
+            Nadpis("A1:D1", "TAG", VelikostTabulky);
+            Nadpis("E1:H1", "CABLE", VelikostTabulky);
+            Nadpis("I1:I1", "TYPE", VelikostTabulky);
+            Nadpis("J1:M1", "FROM", VelikostTabulky);
+            Nadpis("N1:N1", "", VelikostTabulky);
+            Nadpis("O1:R1", "TO", VelikostTabulky);
+            Nadpis("S1:S1", "LENGHT", VelikostTabulky);
 
+            Xls.Range["A2"].Value = "TAG";
+            Xls.Range["B2"].Value = "MCC";
+            Xls.Range["D2"].Value = "NUMBER";
+
+            Xls.Range["E2"].Value = "CABLE";
+            Xls.Range["F2"].Value = "CONDUCTOR";
+            Xls.Range["G2"].Value = "[mm2]";
+            //xls.Range["H2"].Value = "[AWG]";
+
+            Xls.Range["J2"].Value = "TAG";
+            Xls.Range["K2"].Value = "MCC";
+            Xls.Range["M2"].Value = "CLAMP";
+
+            Xls.Range["O2"].Value = "TAG";
+            Xls.Range["P2"].Value = "POSITION";
+            Xls.Range["P2"].Value = "FLOOR";
+            Xls.Range["R2"].Value = "CLAMP";
+
+            Xls.Range["S2"].Value = "[m]";
+            //xls.Range["T2"].Value = "[ft]";
+        }
         public void Nadpis(string pole, string Text)  {
             Nadpis(pole, Text, 1);
         }

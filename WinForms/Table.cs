@@ -453,8 +453,9 @@ namespace WinForms
             {
                 dataGridView1.EndEdit();
 
-                var zarizeni = dataGridView1.SelectedRows[0].DataBoundItem as Zarizeni;
-                if (zarizeni != null)
+                //var zarizeni = dataGridView1.SelectedRows[0].DataBoundItem as Zarizeni;
+                //if (zarizeni != null)
+                if (dataGridView1.SelectedRows[0].DataBoundItem is Zarizeni zarizeni)
                 {
                     Pole.Remove(zarizeni); // smažeme ze skutečného seznamu
                     ObnovGrid(); // obnovíme zobrazení podle aktivních filtrů
@@ -570,7 +571,7 @@ namespace WinForms
             dataGridView1.Invalidate(); // Vynutí překreslení DataGridView (resetuje barvy)
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void Button8_Click(object sender, EventArgs e)
         {
             SetListBoxData();
         }

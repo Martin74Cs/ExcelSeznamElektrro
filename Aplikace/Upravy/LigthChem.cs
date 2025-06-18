@@ -134,7 +134,14 @@ namespace Aplikace.Upravy
             var Vývody = Soubory.LoadJsonList<Zarizeni>(cestaVývody);
 
             //Spojení původních s doplněnými
-            Stara.Concat(Vývody);
+            Stara = [.. Stara, .. Vývody];
+
+            //Vývody pro doplnění
+            var cestaStavba = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
+            var VývodyStavba = Soubory.LoadJsonList<Zarizeni>(cestaVývody);
+
+            //Spojení původních s doplněnými
+            Stara = [.. Stara, .. VývodyStavba];
 
             //Možná proud asi jen tam kde není.
             //Stara.AddProud();
@@ -155,7 +162,7 @@ namespace Aplikace.Upravy
             //Nastavení nebo vytvoření záložky
             ExcelApp.GetSheet("Seznam Elektro");
             //Vytvoření nadpisů
-            var range = ExcelApp.Nadpisy([.. Nadpis.DataCz()]);
+            var range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
 
             //Formátování nadpisů
             ExcelApp.NadpisSet(range);
@@ -172,9 +179,9 @@ namespace Aplikace.Upravy
                 {8,"Druh"},
                 {9,"PruzezMM2"},
                 {10,"Delka"},
-                {11,"Rozvadec"},
-                {12,"RozvadecCislo"},
-                {13,"Predmet"},
+                {11,"RozvadecOznačení"},
+                //{12,"RozvadecCislo"},
+                {12,"Predmet"},
 
                 //{100,"PID"},
                 //{101,"Nic"},
@@ -189,6 +196,7 @@ namespace Aplikace.Upravy
 
             //Vytvoření pole kabelů pro zápis do Excelu
             var DataTrida = KabelList.KabelyTrida(Stara);
+            DataTrida = [.. DataTrida.OrderBy(x => x.Hlavni.Rozvadec+x.Hlavni.RozvadecCislo)];
 
             var Change = new List<Trasa>();
             foreach (var kabel in DataTrida)
@@ -209,7 +217,8 @@ namespace Aplikace.Upravy
             ExcelApp.GetSheet("Kabely");
 
             //Doplnení nadpisu a ramecku
-            ExcelApp.ExcelSaveNadpis(PoleData);
+            //ExcelApp.ExcelSaveNadpis(PoleData);
+            ExcelApp.ExcelSaveNadpisEn(PoleData);
 
             //Do Excel vyplní od radku 3 data z PoleData mělo by se jednat o seznam kabelů
             ExcelApp.KabelyToExcel(PoleData, 3);
@@ -325,12 +334,15 @@ namespace Aplikace.Upravy
             var Target = target.ToList(); // převod na List, abys mohl indexovat
 
             var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
-                .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
+                //.Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
+                .Where(x => x.Name.Contains("PraFlaDur ", StringComparison.OrdinalIgnoreCase) && x.Deleni == "3")
+                //.Where(x => x.Name == "PRAFlaDur" && x.Deleni == "4")
                 .OrderBy(x => x.IzAE).ToList();
+
             //vymazaní položek ze seznam
             KabelCu.RemoveAll(x => x.SLmm2 < 2.5);
-
-            if(KabelCu.Count < 1) Console.WriteLine("Chyba hledání kabelů Cu");
+            
+            if (KabelCu.Count < 1) Console.WriteLine("Chyba hledání kabelů Cu");
             else Console.WriteLine($"Kabelů Cu je {KabelCu.Count}");
 
             //Kontrola
@@ -372,7 +384,6 @@ namespace Aplikace.Upravy
                     }
                     pocet++;
                 }
-
             }
             return Target;
         }

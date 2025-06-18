@@ -396,7 +396,7 @@ namespace Aplikace.Seznam
                 {15,"Tag"},
                 {16,"Predmet"},
                 {17,"Patro"},
-                {18,"Svokra"},
+                {18,"Svorka"},
 
                 {19,"Delka"},
 
@@ -426,12 +426,14 @@ namespace Aplikace.Seznam
             foreach (var radek in PoleData)
             {
                 var Kabel = new Kabely();
-                Trasa trasa = new(); 
+                Trasa trasa = new();
+                //1.2.3.4
                 trasa.Tag = radek.Tag.Replace("\n", " "); //1. Kabel
                 trasa.Rozvadec = radek.Rozvadec;          //2. odkud Mcc
                 trasa.RozvadecCislo = radek.RozvadecCislo;//3. Odkud číslo
                 trasa.Oznaceni = "WL 01";                 //4. Kabel
 
+                //5.6.
                 if (radek.Menic == "VSD")
                 {
                     trasa.Kabel = "ÖLFLEX CLASSIC 110 CY";  //5. Kabel
@@ -441,32 +443,35 @@ namespace Aplikace.Seznam
                     trasa.Kabel = radek.Kabel.Označení ?? "";  //5. Kabel
                     trasa.PocetZil = "5x";                     //6. Kabel PocetZil
                 }
+                //7.8
                 trasa.Prurezmm2 = radek.PruzezMM2; //7. Průřez
-                trasa.PrurezFt = "";               //8. Prozatím nepoužito
+                //trasa.PrurezFt = "";               //8. Prozatím nepoužito
 
-                if (string.IsNullOrEmpty(radek.Druh))
-                {
-                    if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B') || radek.BalenaJednotka.StartsWith('x'))
-                        trasa.Druh = "Odhad" + "Motor"; //9. zařízení
-                    else
-                        trasa.Druh = "Odhad" + "Rozvaděč"; //9. zařízení
-                }
-                else
-                    trasa.Druh = radek.Druh; //9. zařízení
+                //9. zařízení
+                //if (string.IsNullOrEmpty(radek.Druh))
+                //{
+                //    if (radek.Druh == Zarizeni.Druhy.Rozvadeč.ToString())
+                //    //if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B') || radek.BalenaJednotka.StartsWith('x'))
+                //        trasa.Druh = "Odhad" + "Motor"; //9. zařízení
+                //    else
+                //        trasa.Druh = "Odhad" + "Rozvaděč"; //9. zařízení
+                //}
+                //else
+                trasa.Druh = radek.Druh; //9. zařízení
 
                 //10.11.12.13
-                trasa.Tag = trasa.Tag;             //10. odkud tag
-                trasa.Rozvadec = trasa.Rozvadec;   //11. odkud Mcc
-                trasa.RozvadecCislo = trasa.RozvadecCislo; //12. Odkud číslo
+                //trasa.Tag = trasa.Tag;             //10. odkud tag
+                //trasa.Rozvadec = trasa.Rozvadec;   //11. odkud Mcc
+                //trasa.RozvadecCislo = trasa.RozvadecCislo; //12. Odkud číslo
                 trasa.OdkudSvokra = "X 01";         //13. Svorka rozvaděče
 
                 trasa.Mezera = "";                //14. Mezera
 
                 //15.16.17.18
-                trasa.Tag = radek.Tag;          //15. kam tag
+                //trasa.Tag = radek.Tag;          //15. kam tag
                 trasa.Patro = radek.Patro;      //16. kam objekt nebo patro
                 trasa.Predmet = radek.Predmet;  //17.kam Zažizeni
-                trasa.Svokra = "X 01";          //18.kam Svorka
+                trasa.Svorka = "X 01";          //18.kam Svorka
                 
                 trasa.Delka = (radek.Delka/1000).ToString("F2");      //19. Delka m
                 //trasa.PrurezFt = (radek.Delka * (1/0.3)).ToString(); //20 Delka ft
@@ -475,8 +480,9 @@ namespace Aplikace.Seznam
                 NovaData.Add(trasa);
                 Kabel.Hlavni = trasa; //přiřazení hlavní trasy do kabelu
                                       //
-                //Ovládací kabel PTC
-                if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
+                                      //Ovládací kabel PTC
+                //if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
+                if (radek.Druh == Zarizeni.Druhy.Motor.ToString())
                 {
                     var PTC = KabelPTCTrida(radek);
                     NovaData.Add(PTC);
@@ -505,7 +511,7 @@ namespace Aplikace.Seznam
             trasa.Kabel = "ÖLFLEX CLASSIC 100 ";    //5. Kabel
             trasa.PocetZil = "2x";                  //6. Kabel PocetZil
             trasa.Prurezmm2 = "2,5";                //7. Průřez
-            trasa.PrurezFt = "";                    //8. Prozatím nepoužito
+            //trasa.PrurezFt = "";                    //8. Prozatím nepoužito
 
             trasa.Druh = "Ptc";                    //9. Druh
 
@@ -518,10 +524,10 @@ namespace Aplikace.Seznam
             trasa.Mezera = "";                //14. Mezera
 
             //Kam 15.16.17.18
-            trasa.Tag = radek.Tag;          //15. kam tag
+            //trasa.Tag = radek.Tag;          //15. kam tag
             trasa.Patro = radek.Patro;      //16. kam objekt nebo patro
             trasa.Predmet = radek.Predmet;  //17.kam Zažizeni
-            trasa.Svokra = "X 01";          //18.kam Svorka
+            trasa.Svorka = "X 01";          //18.kam Svorka
 
             trasa.Delka = (radek.Delka / 1000).ToString("F2");                 //19. Delka m
             
@@ -536,9 +542,9 @@ namespace Aplikace.Seznam
             trasa.RozvadecCislo = radek.RozvadecCislo;//3. Odkud číslo
             trasa.Oznaceni = "WS 02";                 //4. Kabel
 
-            trasa.Kabel = "CYKY ";    //5. Kabel
+            trasa.Kabel = "PRAFlaDur ";    //5. Kabel
             trasa.PocetZil = "12x";                  //6. Kabel PocetZil
-            trasa.Prurezmm2 = "2,5";                //7. Průřez
+            trasa.Prurezmm2 = "2,5 RE";                //7. Průřez
             trasa.PrurezFt = "";                    //8. Prozatím nepoužito
 
             trasa.Druh = "Ovládání";                    //9. Druh
@@ -547,15 +553,15 @@ namespace Aplikace.Seznam
             //Tag                   10
             //Rozvadec              11
             //RozvadecCislo         12
-            trasa.Svokra = "X 03"; //13. Svorka rozvaděče
+            trasa.OdkudSvokra = "X 03"; //13. Svorka rozvaděče
 
             trasa.Mezera = "";                //14. Mezera
 
             //Kam 15.16.17.18
-            trasa.Tag = radek.Tag;        //15. kam tag
+            //trasa.Tag = radek.Tag;        //15. kam tag
             trasa.Patro = radek.Patro;    //16. kam objekt nebo patro
             trasa.Predmet = "MX 01";      //17.kam Zažizeni
-            trasa.Svokra = "X 01";        //18.kam Svorka
+            trasa.Svorka = "X 01";        //18.kam Svorka
 
             trasa.Delka = (radek.Delka / 1000).ToString("F2");                 //19. Delka m
 

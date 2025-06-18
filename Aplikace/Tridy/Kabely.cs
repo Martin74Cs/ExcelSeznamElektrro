@@ -30,7 +30,7 @@ namespace Aplikace.Tridy
         public string Mezera { get; set; } = string.Empty;
         public string Patro { get; set; } = string.Empty;
         public string Predmet { get; set; } = string.Empty;
-        public string Svokra { get; set; } = string.Empty;
+        public string Svorka { get; set; } = string.Empty;
 
         public string Delka { get; set; } = string.Empty;
         /// <summary>Rozvaděč</summary>

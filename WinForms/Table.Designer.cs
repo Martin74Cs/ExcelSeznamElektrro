@@ -221,7 +221,7 @@
             button8.TabIndex = 14;
             button8.Text = "Data";
             button8.UseVisualStyleBackColor = true;
-            button8.Click += button8_Click;
+            button8.Click += Button8_Click;
             // 
             // Table
             // 

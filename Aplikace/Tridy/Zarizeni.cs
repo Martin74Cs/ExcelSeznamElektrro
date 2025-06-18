@@ -55,7 +55,7 @@ namespace Aplikace.Tridy
         private bool isExist = false;
         private string bod = string.Empty;
         private bool isExistElektro = false;
-        private string bodElektro = string.Empty;
+        //private string bodElektro = string.Empty;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -284,7 +284,7 @@ namespace Aplikace.Tridy
         {
             if (source == null) return default;
 
-            T copy = new T();
+            T copy = new();
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                       .Where(p => p.CanRead && p.CanWrite)
                                       .Where(p => !p.PropertyType.IsEnum) // vyloučí enumy
