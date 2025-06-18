@@ -95,6 +95,7 @@ namespace Aplikace.Sdilene
 
             Console.Write($"\nPocet zaznamu:{unikatniZaznamy.Count}");
 
+            // Vytvoření seznamu pro součty
             var Soucet = new List<List<string>>();
             foreach (var item in unikatniZaznamy)
             {
@@ -105,14 +106,16 @@ namespace Aplikace.Sdilene
 
                 Console.Write($"\nzaznamu: {item[4]},{item[5]},{item[6]}, Soucet = {soucet}");
                 //přepočet metry na stopa a formátování na dvě desetinná místa
-                string[] xx = [item[4], item[5], item[6], soucet.ToString("F2"), (soucet * 3.29).ToString("F2")];
+                //string[] xx = [item[4], item[5], item[6], soucet.ToString("F2"), (soucet * 3.29).ToString("F2")];
+                // Označen, počet vodičů, průřez, délka v metrech a délka ve stopách
+                string[] xx = [item[4], item[5], item[6], soucet.ToString("F2")];
                 Soucet.Add([.. xx]);
             }
 
             //Celkový kontrolní součet
             Soucet.Add([]);
             var celek = PoleData.Sum(x => double.TryParse(x[18], out double hodnota) ? hodnota : 0); // Převod textu na číslo a součet
-            string[] xx1 = ["", "", "", celek.ToString()];
+            string[] xx1 = ["", "", "", celek.ToString("F2")];
             Soucet.Add([.. xx1]);
 
             //nová záložka
@@ -123,8 +126,8 @@ namespace Aplikace.Sdilene
             ExcelApp.Nadpis("D1:D1", "Délka", Soucet.Count);
             ExcelApp.Nadpis("D2", "[m]");
 
-            ExcelApp.Nadpis("E1:E1", "Délka", Soucet.Count);
-            ExcelApp.Nadpis("E2", "[ft]");
+            //ExcelApp.Nadpis("E1:E1", "Délka", Soucet.Count);
+            //ExcelApp.Nadpis("E2", "[ft]");
 
             ExcelApp.KabelyToExcel(Soucet, 3);
 
