@@ -533,5 +533,10 @@ namespace Aplikace.Upravy
             //Verze přepsání původního Jsonu
             Data.SaveJsonList(cestaData);
         }
+
+        internal static void NačtiSeznamVýkresůXls(string v) {
+            var data = ExcelLoad.DataExcelVykres(v, "seznam dokumentace", 17);
+            data.SaveJsonList(Path.ChangeExtension(v, ".json"));
+        }
     }
 }

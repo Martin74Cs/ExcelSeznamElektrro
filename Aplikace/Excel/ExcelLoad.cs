@@ -80,8 +80,46 @@ namespace Aplikace.Excel
             //if (Pole.Count > 1) Pole.SaveJsonList(Cesty.ElektroRozvaděčJson);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");
             return Pole;
-            
         }
+        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List List string z a vytvořejí JSON</summary>
+        public static List<Vykres> DataExcelVykres(string cesta, string Tabulka, int Radek)
+        {
+            Console.WriteLine("Probíná hačítání dat ... ");
+            if (!File.Exists(cesta)) return [];
+
+            var ExcelApp = new ExcelApp(cesta);
+
+            ExcelApp.GetSheet(Tabulka);
+            if (ExcelApp.Xls == null) return [];
+            
+            if (ExcelApp.Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+            Console.WriteLine("Sheet=" + ExcelApp.Xls.Name);
+
+            //Sloupce které se mají načíst z Excelu do názvů tříd. Myslím že třída musí existovat
+            var dir = new Dictionary<int, string>() {
+                {2, "OrientačníčísloB"     },
+                {3, "OrientačníčísloC"       },
+                {4, "OrientačníčísloD"     },
+                {5, "OrientačníčísloE"     },
+                {6, "OrientačníčísloF"    },
+                {7, "ČísloDokumentu"   },
+                {8, "Nazev"   },
+                {9, "Revize"   },
+                {11, "Popisrevize"   },
+                {12, "Cesta"   },
+                {13, "ProfesníČislo"   },
+
+            };
+
+            var Pole = ExcelApp.ExelTableVykresy(Radek,Tabulka, dir);
+
+            ExcelApp.ExcelQuit(cesta);
+            //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
+            //if (Pole.Count > 1) Pole.SaveJsonList(Cesty.ElektroRozvaděčJson);
+            Console.WriteLine($"načeno {Pole.Count} záznamů.");
+            return Pole;
+        }
+
         /// <summary> Načtení dokumentu Ecxel nebo Json do pole List Zarizeni z a vytvořejí JSON</summary>
         public static List<Zarizeni> DwgDataExcel(string cesta, string Tabulka, int Radek)
         {

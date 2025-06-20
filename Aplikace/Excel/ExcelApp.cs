@@ -4,6 +4,7 @@ using Microsoft.Office.Interop.Excel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 using System.Drawing;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -412,6 +413,42 @@ namespace Aplikace.Excel
             return Pole;
         }
 
+        public List<Vykres> ExelTableVykresy(int Radek, string Tabulka, IDictionary<int, string> dir)
+        {
+            //Nastavení listu
+            GetSheet(Tabulka);
+
+            int pocet = 1;
+            var Pole = new List<Vykres>();
+            Console.WriteLine($"[Rows.Col]=[{Xls.UsedRange.Rows.Count},{Xls.UsedRange.Columns.Count}]");
+            for ( int i = Radek; i < Xls.UsedRange.Rows.Count; i++)
+            {
+                //čtení jednotlivých řádků excelu
+                var jeden = new Vykres();
+
+                //Načtení jednotlivých řádků excelu dle sloupců ze dir
+                foreach (var j in dir.Keys.ToArray())
+                //for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
+                {
+                    //Čtení buňky
+                    Exc.Range Pok = Xls.Cells[i, j];
+                    if(Pok.MergeCells)  {
+                        Console.WriteLine("Buňka je součástí sloučených buněk.");
+                        break;
+                    }
+                    string xxx = Convert.ToString(Pok.Value)??"";
+
+                    //ukladnní infomací do třídy dle jejího názvu parametru
+                    jeden[dir[j]] = xxx.Trim(); 
+                }
+                if(!string.IsNullOrEmpty(jeden.Nazev))
+                    Pole.Add(jeden);
+                Console.WriteLine($"Radek {pocet++} - přídán");
+            }
+            return Pole;
+        }
+
+
         /// <summary> uložení dat do excel podle kriterii </summary>
         public void ClassToExcel<T>(int Row, List<T> Pole, IDictionary<int, string> Sloupce)
         {
@@ -447,8 +484,7 @@ namespace Aplikace.Excel
                     string value = prop.GetValue(item).ToString();
                     if (double.TryParse(value, out double cislo))
                     {
-                        if (prop.Name == "Delka")
-                            cislo = cislo / 1000;
+                        if (prop.Name == "Delka") cislo /= 1000;
                         Zapis1.Value = cislo;
                         //Formátovat jako číslo s 2 desetinnými místy
                         Zapis1.NumberFormat = "#,##0.00";

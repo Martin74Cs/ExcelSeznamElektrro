@@ -30,7 +30,11 @@ using Exc = Microsoft.Office.Interop.Excel;
 //LigthChem.SpojitSeznamy();
 
 //Dopln strojni
-LigthChem.DoplněníDat();
+//LigthChem.DoplněníDat();
+
+LigthChem.NačtiSeznamVýkresůXls(@"G:\Můj disk\Projekty\Lightchem\Elektro\DL025AHE.xls");
+
+
 
 //Duplicity
 //LigthChem.Duplicity();
