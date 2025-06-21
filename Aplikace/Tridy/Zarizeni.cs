@@ -277,6 +277,7 @@ namespace Aplikace.Tridy
             Rozvadeč,
             Motor,
             Otop,
+            Trafo,
             Nic,
         }
 
