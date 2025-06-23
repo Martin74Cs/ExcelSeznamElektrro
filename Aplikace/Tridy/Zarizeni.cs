@@ -287,10 +287,10 @@ namespace Aplikace.Tridy
 
             T copy = new();
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                      .Where(p => p.CanRead && p.CanWrite)
-                                      .Where(p => !p.PropertyType.IsEnum) // vyloučí enumy
-                                      .Where(p => p.Name != "Vlastnosti") // vyloučí konkrétní název
-             .Where(p => !Attribute.IsDefined(p, typeof(JsonIgnoreAttribute))); // vyloučí [JsonIgnore]
+                .Where(p => p.CanRead && p.CanWrite)
+                .Where(p => !p.PropertyType.IsEnum) // vyloučí enumy
+                .Where(p => p.Name != "Vlastnosti") // vyloučí konkrétní název
+                .Where(p => !Attribute.IsDefined(p, typeof(JsonIgnoreAttribute))); // vyloučí [JsonIgnore]
 
             foreach (var prop in properties)
             {

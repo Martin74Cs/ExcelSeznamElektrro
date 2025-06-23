@@ -84,7 +84,7 @@ namespace Aplikace.Sdilene
             //return pole;
         }
 
-        public static void Soucet(ExcelApp ExcelApp, List<List<string>> PoleData)
+        public static void Soucet(ExcelApp ExcelApp, List<List<string>> PoleData, string SheetName)
         {
             // Použití GroupBy k získání unikátních záznamů na základě tří kritérií
             var unikatniZaznamy = PoleData
@@ -120,7 +120,7 @@ namespace Aplikace.Sdilene
 
             //nová záložka
             //var ExcelApp = new ExcelApp();
-            ExcelApp.GetSheet("Seznam");
+            ExcelApp.GetSheet(SheetName);
             ExcelApp.Nadpis("A1:C1", "Označeni", Soucet.Count);
             
             ExcelApp.Nadpis("D1:D1", "Délka", Soucet.Count);

@@ -1531,20 +1531,20 @@ namespace Aplikace.Excel
                 {
                     Exc.Range Zapis1 = Xls.Cells[Row, j++];
                     Zapis1.Value = item;
-                    //if (double.TryParse(item, out double cislo))
-                    //{
-                    //    Zapis1.Value = cislo;
+                    if (double.TryParse(item, out double cislo))
+                    {
+                        Zapis1.Value2 = cislo;
 
                     //    // Formátovat jako číslo s 2 desetinnými místy
                     //    Zapis1.NumberFormat = "#,##0.00";
 
                     //    // Zarovnat doprava
                     //    Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
-                    //}
-                    //else 
-                    //{
-                    //     Zapis1.Value = item;
-                    //}
+                    }
+                    else 
+                    {
+                         Zapis1.Value = item;
+                    }
                 }
             }
             for (int i = 1; i < j; i++)

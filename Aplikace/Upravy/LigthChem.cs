@@ -146,7 +146,7 @@ namespace Aplikace.Upravy
             //Možná proud asi jen tam kde není.
             //Stara.AddProud();
 
-            //Přidání typu kabelu pokud chybí .
+            //Přidání typu kabelu pokud chybí.
             var prazdne = Stara.Where(x => x.Kabel == null).ToList();
             prazdne.AddKabelCyky(1.6);
 
@@ -154,11 +154,15 @@ namespace Aplikace.Upravy
             //Stara = Stara.Where(x => x.Kabel != null).Concat(prazdne).ToList();
             Stara = [.. Stara.Where(x => x.Kabel != null), .. prazdne];
 
+            var StaraVSD = Stara.Where(x => x.Menic == "VSD").ToList();
+            var StaraBezVSD = Stara.Where(x => x.Menic != "VSD").ToList(); // vyloučí všechny s Menic == "VSD"
+
             string filename = "Seznam.xlsx";
             var cesta = Path.Combine(Cesty.Elektro, filename);
             //vytvoření nebo otevření dokumentu elektro
             var ExcelApp = new ExcelApp(cesta);
 
+            //1.Excel založka seznam kabelů
             //Nastavení nebo vytvoření záložky
             ExcelApp.GetSheet("Seznam Elektro");
             //Vytvoření nadpisů
@@ -190,22 +194,47 @@ namespace Aplikace.Upravy
                 //{105,"Napeti"},
                 //{106,"Radek"},
             };
-            ExcelApp.ClassToExcel(Row: 3, Stara, dir);
+            ExcelApp.ClassToExcel(Row: 3, StaraBezVSD, dir);
 
+            //2.Excel založka seznam kabelů
+            ExcelApp.GetSheet("Seznam Elektro VSD");
+            range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
+            ExcelApp.NadpisSet(range);
+            ExcelApp.ClassToExcel(Row: 3, StaraVSD, dir);
+
+            //3.Excel založka seznam kabelů
+            //Vyzváření seznamu kabelů podle krytérii
+            List<List<string>> PoleDataBezVSD = SeznamKabelů(StaraBezVSD, ExcelApp, "Kabely");
+            //4.Excel založka seznam kabelů
+            Pridat.Soucet(ExcelApp, PoleDataBezVSD, "Součet Kabely");
+
+            //5.Excel založka seznam kabelů
+            //Vyzváření seznamu kabelů podle krytérii
+            var PoleDataVSD = SeznamKabelů(StaraVSD, ExcelApp, "Kabely VSD");
+            //6.Excel založka seznam kabelů
+            Pridat.Soucet(ExcelApp, PoleDataVSD, "Seznam VSD");
+
+            ExcelApp.ExcelQuit(cesta);
+
+        }
+
+        private static List<List<string>> SeznamKabelů(List<Zarizeni> Stara, ExcelApp ExcelApp, string SheatName)
+        {
             Console.WriteLine("Probíhá načítaní kabelů");
 
+            //2.Excel založka seznam kabelů
             //Vytvoření pole kabelů pro zápis do Excelu
             var DataTrida = KabelList.KabelyTrida(Stara);
-            DataTrida = [.. DataTrida.OrderBy(x => x.Hlavni.Rozvadec+x.Hlavni.RozvadecCislo)];
+            DataTrida = [.. DataTrida.OrderBy(x => x.Hlavni.Rozvadec + x.Hlavni.RozvadecCislo)];
 
             var Change = new List<Trasa>();
             foreach (var kabel in DataTrida)
             {
-                if(kabel.Hlavni != null) 
+                if (kabel.Hlavni != null)
                     Change.Add(kabel.Hlavni);
-                if(kabel.PTC != null)
+                if (kabel.PTC != null)
                     Change.Add(kabel.PTC);
-                if(kabel.Ovladani != null)
+                if (kabel.Ovladani != null)
                     Change.Add(kabel.Ovladani);
             }
 
@@ -214,7 +243,7 @@ namespace Aplikace.Upravy
             //var PoleData = KabelList.Kabely(Stara);
 
             //Nová záložka nebo nastav existující
-            ExcelApp.GetSheet("Kabely");
+            ExcelApp.GetSheet(SheatName);
 
             //Doplnení nadpisu a ramecku
             //ExcelApp.ExcelSaveNadpis(PoleData);
@@ -222,13 +251,10 @@ namespace Aplikace.Upravy
 
             //Do Excel vyplní od radku 3 data z PoleData mělo by se jednat o seznam kabelů
             ExcelApp.KabelyToExcel(PoleData, 3);
-
-            //Vyzváření seznamu kabelů podle krytérii
-            Pridat.Soucet(ExcelApp, PoleData);
-
-            ExcelApp.ExcelQuit(cesta);
-
+            return PoleData;
         }
+
+
 
         public static void Hlavni()
         {
