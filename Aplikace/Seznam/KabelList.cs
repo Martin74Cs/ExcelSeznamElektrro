@@ -442,11 +442,22 @@ namespace Aplikace.Seznam
                 else { 
                     //trasa.Kabel = radek.Kabel.Označení ?? "";  //5. Kabel
                     trasa.Kabel = "PraflaDur";  //5. Kabel
-                    trasa.PocetZil = "5x";                     //6. Kabel PocetZil
+                    trasa.PocetZil = "4x";      //6. Kabel PocetZil
                 }
                 //7.8
-                trasa.Prurezmm2 = radek.PruzezMM2; //7. Průřez
-                //trasa.PrurezFt = "";               //8. Prozatím nepoužito
+                var Pruz = radek.PruzezMM2.Split('x');
+                if(Pruz.Length > 1) {
+                    trasa.Prurezmm2 = Pruz.Last();
+                    if (Pruz.Length == 2 ) {
+                        trasa.PocetZil = Pruz.First() + "x" + trasa.PocetZil;
+                    }
+                }
+                else {
+                    trasa.Prurezmm2 = radek.PruzezMM2; //7. Průřez mm2
+                }
+                //trasa.Prurezmm2 = radek.PruzezMM2; //7. Průřez
+
+                //trasa.PrurezFt = "";             //8. Prozatím nepoužito
 
                 //9. zařízení
                 //if (string.IsNullOrEmpty(radek.Druh))
