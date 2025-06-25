@@ -3,6 +3,7 @@ using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Aplikace.Upravy;
 using System.ComponentModel;
+using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
@@ -11,37 +12,45 @@ using static System.Windows.Forms.DataFormats;
 
 namespace WinForms
 {
-    public partial class Form1: Form {
-        public Form1() {
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
             InitializeComponent();
         }
 
         //Převod stroju na JSON a CSV
-        private async void Button2_Click(object sender, EventArgs e) {
+        private async void Button2_Click(object sender, EventArgs e)
+        {
             //Převod->json,csv
             await Task.Run(() => LigthChem.StrojniToJsonCsv());
             //Console.SetOut(new ListBoxWriter(listBox1));
         }
 
-        private void Form1_Load(object sender, EventArgs e) {
+        private void Form1_Load(object sender, EventArgs e)
+        {
             Console.SetOut(new ListBoxWriter(listBox1));
         }
 
 
-        private void ListBox1_SelectedIndexChanged_1(object sender, EventArgs e) {
+        private void ListBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
             var box = (ListBox)sender;
             textBox1.Text = box.Text;
         }
 
-        private void Button1_Click(object sender, EventArgs e) {
+        private void Button1_Click(object sender, EventArgs e)
+        {
             Close();
         }
 
-        private async void Button3_Click(object sender, EventArgs e) {
+        private async void Button3_Click(object sender, EventArgs e)
+        {
             await Task.Run(() => LigthChem.DoplneniCsvToJson());
         }
 
-        private async void Button4_Click(object sender, EventArgs e) {
+        private async void Button4_Click(object sender, EventArgs e)
+        {
             await Task.Run(() => Soubory.KillExcel());
         }
 
@@ -50,36 +59,42 @@ namespace WinForms
         //    await Task.Run(() => LigthChem.AddKabely());
         //}
 
-        private void Button8_Click(object sender, EventArgs e) {
+        private void Button8_Click(object sender, EventArgs e)
+        {
             //string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
             System.Diagnostics.Process.Start("explorer.exe", Cesty.Elektro);
         }
 
-        private async void Button9_Click(object sender, EventArgs e) {
+        private async void Button9_Click(object sender, EventArgs e)
+        {
             //await Task.Run(() => LigthChem.AddVyvody());
             await Task.Run(() => LigthChem.Rozvadec());
         }
 
-        private void OpenToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             string cesta = Cesty.BasePath;
             System.Diagnostics.Process.Start("explorer.exe", cesta);
         }
 
-        private void SeznamyToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void SeznamyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             var vyvorit = new Vytvořit();
 
             SetTable(vyvorit);
 
             // Zobrazíme druhý formulář jako modální dialog
             var result = vyvorit.ShowDialog();
-            if(result == DialogResult.OK) {
+            if (result == DialogResult.OK)
+            {
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }
         }
 
         /// <summary>Nastavení pomocného okna </summary>
-        private void SetTable(Form form) {
+        private void SetTable(Form form)
+        {
             // Vypočteme střed Form1 a posuneme Form2 tam
             int x = this.Location.X + (this.Width - form.Width) / 2;
             int y = this.Location.Y + (this.Height - form.Height) / 2;
@@ -90,39 +105,45 @@ namespace WinForms
         }
 
         /// <summary> Místnosti - otevřít seznam </summary>
-        private void MístnostiToolStripMenuItem1_Click(object sender, EventArgs e) {
+        private void MístnostiToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
             //použitá cesta z Místnosti.cs          
             System.Diagnostics.Process.Start("explorer.exe", Cesty.MistnostiXLs);
         }
 
         /// <summary> Místnosti - vytvoření seznamu </summary>
-        private async void GenerovatToolStripMenuItem_Click(object sender, EventArgs e) {
+        private async void GenerovatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             await Task.Run(() => Místnosti.VytvoritSeznamy());
         }
 
-        private async void Button6_Click(object sender, EventArgs e) {
+        private async void Button6_Click(object sender, EventArgs e)
+        {
             await Task.Run(() => LigthChem.JsonToExcel());
         }
 
 
-        private void Button10_Click(object sender, EventArgs e) {
+        private void Button10_Click(object sender, EventArgs e)
+        {
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
             var table = new Table(Data);
             SetTable(table);
 
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
-            if(result == DialogResult.OK) {
-                if(Data.Count < 1) Data.Add(new Zarizeni());
+            if (result == DialogResult.OK)
+            {
+                if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveJsonList(Cesty.ElektroDataJson);
-                if(MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     Data.SaveToCsv(Cesty.ElektroDataCsv);
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }
         }
 
-        private void Button11_Click(object sender, EventArgs e) {
+        private void Button11_Click(object sender, EventArgs e)
+        {
             //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
             //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
 
@@ -135,9 +156,10 @@ namespace WinForms
             SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
-            if(result == DialogResult.OK) {
+            if (result == DialogResult.OK)
+            {
                 //přidat prázdný záznam
-                if(Data.Count < 1) Data.Add(new Zarizeni());
+                if (Data.Count < 1) Data.Add(new Zarizeni());
 
                 //Data.SaveToCsv(Vývody);
                 Data.SaveJsonList(Vývody);
@@ -149,7 +171,8 @@ namespace WinForms
             }
         }
 
-        private static void SkrytSloupce(DataGridView data) {
+        private static void SkrytSloupce(DataGridView data)
+        {
             //skryje sloupce, které nechceme zobrazit
             data.Columns["Patro"]?.Visible = false;
             data.Columns["HP"]?.Visible = false;
@@ -181,11 +204,13 @@ namespace WinForms
         }
 
 
-        private void Button12_Click(object sender, EventArgs e) {
+        private void Button12_Click(object sender, EventArgs e)
+        {
             System.Diagnostics.Process.Start("explorer.exe", Cesty.Elektro);
         }
 
-        private void Button13_Click(object sender, EventArgs e) {
+        private void Button13_Click(object sender, EventArgs e)
+        {
             //string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
             var Strojni = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
@@ -193,7 +218,8 @@ namespace WinForms
             var Elektro = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
             var table = new Shoda(Strojni, Elektro);
             var result = table.ShowDialog();
-            if(result == DialogResult.OK) {
+            if (result == DialogResult.OK)
+            {
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
                 Elektro.SaveJsonList(Cesty.ElektroDataJson);
@@ -228,7 +254,8 @@ namespace WinForms
             Elektro.SaveJsonList(Cesty.ElektroDataJson);
         }
 
-        private void Button14_Click(object sender, EventArgs e) {
+        private void Button14_Click(object sender, EventArgs e)
+        {
             //string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
             var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
@@ -238,8 +265,9 @@ namespace WinForms
 
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
-            if(result == DialogResult.OK) {
-                if(Data.Count < 1) Data.Add(new Zarizeni());
+            if (result == DialogResult.OK)
+            {
+                if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
 
                 // Zde můžete provést další akce po zavření dialogu
@@ -247,19 +275,22 @@ namespace WinForms
             }
         }
 
-        private async void ExpotrToolStripMenuItem_Click(object sender, EventArgs e) {
+        private async void ExpotrToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             //Převod extrahovaných dat z Dwg do Xls s následným převodem do Json
             await Task.Run(() => LigthChem.DwgXlsToJsonCsv());
         }
 
-        private void PropojeniToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void PropojeniToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             var table = new Rozvaděč();
             //var result = table.ShowDialog();
             table.ShowDialog();
         }
 
         //Vývody stavba
-        private void Button5_Click(object sender, EventArgs e) {
+        private void Button5_Click(object sender, EventArgs e)
+        {
             var Vývody = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
 
@@ -267,13 +298,26 @@ namespace WinForms
             SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
-            if(result == DialogResult.OK) {
+            if (result == DialogResult.OK)
+            {
                 //přidat prázdný záznam
-                if(Data.Count < 1) Data.Add(new Zarizeni());
-
+                if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveJsonList(Vývody);
+            }
+        }
 
-                }
+        private void PříkonCelkemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+            Console.WriteLine($"Příkon celkem: {Data.Sum(x => double.TryParse(x.Prikon, out var p ) ? p : 0.0) } W");
+            Console.WriteLine($"Příkon FAZE 1: {Data.Where(x => x.Etapa == "FAZE 1").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
+            Console.WriteLine($"Příkon FAZE 2: {Data.Where(x => x.Etapa == "FAZE 2").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
+
+            var Topeni = Data.Where(x => x.RozvadecOznačení != "RT01");
+            Console.WriteLine($"Příkon bez topení");
+            Console.WriteLine($"Příkon celkem: {Topeni.Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
+            Console.WriteLine($"Příkon FAZE 1: {Topeni.Where(x => x.Etapa == "FAZE 1").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
+            Console.WriteLine($"Příkon FAZE 2: {Topeni.Where(x => x.Etapa == "FAZE 2").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
         }
     }
 

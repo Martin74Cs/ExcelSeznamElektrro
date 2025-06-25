@@ -28,7 +28,8 @@ namespace WinForms
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-        private async Task InitializeComponent() {
+        private async Task InitializeComponent()
+        {
             button1 = new Button();
             label1 = new Label();
             textBox1 = new TextBox();
@@ -65,6 +66,7 @@ namespace WinForms
             button14 = new Button();
             label4 = new Label();
             button5 = new Button();
+            příkonCelkemToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -244,14 +246,14 @@ namespace WinForms
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(176, 26);
+            místnostiToolStripMenuItem1.Size = new Size(180, 26);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // generovatToolStripMenuItem
             // 
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(176, 26);
+            generovatToolStripMenuItem.Size = new Size(180, 26);
             generovatToolStripMenuItem.Text = "Generovat ";
             generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
@@ -277,7 +279,7 @@ namespace WinForms
             // 
             // rozvaděčToolStripMenuItem
             // 
-            rozvaděčToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propojeniToolStripMenuItem });
+            rozvaděčToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propojeniToolStripMenuItem, příkonCelkemToolStripMenuItem });
             rozvaděčToolStripMenuItem.Name = "rozvaděčToolStripMenuItem";
             rozvaděčToolStripMenuItem.Size = new Size(88, 25);
             rozvaděčToolStripMenuItem.Text = "Rozvaděč";
@@ -285,7 +287,7 @@ namespace WinForms
             // propojeniToolStripMenuItem
             // 
             propojeniToolStripMenuItem.Name = "propojeniToolStripMenuItem";
-            propojeniToolStripMenuItem.Size = new Size(180, 26);
+            propojeniToolStripMenuItem.Size = new Size(181, 26);
             propojeniToolStripMenuItem.Text = "Propojeni";
             propojeniToolStripMenuItem.Click += PropojeniToolStripMenuItem_Click;
             // 
@@ -428,6 +430,13 @@ namespace WinForms
             button5.UseVisualStyleBackColor = true;
             button5.Click += Button5_Click;
             // 
+            // příkonCelkemToolStripMenuItem
+            // 
+            příkonCelkemToolStripMenuItem.Name = "příkonCelkemToolStripMenuItem";
+            příkonCelkemToolStripMenuItem.Size = new Size(181, 26);
+            příkonCelkemToolStripMenuItem.Text = "Příkon Celkem";
+            příkonCelkemToolStripMenuItem.Click += PříkonCelkemToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -506,5 +515,6 @@ namespace WinForms
         private ToolStripMenuItem rozvaděčToolStripMenuItem;
         private ToolStripMenuItem propojeniToolStripMenuItem;
         private Button button5;
+        private ToolStripMenuItem příkonCelkemToolStripMenuItem;
     }
 }
