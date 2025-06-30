@@ -124,8 +124,7 @@ namespace Aplikace.Upravy
         }
 
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
-        public static void JsonToExcel()
-        {
+        public static void JsonToExcel() {
             string cestaData = Cesty.ElektroDataJson;
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
@@ -143,36 +142,11 @@ namespace Aplikace.Upravy
             //Spojení původních s doplněnými
             Stara = [.. Stara, .. VývodyStavba];
 
-            //Překlad
-            Stara.Where(x => x.Druh == "Otop").ToList()
-                        .ForEach(x => x.Druh = "Heating");
-
-            Stara.Where(x => x.Druh == "Rozvadeč").ToList()
-                        .ForEach(x => x.Druh = "Distributor");
-
-            Stara.Where(x => x.Typ == "PŘÍVOD").ToList()
-                        .ForEach(x => x.Typ = "Supply");
-
-            Stara.Where(x => x.Typ == "ČERPADLO").ToList()
-                        .ForEach(x => x.Typ = "Pump");
-
-            Stara.Where(x => x.Typ == "OKLEP").ToList()
-                .ForEach(x => x.Typ = "Vibration");
-
-            Stara.Where(x => x.Typ == "KOČKA").ToList()
-                .ForEach(x => x.Typ = "Elevator");
-
-            Stara.Where(x => x.Typ == "VÝVĚVA").ToList()
-                .ForEach(x => x.Typ = "Vacuum");
-
-            Stara.Where(x => x.Typ == "PODAVAČ").ToList()
-                .ForEach(x => x.Typ = "Rotary");
-
-            Stara.Where(x => x.Typ == "MÍCHADLO").ToList()
-                .ForEach(x => x.Typ = "Mixer");
+            //Překlad do Angličtiny
+            Preklad(Stara);
 
             Console.WriteLine($"Načteno {Stara.Count} záznamů z {cestaData}");
-            Stara = [.. Stara.Where(x => x.Etapa == "FAZE 1")];   
+            Stara = [.. Stara.Where(x => x.Etapa == "FAZE 1")];
             Console.WriteLine($"Pouze záznamy FAZE 1");
 
             //Možná proud asi jen tam kde není.
@@ -259,6 +233,35 @@ namespace Aplikace.Upravy
 
             ExcelApp.ExcelQuit(cesta);
 
+        }
+
+        private static void Preklad(List<Zarizeni> Stara) {
+            Stara.Where(x => x.Druh == "Otop").ToList()
+                        .ForEach(x => x.Druh = "Heating");
+
+            Stara.Where(x => x.Druh == "Rozvadeč").ToList()
+                        .ForEach(x => x.Druh = "Distributor");
+
+            Stara.Where(x => x.Typ == "PŘÍVOD").ToList()
+                        .ForEach(x => x.Typ = "Supply");
+
+            Stara.Where(x => x.Typ == "ČERPADLO").ToList()
+                        .ForEach(x => x.Typ = "Pump");
+
+            Stara.Where(x => x.Typ == "OKLEP").ToList()
+                .ForEach(x => x.Typ = "Vibration");
+
+            Stara.Where(x => x.Typ == "KOČKA").ToList()
+                .ForEach(x => x.Typ = "Elevator");
+
+            Stara.Where(x => x.Typ == "VÝVĚVA").ToList()
+                .ForEach(x => x.Typ = "Vacuum");
+
+            Stara.Where(x => x.Typ == "PODAVAČ").ToList()
+                .ForEach(x => x.Typ = "Rotary");
+
+            Stara.Where(x => x.Typ == "MÍCHADLO").ToList()
+                .ForEach(x => x.Typ = "Mixer");
         }
 
         private static List<List<string>> SeznamKabelů(List<Zarizeni> Stara, ExcelApp ExcelApp, string SheatName)
