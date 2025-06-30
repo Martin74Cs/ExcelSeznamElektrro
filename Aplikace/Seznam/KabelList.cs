@@ -449,24 +449,29 @@ namespace Aplikace.Seznam
                         trasa.Kabel = "1-CYKY";
                         //radek.PrurezMM2 = radek.Kabel.Name.Replace("1-CYKY", "");
                         //1-CYKY bude odstraněno \+.* znamená „plus a vše za ním“
-                        radek.PrurezMM2 = Regex.Replace(radek.Kabel.Name, @"1-CYKY|\+.*", "");
+                        //radek.PrurezMM2 = Regex.Replace(radek.Kabel.Name, @"1-CYKY|\+.*", "");
                     }
 
                     //trasa.Kabel = radek.Kabel.Name.Split(' ').First();
+                    double napeti = double.TryParse(radek.Napeti, out double napeti1) ? napeti1 : 0;
                     trasa.PocetZil = "4x";      //6. Kabel PocetZil
+                    if(napeti < 250)
+                        trasa.PocetZil = "3x";      //6. Kabel PocetZil
                 }
+                trasa.Prurezmm2 = radek.Kabel.SLmm2.ToString();
                 //7.8
-                var Pruz = radek.PrurezMM2.Split('x');
-                if(Pruz.Length > 1) {
-                    trasa.Prurezmm2 = Pruz.Last();
-                    if (Pruz.Length == 2 ) {
-                        trasa.PocetZil = Pruz.First() + "x(" + trasa.PocetZil;
-                        trasa.Prurezmm2 = Pruz.Last() + ")"; //7. Průřez mm2
-                    }
-                }
-                else {
-                    trasa.Prurezmm2 = radek.PrurezMM2; //7. Průřez mm2
-                }
+                //var Pruz = radek.PrurezMM2.Split('x');
+                //if(Pruz.Length > 1) {
+                //    trasa.Prurezmm2 = Pruz.Last();
+                //    if (Pruz.Length == 2 ) {
+                //        trasa.PocetZil = Pruz.First() + "x(" + trasa.PocetZil;
+                //        trasa.Prurezmm2 = Pruz.Last() + ")"; //7. Průřez mm2
+                //    }
+                //}
+                //else {
+                //    trasa.Prurezmm2 = radek.PrurezMM2; //7. Průřez mm2
+                //}
+
                 //trasa.Prurezmm2 = radek.PrurezMM2; //7. Průřez
 
                 //trasa.PrurezFt = "";             //8. Prozatím nepoužito
@@ -568,7 +573,7 @@ namespace Aplikace.Seznam
 
             trasa.Kabel = "PRAFlaDur ";    //5. Kabel
             trasa.PocetZil = "12x";                  //6. Kabel PocetZil
-            trasa.Prurezmm2 = "2,5 RE";                //7. Průřez
+            trasa.Prurezmm2 = "2,5";                //7. Průřez
             trasa.PrurezFt = "";                    //8. Prozatím nepoužito
 
             trasa.Druh = "Ovládání";                    //9. Druh

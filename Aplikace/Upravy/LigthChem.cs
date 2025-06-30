@@ -168,6 +168,9 @@ namespace Aplikace.Upravy
             Stara.Where(x => x.Typ == "PODAVAČ").ToList()
                 .ForEach(x => x.Typ = "Rotary");
 
+            Stara.Where(x => x.Typ == "MÍCHADLO").ToList()
+                .ForEach(x => x.Typ = "Mixer");
+
             Console.WriteLine($"Načteno {Stara.Count} záznamů z {cestaData}");
             Stara = [.. Stara.Where(x => x.Etapa == "FAZE 1")];   
             Console.WriteLine($"Pouze záznamy FAZE 1");
