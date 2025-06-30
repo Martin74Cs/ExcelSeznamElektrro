@@ -143,6 +143,35 @@ namespace Aplikace.Upravy
             //Spojení původních s doplněnými
             Stara = [.. Stara, .. VývodyStavba];
 
+            //Překlad
+            Stara.Where(x => x.Druh == "Otop").ToList()
+                        .ForEach(x => x.Druh = "Heating");
+
+            Stara.Where(x => x.Druh == "Rozvadeč").ToList()
+                        .ForEach(x => x.Druh = "Distributor");
+
+            Stara.Where(x => x.Typ == "PŘÍVOD").ToList()
+                        .ForEach(x => x.Typ = "Supply");
+
+            Stara.Where(x => x.Typ == "ČERPADLO").ToList()
+                        .ForEach(x => x.Typ = "Pump");
+
+            Stara.Where(x => x.Typ == "OKLEP").ToList()
+                .ForEach(x => x.Typ = "Vibration");
+
+            Stara.Where(x => x.Typ == "KOČKA").ToList()
+                .ForEach(x => x.Typ = "Elevator");
+
+            Stara.Where(x => x.Typ == "VÝVĚVA").ToList()
+                .ForEach(x => x.Typ = "Vacuum");
+
+            Stara.Where(x => x.Typ == "PODAVAČ").ToList()
+                .ForEach(x => x.Typ = "Rotary");
+
+            Console.WriteLine($"Načteno {Stara.Count} záznamů z {cestaData}");
+            Stara = [.. Stara.Where(x => x.Etapa == "FAZE 1")];   
+            Console.WriteLine($"Pouze záznamy FAZE 1");
+
             //Možná proud asi jen tam kde není.
             //Stara.AddProud();
 
@@ -177,15 +206,26 @@ namespace Aplikace.Upravy
                 {2,"Popis"},
                 {3,"Prikon"},
                 {4,"Napeti"},
-                {5,"Proud"},
-                {6,"Druh"},
-                {7,"Menic"},
-                {8,"Typ"},
-                {9,"PruzezMM2"},
-                {10,"Delka"},
-                {11,"RozvadecOznačení"},
-                //{12,"RozvadecCislo"},
-                {12,"Predmet"},
+                {5,"Druh"},
+                {6,"Menic"},
+                {7,"Typ"},
+                {8,"RozvadecOznačení"},
+                {9,"Predmet"},
+
+                //{1,"Tag"},
+                //{2,"Popis"},
+                //{3,"Prikon"},
+                //{4,"Napeti"},
+                ////{5,"Proud"},
+                //{6,"Druh"},
+                //{7,"Menic"},
+                //{8,"Typ"},
+                ////{9,"PrurezMM2"},
+                ////{10,"Delka"},
+                //{11,"RozvadecOznačení"},
+                ////{12,"RozvadecCislo"},
+                //{12,"Predmet"},
+
 
                 //{100,"PID"},
                 //{101,"Nic"},
@@ -364,10 +404,15 @@ namespace Aplikace.Upravy
                 .Where(x => x.Name.Contains("PraFlaDur ", StringComparison.OrdinalIgnoreCase) && x.Deleni == "3")
                 //.Where(x => x.Name == "PRAFlaDur" && x.Deleni == "4")
                 .OrderBy(x => x.IzAE).ToList();
-
             //vymazaní položek ze seznam
             KabelCu.RemoveAll(x => x.SLmm2 < 2.5);
-            
+
+            var KabelCYKY = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
+                .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
+                .OrderBy(x => x.IzAE).ToList();
+            //vymazaní položek ze seznam
+            KabelCYKY.RemoveAll(x => x.SLmm2 < 2.5);
+
             if (KabelCu.Count < 1) Console.WriteLine("Chyba hledání kabelů Cu");
             else Console.WriteLine($"Kabelů Cu je {KabelCu.Count}");
 
@@ -395,18 +440,39 @@ namespace Aplikace.Upravy
                         //var value = prop.GetValue(target);
                         var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
                         //var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva) ?? KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
-                        var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
-                        JedenKabel ??= KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
-                        if (JedenKabel == null) continue;
 
-                        //prop.SetValue(target, value);
-                        //target.GetType().GetProperty("PruzezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-                        if(pocet > 1) Target[i].PruzezMM2 = pocet.ToString() + "x"+ JedenKabel.SLmm2.ToString();
-                        else Target[i].PruzezMM2 = JedenKabel.SLmm2.ToString();
-                        Target[i].Vodice = JedenKabel.Deleni;
-                        Target[i].Kabel = JedenKabel;
-                        volba = false;
-                        break;
+                        if (proud < 150)
+                        {
+                            //kabel PraFlaDur
+                            var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
+                            JedenKabel ??= KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
+                            if (JedenKabel == null) continue;
+
+                            //prop.SetValue(target, value);
+                            //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
+                            if (pocet > 1) Target[i].PrurezMM2 = pocet.ToString() + "x" + JedenKabel.SLmm2.ToString();
+                            else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+                            Target[i].Vodice = JedenKabel.Deleni;
+                            Target[i].Kabel = JedenKabel;
+                            volba = false;
+                            break;
+                        }
+                        else {
+                            //kabel CYKY
+                            var JedenKabel = KabelCYKY.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
+                            JedenKabel ??= KabelCYKY.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
+                            if (JedenKabel == null) continue;
+
+                            //prop.SetValue(target, value);
+                            //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
+                            if (pocet > 1) Target[i].PrurezMM2 = pocet.ToString() + "x" + JedenKabel.SLmm2.ToString();
+                            else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+                            Target[i].Vodice = JedenKabel.Deleni;
+                            Target[i].Kabel = JedenKabel;
+                            volba = false;
+                            break;
+                        }
+                        
                     }
                     pocet++;
                 }

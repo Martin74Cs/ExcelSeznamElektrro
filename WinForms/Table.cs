@@ -149,7 +149,7 @@ namespace WinForms
         }
         public void SetListBoxData()
         {
-            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Typ", "Prikon", "Napeti", "Menic", "Proud", "RozvadecOznačení", "PruzezMM2" };
+            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Typ", "Prikon", "Napeti", "Menic", "Proud", "RozvadecOznačení", "PrurezMM2" };
             SetListBox(namesToRemove);
         }
 
@@ -235,7 +235,8 @@ namespace WinForms
             //průřez
             if (Pole == null) return;
             //Strojni.AddProud();
-            Pole.AddKabelCyky(1.6);
+            //Pole.AddKabelCyky(1.6);
+            Pole.AddKabelCyky(2);
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 
@@ -297,7 +298,7 @@ namespace WinForms
             SetListBox(); // Obnoví sloupce v datagridu
 
             //string[] columnsToHide =
-            //["Pocet", "Nic", "PruzezMM2", "AWG", "Delka", "Delkaft", "Vyvod", "Druh", "Radek", "Vodice", "Kabel",
+            //["Pocet", "Nic", "PrurezMM2", "AWG", "Delka", "Delkaft", "Vyvod", "Druh", "Radek", "Vodice", "Kabel",
             //"Motor", "Patro", "Vykres", "IsExist", "Bod", "IsExistElektro", "Otoceni", "BodElektro", "HP", "Id" ];
 
             //foreach (string columnName in columnsToHide)
@@ -310,7 +311,7 @@ namespace WinForms
             //dataGridView1.Columns["Pocet"]?.Visible = false;
             //dataGridView1.Columns["Nic"]?.Visible = false;
             ////dataGridView1.Columns["Proud"].Visible = false; 
-            //dataGridView1.Columns["PruzezMM2"]?.Visible = false;
+            //dataGridView1.Columns["PrurezMM2"]?.Visible = false;
             //dataGridView1.Columns["AWG"]?.Visible = false;
             //dataGridView1.Columns["Delka"]?.Visible = false;
             //dataGridView1.Columns["Delkaft"]?.Visible = false;

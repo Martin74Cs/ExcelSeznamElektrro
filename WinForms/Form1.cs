@@ -191,7 +191,7 @@ namespace WinForms
             data.Columns["AWG"]?.Visible = false;
             data.Columns["Delkaft"]?.Visible = false;
 
-            //data.Columns["PruzezMM2"].Visible = false;
+            //data.Columns["PrurezMM2"].Visible = false;
             //data.Columns["Rozvadec"].Visible = false;
             //data.Columns["RozvadecCislo"].Visible = false;
             //data.Columns["RozvadecOznačení"].Visible = false;

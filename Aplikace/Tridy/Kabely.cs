@@ -20,7 +20,7 @@ namespace Aplikace.Tridy
 
         public string Kabel { get; set; } = string.Empty;   //ozvaděčení kabelu
         public string PocetZil { get; set; } = string.Empty; //Zarizeni.vodice
-        public string Prurezmm2 { get; set; } = string.Empty;   //Zarizeni.PruzezMM2
+        public string Prurezmm2 { get; set; } = string.Empty;   //Zarizeni.PrurezMM2
         public string PrurezFt { get; set; } = string.Empty; //nepoužito
 
         public string Druh { get; set; } = string.Empty;

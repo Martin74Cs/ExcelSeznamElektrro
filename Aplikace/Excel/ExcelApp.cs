@@ -1214,12 +1214,12 @@ namespace Aplikace.Excel
                             Zapis.value = (proud1 * 500 / 480).ToString();
                         break;
                     case 10:
-                        //PruzezMM2
-                        Zapis.value = radek.PruzezMM2;
+                        //PrurezMM2
+                        Zapis.value = radek.PrurezMM2;
                         break;
                     case 11:
                         //Pruzez US unit
-                        //Zapis.value = radek.PruzezMM2;
+                        //Zapis.value = radek.PrurezMM2;
                         break;
                     case 12:
                         //delka

@@ -32,7 +32,7 @@ namespace Aplikace.Tridy
         private string menic = string.Empty;
         private string nic = string.Empty;
         private string proud = string.Empty;
-        private string pruzezMM2 = string.Empty;
+        private string prurezMM2 = string.Empty;
         private string pid = string.Empty;
         private int pocet;
         private string popis = string.Empty;
@@ -61,7 +61,7 @@ namespace Aplikace.Tridy
 
         //public Zarizeni() { }
 
-        //public Zarizeni(string Tag, string PID, string Popis, string Prikon ,string BalenaJednotka, string Menic , string Nic, string HPstr , string Proud, string PruzezMM2, string AWG, 
+        //public Zarizeni(string Tag, string PID, string Popis, string Prikon ,string BalenaJednotka, string Menic , string Nic, string HPstr , string Proud, string PrurezMM2, string AWG, 
         //string Delka, string Delkaft , string Rozvadec , string RozvadecCislo )
         //{
         //    this.Tag = Tag;
@@ -73,7 +73,7 @@ namespace Aplikace.Tridy
         //    this.Nic = Nic;
         //    //hp
         //    this.Proud = Proud;
-        //    this.PruzezMM2 = PruzezMM2;
+        //    this.PrurezMM2 = PrurezMM2;
         //    this.AWG = AWG;
         //    this.Delka = Delka;
         //    this.Delkaft = Delkaft;
@@ -118,7 +118,7 @@ namespace Aplikace.Tridy
 
         [Display(Name = "Průřez")]
         [Jednotky("[mm2]")]
-        public string PruzezMM2 { get => pruzezMM2; set => SetProperty(ref pruzezMM2, value); }
+        public string PrurezMM2 { get => prurezMM2; set => SetProperty(ref prurezMM2, value); }
 
         public string AWG { get => aWG; set => SetProperty(ref aWG, value); }
 

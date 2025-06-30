@@ -8,6 +8,7 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -54,10 +55,10 @@ namespace Aplikace.Seznam
                     Data.Add("5x");             
 
                 //7. proud
-                Data.Add(radek.PruzezMM2);
+                Data.Add(radek.PrurezMM2);
 
                 //8. Průřez
-                Data.Add(radek.PruzezMM2);
+                Data.Add(radek.PrurezMM2);
 
                 //9. zařízení
                 //Pokud začíná na P ne B jedná se  balenou jednotku
@@ -157,7 +158,7 @@ namespace Aplikace.Seznam
                     Kabel = radek.Kabel.Označení ?? "";
                     PocetZil = "5x";
                 }
-                string PruzezMM2 = radek.PruzezMM2; //7. Průřez
+                string PruzezMM2 = radek.PrurezMM2; //7. Průřez
                 string PrurezFt = ""; //8. 
 
                 trasa.Kabel = Kabel;
@@ -441,21 +442,32 @@ namespace Aplikace.Seznam
                 }
                 else { 
                     //trasa.Kabel = radek.Kabel.Označení ?? "";  //5. Kabel
+                    
                     trasa.Kabel = "PraflaDur";  //5. Kabel
+                    if (radek.Kabel.Name.Contains("1-CYKY")) { 
+
+                        trasa.Kabel = "1-CYKY";
+                        //radek.PrurezMM2 = radek.Kabel.Name.Replace("1-CYKY", "");
+                        //1-CYKY bude odstraněno \+.* znamená „plus a vše za ním“
+                        radek.PrurezMM2 = Regex.Replace(radek.Kabel.Name, @"1-CYKY|\+.*", "");
+                    }
+
+                    //trasa.Kabel = radek.Kabel.Name.Split(' ').First();
                     trasa.PocetZil = "4x";      //6. Kabel PocetZil
                 }
                 //7.8
-                var Pruz = radek.PruzezMM2.Split('x');
+                var Pruz = radek.PrurezMM2.Split('x');
                 if(Pruz.Length > 1) {
                     trasa.Prurezmm2 = Pruz.Last();
                     if (Pruz.Length == 2 ) {
-                        trasa.PocetZil = Pruz.First() + "x" + trasa.PocetZil;
+                        trasa.PocetZil = Pruz.First() + "x(" + trasa.PocetZil;
+                        trasa.Prurezmm2 = Pruz.Last() + ")"; //7. Průřez mm2
                     }
                 }
                 else {
-                    trasa.Prurezmm2 = radek.PruzezMM2; //7. Průřez mm2
+                    trasa.Prurezmm2 = radek.PrurezMM2; //7. Průřez mm2
                 }
-                //trasa.Prurezmm2 = radek.PruzezMM2; //7. Průřez
+                //trasa.Prurezmm2 = radek.PrurezMM2; //7. Průřez
 
                 //trasa.PrurezFt = "";             //8. Prozatím nepoužito
 
