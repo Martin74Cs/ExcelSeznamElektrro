@@ -135,8 +135,11 @@ namespace WinForms
             {
                 if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveJsonList(Cesty.ElektroDataJson);
-                if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                if(MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) { 
                     Data.SaveToCsv(Cesty.ElektroDataCsv);
+                    Data.SaveXML(Path.ChangeExtension(Cesty.ElektroDataCsv, ".xml"));
+                    Data.SaveHtml(Path.ChangeExtension(Cesty.ElektroDataCsv, ".html"));
+                }
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }

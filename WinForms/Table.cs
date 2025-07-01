@@ -144,12 +144,13 @@ namespace WinForms
 
         public void SetListBox()
         {
-            var namesToRemove = new[] { "TagStroj", "Tag", "Predmet", "Popis", "Typ", "Pid", "Menic", "Prikon", "PrikonStroj", "Rozvadec", "RozvadecCislo", "RozvadecOznačení", "Nic", "Delka", "Vyvod", "Patro", "Vykres" };
+            //var namesToRemove = new[] { "TagStroj", "Tag", "Predmet", "Popis", "Druh", "Typ", "Pid", "Menic", "Prikon", "PrikonStroj", "Rozvadec", "RozvadecCislo", "RozvadecOznačení", "Nic", "Delka", "Vyvod", "Patro", "Vykres" };
+            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "Menic","Napeti", "Prikon", "Rozvadec", "RozvadecCislo", "Vyvod", };
             SetListBox(namesToRemove);
         }
         public void SetListBoxData()
         {
-            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Typ", "Prikon", "Napeti", "Menic", "Proud", "RozvadecOznačení", "PrurezMM2" };
+            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "PrikonStroj", "Prikon", "Napeti", "Menic", "Proud", "RozvadecOznačení", "PrurezMM2" };
             SetListBox(namesToRemove);
         }
 
@@ -164,6 +165,7 @@ namespace WinForms
             // Přidáš sloupce ručně:
             foreach (var name in namesToRemove)
             {
+                if (name == "Druh") continue; // přeskočíme sloupec "Druh", ten bude přidán později
                 var nameColumn = new DataGridViewTextBoxColumn
                 {
                     DataPropertyName = name,
@@ -198,7 +200,9 @@ namespace WinForms
                 ValueType = typeof(Zarizeni.Druhy)
             };
             //dataGridView1.Columns.Add(comboBoxColumn);
-            dataGridView1.Columns.Insert(4, comboBoxColumn);
+            // Přidáme ComboBox sloupec na konec, nebo na určitou pozici
+            int position = namesToRemove.Contains("Druh") ? namesToRemove.IndexOf("Druh") : 1; // Najdeme index sloupce "Druh" v seznamu
+            dataGridView1.Columns.Insert(position, comboBoxColumn);
             // Umožnit přidávání/smazání
             //dataGridView1.AllowUserToAddRows = true;
             dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
@@ -475,9 +479,10 @@ namespace WinForms
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
-            string vybranePatro = box.SelectedItem.ToString();
-            var filtrovanaData = Pole.Where(z => z.Etapa == vybranePatro).ToList();
-            dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+            ObnovGrid(); // zachová aktuální filtry
+            //string vybranePatro = box.SelectedItem.ToString();
+            //var filtrovanaData = Pole.Where(z => z.Etapa == vybranePatro).ToList();
+            //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
         }
 
         private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e)
@@ -488,9 +493,10 @@ namespace WinForms
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
-            string vybranePatro = box.SelectedItem.ToString();
-            var filtrovanaData = Pole.Where(z => z.RozvadecOznačení == vybranePatro).ToList();
-            dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+            ObnovGrid(); // zachová aktuální filtry
+            //string vybranePatro = box.SelectedItem.ToString();
+            //var filtrovanaData = Pole.Where(z => z.RozvadecOznačení == vybranePatro).ToList();
+            //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
         }
 
         private void ComboBox3_MouseClick(object sender, MouseEventArgs e)
@@ -519,9 +525,11 @@ namespace WinForms
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
-            string vybranePatro = box.SelectedItem.ToString();
-            var filtrovanaData = Pole.Where(z => z.PID == vybranePatro).ToList();
-            dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+
+            ObnovGrid(); // zachová aktuální filtry
+            //string vybranePatro = box.SelectedItem.ToString();
+            //var filtrovanaData = Pole.Where(z => z.PID == vybranePatro).ToList();
+            //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
         }
 
         private void ComboBox4Pid_MouseClick(object sender, MouseEventArgs e)

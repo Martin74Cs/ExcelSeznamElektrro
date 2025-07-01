@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aplikace.Sdilene
@@ -117,6 +118,55 @@ namespace Aplikace.Sdilene
             //List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString);
             List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
             return moje;
+        }
+
+
+        public static void SaveXML<T>(this T Pole, string cesta) where T : new()
+        {
+            // Serializace do souboru
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            using (FileStream fs = new FileStream(cesta, FileMode.Create))
+            {
+                serializer.Serialize(fs, Pole);
+            }
+            Console.WriteLine($"Hotovo! Uloženo do {cesta}");
+        }
+        public static void SaveHtml<T>(this List<T> Pole, string cesta) where T : new()
+        {
+            var sb = new StringBuilder();
+            if(Pole == null || Pole.Count == 0) { 
+                sb.Append("<p>Seznam je prázdný.</p>");
+                File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+                return;
+            }
+
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Tabulka</title></head><body>");
+            sb.AppendLine("<table border='1'><thead><tr>");
+
+            // Hlavička tabulky
+            foreach(var prop in props) {
+                sb.AppendLine($"<th>{prop.Name}</th>");
+            }
+
+            sb.AppendLine("</tr></thead><tbody>");
+
+            // Řádky tabulky
+            foreach(var item in Pole) {
+                sb.AppendLine("<tr>");
+                foreach(var prop in props) {
+                    object value = prop.GetValue(item, null) ?? "";
+                    sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
+                }
+                sb.AppendLine("</tr>");
+            }
+            sb.AppendLine("</tbody></table></body></html>");
+
+            File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+
+            Console.WriteLine("Hotovo! Uloženo do output.html");
         }
 
 
