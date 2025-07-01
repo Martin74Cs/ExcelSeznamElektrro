@@ -33,6 +33,7 @@ namespace Aplikace.Tridy
         private string nic = string.Empty;
         private string proud = string.Empty;
         private string prurezMM2 = string.Empty;
+        private int pocetKabelu = 1; //string.Empty;
         private string pid = string.Empty;
         private int pocet;
         private string popis = string.Empty;
@@ -115,6 +116,10 @@ namespace Aplikace.Tridy
         [Display(Name = "Proud")]
         [Jednotky("[A]")]
         public string Proud { get => proud; set => SetProperty(ref proud, value); }
+
+        [Display(Name = "Počet kabelů")]
+        [Jednotky("[ks]")]
+        public int PocetKabelu { get => pocetKabelu; set => SetProperty(ref pocetKabelu, value); }
 
         [Display(Name = "Průřez")]
         [Jednotky("[mm2]")]

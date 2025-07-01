@@ -52,7 +52,7 @@ namespace Aplikace.Seznam
                 if (radek.Menic == "VSD")
                     Data.Add("4x");
                 else
-                    Data.Add("5x");             
+                    Data.Add("5x");
 
                 //7. proud
                 Data.Add(radek.PrurezMM2);
@@ -98,8 +98,8 @@ namespace Aplikace.Seznam
                     Data.Add(radek.BalenaJednotka);
                     Data.Add("X 01");
                 }
-                else 
-                { 
+                else
+                {
                     Data.Add("M 01");
                     Data.Add("X 01");
                 }
@@ -115,14 +115,14 @@ namespace Aplikace.Seznam
 
                 //Ovládací kabel PTC
                 if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
-                { 
-                  NovaData.Add(KabelPTC(radek));
-                  NovaData.Add(KabelOvladani(radek));
+                {
+                    NovaData.Add(KabelPTC(radek));
+                    NovaData.Add(KabelOvladani(radek));
                 }
             }
             return NovaData;
         }
-        
+
         public static List<List<string>> Kabely(List<Zarizeni> PoleData)
         {
             //uprava pole tabulky pro vypsaní
@@ -135,11 +135,11 @@ namespace Aplikace.Seznam
                 var Cislo = radek.RozvadecCislo; //3. Odkud číslo
                 string Oznaceni = "WL 01"; //4. Kabel
 
-                trasa.Tag = radek.Tag.Replace("\n", " "); 
+                trasa.Tag = radek.Tag.Replace("\n", " ");
                 trasa.Rozvadec = Rozvadec;
                 trasa.RozvadecCislo = Cislo;
                 trasa.Oznaceni = Cislo;
-                
+
                 var Data = new List<string>  {
                     Tag,        //1. Kabel
                     Rozvadec,   //2. odkud Mcc
@@ -154,7 +154,8 @@ namespace Aplikace.Seznam
                     Kabel = "ÖLFLEX CLASSIC 110 CY";
                     PocetZil = "4x";
                 }
-                else { 
+                else
+                {
                     Kabel = radek.Kabel.Označení ?? "";
                     PocetZil = "5x";
                 }
@@ -185,7 +186,7 @@ namespace Aplikace.Seznam
                 //dtto trasa - trasa.RozvadecCislo; 
                 Data.Add(radek.RozvadecCislo);  //12. Odkud číslo
                 //13. Svorka rozvaděče
-                trasa.OdkudSvokra = "X 01"; 
+                trasa.OdkudSvokra = "X 01";
                 Data.Add(trasa.OdkudSvokra);
 
                 //14. Mezera
@@ -215,9 +216,9 @@ namespace Aplikace.Seznam
 
                 //Ovládací kabel PTC
                 if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
-                { 
-                  NovaData.Add(KabelPTC(radek));
-                  NovaData.Add(KabelOvladani(radek));
+                {
+                    NovaData.Add(KabelPTC(radek));
+                    NovaData.Add(KabelOvladani(radek));
                 }
             }
             return NovaData;
@@ -290,8 +291,8 @@ namespace Aplikace.Seznam
                 //20. Delka ft
                 //radek.Delka
             };
-                
-            
+
+
             return Data;
         }
         public static List<string> KabelOvladani(Zarizeni radek)
@@ -311,8 +312,6 @@ namespace Aplikace.Seznam
                 //4. Kabel
                 "WS 02",
 
-
-
                 //5. Kabel
                 "CYKY",
 
@@ -328,8 +327,6 @@ namespace Aplikace.Seznam
 
                 //9. Počet žil
                 "Ovládání",
-
-
 
                 //10. odkud tag
                 radek.Tag,
@@ -406,7 +403,8 @@ namespace Aplikace.Seznam
             foreach (var item in Data)
             {
                 var result = dir.OrderBy(kvp => kvp.Key) // Seřadíme podle int klíče
-                    .Select(kvp => {
+                    .Select(kvp =>
+                    {
                         var prop = item.GetType().GetProperty(kvp.Value);
                         return prop != null ? prop.GetValue(item)?.ToString() ?? "" : "";
                     })
@@ -440,11 +438,13 @@ namespace Aplikace.Seznam
                     trasa.Kabel = "ÖLFLEX CLASSIC 110 CY";  //5. Kabel
                     trasa.PocetZil = "4x";                  //6. Kabel PocetZil
                 }
-                else { 
+                else
+                {
                     //trasa.Kabel = radek.Kabel.Označení ?? "";  //5. Kabel
-                    
+
                     trasa.Kabel = "PraflaDur";  //5. Kabel
-                    if (radek.Kabel.Name.Contains("1-CYKY")) { 
+                    if (radek.Kabel.Name.Contains("1-CYKY"))
+                    {
 
                         trasa.Kabel = "1-CYKY";
                         //radek.PrurezMM2 = radek.Kabel.Name.Replace("1-CYKY", "");
@@ -455,18 +455,29 @@ namespace Aplikace.Seznam
                     //trasa.Kabel = radek.Kabel.Name.Split(' ').First();
                     double napeti = double.TryParse(radek.Napeti, out double napeti1) ? napeti1 : 0;
                     trasa.PocetZil = "4x";      //6. Kabel PocetZil
-                    if(napeti < 250)
+                    if (napeti < 250)
                         trasa.PocetZil = "3x";      //6. Kabel PocetZil
                 }
                 trasa.Prurezmm2 = radek.Kabel.SLmm2.ToString();
                 //7.8
+                if (radek.PocetKabelu > 1)
+                    trasa.Kabel = radek.PocetKabelu.ToString() + "x" + trasa.Kabel;
+                    //trasa.PocetZil = radek.PocetKabelu + "x("  + trasa.PocetZil + "x" + radek.PrurezMM2 + ")"; //7. Průřez mm2
+
                 //var Pruz = radek.PrurezMM2.Split('x');
-                //if(Pruz.Length > 1) {
-                //    trasa.Prurezmm2 = Pruz.Last();
-                //    if (Pruz.Length == 2 ) {
-                //        trasa.PocetZil = Pruz.First() + "x(" + trasa.PocetZil;
+                //if (Pruz.Length > 1)
+                //{
+                //    //    trasa.Prurezmm2 = Pruz.Last();
+                //    if (Pruz.Length == 2)
+                //    {
+                //        trasa.PocetZil = Pruz.First() + "x(" + trasa.PocetZil + "x";
                 //        trasa.Prurezmm2 = Pruz.Last() + ")"; //7. Průřez mm2
                 //    }
+                //    else
+                //    {
+                //        trasa.PocetZil = trasa.PocetZil + "x";
+                //    }
+                //}
                 //}
                 //else {
                 //    trasa.Prurezmm2 = radek.PrurezMM2; //7. Průřez mm2
@@ -487,7 +498,6 @@ namespace Aplikace.Seznam
                 //}
                 //else
                 trasa.Druh = radek.Druh; //9. zařízení
-
                 //10.11.12.13
                 //trasa.Tag = trasa.Tag;             //10. odkud tag
                 //trasa.Rozvadec = trasa.Rozvadec;   //11. odkud Mcc
@@ -501,8 +511,8 @@ namespace Aplikace.Seznam
                 trasa.Patro = radek.Patro;      //16. kam objekt nebo patro
                 trasa.Predmet = radek.Predmet;  //17.kam Zažizeni
                 trasa.Svorka = "X 01";          //18.kam Svorka
-                
-                trasa.Delka = (radek.Delka/1000).ToString("F2");      //19. Delka m
+
+                trasa.Delka = (radek.Delka / 1000).ToString("F2");      //19. Delka m
                 //trasa.PrurezFt = (radek.Delka * (1/0.3)).ToString(); //20 Delka ft
 
                 //přidání řádku do pole
@@ -510,7 +520,7 @@ namespace Aplikace.Seznam
                 Kabel.Hlavni = trasa; //přiřazení hlavní trasy do kabelu
                                       //
                                       //Ovládací kabel PTC
-                //if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
+                                      //if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
                 if (radek.Druh == Zarizeni.Druhy.Motor.ToString())
                 {
                     var PTC = KabelPTCTrida(radek);
@@ -549,7 +559,7 @@ namespace Aplikace.Seznam
             //Rozvadec              11
             //RozvadecCislo         12
             trasa.OdkudSvokra = "X 02"; //13. Svorka rozvaděče
-           
+
             trasa.Mezera = "";                //14. Mezera
 
             //Kam 15.16.17.18
@@ -559,7 +569,7 @@ namespace Aplikace.Seznam
             trasa.Svorka = "X 01";          //18.kam Svorka
 
             trasa.Delka = (radek.Delka / 1000).ToString("F2");                 //19. Delka m
-            
+
             return trasa;
         }
         public static Trasa KabelOvladaniTrida(Zarizeni radek)
@@ -576,7 +586,8 @@ namespace Aplikace.Seznam
             trasa.Prurezmm2 = "2,5";                //7. Průřez
             trasa.PrurezFt = "";                    //8. Prozatím nepoužito
 
-            trasa.Druh = "Ovládání";                    //9. Druh
+            //trasa.Druh = "Ovládání";                    //9. Druh
+            trasa.Druh = "Remote";                    //9. Druh
 
             //Odkud
             //Tag                   10

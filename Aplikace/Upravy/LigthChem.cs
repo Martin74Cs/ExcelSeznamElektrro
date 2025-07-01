@@ -129,15 +129,15 @@ namespace Aplikace.Upravy
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
             //Vývody pro doplnění
-            var cestaVývody = Path.Combine(Cesty.Elektro, "Vývody.json");
-            var Vývody = Soubory.LoadJsonList<Zarizeni>(cestaVývody);
+            //var cestaVývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+            //var Vývody = Soubory.LoadJsonList<Zarizeni>(cestaVývody);
 
-            //Spojení původních s doplněnými
-            Stara = [.. Stara, .. Vývody];
+            //Spojení ZAŘÍZENÍ A ROZVADĚČE
+            //Stara = [.. Stara, .. Vývody];
 
             //Vývody pro doplnění
             var cestaStavba = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
-            var VývodyStavba = Soubory.LoadJsonList<Zarizeni>(cestaVývody);
+            var VývodyStavba = Soubory.LoadJsonList<Zarizeni>(cestaStavba);
 
             //Spojení původních s doplněnými
             Stara = [.. Stara, .. VývodyStavba];
@@ -154,7 +154,7 @@ namespace Aplikace.Upravy
 
             //Přidání typu kabelu pokud chybí.
             var prazdne = Stara.Where(x => x.Kabel == null).ToList();
-            prazdne.AddKabelCyky(1.6);
+            prazdne.AddKabelCyky(1.8);
 
             // Spojení původních neprázdných s doplněnými kabely – Concat vytvoří novou spojenou kolekci
             //Stara = Stara.Where(x => x.Kabel != null).Concat(prazdne).ToList();
@@ -170,12 +170,6 @@ namespace Aplikace.Upravy
 
             //1.Excel založka seznam kabelů
             //Nastavení nebo vytvoření záložky
-            ExcelApp.GetSheet("Seznam Elektro");
-            //Vytvoření nadpisů
-            var range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
-
-            //Formátování nadpisů
-            ExcelApp.NadpisSet(range);
 
             //čísla sloupců a nazvy tříd. 
             var dir = new Dictionary<int, string>() {
@@ -211,6 +205,19 @@ namespace Aplikace.Upravy
                 //{105,"Napeti"},
                 //{106,"Radek"},
             };
+
+            ExcelApp.GetSheet("Seznam Všechno");
+            //Vytvoření nadpisů
+            var range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
+            //Formátování nadpisů
+            ExcelApp.NadpisSet(range);
+            ExcelApp.ClassToExcel(Row: 3, Stara, dir);
+
+            ExcelApp.GetSheet("Seznam Elektro");
+            //Vytvoření nadpisů
+            range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
+            //Formátování nadpisů
+            ExcelApp.NadpisSet(range);
             ExcelApp.ClassToExcel(Row: 3, StaraBezVSD, dir);
 
             //2.Excel založka seznam kabelů
@@ -242,8 +249,11 @@ namespace Aplikace.Upravy
             Stara.Where(x => x.Druh == "Rozvadeč").ToList()
                         .ForEach(x => x.Druh = "Distributor");
 
-            Stara.Where(x => x.Typ == "PŘÍVOD").ToList()
+            Stara.Where(x => x.Typ.ToUpper() == "PŘÍVOD").ToList()
                         .ForEach(x => x.Typ = "Supply");
+
+            Stara.Where(x => x.Typ == "Spojka").ToList()
+                        .ForEach(x => x.Typ = "Coupler");
 
             Stara.Where(x => x.Typ == "ČERPADLO").ToList()
                         .ForEach(x => x.Typ = "Pump");
@@ -456,7 +466,11 @@ namespace Aplikace.Upravy
 
                             //prop.SetValue(target, value);
                             //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-                            if (pocet > 1) Target[i].PrurezMM2 = pocet.ToString() + "x" + JedenKabel.SLmm2.ToString();
+                            if (pocet > 1) {
+                                Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+                                Target[i].PocetKabelu = pocet;
+                            }
+                            
                             else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
                             Target[i].Vodice = JedenKabel.Deleni;
                             Target[i].Kabel = JedenKabel;
@@ -467,11 +481,17 @@ namespace Aplikace.Upravy
                             //kabel CYKY
                             var JedenKabel = KabelCYKY.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
                             JedenKabel ??= KabelCYKY.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
-                            if (JedenKabel == null) continue;
+                            if (JedenKabel == null) {
+                                pocet++;
+                            continue;
+                            }
 
                             //prop.SetValue(target, value);
                             //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-                            if (pocet > 1) Target[i].PrurezMM2 = pocet.ToString() + "x" + JedenKabel.SLmm2.ToString();
+                            if (pocet > 1) {
+                                Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+                                Target[i].PocetKabelu = pocet;
+                            } 
                             else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
                             Target[i].Vodice = JedenKabel.Deleni;
                             Target[i].Kabel = JedenKabel;
@@ -480,7 +500,7 @@ namespace Aplikace.Upravy
                         }
                         
                     }
-                    pocet++;
+                    //pocet++;
                 }
             }
             return Target;
