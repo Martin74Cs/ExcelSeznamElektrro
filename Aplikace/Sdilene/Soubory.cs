@@ -1,4 +1,5 @@
-﻿using Microsoft.Office.Interop.Excel;
+﻿using Aplikace.Tridy;
+using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -157,6 +158,55 @@ namespace Aplikace.Sdilene
             foreach(var item in Pole) {
                 sb.AppendLine("<tr>");
                 foreach(var prop in props) {
+                    if(prop.Name == "Item") continue;
+                    object value = prop.GetValue(item, null) ?? "";
+                    sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
+                }
+                sb.AppendLine("</tr>");
+            }
+            sb.AppendLine("</tbody></table></body></html>");
+
+            File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+
+            Console.WriteLine("Hotovo! Uloženo do output.html");
+        }
+       public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta) where T : new()
+        {
+            var sb = new StringBuilder();
+            if(Pole == null || Pole.Count == 0) { 
+                sb.Append("<p>Seznam je prázdný.</p>");
+                File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+                return;
+            }
+
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Seznam zařízení</title>");
+            sb.AppendLine("<style>");
+            sb.AppendLine("body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9; }");
+            sb.AppendLine("h1 { color: #333; }");
+            sb.AppendLine("table { border-collapse: collapse; width: 100%; background-color: #fff; box-shadow: 0 0 10px #ccc; }");
+            sb.AppendLine("th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }");
+            sb.AppendLine("th { background-color: #f0f0f0; }");
+            sb.AppendLine("tr:nth-child(even) { background-color: #f7f7f7; }");
+            sb.AppendLine("</style></head><body>");
+            string nadpis = "Seznam zařízení";
+            sb.AppendLine($"<h1>{nadpis}</h1>");
+            sb.AppendLine("<table><thead><tr>");
+
+            // Hlavička tabulky
+            foreach(var prop in props) {
+                sb.AppendLine($"<th>{prop.Name}</th>");
+            }
+
+            sb.AppendLine("</tr></thead><tbody>");
+
+            // Řádky tabulky
+            foreach(var item in Pole) {
+                sb.AppendLine("<tr>");
+                foreach(var prop in props) {
+                    if(prop.Name == "Item") continue;
                     object value = prop.GetValue(item, null) ?? "";
                     sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
                 }

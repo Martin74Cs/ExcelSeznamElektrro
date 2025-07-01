@@ -138,7 +138,7 @@ namespace WinForms
                 if(MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) { 
                     Data.SaveToCsv(Cesty.ElektroDataCsv);
                     Data.SaveXML(Path.ChangeExtension(Cesty.ElektroDataCsv, ".xml"));
-                    Data.SaveHtml(Path.ChangeExtension(Cesty.ElektroDataCsv, ".html"));
+                    Data.SaveHtmlStyle(Path.ChangeExtension(Cesty.ElektroDataCsv, ".html"));
                 }
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
