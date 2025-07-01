@@ -197,7 +197,6 @@ namespace Aplikace.Upravy
                 ////{12,"RozvadecCislo"},
                 //{12,"Predmet"},
 
-
                 //{100,"PID"},
                 //{101,"Nic"},
                 //{102,"HP"},
