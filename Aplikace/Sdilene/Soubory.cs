@@ -1,18 +1,24 @@
 ﻿using Aplikace.Tridy;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+//using static System.Net.Mime.MediaTypeNames;
+//using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aplikace.Sdilene
 {
@@ -216,9 +222,16 @@ namespace Aplikace.Sdilene
 
             File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
 
-            Console.WriteLine("Hotovo! Uloženo do output.html");
+            Console.WriteLine($"Hotovo! Uloženo do {cesta}");
         }
 
+
+        public static void SaveDocx<T>(this List<T> Pole, string cesta){
+            //ruzné varienty vytvoření dokumentu
+            //new Word().SaveDocx(Pole, cesta);
+            //new Word().SaveDocxList(Pole, cesta);
+            new Word().SaveDocxListClass(Pole, cesta);
+        }
 
         public static List<T> LoadFromCsv<T>(string file ) where T : new()
         {

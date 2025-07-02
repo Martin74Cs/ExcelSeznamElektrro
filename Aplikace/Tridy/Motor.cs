@@ -58,16 +58,18 @@ namespace Aplikace.Tridy
         [Display(Name = "Maximální moment Mk/Mn [-]")]
         public double MkMn { get; set; }
 
-        [Display(Name = "Hladina akustického tlaku při 50 Hz Lpfa [dB(A)]")]
+        //[Display(Name = "Hladina akustického tlaku při 50 Hz Lpfa [dB(A)]")]
+        [Display(Name = "Akustický tlak (50 Hz) Lpfa [dB(A)]")]
         public double Lpfa { get; set; }
 
-        [Display(Name = "Hladina akustického výkonu při 50 Hz Lwa [db(A)]")]
+        //[Display(Name = "Hladina akustického výkonu při 50 Hz Lwa [db(A)]")]
+        [Display(Name = "Akustický výkon (50 Hz) Lwa [db(A)]")]
         public double LWA { get; set; }
 
-        [Display(Name = "Objednací číslo Trojůhelnik/Hvězda [V]")]
+        [Display(Name = "Objednací číslo Y/D [V]")]
         public string ObjednaciCislo { get; set; } = string.Empty;
 
-        [Display(Name = "Popis Trojůhelnik/Hvězda [V]")]
+        [Display(Name = "Popis Y/D [V]")]
         public string TrojuhelnikHvezda { get; set; } = string.Empty;
 
         [Display(Name = "Tvar připojení")]

@@ -139,6 +139,7 @@ namespace WinForms
                     Data.SaveToCsv(Cesty.ElektroDataCsv);
                     Data.SaveXML(Path.ChangeExtension(Cesty.ElektroDataCsv, ".xml"));
                     Data.SaveHtmlStyle(Path.ChangeExtension(Cesty.ElektroDataCsv, ".html"));
+                    Data.SaveDocx(Path.ChangeExtension(Cesty.ElektroDataCsv, ".docx"));
                 }
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI

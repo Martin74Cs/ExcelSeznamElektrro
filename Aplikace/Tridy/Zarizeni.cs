@@ -89,6 +89,8 @@ namespace Aplikace.Tridy
         /// <summary>Označení zařízení </summary>
         public string Tag { get => tag; set => SetProperty(ref tag , value); }
         public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
+
+        [Display(Name = "Technologické schéma")]
         public string PID { get => pid; set => SetProperty(ref pid, value); }
         public int Pocet { get => pocet; set => SetProperty(ref pocet, value); }
 
@@ -96,15 +98,18 @@ namespace Aplikace.Tridy
         [Display(Name = "Jméno zařízení")]
         public string Popis { get => popis; set => SetProperty(ref popis, value); }
 
-        [Display(Name = "Příkon")]
+        [Display(Name = "Příkon elektro")]
         [Jednotky("[kW]")]
         public string Prikon { get => prikon; set => SetProperty(ref prikon , value); }
 
-        [Display(Name = "Příkon")]
+        [Display(Name = "Příkon strojní")]
         [Jednotky("[kW]")]
         public string PrikonStroj { get => prikonStroj; set => SetProperty(ref prikonStroj, value); }
         public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
+
+        [Display(Name = "Měnič")]
         public string Menic { get => menic; set => SetProperty(ref menic, value); }
+
         public string Nic { get => nic; set => SetProperty(ref nic, value); }
         public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
 
@@ -130,29 +135,38 @@ namespace Aplikace.Tridy
         [Display(Name = "Délka")]
         [Jednotky("[m]")]
         public double Delka { get => delka; set => SetProperty(ref delka, value); }
+
         [Display(Name = "Délka")]
         [Jednotky("[ft]")]
-
         public double Delkaft { get => delkaft; set => SetProperty(ref delkaft, value); }
 
+        [Display(Name = "Rozvaděč text")]
         public string Rozvadec { get => rozvadec; set => SetProperty(ref rozvadec, value); }
+
+        [Display(Name = "Rozvaděč číslo")]
         public string RozvadecCislo { get => rozvadecCislo; set => SetProperty(ref rozvadecCislo, value); }
+        
         /// <summary>Označení celého rozvaděče</summary>
         [JsonIgnore]
+        [Display(Name = "Označení rozvaděče")]
         public string RozvadecOznačení => Rozvadec + RozvadecCislo;
         public string Vyvod { get; set; } = string.Empty;
 
         /// <summary>Druh Motor, Přívod, Spojka, Rozvaěděč</summary>
+        [Display(Name = "Druh zařízení")]
         public string Druh { get => druh; set => SetProperty(ref druh, value); }
 
         /// <summary>Druh zařízení čerpadlo, vývěva, Míchadlo</summary>
         public string Typ { get => typ; set => SetProperty(ref typ, value); }
 
         /// <summary> Fáze výstavba </summary>
+        [Display(Name = "Fáze výstavby")]
         public string Etapa { get => etapa; set => SetProperty(ref etapa, value); }
 
         [JsonIgnore]
         public Druhy DruhEnum { get => druhenum; set => SetProperty(ref druhenum, value); }
+
+        [Display(Name = "Napětí")]
         public string Napeti { get => napeti; set => SetProperty(ref napeti, value); }
         /// <summary>Odpovídá radku strojního zařízení</summary>
         public int Radek { get => radek; set => SetProperty(ref radek, value); }
