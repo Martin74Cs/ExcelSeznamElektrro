@@ -89,6 +89,20 @@ namespace Aplikace.Sdilene
             Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
             return;
         }
+        /// <summary>
+        /// uložit soubor, deserializace třídy pozor na vstup generika
+        /// </summary>
+        public static void SaveJson<T>(this T values, string cesta) where T : class
+        {
+            //MessageBox.Show("save");
+            // Nastavení formátování JSON s odsazením (entery)
+            //var settings = new JsonSerializerSettings { Formatting = Formatting.Indented };
+            string Json = JsonConvert.SerializeObject(values, Nastaveni());
+            //MessageBox.Show(Json);
+            File.WriteAllText(cesta, Json);
+            Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
+            return;
+        }
 
         /// <summary> Načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
         public static List<T> LoadJsonList<T>(string cesta) where T : class
