@@ -1,8 +1,8 @@
-﻿using Aplikace.Tridy;
+using Aplikace.Tridy;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Office.Interop.Excel;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -76,15 +76,157 @@ namespace Aplikace.Sdilene
         }
 
         /// <summary>
+        /// Ověří, zda je možné soubor uložit (vytvoří složku pokud neexistuje, a pokud soubor existuje, zeptá se na přepsání).
+        /// </summary>
+        public static bool CanSaveFile(string cesta)
+        {
+            try
+            {
+                string? adresar = Path.GetDirectoryName(cesta);
+                if (!string.IsNullOrEmpty(adresar) && !Directory.Exists(adresar))
+                {
+                    Directory.CreateDirectory(adresar);
+                    Console.WriteLine($"Složka {adresar} byla vytvořena.");
+                }
+
+                if (File.Exists(cesta))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write($"Soubor '{Path.GetFileName(cesta)}' již existuje. Chcete jej přepsat? [A/N, výchozí A]: ");
+                    Console.ResetColor();
+                    string? odpoved = Console.ReadLine();
+                    if (!string.IsNullOrEmpty(odpoved) && 
+                        (odpoved.Equals("N", StringComparison.OrdinalIgnoreCase) || 
+                         odpoved.Equals("Ne", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        Console.WriteLine($"Ukládání souboru '{Path.GetFileName(cesta)}' bylo stornováno uživatelem.");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Chyba při kontrole nebo vytváření složky pro '{cesta}': {ex.Message}");
+                Console.ResetColor();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Zobrazí dialog pro výběr existujícího souboru. Běží na samostatném STA vlákně.
+        /// </summary>
+        public static string? ShowOpenFileDialog(string filter, string defaultPath = "")
+        {
+            string? selectedPath = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                using (var dialog = new System.Windows.Forms.OpenFileDialog())
+                {
+                    dialog.Filter = filter;
+                    if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
+                    {
+                        dialog.InitialDirectory = defaultPath;
+                    }
+                    else
+                    {
+                        var info = Aplikace.Tridy.InformaceProjektu.Create();
+                        if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
+                        {
+                            dialog.InitialDirectory = info.BasePath;
+                        }
+                    }
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        selectedPath = dialog.FileName;
+                    }
+                }
+            });
+            thread.SetApartmentState(System.Threading.ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            return selectedPath;
+        }
+
+        /// <summary>
+        /// Zobrazí dialog pro výběr složky. Běží na samostatném STA vlákně.
+        /// </summary>
+        public static string? ShowFolderBrowserDialog(string description, string defaultPath = "")
+        {
+            string? selectedPath = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+                {
+                    dialog.Description = description;
+                    if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
+                    {
+                        dialog.SelectedPath = defaultPath;
+                    }
+                    else
+                    {
+                        var info = Aplikace.Tridy.InformaceProjektu.Create();
+                        if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
+                        {
+                            dialog.SelectedPath = info.BasePath;
+                        }
+                    }
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        selectedPath = dialog.SelectedPath;
+                    }
+                }
+            });
+            thread.SetApartmentState(System.Threading.ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            return selectedPath;
+        }
+
+        /// <summary>
+        /// Zobrazí dialog pro uložení souboru. Běží na samostatném STA vlákně.
+        /// </summary>
+        public static string? ShowSaveFileDialog(string filter, string defaultName = "", string defaultPath = "")
+        {
+            string? selectedPath = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                using (var dialog = new System.Windows.Forms.SaveFileDialog())
+                {
+                    dialog.Filter = filter;
+                    dialog.FileName = defaultName;
+                    if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
+                    {
+                        dialog.InitialDirectory = defaultPath;
+                    }
+                    else
+                    {
+                        var info = Aplikace.Tridy.InformaceProjektu.Create();
+                        if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
+                        {
+                            dialog.InitialDirectory = info.BasePath;
+                        }
+                    }
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        selectedPath = dialog.FileName;
+                    }
+                }
+            });
+            thread.SetApartmentState(System.Threading.ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            return selectedPath;
+        }
+
+        /// <summary>
         /// uložit soubor, deserializace třídy pozor na vstup generika
         /// </summary>
         public static void SaveJsonList<T>(this List<T> values, string cesta) where T : class
         {
-            //MessageBox.Show("save");
-            // Nastavení formátování JSON s odsazením (entery)
-            //var settings = new JsonSerializerSettings { Formatting = Formatting.Indented };
+            if (!CanSaveFile(cesta)) return;
             string Json = JsonConvert.SerializeObject(values, Nastaveni());
-            //MessageBox.Show(Json);
             File.WriteAllText(cesta, Json);
             Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
             return;
@@ -94,11 +236,8 @@ namespace Aplikace.Sdilene
         /// </summary>
         public static void SaveJson<T>(this T values, string cesta) where T : class
         {
-            //MessageBox.Show("save");
-            // Nastavení formátování JSON s odsazením (entery)
-            //var settings = new JsonSerializerSettings { Formatting = Formatting.Indented };
+            if (!CanSaveFile(cesta)) return;
             string Json = JsonConvert.SerializeObject(values, Nastaveni());
-            //MessageBox.Show(Json);
             File.WriteAllText(cesta, Json);
             Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
             return;
@@ -144,6 +283,7 @@ namespace Aplikace.Sdilene
 
         public static void SaveXML<T>(this T Pole, string cesta) where T : new()
         {
+            if (!CanSaveFile(cesta)) return;
             // Serializace do souboru
             XmlSerializer serializer = new XmlSerializer(typeof(T));
             using (FileStream fs = new FileStream(cesta, FileMode.Create))
@@ -154,6 +294,7 @@ namespace Aplikace.Sdilene
         }
         public static void SaveHtml<T>(this List<T> Pole, string cesta) where T : new()
         {
+            if (!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
             if(Pole == null || Pole.Count == 0) { 
                 sb.Append("<p>Seznam je prázdný.</p>");
@@ -192,6 +333,7 @@ namespace Aplikace.Sdilene
         }
        public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta) where T : new()
         {
+            if (!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
             if(Pole == null || Pole.Count == 0) { 
                 sb.Append("<p>Seznam je prázdný.</p>");
@@ -372,6 +514,7 @@ namespace Aplikace.Sdilene
         //[LibraryImport("user32.dll", SetLastError = true)]
         //public static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
+        /*
         public static int GetExcelProcess(Application myApp)
         {
             //IntPtr myHwnd = (IntPtr)myApp.Hwnd;
@@ -379,6 +522,7 @@ namespace Aplikace.Sdilene
             GetWindowThreadProcessId(myHwnd, out uint myProcessId);
             return (int)myProcessId;
         }
+        */
 
         public static bool IsFileLocked(string path)
         {

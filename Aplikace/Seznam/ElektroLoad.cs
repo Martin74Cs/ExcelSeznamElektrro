@@ -1,7 +1,7 @@
-﻿using Aplikace.Excel;
+using Aplikace.Excel;
 using Aplikace.Sdilene;
 using Aplikace.Tridy;
-using Microsoft.Office.Interop.Excel;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Exc = Microsoft.Office.Interop.Excel;
+
 
 namespace Aplikace.Seznam
 {
@@ -19,21 +19,48 @@ namespace Aplikace.Seznam
         /// <summary>Koirování parametrů</summary>
         public static void Elektro()
         {
-            string cesta = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr souboru s motory (např. Motory500V.xlsx)...");
+            Console.ResetColor();
+            string? cestaMotory = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
+            if (string.IsNullOrEmpty(cestaMotory))
+            {
+                Console.WriteLine("Výběr souboru s motory byl stornován. Proces ukončen.");
+                return;
+            }
+
             var PouzitProTabulku = new int[] { 1, 2, 3 };
-            var Motory500 = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "Motory500V", 2);
+            var Motory500 = ExcelLoad.LoadDataExcel(cestaMotory, PouzitProTabulku, "Motory500V", 2);
             Motory500.Vypis();
 
-            cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr NOVÉHO seznamu strojů (např. rev7)...");
+            Console.ResetColor();
+            string? cestaNova = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
+            if (string.IsNullOrEmpty(cestaNova))
+            {
+                Console.WriteLine("Výběr nového seznamu byl stornován. Proces ukončen.");
+                return;
+            }
+
             //var TextPole = new string[] { "Tag", "Příkon", "Měnič", "Balená Jednotka", "Popis", "PID"
             //string[] TextPole = ["Tag", "Popis", "Prikon", "Menic", "BalenaJednotka", "PID"];
             PouzitProTabulku = [3, 18, 21, 1, 7, 2];
-            var Nova = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7);
+            var Nova = ExcelLoad.LoadDataExcel(cestaNova, PouzitProTabulku, "M_equipment_list", 7);
 
-            cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx";
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr STARÉHO seznamu strojů (např. rev6)...");
+            Console.ResetColor();
+            string? cestaStara = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
+            if (string.IsNullOrEmpty(cestaStara))
+            {
+                Console.WriteLine("Výběr starého seznamu byl stornován. Proces ukončen.");
+                return;
+            }
+
             //TextPole = [ "Tag", "HP", "Měnič", "Proud", "Delka", "AWG", "BalenaJednotka", "Popis", "Rozvadec", "RozvadecCislo", "PrurezMM2" ];
             PouzitProTabulku = [5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45];
-            var Stara = ExcelLoad.LoadDataExcel(cesta, PouzitProTabulku, "M_equipment_list", 7);
+            var Stara = ExcelLoad.LoadDataExcel(cestaStara, PouzitProTabulku, "M_equipment_list", 7);
 
             // Najít chybějící klíče v obou seznamech
             // Najdeme položky v Nova, které nejsou v Stara.
@@ -44,15 +71,14 @@ namespace Aplikace.Seznam
             var MissingFromList1 = FindMissingKeys(Stara, Nova);
             Console.WriteLine(MissingFromList1);
 
-            //Cesta Excel pro změny 
-            cesta = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03\BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx";
+            // Zápis změn zpět do nového souboru
             //Hledání shody radku excelu s polem SadaUpraveno --- PouzitProTabulku -> první je kryterium
             PouzitProTabulku = [3, 18];
 
             //zapis do buněk.
             //var PouzitProZapis = new int[] { 56, 57 };
             var PouzitProZapis = new int[] { 59, 65, 66, 61, 63, 64 };
-            new ExcelApp().ExcelSaveSloupec(cesta, PouzitProZapis, zalozka: "M_equipment_list", PouzitProTabulku, Stara);
+            new ExcelApp().ExcelSaveSloupec(cestaNova, PouzitProZapis, zalozka: "M_equipment_list", PouzitProTabulku, Stara);
             Console.Write("\nFunguje --- ExelSaveSlopec ");
 
             Console.WriteLine(MissingFromList2);

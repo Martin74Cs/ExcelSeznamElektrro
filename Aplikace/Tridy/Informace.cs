@@ -1,6 +1,7 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -38,6 +39,20 @@ namespace Aplikace.Tridy
                 }
             //}
             return informace;
+        }
+
+        public static void Ulozit(Informace info)
+        {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string dir = Path.Combine(appData, "Elektro");
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            string file = Path.Combine(dir, "data.txt");
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(info, Soubory.Nastaveni());
+            File.WriteAllText(file, json);
+            informace = info;
         }
     }
 

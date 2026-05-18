@@ -1,4 +1,4 @@
-﻿using Aplikace.Excel;
+using Aplikace.Excel;
 using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Tridy;
@@ -12,44 +12,27 @@ using System.Runtime.InteropServices;
 using static Aplikace.Tridy.Motor;
 using static Aplikace.Tridy.Zarizeni;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using Exc = Microsoft.Office.Interop.Excel;
+
 
 namespace Aplikace.Upravy
 {
     public static class LigthChem
     {
-        /// <summary>Vytvořit z Seznamu strojů json a Csv pro další doplnění</summary>
+        /// <summary>Vytvořit ze Seznamu strojů json a Csv pro další doplnění</summary>
         public static void StrojniToJsonCsv()
         {
-            //Převod->json,csv
-
-            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
-            if (!Directory.Exists(Cesty.Elektro)) { 
-                Directory.CreateDirectory(Cesty.Elektro);
-                Console.WriteLine($"Vytvořen adresář {Cesty.Elektro}");
-            }
-            string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            if (!File.Exists(cesta1)) {
-                Console.WriteLine($"Soubor {cesta1} neexistuje");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů (např. N92120_Seznam_stroju_zarizeni_250311_250407.xlsx)...");
+            Console.ResetColor();
+            string? cesta1 = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
+            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
+                Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
                 return;
             }
-            var Stara = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
+            var Stara = ExcelLoad.DataExcelInteractive(cesta1, "Seznam", 8);
 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             Stara.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
-
-            //string cestaData = Path.Combine(Cesty.ElektroDataCsv);
-            //if (!File.Exists(cestaData))
-            //{
-            //    //vytvoření základu pro json jen pokud neexistuje.
-            //    Stara.SaveJsonList(Path.ChangeExtension(cestaData, ".json"));
-            //    //vytvoření csv pro doplnění
-            //    Stara.SaveToCsv(cestaData);
-            //}
-            //else
-            //{
-            //    Console.WriteLine($"Vyvoření kopie {Path.GetFileName(cestaData)} přeskočeno");
-            //}
         }
 
         public static List<Zarizeni> DwgToJson(string cesta1)
@@ -87,7 +70,14 @@ namespace Aplikace.Upravy
         /// <summary>Převod extrahovaných dat z Dwg do Xls s následným převodem do Json</summary>
         public static void DwgXlsToJsonCsv()
         {
-            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr Dwg extrahovaných dat (např. UpravaZnovu.006.xlsm)...");
+            Console.ResetColor();
+            string? cesta1 = Soubory.ShowOpenFileDialog("Excel / Makro soubory (*.xls;*.xlsx;*.xlsm)|*.xls;*.xlsx;*.xlsm");
+            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
+                Console.WriteLine("Výběr souboru byl stornován.");
+                return;
+            }
             var Stara = DwgToJson(cesta1);
 
             //Převod->json,csv 
@@ -98,9 +88,22 @@ namespace Aplikace.Upravy
         public static void DoplněníDat()
         {
             string cestaData = Cesty.ElektroDataJson;
+            if (!File.Exists(cestaData))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Otevírám dialog pro výběr stávajícího datového souboru JSON...");
+                Console.ResetColor();
+                cestaData = Soubory.ShowOpenFileDialog("JSON soubory (*.json)|*.json") ?? "";
+                if (string.IsNullOrEmpty(cestaData)) return;
+            }
             var Data = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
-            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.xlsm");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr extrahovaných dat stroje (např. UpravaZnovu.006.xlsm)...");
+            Console.ResetColor();
+            string? cesta1 = Soubory.ShowOpenFileDialog("Excel / Makro soubory (*.xls;*.xlsx;*.xlsm)|*.xls;*.xlsx;*.xlsm");
+            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) return;
+
             var Stroj = DwgToJson(cesta1);
 
             var Nove = new List<Zarizeni>();
@@ -123,7 +126,8 @@ namespace Aplikace.Upravy
                 }
             }
             //testovací verze
-            Nove.SaveToCsv(Path.Combine(Cesty.Elektro, "Pid", "Test.csv"));
+            string testCsv = Path.Combine(Path.GetDirectoryName(cesta1) ?? Cesty.Elektro, "Test.csv");
+            Nove.SaveToCsv(testCsv);
             //Verze přepsání původního Jsonu
             //Nove.SaveJsonList(cestaData);
         }
@@ -624,8 +628,16 @@ namespace Aplikace.Upravy
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
             Data = [.. Data.Where(x => x.Etapa == "FAZE 1")];
 
-            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
-            var Data2 = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr JSON souboru FÁZE 2 k připojení (např. UpravaZnovu.006.json)...");
+            Console.ResetColor();
+            string? cesta1 = Soubory.ShowOpenFileDialog("JSON soubory (*.json)|*.json");
+            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1))
+            {
+                Console.WriteLine("Výběr souboru byl stornován.");
+                return;
+            }
+            var Data2 = Soubory.LoadJsonList<Zarizeni>(cesta1);
             Data2 = [.. Data2.Where(x => x.Etapa == "FAZE 2")];
 
             Data = [.. Data, .. Data2];

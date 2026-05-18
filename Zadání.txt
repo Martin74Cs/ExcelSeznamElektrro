@@ -1,0 +1,47 @@
+Prosím koukni na aplikaci napiš mi jak vy to šlo vylepšit. 
+Hlavně by mě zajímalo jestli by se to dalo udělat jednodušeji, rychlejší.
+misto using Exc = Microsoft.Office.Interop.Excel bych použil CloseXML, možná to jde líp.
+Se všemi změnami musím být schopen exportovat do Excelu, 
+s formátováním a vzorci, aby to vypadalo hezky.
+
+Důležité parametry pro Excel soubor:
+- formátování se musí zachovat
+- vzorce se musí zachovat
+- musí to vypadat hezky
+
+Všechyn výpisy z konzole ukladádej. Budeme je potřebovat při testování.
+
+Můžes do kodu dopsat vyvětlení kodu napovědu která tam je tam ponechej.
+
+Aplikaci jsem dlouho nepiužíval a nepamatuji si jak funguje mužeš tam doplnit napovědu.
+
+V kodu asi do meni Přidej položku kde se nastavý složka projektu
+všechny cesty pak uprav podle této nastavené cesty. 
+Cestu do složky nějak ulož aby si jí program pamataoval. 
+Všechny složky pro ukládání doplň podmínkou,
+že soubou může být uložen nebo že již existuje a že může být přepsaán.
+
+Zrušit všechny pevné cesty k souborům a nahradit je dialogy.
+
+nezapoměl jsi smazat nekteré pevné soubory jako je 
+string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+
+vytvoř kopii metody public static List<Zarizeni> 
+DataExcel(string cesta, string Tabulka, int Radek) 
+v mětodě potřeji analýzu  názvů sloupců kde potřebuji najít sloupce                         var dir = new Dictionary<int, string>() {
+                {1, "Radek"     },
+                {2, "Tag"       },
+                {3, "Pocet"     },
+                {4, "Popis"     },
+                {11, "Menic"    },
+                {10, "Prikon"   },
+                {18, "BalenaJednotka"   },
+            }; 
+ale čísla sloupců nesedí potřebuji nějaký dialog 
+kde vyberu jak se mají jednotlivé sloupce přiřadit 
+jednotlivým parametrům třídy a následně soubor uložit tak jak bylo původně.
+
+vlasně nevím na kterém listě jsou data doplň tam ještě výběr listu a doufám 
+že ve výberu budde vidět nějaká data ze souboru abych sloupce mohl přiřadit. 
+Když už proběhne přiřazení prosím nekam to ulož ať to příště 
+pro strejná soubornemusím dělat znovu.

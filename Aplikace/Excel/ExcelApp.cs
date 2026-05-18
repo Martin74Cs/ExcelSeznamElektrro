@@ -1,213 +1,291 @@
-﻿using Aplikace.Sdilene;
-using Aplikace.Tridy;
-using Microsoft.Office.Interop.Excel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.Design;
+using ClosedXML.Excel;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Formats.Asn1;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using Exc = Microsoft.Office.Interop.Excel;
+using System.ComponentModel.DataAnnotations;
+using Aplikace.Sdilene;
+using Aplikace.Tridy;
 
 namespace Aplikace.Excel
 {
-    public class ExcelApp 
+    /// <summary>
+    /// Obalovací třída (Adapter) pro ClosedXML list (IXLWorksheet), která simuluje chování původního COM rozhraní Microsoft.Office.Interop.Excel.Worksheet.
+    /// Zajišťuje zpětnou kompatibilitu a umožňuje volání vlastností jako Range, Cells a Name bez změny původního kódu.
+    /// </summary>
+    public class ExcelWorksheetWrapper
     {
-        public Exc.Application App { get; set; } 
-        public Exc.Workbook Doc { get; set; }
-        public Exc.Worksheet Xls { get; set; }
-        public int Process { get; set; }
-        static int record = 0;
+        private readonly IXLWorksheet _ws;
 
-        public ExcelApp()   : this("") // zavolá druhý konstruktor s prázdným stringem
+        /// <summary>
+        /// Inicializuje novou instanci třídy ExcelWorksheetWrapper obalující zadaný ClosedXML list.
+        /// </summary>
+        public ExcelWorksheetWrapper(IXLWorksheet ws)
+        {
+            _ws = ws;
+        }
+
+        /// <summary>
+        /// Získá podkladový objekt ClosedXML IXLWorksheet.
+        /// </summary>
+        public IXLWorksheet Worksheet => _ws;
+
+        /// <summary>
+        /// Získá název listu.
+        /// </summary>
+        public string Name => _ws.Name;
+
+        /// <summary>
+        /// Zprostředkuje přístup k rozsahům buněk přes Interop-like syntaxi Range["A1"].
+        /// </summary>
+        public ExcelRangeWrapper Range => new ExcelRangeWrapper(_ws);
+
+        /// <summary>
+        /// Zprostředkuje přístup k buňkám přes indexovaný přístup Cells[radek, sloupec].
+        /// </summary>
+        public ExcelCellsWrapper Cells => new ExcelCellsWrapper(_ws);
+
+        /// <summary>
+        /// Aktivuje aktuální list (v ClosedXML je to prázdná operace, zachovaná pro kompatibilitu).
+        /// </summary>
+        public void Activate()
+        {
+            // Dummy implementace pro zachování kompatibility s Interopem
+        }
+    }
+
+    /// <summary>
+    /// Zajišťuje indexovaný přístup k buňkám a rozsahům pomocí textové adresy (např. Range["A1"]) 
+    /// nebo dvou rohových buněk (např. Range[cell1, cell2]).
+    /// </summary>
+    public class ExcelRangeWrapper
+    {
+        private readonly IXLWorksheet _ws;
+
+        /// <summary>
+        /// Inicializuje novou instanci indexeru rozsahů.
+        /// </summary>
+        public ExcelRangeWrapper(IXLWorksheet ws)
+        {
+            _ws = ws;
+        }
+
+        /// <summary>
+        /// Získá nebo nastaví buňku na základě textové adresy (např. Range["A2"]).
+        /// </summary>
+        public ExcelCellWrapper this[string address]
+        {
+            get => new ExcelCellWrapper(_ws.Cell(address));
+            set
+            {
+                var cell = _ws.Cell(address);
+                if (value != null)
+                {
+                    cell.Value = XLCellValue.FromObject(value.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Získá rozsah buněk na základě dvou rohových buněk (např. Range[Xls.Cells[1,1], Xls.Cells[2,2]]).
+        /// </summary>
+        public ExcelCellWrapper this[object cell1, object cell2]
+        {
+            get
+            {
+                var c1 = cell1 as ExcelCellWrapper;
+                var c2 = cell2 as ExcelCellWrapper;
+                if (c1 != null && c2 != null)
+                {
+                    return new ExcelCellWrapper(_ws.Range(c1.Cell, c2.Cell));
+                }
+                return new ExcelCellWrapper(_ws.Cell(1, 1));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Zajišťuje indexovaný přístup k jednotlivým buňkám pomocí souřadnic řádku a sloupce (např. Cells[3, 4]).
+    /// </summary>
+    public class ExcelCellsWrapper
+    {
+        private readonly IXLWorksheet _ws;
+
+        /// <summary>
+        /// Inicializuje novou instanci indexeru buněk.
+        /// </summary>
+        public ExcelCellsWrapper(IXLWorksheet ws)
+        {
+            _ws = ws;
+        }
+
+        /// <summary>
+        /// Získá obalenou buňku na zadaném řádku a sloupci (indexováno od 1).
+        /// </summary>
+        public ExcelCellWrapper this[int row, int col]
+        {
+            get => new ExcelCellWrapper(_ws.Cell(row, col));
+        }
+    }
+
+    /// <summary>
+    /// Obalovací třída pro buňku (IXLCell) nebo rozsah (IXLRange) ClosedXML, která simuluje chování COM objektu Range.
+    /// Poskytuje vlastnosti pro přístup k hodnotám, vzorcům a lokálním vzorcům.
+    /// </summary>
+    public class ExcelCellWrapper
+    {
+        private readonly IXLRange _range;
+        private readonly IXLCell _cell;
+
+        /// <summary>
+        /// Inicializuje obal pro jedinou ClosedXML buňku.
+        /// </summary>
+        public ExcelCellWrapper(IXLCell cell)
+        {
+            _cell = cell;
+        }
+
+        /// <summary>
+        /// Inicializuje obal pro ClosedXML rozsah buněk.
+        /// </summary>
+        public ExcelCellWrapper(IXLRange range)
+        {
+            _range = range;
+            _cell = range.FirstCell();
+        }
+
+        /// <summary>
+        /// Získá podkladovou buňku.
+        /// </summary>
+        public IXLCell Cell => _cell;
+
+        /// <summary>
+        /// Získá podkladový rozsah.
+        /// </summary>
+        public IXLRange Range => _range;
+
+        /// <summary>
+        /// Získá nebo nastaví hodnotu buňky s automatickou konverzí datových typů.
+        /// </summary>
+        public object Value
+        {
+            get => _cell?.Value ?? "";
+            set
+            {
+                if (value == null)
+                {
+                    if (_cell != null) _cell.Clear();
+                    return;
+                }
+
+                if (value is string s)
+                {
+                    if (_cell != null) _cell.Value = s;
+                    else if (_range != null) _range.Value = s;
+                }
+                else if (value is double d)
+                {
+                    if (_cell != null) _cell.Value = d;
+                    else if (_range != null) _range.Value = d;
+                }
+                else if (value is int val)
+                {
+                    if (_cell != null) _cell.Value = val;
+                    else if (_range != null) _range.Value = val;
+                }
+                else if (value is bool b)
+                {
+                    if (_cell != null) _cell.Value = b;
+                    else if (_range != null) _range.Value = b;
+                }
+                else
+                {
+                    string str = value.ToString() ?? "";
+                    if (_cell != null) _cell.Value = str;
+                    else if (_range != null) _range.Value = str;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Získá nebo nastaví hodnotu buňky (alternativní název vlastnosti pro kompatibilitu).
+        /// </summary>
+        public object Value2
+        {
+            get => Value;
+            set => Value = value;
+        }
+
+        /// <summary>
+        /// Získá nebo nastaví vzorec v buňce ve formátu A1 (např. "=SUM(D3:D10)").
+        /// </summary>
+        public string Formula
+        {
+            get => _cell?.FormulaA1 ?? "";
+            set
+            {
+                if (_cell != null) _cell.FormulaA1 = value;
+            }
+        }
+
+        /// <summary>
+        /// Získá nebo nastaví lokalizovaný vzorec buňky (v ClosedXML mapováno na standardní FormulaA1).
+        /// </summary>
+        public string FormulaLocal
+        {
+            get => Formula;
+            set => Formula = value;
+        }
+    }
+
+    public class ExcelApp
+    {
+        public XLWorkbook Doc { get; set; }
+        public ExcelWorksheetWrapper Xls { get; set; }
+        public int Process { get; set; }
+        public object App { get; set; } // Dummy property to prevent compilation errors in other files
+        private int record = 1;
+
+        public ExcelApp() : this("")
         { }
 
         public ExcelApp(string Cesta)
         {
-            //var App = new Exc.Application
-            App = new Exc.Application
+            if (!string.IsNullOrEmpty(Cesta) && File.Exists(Cesta))
             {
-                Visible = true,
-                DisplayAlerts = false // tohle je klíčové!
-            };
-            Process = Soubory.GetExcelProcess(App);
-
-            if (File.Exists(Cesta))
-            {
-                Console.WriteLine("Otevřít dokument Excel.");    
-                // Vytvoření nového sešitu
-                //Automatikcky se vytvoří nový List1
-                Doc = App.Workbooks.Add(Cesta);
-                Xls = Doc.Sheets[1];
-                Xls.Activate();
+                Console.WriteLine("Otevřít dokument Excel.");
+                Doc = new XLWorkbook(Cesta);
+                Xls = new ExcelWorksheetWrapper(Doc.Worksheet(1));
                 return;
             }
-            //Exc.Workbook Doc = App.Workbooks.Add();
 
-            Console.WriteLine("Vytvořen prázný dokument Excel.");
-            //Automatikcky se vytvoří nový List1
-            Doc = App.Workbooks.Add();
-            Xls = Doc.Sheets[Doc.Sheets.Count];
-            Xls.Activate();
-            Console.WriteLine("nVztvořený dokument nastaven Aktivní.");
-            //return (App, Doc);
+            Console.WriteLine("Vytvořen prázdný dokument Excel.");
+            Doc = new XLWorkbook();
+            var ws = Doc.Worksheets.Add("List1");
+            Xls = new ExcelWorksheetWrapper(ws);
+            Console.WriteLine("\nVytvořený dokument nastaven Aktivní.");
         }
-
-        //[DllImport("oleaut32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        //private static extern int GetActiveObject(ref Guid rclsid, IntPtr reserved, out object ppunk);
-
-        //static Exc.Application ExcelExist() 
-        //{
-        //    //Exc.Application excelApp = null;
-        //    Guid clsid = new("00024500-0000-0000-C000-000000000046"); // CLSID pro Excel.Application
-        //    try
-        //    {
-        //        int hResult = GetActiveObject(ref clsid, IntPtr.Zero, out object excelAppObj);
-        //        if (hResult == 0)
-        //        {
-        //            Exc.Application excelApp = (Exc.Application)excelAppObj;
-        //            Console.WriteLine("Excel je spuštěn.");
-        //            return excelApp;
-        //        }
-        //        Console.WriteLine("Excel není spuštěn.");
-        //        return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Console.WriteLine("Chyba - Excel bude nově spuštěn.");
-        //        return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application ?? new();      
-        //    }
-
-        //    //    try
-        //    //{
-        //    //    // Pokus o připojení k již spuštěné instanci Excelu
-        //    //    //excelApp = (Exc.Application)Marshal.GetActiveObject("Excel.Application");
-        //    //}
-        //    //catch (COMException)
-        //    //{
-        //    //    Console.WriteLine("Excel není spuštěn.");
-        //    //    return Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
-        //    //}
-
-        //    //if (excelApp != null)
-        //    //{
-        //    //    Console.WriteLine("Excel je spuštěn.");
-        //    //    // Nyní můžete pracovat s aplikací Excel
-        //    //    // Například první otevřený sešit
-        //    //    Exc.Workbook workbook = excelApp.Worksheets[1];
-        //    //    Exc.Worksheet worksheet = (Exc.Worksheet)workbook.Worksheets[1];
-        //    //    // Proveďte nějaké operace s Excel
-        //    //    //Console.WriteLine("Název prvního listu: " + worksheet.Name);
-        //    //    return excelApp;
-        //    //}
-        //}
-
-        /// <summary> Vytvoření nového Excel dokumentu </summary>
-        //public void VytvorNovyDokument()
-        //{
-        //    //Exc.Application? App = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) as Exc.Application;
-        //    //var App = ExcelExist();
-        //    //if (App == null) return null;
-        //    //App.Visible = true;
-
-        //    //var App = new Exc.Application
-        //    App = new Exc.Application
-        //    {
-        //        Visible = true,
-        //        DisplayAlerts = false // tohle je klíčové!
-        //    };
-
-        //    // Vytvoření nového sešitu
-        //    //Exc.Workbook Doc = App.Workbooks.Add();
-        //    Doc = App.Workbooks.Add();
-
-        //    //Automatikcky se vytvoří nový List1
-        //    Console.Write("\nVytvořen prázný dokument Excel.");
-        //    //return (App, Doc);
-        //}
-
-        //public void NovyExcelSablona(string cesta)
-        //{
-        //    /// <summary> Cesta k dresaři kde bylo spuštěno nevím jak funguje u dll </summary>
-        //    //var AktuallniAdresear = System.Environment.CurrentDirectory + @"\";
-        //    /// <summary> Cesta k Aresaři kde bylo spuštěno nevím jak funguje u dll </summary>
-        //    //var AktuallniAdresearJinak = System.IO.Directory.GetCurrentDirectory() + @"\";
-
-        //    string BaseAdress = Path.Combine(System.Environment.CurrentDirectory, "Podpora");
-        //    string sablona =  Path.Combine(BaseAdress, "Sablona_SSaZ.xlsx");
-        //    // pokud neexistuje vlastní šablona použij výchozí
-        //    //if (!File.Exists(sablona))
-        //    //var (App, Doc) = VytvorNovyDokument();
-        //    //VytvorNovyDokument();
-        //    //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App) return null;
-        //    //App.Visible = true;
-
-        //    if (File.Exists(cesta))
-        //        File.Delete(cesta);
-        //    File.Copy(sablona, cesta);
-
-        //    //new ExcelApp(cesta);
-        //    //Doc = App.Workbooks.Open(cesta);
-        //    //Console.Write("\nVytvořen soubor ze šablony Excel.");
-        //    //return (App, Doc);
-        //}
-
-
-        /// <summary> Přidání nového listu do Excelového dokumentu </summary>
-        //public void PridatNovyList(string NazevListu)
-        //{
-        //    GetSheet(NazevListu);
-        //    //return xls;
-        //}
-
-        /// <summary> nastavení nebo vytvoření listu dle jeho jména</summary>
         public void GetSheet(string Nazev)
         {
-            if (Doc == null)
-                return;
-            foreach (Exc.Worksheet item in Doc.Sheets)
+            if (Doc == null) return;
+            if (Doc.TryGetWorksheet(Nazev, out var ws))
             {
-                if (item.Name == Nazev)
-                {   
-                    Xls = item;
-                    Xls.Activate();
-                    Console.WriteLine($"List {item.Name} - Nastaven");
-                    return;
-                }
+                Xls = new ExcelWorksheetWrapper(ws);
+                Console.WriteLine($"List {ws.Name} - Nastaven");
+                return;
             }
-            // Přidání nového listu na konec sešitu pokud je XLs praázdné
-            var listy = Doc.Sheets.Count;
-            Xls = Doc.Sheets.Add(After: Doc.Sheets[listy]);
-            Xls.Name = Nazev;
-            Xls.Activate();
-            Console.WriteLine($"List {Nazev} - Přádán");
-            //return null;
+            var newWs = Doc.Worksheets.Add(Nazev);
+            Xls = new ExcelWorksheetWrapper(newWs);
+            Console.WriteLine($"List {Nazev} - Přidán");
         }
-
-        /// <summary>Nový dokument v exelu</summary>
         public void DokumetExcel(string Cesta)
         {
-            //Exc.Application App = AplikaceExcel();
-
-            App = new Exc.Application
-            {
-                Visible = true,
-                DisplayAlerts = false // tohle je klíčové!
-            };
-            Process = Soubory.GetExcelProcess(App);
-            //if (Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application")) is not Exc.Application App)
-            //{
-            //    App.Visible = true;
-            //    return null;
-            //} 
-
             Console.Write("\nKontrolaOtevenehoNeboOtevreniSobroruExel - OK");
             KontrolaOtevenehoNeboOtevreniSobroruExel(Cesta);
-            //return (App, KontrolaOtevenehoNeboOtevreniSobroruExel(App, Cesta));
         }
 
-        /// <summary>Kontrola otevřeného souboru v Excel</summary>
         public void KontrolaOtevenehoNeboOtevreniSobroruExel(string Cesta)
         {
             Console.Write("\nMetoda Kontrola Oteveneho Nebo Otevreni Sobroru Exel");
@@ -215,161 +293,107 @@ namespace Aplikace.Excel
             if (File.Exists(Cesta))
             {
                 Console.Write("\nSoubor není otevřen kontrola ");
-                //return null;
-                //nefunuguje otevření souboru
-               Doc = App.Workbooks.Open(Cesta.ToLowerInvariant());
+                Doc = new XLWorkbook(Cesta);
+                Xls = new ExcelWorksheetWrapper(Doc.Worksheet(1));
             }
-            Doc = App.Workbooks.Add();
-            //foreach (Exc.Workbook item in App.Workbooks)
-            //{
-            //    Console.Write("\nName=" + item.Name);
-            //    if (item.Name == System.IO.Path.GetFileName(Cesta.ToLowerInvariant()))
-            //        return item;
-            //}
-
+            else
+            {
+                Doc = new XLWorkbook();
+                var ws = Doc.Worksheets.Add("List1");
+                Xls = new ExcelWorksheetWrapper(ws);
+            }
         }
 
-        //public Exc.Application AplikaceExcel()
-        //{
-        //    try
-        //    {
-        //        if (ExcelKontrolaInstalace() == false)
-        //        {
-        //            Console.Write("\nExcelKontrolaInstalace");
-        //            return new Exc.Application();
-        //        }
-        //        Console.Write("\nMarshal.GetActiveObject");
-        //        //return System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application") as Exc.Application;
-
-        //        //vytvoříte instanci Excelu, pokud již neběží, a pokud běží, připojíte se k aktivní instanci.
-        //        dynamic excelApp = Activator.CreateInstance(Type.GetTypeFromProgID("Excel.Application"));
-        //        return excelApp;
-        //    }
-        //    catch (System.Runtime.InteropServices.COMException)
-        //    {
-        //        return new Exc.Application();
-        //    }
-        //}
-
-        /// <summary> uložení dat do excel podle kriterii </summary>
         public List<List<string>> ExelLoadTable(string cesta, string zalozka, int Radek, int[] CteniSloupcu)
         {
-            if (!System.IO.File.Exists(cesta)) return [];
+            if (!File.Exists(cesta)) return new List<List<string>>();
 
-            //var (App,Xls) = DokumetExcel(cesta);
             DokumetExcel(cesta);
-            if (Xls == null) return [];
+            if (Xls == null) return new List<List<string>>();
             Console.Write("\nDokument excel - Otevřen");
 
-            //Nastavení listu
             GetSheet(zalozka);
-            if (Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+            if (Xls == null) { Console.Write("\nChyba KONEC"); return new List<List<string>>(); }
             Console.Write("\nSheet=" + Xls.Name);
 
-            //var cteniPole = new List<string>() ;
             var Pole = new List<List<string>>();
-            Console.Write("\nZal.Rows.Count=" + Xls.UsedRange.Rows.Count);
-            for (int i = Radek; i < Xls.UsedRange.Rows.Count; i++)
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
+            Console.Write("\nZal.Rows.Count=" + rowCount);
+
+            for (int i = Radek; i <= rowCount; i++)
             {
-                //int x = 0;
                 var cteniPole = new List<string>();
-                //čtení jednotlivých řádků excelu
                 foreach (var item in CteniSloupcu)
                 {
-                    //Čtení buňky
-                    Exc.Range Pok = Xls.Cells[i, item]; 
-                    object cteni = Pok.Value;
-
-                    string xxx = Convert.ToString(cteni) ?? string.Empty;
-                    if (!string.IsNullOrEmpty(xxx))
-                    {
-                        cteniPole.Add(xxx);
-                    }
-                        //object obj = new Zarizeni();
-                    else
-                        cteniPole.Add("");
+                    var cell = ws.Cell(i, item);
+                    string xxx = cell.GetString();
+                    cteniPole.Add(xxx);
                 }
-                if (!string.IsNullOrEmpty(cteniPole[1]) && cteniPole[1] != "0")
+                if (cteniPole.Count > 1 && !string.IsNullOrEmpty(cteniPole[1]) && cteniPole[1] != "0")
                 {
                     Pole.Add(cteniPole);
                     Console.Write("\nRadek=" + i.ToString() + "\t" + cteniPole[0]);
                 }
-                //Pojistka
-                if (i > 100 && Pole.Last().First().Length < 2) break;
+                if (i > 100 && Pole.Count > 0 && Pole.Last().First().Length < 2) break;
             }
             Console.Write("\nUkončení Excel");
-            //Xls.Save();
-            //Console.Write("\nSave OK");
             ExcelQuit(cesta);
             Console.Write("\nUkončení Excel");
             return Pole;
         }
 
-        /// <summary> uložení dat do excel podle kriterii </summary>
         public List<Zarizeni> ExelTable(int Radek, string Tabulka, IDictionary<int, string> dir)
         {
-            //Nastavení listu
             GetSheet(Tabulka);
-            var key = dir.FirstOrDefault(x => x.Value == "Prikon").Key;
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
 
             int pocet = 1;
-            //string prikon = string.Empty;
-            //var cteniPole = new List<string>();
-            //var Pole = new List<List<string>>();
             var Pole = new List<Zarizeni>();
-            Console.WriteLine($"[Rows.Col]=[{Xls.UsedRange.Rows.Count},{Xls.UsedRange.Columns.Count}]");
-            for ( int i = Radek; i < Xls.UsedRange.Rows.Count; i++)
+            int colCount = ws.LastColumnUsed()?.ColumnNumber() ?? 0;
+            Console.WriteLine($"[Rows.Col]=[{rowCount},{colCount}]");
+
+            for (int i = Radek; i <= rowCount; i++)
             {
-                //int x = 0;
-                //čteniPole = [];
-                //čtení jednotlivých řádků excelu
                 var jeden = new Zarizeni();
                 bool Prerusit = true;
-                //Načtení jednotlivých řádků excelu dle sloupců ze dir
+
+                //OMEZENÍ NAČÁTÁNÍ RADKU
+                //string tagstr = ws.Cell(i, 5).GetString();
+                //if (!new[] { "M", "MOB", "MOP" }.Contains(tagstr))
+                //{
+                //    Prerusit = false;
+                //    continue;
+                //}
+
                 foreach (var j in dir.Keys.ToArray())
-                //for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
                 {
-                    //Podmínka pro sloupec 5 který je Tag - musí být "M"
-                    string tagstr = Xls.Cells[i, 5].Value;
-                    //Pokud neobsahuje "M", "MOB", "MOP" přeskočit řádek
-                    if (!new[] { "M", "MOB", "MOP" }.Contains(tagstr))
-                    { 
-                        Prerusit = false;
-                        break;
-                    }
-
-                    //var prikon = Convert.ToString(Xls.Cells[i, key].Value);
-                    //přeskok pokud je příkon prazdný
-                    //if (string.IsNullOrEmpty(prikon) || prikon == "0") { jeden.Prikon = ""; break; } 
-
-                    //Čtení buňky
-                    Exc.Range Pok = Xls.Cells[i, j];
-                    if(Pok.MergeCells)  {
+                    var cell = ws.Cell(i, j);
+                    if (cell.IsMerged())
+                    {
                         Console.WriteLine("Buňka je součástí sloučených buněk.");
                         break;
                     }
-                    string xxx = Convert.ToString(Pok.Value);
+                    string xxx = cell.GetString();
 
-                    //Přeskočit prázdné buňky a nulové
                     if (string.IsNullOrEmpty(xxx) || xxx == "0")
                         continue;
 
-                    //ukladnní infomací do třídy dle jejího názvu parametru
-                    //if (dir.TryGetValue(j, out var value))
-                    if (int.TryParse(xxx, out int value))
-                        jeden[dir[j]] = value; 
-                    jeden[dir[j]] = xxx; 
+                    if (int.TryParse(xxx, out int intVal))
+                        jeden[dir[j]] = intVal;
+                    else
+                        jeden[dir[j]] = xxx;
                 }
-                //Vždy přidat
+
                 jeden.Apid = ExcelLoad.Apid();
                 jeden.Id = pocet;
+
                 if (jeden.Pocet > 1)
                 {
-                    //je uvedeno více než 1 zezřízení , Bude rozděleno formou kopii
-                    var deleni = jeden.Tag.Split('\n').ToList();
+                    var deleni = jeden.Tag?.Split('\n').ToList() ?? new List<string>();
                     foreach (var item in deleni)
                     {
-                        //vytvoření kopie třídy jinak se jedná o stále stejný ukazatel
                         var json = System.Text.Json.JsonSerializer.Serialize(jeden);
                         var kopie = System.Text.Json.JsonSerializer.Deserialize<Zarizeni>(json)!;
                         kopie.Apid = ExcelLoad.Apid();
@@ -379,243 +403,173 @@ namespace Aplikace.Excel
                         Console.WriteLine($"Tag {kopie.Tag}");
                     }
                 }
-                else
-                    if(Prerusit)
-                        Pole.Add(jeden);
+                else if (Prerusit)
+                {
+                    Pole.Add(jeden);
+                }
                 Console.WriteLine($"Radek {pocet++} - přídán");
-
-                //if (!string.IsNullOrEmpty(jeden.Prikon))
-                //{
-                //    jeden.Apid = ExcelLoad.Apid();
-                //    jeden.Id = pocet;
-                //    Pole.Add(jeden);
-                //    Console.WriteLine($"Radek {pocet++} - přídán");
-                //}
-                //else
-                //{
-                //    Console.WriteLine($"Radek {pocet} - přeskočen, Příkon {jeden.Prikon} - není číslo");
-                //}
-
-                //if (!string.IsNullOrEmpty(Pole[1]) && Pole[1] != "0")
-                //{
-                //    Pole.Add(Pole);
-                //    Console.Write("\nRadek=" + i.ToString() + "\t" + Pole[0]);
-                //}
-                //Pojistka
-                //if (i > 100 && Pole.Last().First().Length < 2) break;
             }
             Console.WriteLine("Zavřít sešit Excel");
-            //Xls.Save();
-            //Zal.Parent.Close();
-            //Console.Write("\nSave OK");
-            //ExcelQuit(Xls);
-            //Console.Write("\nUkončení Excel");
             return Pole;
         }
 
         public List<Vykres> ExelTableVykresy(int Radek, string Tabulka, IDictionary<int, string> dir)
         {
-            //Nastavení listu
             GetSheet(Tabulka);
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
 
             int pocet = 1;
             var Pole = new List<Vykres>();
-            Console.WriteLine($"[Rows.Col]=[{Xls.UsedRange.Rows.Count},{Xls.UsedRange.Columns.Count}]");
-            for ( int i = Radek; i < Xls.UsedRange.Rows.Count; i++)
-            {
-                //čtení jednotlivých řádků excelu
-                var jeden = new Vykres();
+            int colCount = ws.LastColumnUsed()?.ColumnNumber() ?? 0;
+            Console.WriteLine($"[Rows.Col]=[{rowCount},{colCount}]");
 
-                //Načtení jednotlivých řádků excelu dle sloupců ze dir
+            for (int i = Radek; i <= rowCount; i++)
+            {
+                var jeden = new Vykres();
                 foreach (var j in dir.Keys.ToArray())
-                //for (int j = 1; j < Xls.UsedRange.Columns.Count; j++)
                 {
-                    //Čtení buňky
-                    Exc.Range Pok = Xls.Cells[i, j];
-                    if(Pok.MergeCells)  {
+                    var cell = ws.Cell(i, j);
+                    if (cell.IsMerged())
+                    {
                         Console.WriteLine("Buňka je součástí sloučených buněk.");
                         break;
                     }
-                    string xxx = Convert.ToString(Pok.Value)??"";
-
-                    //ukladnní infomací do třídy dle jejího názvu parametru
-                    jeden[dir[j]] = xxx.Trim(); 
+                    string xxx = cell.GetString();
+                    jeden[dir[j]] = xxx.Trim();
                 }
-                if(!string.IsNullOrEmpty(jeden.Nazev))
+                if (!string.IsNullOrEmpty(jeden.Nazev))
                     Pole.Add(jeden);
                 Console.WriteLine($"Radek {pocet++} - přídán");
             }
             return Pole;
         }
 
-
-        /// <summary> uložení dat do excel podle kriterii </summary>
         public void ClassToExcel<T>(int Row, List<T> Pole, IDictionary<int, string> Sloupce)
         {
-
-            //var properties = typeof(T).GetProperties();
             var properties = typeof(T).GetProperties().ToDictionary(p => p.Name);
 
-            // kontrola vlastností v dir, jestli existují v T
-            foreach (var kvp in Sloupce)
-            {
-                if (!properties.ContainsKey(kvp.Value))
-                {
-                    Console.WriteLine($"[WARN] Vlastnost '{kvp.Value}' (pro sloupec {kvp.Key}) neexistuje v typu {typeof(T).Name}");
-                }
-            }
-
-            // Vyfiltruj jen ty položky, které mají odpovídající vlastnost ve třídě T
             var dirFiltered = Sloupce
                 .Where(kvp => properties.ContainsKey(kvp.Value))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            //var cteniPole = new List<string>();
-            //var Pole = new List<List<string>>();
-            //int Row = 3; 
-            Console.WriteLine($"[Rows.Col]=[{Xls.UsedRange.Rows.Count},{Xls.UsedRange.Columns.Count}]");
+            var ws = Xls.Worksheet;
+
             foreach (var item in Pole)
             {
                 foreach (var kvp in dirFiltered)
                 {
-                    Exc.Range Zapis1 = Xls.Cells[Row, kvp.Key];
+                    var cell = ws.Cell(Row, kvp.Key);
                     var prop = properties[kvp.Value];
-                    //Zapis1.Value = prop.GetValue(item);
-                    string value = prop.GetValue(item).ToString();
-                    if (double.TryParse(value, out double cislo))
+                    var rawValue = prop.GetValue(item);
+                    string value = rawValue?.ToString() ?? "";
+
+                    if (double.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double cislo))
                     {
                         if (prop.Name == "Delka") cislo /= 1000;
-                        Zapis1.Value = cislo;
-                        //Formátovat jako číslo s 2 desetinnými místy
-                        Zapis1.NumberFormat = "#,##0.00";
-
-                        //Zarovnat doprava
-                        Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
+                        cell.Value = cislo;
+                        cell.Style.NumberFormat.Format = "#,##0.00";
+                        cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                     }
-                    else 
-                         Zapis1.Value = value;
+                    else
+                    {
+                        cell.Value = value;
+                    }
                 }
                 Row++;
             }
-                for (int i = 1; i < dirFiltered.Count; i++)
-                    Xls.Columns[i].AutoFit();
-            return;
+
+            foreach (var colKey in dirFiltered.Keys)
+            {
+                ws.Column(colKey).AdjustToContents();
+            }
         }
 
-
-        /// <summary> uložení dat do excel podle kriterii </summary>
         public List<Zarizeni> ExelLoadTableTrida(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
         {
-            if (!System.IO.File.Exists(cesta)) return [];
+            if (!File.Exists(cesta)) return new List<Zarizeni>();
 
-            //var (App, Xls) = DokumetExcel(cesta);
             DokumetExcel(cesta);
-            if (Xls == null) return [];
+            if (Xls == null) return new List<Zarizeni>();
             Console.Write("\nDokument excel - Otevřen");
 
-            //Nastavení listu
             GetSheet(zalozka);
-            if (Xls == null) { Console.Write("\nChyba KONEC"); return []; }
+            if (Xls == null) { Console.Write("\nChyba KONEC"); return new List<Zarizeni>(); }
             Console.Write("\nSheet=" + Xls.Name);
 
             var Pole = new List<Zarizeni>();
-            Console.Write("\nZal.Rows.Count=" + Xls.Rows.Count);
-            var Test = new List<Zarizeni>();
-            for (int i = Radek; i < Xls.Rows.Count; i++)
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
+            Console.Write("\nZal.Rows.Count=" + rowCount);
+
+            for (int i = Radek; i <= rowCount; i++)
             {
                 var obj = new Zarizeni();
                 int x = 0;
                 foreach (var item in CteniSloupcu)
                 {
-                    //Čtení buňky
-                    Exc.Range Pok = Xls.Cells[i, item];
-                    object cteni = Pok.Value;
-
-                    string xxx = Convert.ToString(cteni)?? string.Empty;
+                    var cell = ws.Cell(i, item);
+                    string xxx = cell.GetString();
                     if (!string.IsNullOrEmpty(xxx))
                     {
-                        //ukladnní infomací do třídy dle jejího názvu parametru
-                        //Zarizeni.NastavVlastnost(obj, TextPole[x++], cteni);
-                        obj[TextPole[x++]] = cteni;
+                        obj[TextPole[x++]] = xxx;
                     }
                 }
-                Test.Add(obj);
-
-                //if (i > 100 && obj.Tag.Length < 2) break;
+                Pole.Add(obj);
             }
             ExcelQuit(cesta);
             return Pole;
         }
 
-        /// <summary> uložení dat do excel podle kdyterii </summary>
         public void ExcelSaveJeden(string cesta, int[] SloupceZapisu, string zalozka, int[] SloupceCteni, List<List<string>> Vstup)
         {
-            if (!System.IO.File.Exists(cesta)) return;
+            if (!File.Exists(cesta)) return;
 
-            //var (App, Xls) = DokumetExcel(cesta);
             DokumetExcel(cesta);
             if (Xls == null) return;
             Console.Write("\nDokument excel - Otevřen");
 
-            //Nastavení listu
             GetSheet(zalozka);
-            if (Xls == null) { Console.Write("\nChyba KONEC");  return; }
-            //Exc.Worksheet Zal = Xls.Worksheets[zalozka];
+            if (Xls == null) { Console.Write("\nChyba KONEC"); return; }
             Console.Write("\nSheet=" + Xls.Name);
 
-            //Čtení listu excel
-            for (int i = 7; i < Xls.Rows.Count; i++)
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
+
+            for (int i = 7; i <= rowCount; i++)
             {
-                //Čtení radků excel
                 var cteniPole = new List<string>();
                 foreach (var item in SloupceCteni)
                 {
-                    //Čtení buňky Tag
-                    Exc.Range Pok = Xls.Cells[i, item];
-                    string xxx = Convert.ToString(Pok.Value);
+                    var cell = ws.Cell(i, item);
+                    string xxx = cell.GetString();
                     if (!string.IsNullOrEmpty(xxx))
                         cteniPole.Add(xxx);
                 }
 
-                //Hledání shody Vstupu s načteným řádkem Hledání v první shode
                 var Shoda = Vstup.FirstOrDefault(x => x.FirstOrDefault() == cteniPole.FirstOrDefault());
 
-                //Pokud byla nalezeny schoda radku s polem vstupu
                 if (Shoda != null)
                 {
-                     Console.Write("\nShoda buňky " + i + " = " + Shoda.First());
-
-                    //zapis buňky
-                    Exc.Range Zapis = Xls.Cells[i, SloupceZapisu.First()];
-                    Zapis.Value = Shoda.First();
-
-                    //Posledni
-                    Zapis = Xls.Cells[i, SloupceZapisu.Last()];
-                    Zapis.Value = Shoda[8] + " " + Shoda.Last();
+                    Console.Write("\nShoda buňky " + i + " = " + Shoda.First());
+                    ws.Cell(i, SloupceZapisu.First()).Value = Shoda.First();
+                    ws.Cell(i, SloupceZapisu.Last()).Value = Shoda[8] + " " + Shoda.Last();
                 }
                 else
                 {
-                    //nebyla shoda
-                    //zapis buňky
-                    Exc.Range Zapis = Xls.Cells[i, SloupceZapisu.First()];
-                    Zapis.Value = "Nenalezeno";
+                    ws.Cell(i, SloupceZapisu.First()).Value = "Nenalezeno";
                 }
 
-                { Console.Write("\nShoda buňky " + i); }
+                Console.Write("\nShoda buňky " + i);
                 if (i > 500) break;
             }
             Console.Write("\nUkončení Excel");
             Doc.Save();
-
             Console.Write("\nSave OK");
-            //Xls.Close();
-            //ed.WriteMessage("\nClose OK");
             ExcelQuit(cesta);
             Console.Write("\nUkončení Excel");
-            return;
         }
 
-        /// <summary> uložení dat do excel podle kdyterii </summary>
         public void ExcelSaveSloupec(string cesta, int[] SloupceZapisu, string zalozka, int[] SloupceCteni, List<List<string>> Vstup)
         {
             string cesta1 = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
@@ -623,101 +577,69 @@ namespace Aplikace.Excel
             var Motory500 = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2);
             Motory500.Vypis();
 
-            if (!System.IO.File.Exists(cesta)) return;
+            if (!File.Exists(cesta)) return;
 
-            //var (App, Xls) = DokumetExcel(cesta);
             DokumetExcel(cesta);
             if (Xls == null) return;
             Console.Write("\nDokument excel - Otevřen");
 
-            //Nastavení listu
             GetSheet(zalozka);
             if (Xls == null) return;
-            //Exc.Worksheet Zal = Xls.Worksheets[zalozka];
             Console.Write("\nSheet=" + Xls.Name);
 
-            //Čtení listu excel
-            for (int i = 7; i < Xls.Rows.Count; i++)
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
+
+            for (int i = 7; i <= rowCount; i++)
             {
-                //Čtení radků excel
                 var cteniPole = new List<string>();
                 foreach (var item in SloupceCteni)
                 {
-                    //Čtení buňky
-                    Exc.Range Pok = Xls.Cells[i, item];
-                    object cteni = Pok.Value;
-
-                    //string xxx = Convert.ToString(cteni);
-                    string xxx = Convert.ToString(cteni) ?? string.Empty;;
+                    var cell = ws.Cell(i, item);
+                    string xxx = cell.GetString();
                     if (!string.IsNullOrEmpty(xxx))
                         cteniPole.Add(xxx);
                 }
 
-                //Hledání shody Vstupu s načteným řádkem Hledání v první shode
                 var Shoda = Vstup.FirstOrDefault(x => x.FirstOrDefault() == cteniPole.FirstOrDefault());
-
-                //Pokud byla nalezeny schoda radku s polem vstupu
 
                 if (Shoda != null)
                 {
-                    Console.Write("\nShoda buňky " + i + " = " + Shoda.First()); 
+                    Console.Write("\nShoda buňky " + i + " = " + Shoda.First());
 
-                    //hledni proudu z tabulky Motory500V
-                    if (double.TryParse(cteniPole[1], out double Prikon))
+                    if (cteniPole.Count > 1 && double.TryParse(cteniPole[1], out double Prikon))
                     {
-                        var Informace = Motory500.FirstOrDefault(x => Convert.ToDouble(x[0]) == Prikon)?[1]; //.ToArray(); 
+                        var Informace = Motory500.FirstOrDefault(x => Convert.ToDouble(x[0]) == Prikon)?[1];
                         if (double.TryParse(Informace, out double Proud))
                         {
-                            Exc.Range Zapis1 = Xls.Cells[i, SloupceZapisu.First()];
-                            Zapis1.Value = Proud;
+                            ws.Cell(i, SloupceZapisu.First()).Value = Proud;
                         }
                     }
 
-                    ////zapis proud
-                    //Exc.Range Zapis = Zal.Cells[i, SloupceZapisu.First()];
-                    //if (double.TryParse(Shoda[3], out double cislo))
-                    //    Zapis.Value = cislo;
-                    //else
-                    //    Zapis.Value = "";
+                    ws.Cell(i, SloupceZapisu[1]).Value = Shoda[8];
+                    ws.Cell(i, SloupceZapisu[2]).Value = Shoda[9];
 
-                    //Rozvaděč
-                    var Zapis = Xls.Cells[i, SloupceZapisu[1]];
-                    Zapis.Value = Shoda[8];
-
-                    //Rozvaděč
-                    Zapis = Xls.Cells[i, SloupceZapisu[2]];
-                    Zapis.Value = Shoda[9];
-
-                    //zapis delka
-                    Zapis = Xls.Cells[i, SloupceZapisu[3]];
                     if (double.TryParse(Shoda[4], out double delka))
-                        Zapis.Value = delka;
+                        ws.Cell(i, SloupceZapisu[3]).Value = delka;
                     else
-                        Zapis.Value = Shoda[4].ToString();
+                        ws.Cell(i, SloupceZapisu[3]).Value = Shoda[4];
 
-                    //zapis AWG
-                    Zapis = Xls.Cells[i, SloupceZapisu[5]];
                     if (double.TryParse(Shoda[5], out double AWG))
-                        Zapis.Value = AWG;
+                        ws.Cell(i, SloupceZapisu[5]).Value = AWG;
                     else
-                        Zapis.Value = Shoda[5].ToString();
+                        ws.Cell(i, SloupceZapisu[5]).Value = Shoda[5];
 
-                    //zapis mm2
-                    Zapis = Xls.Cells[i, SloupceZapisu[4]];
                     if (double.TryParse(Shoda[10], out double mm2))
-                        Zapis.Value = mm2;
+                        ws.Cell(i, SloupceZapisu[4]).Value = mm2;
                     else
-                        Zapis.Value = "";
+                        ws.Cell(i, SloupceZapisu[4]).Value = "";
                 }
                 else
                 {
-                    //nebyla shoda
-                    //zapis buňky
-                    Exc.Range Zapis = Xls.Cells[i, SloupceZapisu.First()];
-                    Zapis.Value = "Nenalezeno";
+                    ws.Cell(i, SloupceZapisu.First()).Value = "Nenalezeno";
                 }
 
-                { Console.Write("\nShoda buňky " + i); }
+                Console.Write("\nShoda buňky " + i);
                 if (i > 500) break;
             }
             ExcelQuit(cesta);
@@ -725,122 +647,44 @@ namespace Aplikace.Excel
 
         public void ExcelSaveT<T>(T[] pole, string Nazev)
         {
-            // Získání názvu typu T
             string ClassName = typeof(T).Name;
             Console.WriteLine(ClassName);
 
-            // Získání názvu Type
             var TridaPole = pole.GetType();
             Console.WriteLine(TridaPole.Name);
 
-            //Sada vlasnotnotí 
             var Sloupce = typeof(T).GetProperties();
             foreach (var item in Sloupce)
-                Console.WriteLine(item.Name, item?.GetValue(item)?.ToString());
-            //Table tab = new Table();
-            //tab.TableStyle = Sdilene.Nastav.SetTable();
-
-            //Nastavení velikosti tabulky
-            //tab.SetSize(pole.Length + 2, Sloupce.Length);
-            //ed.WriteMessage("\nVelikost tabulky " + pole.Length + ", " + Sloupce.Length);
+                Console.WriteLine(item.Name);
 
             int row = 1; int col = 1;
-            Xls.Cells[row, col].value = Nazev;
+            var ws = Xls.Worksheet;
+            ws.Cell(row, col).Value = Nazev;
             row++;
             foreach (var item in Sloupce)
             {
-                // Získání atributu DisplayAttribute
                 DisplayAttribute displayAttribute = item.GetCustomAttributes(typeof(DisplayAttribute), false).Cast<DisplayAttribute>().FirstOrDefault();
-                Xls.Cells[row, col].value = item.Name.ToUpper();
-                if (displayAttribute != null)
-                    Xls.Cells[row, col].value = displayAttribute.Name;
-
-                //tab.Cells[row, col].TextStyleId = Sdilene.Nastav.SetROMANS();
-                //tab.Columns[col].Width = (item.Name.Length * 3) + 5;
+                ws.Cell(row, col).Value = displayAttribute != null ? displayAttribute.Name : item.Name.ToUpper();
                 col++;
             }
-            //ed.WriteMessage("\nFunguje");
+
             col = 1;
             row++;
             foreach (var item in pole)
             {
-                //ed.WriteMessage("\nFunguje Sloupce" + Sloupce.Length);
                 foreach (var Property in Sloupce)
                 {
-                    //ed.WriteMessage("\nProperty.PropertyType " + Property.PropertyType);
-                    //pokud je datovy typ pole
-                    Console.WriteLine(Property.PropertyType.ToString());     
-                    Console.WriteLine(typeof(Fluids).ToString());
+                    Console.WriteLine(Property.PropertyType.ToString());
 
-                    if (Property.PropertyType == typeof(int))
-                    {
-                        Console.WriteLine("Jedná se o int");
-                    }
-
-                    if (Property.PropertyType.IsGenericType) 
-                    {
-                        Console.WriteLine("Jedná se o IsGenericType");
-                        if (Property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
-                        {
-                            var xx = item?.GetType().GetProperty(Property.Name)?.GetValue(item) as List<T>;
-                            //var dad = xx.GetProperties();
-
-                            var Sloudvapce = typeof(T).GetProperties();
-                            Console.WriteLine("Jedná se o List");
-                        }
-                    }
-
-
-                    if (Property.PropertyType == typeof(List<>))
-                    {
-                        Console.WriteLine("Jedná se o IList");
-                    }
-
-                    if (Property.PropertyType == typeof(Fluids))
-                    {
-                        Console.WriteLine("Jedná se o seznam");
-                    }
-
-                    if (Property.PropertyType == typeof(string[]))
-                    {
-                        //var prop = item?.GetType().GetProperty(Property.Name);
-                        //var value = prop?.GetValue(item) as string[];
-                        //var Hodnota = value ?? [];
-
-                        var Hodnota = (string[])item?.GetType().GetProperty(Property.Name)?.GetValue(item);
-                        string Hodpole = string.Empty;
-                        //bude vytvožen seznam tohoto pole
-                        foreach (var txt in Hodnota.ToString() ?? string.Empty)
-                        {
-                            Hodpole += txt + ",";
-                        }
-                        Xls.Cells[row, col].value = Hodpole[..^1];
-                    }
-
-                    //pokud je datovy typ string
                     if (Property.PropertyType == typeof(string))
                     {
-                        //ed.WriteMessage("\nFunguje Sloupce " + Sloupce.Length);
-                        //ed.WriteMessage("\nFunguje GetProperty " + Property.Name);
-                        var value = item?.GetType().GetProperty(Property.Name)?.GetValue(item)?.ToString(); // Získání hodnoty vlastnosti
-                        //ed.WriteMessage("\nFunguje GetProperty " + value);
-                        //if (value == "") 
-                        //    value = "x";
-                        //ed.WriteMessage("\nFunguje");
-                        Xls.Cells[row, col].value = value;
-
-                        //tab.Cells[row, col].Alignment = CellAlignment.BottomLeft;
-                        //tab.Cells[row, col].TextStyleId = Sdilene.Nastav.SetROMANS();
-                        //tab.Columns[col].Width = (value.Length * 3) + 5;
+                        var value = item?.GetType().GetProperty(Property.Name)?.GetValue(item)?.ToString();
+                        ws.Cell(row, col).Value = value;
                         col++;
-                        //this.GetType().GetProperty(Property.Name).SetValue(this, Propertys);
-                        //this.GetType().GetProperty(Property.Name).GetValue(Propertys);
                     }
                 }
                 col = 1; row++;
             }
-            //tab.GenerateLayout();
-            //return; //tab;
         }
 
         public void NadpisMIlan()
@@ -848,62 +692,60 @@ namespace Aplikace.Excel
             string Nad = @"    |     |   |     |     |                                        |  |KAPACITA        |                        |        |        |      |EL.  |        ";
             int col = 1;
             int row = 1;
+            var ws = Xls.Worksheet;
             foreach (var item in Nad.Split('|'))
             {
-                Xls.Cells[row, col++].value = item;
+                ws.Cell(row, col++).Value = item;
             }
             row++; col = 1;
             Nad = "GUID|IO/SO|NO |PS   |TAG  |NÁZEV                                   |KS|NOSTNOST        |MEDIUM                  |OBJEM   |PRŮTOK  |HMOTN.|PŘÍK.|POZNÁMKA";
             foreach (var item in Nad.Split('|'))
             {
-                Xls.Cells[row, col++].value = item;
+                ws.Cell(row, col++).Value = item;
             }
-            //zalamování textu - pozor pokud dále řěším šírku sloupcu nesmí být zapnuto
-            var range = Xls.Range[Xls.Cells[1, 1], Xls.Cells[2, col - 1]];
-            range.WrapText = false;
+
+            var range = ws.Range(1, 1, 2, col - 1);
+            range.Style.Alignment.WrapText = false;
             NadpisSet(range);
         }
 
         public void ExcelSave(Item[] pole)
         {
             NadpisMIlan();
-            //ed.WriteMessage("\nFunguje");
             int col = 1;
             int row = 3;
             Tisk(pole, ref row, col);
 
-            for (int i = 1; i < 20; i++)
-                Xls.Columns[i].AutoFit();
-
-            //tab.GenerateLayout();
-            return; //tab;
+            for (int i = 1; i <= 20; i++)
+                Xls.Worksheet.Column(i).AdjustToContents();
         }
 
         public int Tisk(Item[] pole, ref int row, int col)
         {
+            var ws = Xls.Worksheet;
             foreach (var item in pole)
             {
-                Xls.Cells[row, col++].value = item.Id.ToString();
-                Xls.Cells[row, col++].value = item.Cunit.Pfx + " " +  item.Cunit.Num;
-                Xls.Cells[row, col++].value = record++.ToString();
-                Xls.Cells[row, col++].value = item.Munit.Pfx + " " + item.Munit.Num;
-                Xls.Cells[row, col++].value = item.Tag;
-                Xls.Cells[row, col++].value = item.Name;
-                Xls.Cells[row, col++].value = item.Pcs;
+                ws.Cell(row, col++).Value = item.Id.ToString();
+                ws.Cell(row, col++).Value = item.Cunit.Pfx + " " + item.Cunit.Num;
+                ws.Cell(row, col++).Value = (record++).ToString();
+                ws.Cell(row, col++).Value = item.Munit.Pfx + " " + item.Munit.Num;
+                ws.Cell(row, col++).Value = item.Tag;
+                ws.Cell(row, col++).Value = item.Name;
+                ws.Cell(row, col++).Value = item.Pcs;
 
-                Xls.Cells[row, col+4].value = item.Mass;
-                Xls.Cells[row, col+5].value = item.Power;
-                Xls.Cells[row, col+6].value = item.Note;
+                ws.Cell(row, col + 4).Value = item.Mass;
+                ws.Cell(row, col + 5).Value = item.Power;
+                ws.Cell(row, col + 6).Value = item.Note;
 
                 if (item.Fluid.Count > 0)
                 {
                     if (item.Fluid.Count > 1) row++;
                     foreach (var item2 in item.Fluid)
                     {
-                        Xls.Cells[row, col ].value = item2.Parameter.Value.ToString() + " " +item2.Parameter.Unit;
-                        Xls.Cells[row, col + 1].value = item2.Fluid;
-                        Xls.Cells[row, col + 2].value = item2.Volume;
-                        Xls.Cells[row, col + 3].value = item2.Flowrate;
+                        ws.Cell(row, col).Value = item2.Parameter.Value.ToString() + " " + item2.Parameter.Unit;
+                        ws.Cell(row, col + 1).Value = item2.Fluid;
+                        ws.Cell(row, col + 2).Value = item2.Volume;
+                        ws.Cell(row, col + 3).Value = item2.Flowrate;
                         row++;
                     }
                     col += 4; row--;
@@ -911,604 +753,356 @@ namespace Aplikace.Excel
                 else
                     col += 4;
 
-                // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
-                Exc.Range range = Xls.Range[Xls.Cells[row, 1], Xls.Cells[row, col] ];
-                
-                // Nastavení okrajů kolem buněk
-                range.Borders[Exc.XlBordersIndex.xlEdgeBottom].LineStyle = Exc.XlLineStyle.xlContinuous;
+                var range = ws.Range(row, 1, row, col);
+                range.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
 
-                //Exc.Range range1 = xls.Range[xls.Cells[row, 1], xls.Cells[row, 15]];
                 if (record % 2 == 1)
-                    range.Interior.Color = ColorTranslator.ToOle(Color.LightGray);
+                    range.Style.Fill.BackgroundColor = XLColor.LightGray;
 
                 if (item.Subitem.Count > 0)
                 {
                     row++; col = 1;
-                    //row = Tisk(xls, item._Item__subitem.ToArray(), row, col);
                     Tisk([.. item.Subitem], ref row, col);
                 }
-                else 
+                else
                 {
                     row++; col = 1;
                 }
-
-
             }
             return row;
         }
 
-        public static void NadpisSet(Exc.Range range)
+        public static void NadpisSet(IXLRange range)
         {
-            //Podtržení nadpisů
-            
-            // Výběr konkrétní oblasti buněk, např. A1:C3
-            //Exc.Range range = ListExcel.Range["A1", "M1"];
+            range.Style.Border.LeftBorder = XLBorderStyleValues.Thin;
+            range.Style.Border.RightBorder = XLBorderStyleValues.Thin;
+            range.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+            range.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+            range.Style.Border.LeftBorderColor = XLColor.Black;
+            range.Style.Border.RightBorderColor = XLColor.Black;
+            range.Style.Border.TopBorderColor = XLColor.Black;
+            range.Style.Border.BottomBorderColor = XLColor.Black;
 
-            // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
-            //Exc.Range range = xls.Range[
-            //    xls.Cells[1, 1],  // A1 (1. řádek, 1. sloupec)
-            //    xls.Cells[data.Item1, data.Item2] // Vstup (data.Item1, data.Item2)
-            //];
-            
+            SetFontRed(range.Style.Font);
 
-            // Nastavení okrajů kolem buněk
-            // LineStyle: Může být xlContinuous, xlDash, xlDot a další styly čar.
-            range.Borders[Exc.XlBordersIndex.xlEdgeLeft].LineStyle = Exc.XlLineStyle.xlContinuous;
-            range.Borders[Exc.XlBordersIndex.xlEdgeRight].LineStyle = Exc.XlLineStyle.xlContinuous;
-            range.Borders[Exc.XlBordersIndex.xlEdgeTop].LineStyle = Exc.XlLineStyle.xlContinuous;
-            range.Borders[Exc.XlBordersIndex.xlEdgeBottom].LineStyle = Exc.XlLineStyle.xlContinuous;
+            range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
-            // Další možnosti nastavení tloušťky a barvy okrajů
-            //range.Borders.LineStyle = Exc.XlLineStyle.xlContinuous;
+            range.Style.Fill.BackgroundColor = XLColor.LightBlue;
 
-            // Weight: Určuje tloušťku čáry(xlThin, xlMedium, xlThick).
-            //range.Borders.Weight = Exc.XlBorderWeight.xlMedium;  // nebo xlMedium, xlThick - tlustá
-
-            //Color: Převádí barvu z knihovny System.Drawing.Color na formát použitelný v Excelu.
-            range.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black); // nastavení barvy čar
-
-            SetFontRed(range.Font);
-
-            //Vycentruje text vodorovně.
-            range.HorizontalAlignment = Exc.XlHAlign.xlHAlignCenter;
-
-            //Vycentruje text svisle
-            range.VerticalAlignment = Exc.XlVAlign.xlVAlignCenter;
-
-            //Orientace textu 
-            //range.Orientation = 90;
-
-            // Nastavení barvy buňky (pozadí) (např. světle modrá)
-            range.Interior.Color = ColorTranslator.ToOle(Color.LightBlue);
-
-            //range.Interior.Color = ColorTranslator.ToOle(Color.FromArgb(173, 216, 230));  // Světle modrá
-
-            // Automatické přizpůsobení šířky sloupce (např. pro sloupec A)
-            //for (int i = 1; i <= data.Item2; i++)
-            //    xls.Columns[i].AutoFit();
-
-            //Nastavení sloupců hromadně
-            //range.EntireColumn.AutoFit();
-            foreach (Exc.Range item in range.Columns)
-                item.AutoFit();
-
-            // Automatické přizpůsobení výšky řádku (např. pro řádek 1)
-            foreach (Exc.Range item in range.Rows)
-                item.AutoFit();
-
-            //xls.Rows[1].AutoFit();
-            //xls.Rows[2].AutoFit();
-
-            //range 
-            //range.Columns["A:Z"].AutoFit();
-            //range.Rows["1"].AutoFit();
-            //range.Rows["2"].AutoFit();
-        }
-
-        public Exc.Range Nadpisy(Nadpis[] data)
-        {
-            
-            int col = 1;
-            //Tisk pole data
-            foreach (var item in data)
+            foreach (var col in range.Worksheet.Columns(range.RangeAddress.FirstAddress.ColumnNumber, range.RangeAddress.LastAddress.ColumnNumber))
             {
-                Xls.Cells[1, col].Value = item.Name;
-                Xls.Cells[2, col++].Value = item.Jednotky;
+                col.AdjustToContents();
             }
 
-            // Povolení zalamování textu, aby nový řádek byl viditelný
-            //Xls.Range["A1:M1"].WrapText = true;
-            var Range = Xls.Range[Xls.Cells[1, 1], Xls.Cells[2, col - 1]];
-            //polovlit zalamování
-            //Range.WrapText = false;
-            Range.WrapText = true;
-            return Range;
+            foreach (var r in range.Worksheet.Rows(range.RangeAddress.FirstAddress.RowNumber, range.RangeAddress.LastAddress.RowNumber))
+            {
+                r.AdjustToContents();
+            }
         }
 
-        public Exc.Range Nadpisy(IDictionary<int, string> Dir)
+        public IXLRange Nadpisy(Nadpis[] data)
         {
             int col = 1;
-            //var props = typeof(T).GetProperties();
-            
+            var ws = Xls.Worksheet;
+            foreach (var item in data)
+            {
+                ws.Cell(1, col).Value = item.Name;
+                ws.Cell(2, col++).Value = item.Jednotky;
+            }
+
+            var range = ws.Range(1, 1, 2, col - 1);
+            range.Style.Alignment.WrapText = true;
+            return range;
+        }
+
+        public IXLRange Nadpisy(IDictionary<int, string> Dir)
+        {
+            int col = 1;
+            var ws = Xls.Worksheet;
             var properties = new List<PropertyInfo>();
 
-            // Projdeme všechny třídy v hierarchii
             Type currentType = typeof(Slaboproudy);
             properties.AddRange(currentType.GetProperties(BindingFlags.Public | BindingFlags.Instance));
-            //while (currentType != null)
-            //{
-            //    //currentType = currentType.BaseType;
-            //}
-
-            //currentType = typeof(Mistnost);
-            //properties.AddRange(currentType.GetProperties(BindingFlags.Public | BindingFlags.Instance));
-            //while (currentType != null)
-            //{
-            //    //currentType = currentType.BaseType;
-            //}
-
-            // Převod na Dictionary
-            //var propertiesDict = properties.ToDictionary(p => p.Name);
-
-            //var properties = typeof(T).GetProperties();
-            //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy).ToDictionary(p => p.Name);
-
-            //var test = typeof(Slaboproudy).GetProperties().ToDictionary(p => p.Name);
-
-            // kontrola vlastností v dir, jestli existují v T
-            //foreach (var kvp in Dir)
-            //{
-            //    if (!properties.Contains(kvp.Value))
-            //    {
-            //        Console.WriteLine($"[WARN] Vlastnost '{kvp.Value}' (pro sloupec {kvp.Key}) neexistuje v typu {typeof(T).Name}");
-            //    }
-            //}
-
-            // Vyfiltruj jen ty položky, které mají odpovídající vlastnost ve třídě T
-            //var dirFiltered = properties
-            //    .Where(p => Dir.Values.Contains(p.Name))
-            //    .ToList();
-                //.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            // Filtruj podle hodnot slovníku (tedy jmen vlastností, které chceš ponechat)
-            //var filtrovane = properties
-            //    .Where(p => Dir.Values.Contains(p.Name))
-            //    .ToDictionary(p => p.Name, p => p);
 
             var ppp = properties.ToDictionary(p => p.Name);
 
-            //Tisk pole data
             foreach (var kvp in Dir)
             {
-                // Podmínka existence Property v Dictionary
                 if (!ppp.ContainsKey(kvp.Value)) continue;
-                //převod kvp na PropertyInfo
                 var prop = ppp[kvp.Value];
-                //var prop = properties.FirstOrDefault(p => p.Name == kvp.Value);
 
                 if (prop == null) continue;
 
-                // Načti atribut [Display(Name = "...")]
                 var displayAttr = prop.GetCustomAttribute<DisplayAttribute>();
                 string displayName = displayAttr?.Name ?? prop.Name;
 
-                // Načti atribut [Jednotky("...")] - volitelně, pokud máš
                 var jednotkyAttr = prop.GetCustomAttribute<JednotkyAttribute>();
                 string jednotky = jednotkyAttr?.Text ?? "";
 
-                Xls.Cells[1, kvp.Key].Value = displayName;
-                Xls.Cells[2, kvp.Key].Value = jednotky;
+                ws.Cell(1, kvp.Key).Value = displayName;
+                ws.Cell(2, kvp.Key).Value = jednotky;
                 col++;
             }
 
-            // Povolení zalamování textu, aby nový řádek byl viditelný
-            //Xls.Range["A1:M1"].WrapText = true;
-            var Range = Xls.Range[Xls.Cells[1, 1], Xls.Cells[2, col - 1]];
-            //polovlit zalamování
-            Range.WrapText = false;
-            return Range;
+            var range = ws.Range(1, 1, 2, col - 1);
+            range.Style.Alignment.WrapText = false;
+            return range;
         }
 
-        /// <summary> uložení dat do excel podle kryterii </summary>
         public void ExcelSaveList(List<List<string>> Vstup)
         {
-            //var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
-            //var PouzitProTabulku = new int[] { 3, 2, 7, 18, 1, 21, 63, 64, 61, 62, 65, 66 };
+            int row = 2; int col = 1;
+            var ws = Xls.Worksheet;
 
-            int row = 2; int col = 1; 
-
-            //kontrola špatného přepsaní dat souboru
-            Exc.Range Kontrola = Xls.Cells[row + 1, col];
-            if (!string.IsNullOrEmpty(Kontrola.Value))
-            { 
+            var Kontrola = ws.Cell(row + 1, col);
+            if (!Kontrola.IsEmpty())
+            {
                 Console.WriteLine("Přepsat");
-                if (Console.ReadKey().Key != ConsoleKey.A) return; 
+                if (Console.ReadKey().Key != ConsoleKey.A) return;
             }
 
-            //Čtení listu excel
             foreach (var radek in Vstup)
             {
-                //Čtení radků excel
-                var cteniPole = new List<string>();
-                //if (radek[3] != "" && radek[3] != "0")
-                //{ 
-                    row++; col=1; 
-                    foreach (var item in radek)
-                    {
-                        //zapis qwe
-                        var Zapis = Xls.Cells[row, col++];
-                        if (double.TryParse(item, out double cislo))
-                            Zapis.Value = cislo;
-                        else 
-                        {
-                        //    if (item == "PU")
-                        //    {
-                        //        Zapis = Xls.Cells[row, col - 2];
-                        //        Zapis.Value = item;
-                        //    }
-                        //    else
-                                Zapis.Value = item;
-                        }
-                  //  }
-                    Xls.Rows[row].AutoFit();
+                row++; col = 1;
+                foreach (var item in radek)
+                {
+                    var cell = ws.Cell(row, col++);
+                    if (double.TryParse(item, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double cislo))
+                        cell.Value = cislo;
+                    else
+                        cell.Value = item;
                 }
+                ws.Row(row).AdjustToContents();
             }
-            //zalomení
-            Xls.Columns["A:Z"].AutoFit();
-            return;
+            ws.Columns().AdjustToContents();
         }
-        /// <summary> uložení dat do excel podle kryterii </summary>
+
         public void ExcelSaveClass(List<Zarizeni> Vstup)
         {
-            //var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
-            //var PouzitProTabulku = new int[] { 3, 2, 7, 18, 1, 21, 63, 64, 61, 62, 65, 66 };
-            int row = 2; int col;
+            int row = 2;
+            var ws = Xls.Worksheet;
 
-            //Čtení listu tridy
             foreach (var radek in Vstup)
             {
-                //Čtení radků excel
-                //var cteniPole = new List<string>();
-                //if (radek[3] != "" && radek[3] != "0")
-                //{ 
-                              
-                row++; col = 1;
-                //zapis qwe
-                var Zapis = Xls.Cells[row, col++];
-                switch (col)
+                row++;
+                for (int col = 1; col <= 15; col++)
                 {
-                    case 1: 
-                        Zapis.value = radek.Tag;    
-                        break;
-                    case 2:
-                        //pid
-                        Zapis.value = radek.PID;
-                        break;
-                    case 3:
-                        //popis
-                        Zapis.value = radek.Popis;
-                        break;
-                    case 4:
-                        //prikon
-                        Zapis.value = radek.Prikon;
-                        break;
-                    case 5:
-                        //balená jednotka
-                        Zapis.value = radek.BalenaJednotka;
-                        break;
-                    case 6:
-                        //menic
-                        Zapis.value = radek.Menic;
-                        break;
-                    case 7:
-                        //proud
-                        Zapis.value = radek.Proud;
-                        break;
-                    case 8:
-                        //HP
-                        Zapis.value = radek.HP;
-                        break;
-                    case 9:
-                        //proud
-                        if (double.TryParse(radek.Proud, out double proud1))
-                            Zapis.value = (proud1 * 500 / 480).ToString();
-                        break;
-                    case 10:
-                        //PrurezMM2
-                        Zapis.value = radek.PrurezMM2;
-                        break;
-                    case 11:
-                        //Pruzez US unit
-                        //Zapis.value = radek.PrurezMM2;
-                        break;
-                    case 12:
-                        //delka
-                        Zapis.value = radek.Delka;
-                        break;
-                    case 13:
-                        //delka stopy
-                        //Zapis.value = radek.Delka;
-                        break;
-                    case 14:
-                        //royvaděč
-                        Zapis.value = radek.Rozvadec;
-                        break;
-                    case 15:
-                        //royvaděč
-                        Zapis.value = radek.RozvadecCislo;
-                        break;
-                    default:
-                        break;
+                    var cell = ws.Cell(row, col);
+                    switch (col)
+                    {
+                        case 1:
+                            cell.Value = radek.Tag;
+                            break;
+                        case 2:
+                            cell.Value = radek.PID;
+                            break;
+                        case 3:
+                            cell.Value = radek.Popis;
+                            break;
+                        case 4:
+                            cell.Value = radek.Prikon;
+                            break;
+                        case 5:
+                            cell.Value = radek.BalenaJednotka;
+                            break;
+                        case 6:
+                            cell.Value = radek.Menic;
+                            break;
+                        case 7:
+                            cell.Value = radek.Proud;
+                            break;
+                        case 8:
+                            cell.Value = radek.HP;
+                            break;
+                        case 9:
+                            if (double.TryParse(radek.Proud, out double proud1))
+                                cell.Value = (proud1 * 500 / 480).ToString();
+                            break;
+                        case 10:
+                            cell.Value = radek.PrurezMM2;
+                            break;
+                        case 12:
+                            cell.Value = radek.Delka;
+                            break;
+                        case 14:
+                            cell.Value = radek.Rozvadec;
+                            break;
+                        case 15:
+                            cell.Value = radek.RozvadecCislo;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-
-                //if (double.TryParse(item, out double cislo))
-                //    Zapis.Value = cislo;
-                //else
-                //{
-                //    Zapis.Value = item;
-                //}
-                //  }
-                Xls.Rows[row].AutoFit();
+                ws.Row(row).AdjustToContents();
             }
-            //zalomení
-            Xls.Columns["A:Z"].AutoFit();
-            return;
+            ws.Columns().AdjustToContents();
         }
 
-        /// <summary> uložení dat do excel podle kryterii </summary>
         public void ExcelSaveProud(List<List<string>> Vstup)
         {
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
 
-            //Čtení listu excel
-            for (int i = 3; i < Xls.UsedRange.Rows.Count; i++)
+            for (int i = 3; i <= rowCount; i++)
             {
-                //Čtení kW
-                Exc.Range Pok = Xls.Cells[i, 4];
-                object cteni = Pok.Value;
-
-                string xxx = Convert.ToString(cteni) ?? string.Empty;
+                var cell = ws.Cell(i, 4);
+                string xxx = cell.GetString();
                 if (double.TryParse(xxx, out double cislo))
                 {
-                    //Hledáni proudu z tabulky Motory500V
-                    var Informace = Vstup.FirstOrDefault(x => Convert.ToDouble(x[0]) == cislo)?[1]; //.ToArray(); 
+                    var Informace = Vstup.FirstOrDefault(x => Convert.ToDouble(x[0]) == cislo)?[1];
                     if (double.TryParse(Informace, out double Proud))
                     {
-                        Exc.Range Zapis1 = Xls.Cells[i, 7];
-                        Zapis1.Value = Proud;
+                        ws.Cell(i, 7).Value = Proud;
                     }
                 }
 
-                if (cteni == null && i > 100)
+                if (cell.IsEmpty() && i > 100)
                     break;
             }
-            return;
         }
 
-        /// <summary> doplnění vzorců doExel </summary>
         public void ExcelSaveVzorce(int Pocet)
         {
-            //Čtení listu excel
-            for (int i = 3; i < Xls.UsedRange.Rows.Count; i++)
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
+
+            for (int i = 3; i <= rowCount; i++)
             {
-                // Dynamický vzorec (např. sčítání hodnot v buňkách A a B na daném řádku)
-                //string formula = $"=A{row}+B{row}";
-                //string formula = $"=Cells({i}, 3)+Cells({3}, 2)";
-                //string formula = $"=Cells({i}, 3)*1,34102";
-                //ListExcel.Cells[i, 6].Formula = formula;
-
-                // Dynamický vzorec pomocí Excelové notace (např. C pro sloupec 3)
-                //string formula = $"=C{i}*1.34102";  // C{i} odkazuje na buňku ve sloupci C (3) a řádku i
-
-                //převod kilowatů na koně Kw -> HP * 
-                Xls.Cells[i, 8].Formula = $"=D{i}*1.341022";
-
-                //Převod prodů u 500 V na 480V
-                Xls.Cells[i, 9].Formula = $"=G{i}*500/480";
-
-                //Převod metry na stopy m -> ft 
-                Xls.Cells[i, 13].Formula = $"=L{i}*3.280839895";
+                ws.Cell(i, 8).FormulaA1 = $"=D{i}*1.341022";
+                ws.Cell(i, 9).FormulaA1 = $"=G{i}*500/480";
+                ws.Cell(i, 13).FormulaA1 = $"=L{i}*3.280839895";
 
                 if (i > Pocet)
                     break;
             }
-            return;
         }
 
-        /// <summary> Ze zadaného listu Exel vytvoř DataTable - podle zvolených sloupců </summary>
         public System.Data.DataTable GetTable(int rowNadpis, int[] sloupec)
         {
-            //ed.WriteMessage("\nZačala metoda GetTable");
-            //ed.WriteMessage("\nNadpis=" + rowNadpis + ", sloupec=" + sloupec.Length + ", Name=" + oSheet.Name + ", Rows=" + oSheet.Rows.Count);
-
             var Table = new System.Data.DataTable("Tabulka");
+            var ws = Xls.Worksheet;
+            int usedRows = ws.LastRowUsed()?.RowNumber() ?? 0;
 
-            // Načtěte konkrétní řádek
-            Exc.Range rowRange = Xls.Rows[rowNadpis];
-            //ed.WriteMessage("\nVelikost Sheet.Rows " + rowRange.Columns.Count); //vysledek je 16384
-
-            Exc.Range range = Xls.UsedRange;
-            int usedRows = range.Rows.Count;
-            int usedCols = range.Columns.Count;
-            //ed.WriteMessage("\nVelikost Table " + usedRows + ", " + usedCols);
-
-            int colPomoc = 0;
-            //Vytvoření nadpisů
             foreach (var i in sloupec)
             {
-                //ed.WriteMessage("\nSloupec " + i);
-                Exc.Range cell = rowRange.Cells[i];
-                //ed.WriteMessage("\nFunguje");
-                string cellValue = cell.Value?.ToString().Trim();
+                string cellValue = ws.Cell(rowNadpis, i).GetString().Trim();
                 Console.Write("\nRadek=" + rowNadpis + ", Sloupec=" + i + ", nadpis=" + cellValue);
-                Table.Columns.Add(cellValue ?? i.ToString(), typeof(string));
-                //Table.Columns.Add(i.ToString(), typeof(string));
+                Table.Columns.Add(string.IsNullOrEmpty(cellValue) ? i.ToString() : cellValue, typeof(string));
             }
-            Console.Write("\ninfo" + usedRows + ", " + usedCols + ", " + colPomoc);
 
             int t = 0;
-            for (int row = rowNadpis + 1; row < usedRows; row++)
+            for (int row = rowNadpis + 1; row <= usedRows; row++)
             {
                 var Pole = new List<string>();
-                //seznam sloupců ze zadání
-
-                //DataRow range;
                 var rada = Table.NewRow();
                 int colpomoc = 0;
                 string text = string.Empty;
+
                 foreach (var col in sloupec)
                 {
-                    //čtení buňky
-                    Exc.Range Pok = range.Cells[row, col];
-                    var cteni = Convert.ToString(Pok.Value);
-                    //if(string.IsNullOrEmpty(cteni))                  
+                    var cell = ws.Cell(row, col);
+                    string cteni = cell.GetString();
                     Pole.Add(cteni);
                     text += cteni;
                     rada[colpomoc++] = cteni;
-                    //ed.WriteMessage("\ncteni " + cteni + "Pocet="  + Pole.Count);
                     Console.Write("\ncteni " + cteni);
                 }
+
                 Table.Rows.Add(rada);
 
-                //Kontrola konce
                 Console.Write("\nDelka" + text.Length);
                 if (text.Length < 4) return Table;
-                if (t > 1000) return Table;
+                if (t++ > 1000) return Table;
             }
             return Table;
         }
 
-        // <summary>Kontrola instalovaného Excelu false - Aplikace Exel není instalována</summary>
         public static bool ExcelKontrolaInstalace()
         {
-            if (Type.GetTypeFromProgID("Excel.Application") != null)
-                return true;
             return true;
         }
 
-        
-        ///<summary>Console.WriteLine("Zavřit dokument ");ukončení worksheet </summary>
         public bool ExcelQuit(string cesta, bool UkonceniApplikace = true)
         {
             Console.Write("\nUkončení Excel, ");
-            if (!File.Exists(cesta))
-                Doc.SaveAs(cesta);
-            else
+            if (Doc != null)
             {
-                //Doc.Save();
-                //if(!Soubory.IsFileLocked(cesta))
-                // Zavření bez uložení
-                //ExcelApp.Doc.Close(false);
-                if (Doc == null) return false;
-                    Doc.Close(SaveChanges: true, cesta);
-            }
-            Console.Write("\nSave OK");
-            //ukončení worksheet
-            Console.WriteLine("Uložit a zavřit dokument.");
-            //Uložení Workbook
-
-            if (UkonceniApplikace)
-            { 
-                // Ukončení aplikace Excel
-                Console.WriteLine("Ukončit excel"); 
-                if (App == null) return false;
-                App.Quit();
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                {
-                    Marshal.ReleaseComObject(Doc);
-                    Marshal.ReleaseComObject(App);
-
-                    // Uvolněte paměť
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                }
-                Console.Write("..... OK");
-                Soubory.KillExcel(Process);
+                Doc.SaveAs(cesta);
+                Console.Write("\nSave OK");
             }
             return true;
         }
 
         public void ExcelSaveKabel(List<List<string>> Vstup)
         {
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
 
-            //Čtení listu excel
-            for (int i = 2; i < Xls.Rows.Count; i++)
+            for (int i = 2; i <= rowCount; i++)
             {
-                //Čtení nazvu
-                Exc.Range Pok = Xls.Cells[i, 1];
-                object cteni = Pok.Value;
+                string xxx = ws.Cell(i, 1).GetString();
 
-                string xxx = Convert.ToString(cteni) ?? string.Empty;
+                var Informace = Vstup.FirstOrDefault(x => x[0] == xxx);
 
-                //hledni proudu z tabulky delka
-                var Informace = Vstup.FirstOrDefault(x => x[0] == xxx); //.ToArray(); 
-
-                //delka
-                if (double.TryParse(Informace?[4], out double delka))
+                if (Informace != null)
                 {
-                    Exc.Range Zapis1 = Xls.Cells[i, 12];
-                    Zapis1.Value = delka;
+                    if (double.TryParse(Informace[4], out double delka))
+                    {
+                        ws.Cell(i, 12).Value = delka;
+                    }
+
+                    ws.Cell(i, 11).Value = Informace[5];
+
+                    if (double.TryParse(Informace[10], out double mm2))
+                    {
+                        ws.Cell(i, 10).Value = mm2;
+                    }
                 }
 
-                //awg
-                Exc.Range Zapis = Xls.Cells[i, 11];
-                Zapis.Value = Informace?[5];
-
-                //mm2
-                if (double.TryParse(Informace?[10], out double mm2))
-                {
-                    Exc.Range Zapis1 = Xls.Cells[i, 10];
-                    Zapis1.Value = mm2;
-                }
-
-                if (cteni == null && i > 100)
+                if (ws.Cell(i, 1).IsEmpty() && i > 100)
                     break;
             }
         }
 
-        public static void ExcelSaveRozvadec(Worksheet ListExcel, List<List<string>> Vstup)
+        public static void ExcelSaveRozvadec(ExcelWorksheetWrapper ListExcel, List<List<string>> Vstup)
         {
-            //Čtení listu excel
-            //for (int i = 2; i < ListExcel.Rows.Count; i++)
-            //skutečný počet použitých rádků
-            for (int i = 2; i < ListExcel.UsedRange.Rows.Count; i++)
+            var ws = ListExcel.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
+
+            for (int i = 2; i <= rowCount; i++)
             {
-                //Čtení nazvu
-                Exc.Range Pok = ListExcel.Cells[i, 1];
-                object cteni = Pok.Value;
-                string xxx = Convert.ToString(cteni) ?? string.Empty;
+                string xxx = ws.Cell(i, 1).GetString();
 
-                //hledni proudu z tabulky delka
-                var Informace = Vstup.FirstOrDefault(x => x[0] == xxx); //.ToArray(); 
+                var Informace = Vstup.FirstOrDefault(x => x[0] == xxx);
 
-                //mcc
-                Exc.Range Zapis = ListExcel.Cells[i, 14];
-                Zapis.Value = Informace?[8];
-
-                //mcc
-                if (double.TryParse(Informace?[9], out double cislo))
+                if (Informace != null)
                 {
-                    Exc.Range Zapis1 = ListExcel.Cells[i, 15];
-                    Zapis1.Value = cislo;
-                }
+                    ws.Cell(i, 14).Value = Informace[8];
 
-                //if (string.IsNullOrEmpty(xxx) && i > 100)
-                    //break;
+                    if (double.TryParse(Informace[9], out double cislo))
+                    {
+                        ws.Cell(i, 15).Value = cislo;
+                    }
+                }
             }
         }
 
         public List<List<string>> ExcelLoadWorksheet(int[] pouzitProTabulku)
         {
             var Data = new List<List<string>>();
-            string Cteni = "";
-            //Čtení listu excel
-            for (int i = 3; i < Xls.UsedRange.Rows.Count; i++)
+            var ws = Xls.Worksheet;
+            int rowCount = ws.LastRowUsed()?.RowNumber() ?? 0;
+
+            for (int i = 3; i <= rowCount; i++)
             {
                 var Radek = new List<string>();
+                string Cteni = "";
                 foreach (var item in pouzitProTabulku)
                 {
-                    //zapis qwe
-                    var Zapis = Xls.Cells[i, item];
-                    Cteni = Convert.ToString(Zapis.Value);
+                    var cell = ws.Cell(i, item);
+                    Cteni = cell.GetString();
                     Radek.Add(Cteni);
                 }
                 Data.Add(Radek);
@@ -1522,68 +1116,47 @@ namespace Aplikace.Excel
         public void KabelyToExcel(List<List<string>> data, int Row)
         {
             Row--;
-            int j = 15;
+            int j = 1;
+            var ws = Xls.Worksheet;
             foreach (var radek in data)
             {
                 Console.WriteLine("Radek " + Row);
                 Row++; j = 1;
                 foreach (var item in radek)
                 {
-                    Exc.Range Zapis1 = Xls.Cells[Row, j++];
-                    Zapis1.Value = item;
-                    if (double.TryParse(item, out double cislo))
+                    var cell = ws.Cell(Row, j++);
+                    if (double.TryParse(item, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double cislo))
                     {
-                        Zapis1.Value2 = cislo;
-
-                    //    // Formátovat jako číslo s 2 desetinnými místy
-                    //    Zapis1.NumberFormat = "#,##0.00";
-
-                    //    // Zarovnat doprava
-                    //    Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
+                        cell.Value = cislo;
                     }
-                    else 
+                    else
                     {
-                         Zapis1.Value = item;
+                        cell.Value = item;
                     }
                 }
             }
             for (int i = 1; i < j; i++)
-                Xls.Columns[i].AutoFit();
+                ws.Column(i).AdjustToContents();
         }
+
         public void KabelyToExcel(List<string> data, int Row)
         {
             Row--;
-            int j = 15;
-            foreach (var radek in data)
+            int j = 1;
+            var ws = Xls.Worksheet;
+            foreach (var item in data)
             {
                 Console.WriteLine("Radek " + Row);
                 Row++; j = 1;
-                foreach (var item in radek)
-                {
-                    Exc.Range Zapis1 = Xls.Cells[Row, j++];
-                    Zapis1.Value = item;
-                    //if (double.TryParse(item, out double cislo))
-                    //{
-                    //    Zapis1.Value = cislo;
-
-                    //    // Formátovat jako číslo s 2 desetinnými místy
-                    //    Zapis1.NumberFormat = "#,##0.00";
-
-                    //    // Zarovnat doprava
-                    //    Zapis1.HorizontalAlignment = Exc.XlHAlign.xlHAlignRight;
-                    //}
-                    //else 
-                    //{
-                    //     Zapis1.Value = item;
-                    //}
-                }
+                var cell = ws.Cell(Row, j++);
+                cell.Value = item;
             }
             for (int i = 1; i < j; i++)
-                Xls.Columns[i].AutoFit();
+                ws.Column(i).AdjustToContents();
         }
+
         public void ExcelSaveNadpis<T>(List<T> Ramecek)
         {
-            Xls.Activate();
             var VelikostTabulky = Ramecek.Count;
             Nadpis("A1:D1", "Označeni", VelikostTabulky);
             Nadpis("E1:H1", "Kabel", VelikostTabulky);
@@ -1600,23 +1173,20 @@ namespace Aplikace.Excel
             Xls.Range["E2"].Value = "Kabel";
             Xls.Range["F2"].Value = "Vodic";
             Xls.Range["G2"].Value = "[mm2]";
-            //xls.Range["H2"].Value = "[AWG]";
 
             Xls.Range["J2"].Value = "Tag";
             Xls.Range["K2"].Value = "MCC";
             Xls.Range["M2"].Value = "Svorka";
 
             Xls.Range["O2"].Value = "Tag";
-            Xls.Range["P2"].Value = "Predmet";
             Xls.Range["P2"].Value = "Patro";
             Xls.Range["R2"].Value = "Svorka";
 
             Xls.Range["S2"].Value = "[m]";
-            //xls.Range["T2"].Value = "[ft]";
         }
+
         public void ExcelSaveNadpisEn<T>(List<T> Ramecek)
         {
-            Xls.Activate();
             var VelikostTabulky = Ramecek.Count;
             Nadpis("A1:D1", "TAG", VelikostTabulky);
             Nadpis("E1:H1", "CABLE", VelikostTabulky);
@@ -1633,155 +1203,65 @@ namespace Aplikace.Excel
             Xls.Range["E2"].Value = "CABLE";
             Xls.Range["F2"].Value = "CONDUCTOR";
             Xls.Range["G2"].Value = "[mm2]";
-            //xls.Range["H2"].Value = "[AWG]";
 
             Xls.Range["J2"].Value = "TAG";
             Xls.Range["K2"].Value = "MCC";
             Xls.Range["M2"].Value = "CLAMP";
 
             Xls.Range["O2"].Value = "TAG";
-            Xls.Range["P2"].Value = "POSITION";
             Xls.Range["P2"].Value = "FLOOR";
             Xls.Range["R2"].Value = "CLAMP";
 
             Xls.Range["S2"].Value = "[m]";
-            //xls.Range["T2"].Value = "[ft]";
         }
-        public void Nadpis(string pole, string Text)  {
+
+        public void Nadpis(string pole, string Text)
+        {
             Nadpis(pole, Text, 1);
         }
 
-        /// <summary> Nadpisy  </summary>
-        /// <param name="pole"></param>
-        /// <param name="Text"></param>
-        /// <param name="PoleData">Je delka abych nakreslil rameček</param>
         public void Nadpis(string pole, string Text, int VelikostTabulky)
         {
-            // Sloučení buněk od A1 do C1
-            var range = Xls.Range[pole];
-            //Koontrola počtu buněk nelze sloučit jen jednu bunku.
-            if (range.Cells.Count > 1)
+            var ws = Xls.Worksheet;
+            var range = ws.Range(pole);
+            if (range.Cells().Count() > 1)
                 range.Merge();
 
-            // Nastavení auto šířky sloupce
-            range.WrapText = false;
-
-            //Hodnota bunky
+            range.Style.Alignment.WrapText = false;
             range.Value = Text;
 
-            //zarovnání
-            range.HorizontalAlignment = Exc.XlHAlign.xlHAlignCenter;
-            range.VerticalAlignment = Exc.XlVAlign.xlVAlignCenter;
+            range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
-            // Další možnosti nastavení tloušťky a barvy okrajů
-            range.Borders.LineStyle = Exc.XlLineStyle.xlContinuous;
+            range.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+            range.Style.Border.OutsideBorderColor = XLColor.Black;
 
-            // Weight: Určuje tloušťku čáry(xlThin, xlMedium, xlThick).
-            range.Borders.Weight = Exc.XlBorderWeight.xlMedium;  // nebo xlMedium, xlThick - tlusté
-
-            //Color: Převádí barvu z knihovny System.Drawing.Color na formát použitelný v Excelu.
-            range.Borders.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Black); // nastavení barvy čar
-
-            SetFont(range.Font);
-
-            //Formátování nadpisů
-            //Exc.Range range = xls.Range["A1", "M1"];
-            // Definování rozsahu pomocí čísel řádků a sloupců (např. A1:C3)
-            //Exc.Range range = xls.Range[xls.Cells[3, 1], xls.Cells[PoleData.Count(), PoleData.First().Count()]];
+            SetFont(range.Style.Font);
 
             string v = string.Concat(pole[..^1], (VelikostTabulky + 2).ToString());
-            range = Xls.Range[v];
-            Ramecek(range.Borders);
+            var borderRange = ws.Range(v);
+            Ramecek(borderRange.Style.Border);
         }
 
-        /// <summary> Nastavení Stylu písma </summary>
-        public static void SetFont(Exc.Font Fonty)
+        public static void SetFont(IXLFont Fonty)
         {
-            // Nastavení barvy textu (např. červená)
-            //Fonty.Color = ColorTranslator.ToOle(Color.Red);
-            //range.Font.Color = ColorTranslator.ToOle(Color.FromArgb(255, 0, 0));  // Červená barva
-
-            //Tučné písmo
             Fonty.Bold = true;
-            //range.Font.Italic = true;
-
-            //Velikost písma
-            Fonty.Size = 14;
-
-            //Styl pisma
-            Fonty.FontStyle = "Arial";
+            Fonty.FontSize = 14;
+            Fonty.FontName = "Arial";
         }
 
-        /// <summary> Nastavení Stylu písma červené</summary>
-        public static void SetFontRed(Exc.Font Fonty)
+        public static void SetFontRed(IXLFont Fonty)
         {
-            Fonty.Color = ColorTranslator.ToOle(Color.Red);
+            Fonty.FontColor = XLColor.Red;
             SetFont(Fonty);
         }
-        /// <summary>Orámování rozsahu Rameček </summary>
-        public static void Ramecek(Exc.Borders borders)
+
+        public static void Ramecek(IXLBorder borders)
         {
-            // Výběr rozsahu buněk (např. A1:C3)
-            //Exc.Range range = xls.Range["A1", "C3"];
-            //Exc.Range range = xls.Range["A1:C3"];
-
-            // Přidání rámečku kolem vybraného rozsahu
-            //Exc.Borders borders = range.Borders;
-
-            // Nastavení stylu a tloušťky okrajů uvnitř rozsahu
-            //borders.LineStyle = Exc.XlLineStyle.xlContinuous;
-            //borders.Weight = Exc.XlBorderWeight.xlThin;
-
-            // Horní hrana
-            borders[Exc.XlBordersIndex.xlEdgeTop].LineStyle = Exc.XlLineStyle.xlContinuous;
-            borders[Exc.XlBordersIndex.xlEdgeTop].Weight = Exc.XlBorderWeight.xlThin;
-
-            // Spodní hrana
-            borders[Exc.XlBordersIndex.xlEdgeBottom].LineStyle = Exc.XlLineStyle.xlContinuous;
-            borders[Exc.XlBordersIndex.xlEdgeBottom].Weight = Exc.XlBorderWeight.xlThin;
-
-            // Levá hrana
-            borders[Exc.XlBordersIndex.xlEdgeLeft].LineStyle = Exc.XlLineStyle.xlContinuous;
-            borders[Exc.XlBordersIndex.xlEdgeLeft].Weight = Exc.XlBorderWeight.xlThin;
-
-            // Pravá hrana
-            borders[Exc.XlBordersIndex.xlEdgeRight].LineStyle = Exc.XlLineStyle.xlContinuous;
-            borders[Exc.XlBordersIndex.xlEdgeRight].Weight = Exc.XlBorderWeight.xlThin;
-
-            // Pokud chcete přidat vnitřní hranice
-            //borders[Exc.XlBordersIndex.xlInsideHorizontal].LineStyle = Exc.XlLineStyle.xlContinuous;
-            //borders[Exc.XlBordersIndex.xlInsideHorizontal].Weight = Exc.XlBorderWeight.xlThin;
-
-            //borders[Exc.XlBordersIndex.xlInsideVertical].LineStyle = Exc.XlLineStyle.xlContinuous;
-            //borders[Exc.XlBordersIndex.xlInsideVertical].Weight = Exc.XlBorderWeight.xlThin;
-
+            borders.TopBorder = XLBorderStyleValues.Thin;
+            borders.BottomBorder = XLBorderStyleValues.Thin;
+            borders.LeftBorder = XLBorderStyleValues.Thin;
+            borders.RightBorder = XLBorderStyleValues.Thin;
         }
-
-        /// <summary>Nový dokument Elektro pro přípravu elektro seznamů </summary>
-        //public void ExcelElektro(string cesta)
-        //{   
-           
-        //    if (File.Exists(cesta))
-        //    {
-        //        //(App, Doc) = ExcelApp.DokumetExcel(cesta);
-        //        DokumetExcel(cesta);
-        //        //if (Doc == null) return (App, Doc, null);
-        //        //if (Doc == null) return (App, Doc, null);
-        //        if (Doc == null) return;
-        //        //Nastavení listu
-        //        GetSheet("Seznam Elektro");
-        //        //if (Doc == null) return (App, Doc, Xls);
-        //        if (Doc == null) return;
-        //    }
-        //    else
-        //    {
-        //        //VytvorNovyDokument();
-        //        //(App, Doc) = VytvorNovyDokument();
-        //        PridatNovyList("Seznam Elektro");
-        //    }
-        //    Xls.Activate();
-        //    //return (App, Doc, Xls);
-        //    return;
-        //}
     }
 }

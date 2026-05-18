@@ -1,7 +1,7 @@
-﻿using Aplikace.Excel;
+using Aplikace.Excel;
 using Aplikace.Sdilene;
 using Aplikace.Tridy;
-using Microsoft.Office.Interop.Excel;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,10 +17,18 @@ namespace Aplikace.Upravy
         /// <summary> Převody souborů z JSON do XML a CSV </summary>
         public static void Hlavni()
         {
-            //Item item = new Item();
-            string BaseAdres = @"U:\Elektro\mcsato\Zakázky\Povrly.Med\";
-            string cesta1 = Path.Combine(BaseAdres, @"zarizeni.json");
-            if (!File.Exists(cesta1)) return;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Otevírám dialog pro výběr souboru 'zarizeni.json'...");
+            Console.ResetColor();
+            string? cesta1 = Soubory.ShowOpenFileDialog("JSON soubory (*.json)|*.json");
+            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1))
+            {
+                Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
+                return;
+            }
+
+            string? BaseAdres = Path.GetDirectoryName(cesta1);
+            if (string.IsNullOrEmpty(BaseAdres)) return;
 
             string jsonString = System.IO.File.ReadAllText(cesta1);
             //převod souboru
@@ -41,8 +49,7 @@ namespace Aplikace.Upravy
             data.ReadXml(CestaXML2);
             Prevod.DataTabletoToCsv(data.Tables[0], CestaCsv);
 
-            string cesta = Path.Combine(BaseAdres, @"zarizeni.json");
-            var pokus = Soubory.LoadJsonEn<Item>(cesta);
+            var pokus = Soubory.LoadJsonEn<Item>(cesta1);
 
             Console.Write($"\nCelkem={pokus.Count}");
             Console.Write($"\n");

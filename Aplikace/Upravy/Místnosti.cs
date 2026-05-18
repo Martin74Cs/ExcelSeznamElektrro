@@ -1,7 +1,7 @@
-﻿using Aplikace.Excel;
+using Aplikace.Excel;
 using Aplikace.Sdilene;
 using Aplikace.Tridy;
-using Microsoft.Office.Interop.Excel;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
