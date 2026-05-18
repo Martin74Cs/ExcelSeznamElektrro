@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.DataFormats;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace WinForms
 {
@@ -30,6 +31,7 @@ namespace WinForms
         private void Form1_Load(object sender, EventArgs e)
         {
             Console.SetOut(new ListBoxWriter(listBox1));
+
         }
 
 
@@ -135,10 +137,12 @@ namespace WinForms
             {
                 if (Data.Count < 1) Data.Add(new Zarizeni());
                 Data.SaveJsonList(Cesty.ElektroDataJson);
-                if(MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) { 
+                if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
                     Data.SaveToCsv(Cesty.ElektroDataCsv);
                     Data.SaveXML(Path.ChangeExtension(Cesty.ElektroDataCsv, ".xml"));
                     Data.SaveHtmlStyle(Path.ChangeExtension(Cesty.ElektroDataCsv, ".html"));
+                    Data.SaveDocx(Path.ChangeExtension(Cesty.ElektroDataCsv, ".docx"));
                 }
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
@@ -259,6 +263,8 @@ namespace WinForms
 
         private void Button14_Click(object sender, EventArgs e)
         {
+            //Otevřít Json Stroje
+
             //string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
             var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
@@ -312,7 +318,7 @@ namespace WinForms
         private void PříkonCelkemToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
-            Console.WriteLine($"Příkon celkem: {Data.Sum(x => double.TryParse(x.Prikon, out var p ) ? p : 0.0) } W");
+            Console.WriteLine($"Příkon celkem: {Data.Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
             Console.WriteLine($"Příkon FAZE 1: {Data.Where(x => x.Etapa == "FAZE 1").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
             Console.WriteLine($"Příkon FAZE 2: {Data.Where(x => x.Etapa == "FAZE 2").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
 
@@ -321,6 +327,38 @@ namespace WinForms
             Console.WriteLine($"Příkon celkem: {Topeni.Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
             Console.WriteLine($"Příkon FAZE 1: {Topeni.Where(x => x.Etapa == "FAZE 1").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
             Console.WriteLine($"Příkon FAZE 2: {Topeni.Where(x => x.Etapa == "FAZE 2").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
+        }
+
+        private void nastavSložkuProjektuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            //string file = Path.Combine(appData, "ElektroData", "data.txt");
+            string file = Path.Combine(appData, "Elektro", "data.txt");
+            Directory.CreateDirectory(Path.GetDirectoryName(file)!);
+
+            //File.WriteAllText(file, @"C:\ElektroData");
+            //OpenFileDialog openFileDialog = new OpenFileDialog
+            //{
+            //    InitialDirectory = @"C:\ElektroData",
+            //    Title = "Vyberte složku projektu",
+            //    CheckFileExists = false,
+            //    CheckPathExists = true,
+            //    //FileName = "Vyberte složku projektu"
+            //};
+            //var dialog = openFileDialog.ShowDialog();
+
+            FolderBrowserDialog Folder = new FolderBrowserDialog();
+            Folder.Description = "Vyber složku s projektem";
+            Folder.UseDescriptionForTitle = true; // .NET 6+ moderní styl
+            if (Folder.ShowDialog() == DialogResult.OK) {
+                Informace informace = new()
+                {
+                    BasePath = Folder.SelectedPath,
+                };
+                Console.WriteLine($"Složka nastavena na {informace.BasePath}.");
+                informace.SaveJson(file);
+            }
+
         }
     }
 

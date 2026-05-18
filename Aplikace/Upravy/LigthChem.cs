@@ -22,12 +22,17 @@ namespace Aplikace.Upravy
         public static void StrojniToJsonCsv()
         {
             //Převod->json,csv
-            
-            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
-            if (!Directory.Exists(Cesty.Elektro))
-                Directory.CreateDirectory(Cesty.Elektro);
 
+            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
+            if (!Directory.Exists(Cesty.Elektro)) { 
+                Directory.CreateDirectory(Cesty.Elektro);
+                Console.WriteLine($"Vytvořen adresář {Cesty.Elektro}");
+            }
             string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+            if (!File.Exists(cesta1)) {
+                Console.WriteLine($"Soubor {cesta1} neexistuje");
+                return;
+            }
             var Stara = ExcelLoad.DataExcel(cesta1, "Seznam", 8);
 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));

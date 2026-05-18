@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Aplikace.Tridy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Aplikace.Sdilene
 {
@@ -41,11 +41,14 @@ namespace Aplikace.Sdilene
         
         public static string BasePath {
             get {
-                if (Environment.UserDomainName == "D10")
-                    //return @":\a\";
-                    return @"E:\Můj disk\Projekty\";
-                else
-                    return @"G:\Můj disk\Projekty\";
+                //if (Environment.UserDomainName == "D10")
+                //    //return @":\a\";
+                //    return @"E:\Můj disk\Projekty\";
+                //else
+                //    return @"G:\Můj disk\Projekty\";
+
+                var Inforamce = InformaceProjektu.Create();
+                return Inforamce.BasePath;
             }
         }
 
