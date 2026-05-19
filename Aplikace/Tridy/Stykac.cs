@@ -47,5 +47,9 @@ namespace Aplikace.Tridy
         // Maximální teplota (např. okolí) v °C
         public int Teplota { get; set; }
         public string Výrobce { get; set; }
+
+        //Odkaz na datasheet nebo další informace
+        public string Data { get; set; }   
+
     }
 }

@@ -14,7 +14,7 @@ namespace Aplikace.Excel
     public class ExcelLoad
     {
 
-        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List<List<string>> z a vytvořejí JSON</summary>
+        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List<List<string>> a vytvoření JSON</summary>
         public static List<List<string>> LoadDataExcel(string cesta, int[] Sloupce, string Tabulka , int Radek)
         {
             Console.Write("\nProbíná hačítání dat ... ");
@@ -25,23 +25,23 @@ namespace Aplikace.Excel
             //string Adresar = Path.GetDirectoryName(cesta);
             //string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
             string json = Path.ChangeExtension(cesta, ".json");
-            if (File.Exists(json))
-            {
-                return Soubory.LoadJsonList<List<string>>(json);
-                //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-            }
-            else
-            {
+            //if (File.Exists(json))
+            //{
+            //    return Soubory.LoadJsonList<List<string>>(json);
+            //    //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
+            //}
+            //else
+            //{
                 var ExcelApp = new ExcelApp();
                 var Pole = ExcelApp.ExelLoadTable(cesta, Tabulka, Radek, Sloupce);
                 //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 if(Pole.Count>1) Pole.SaveJsonList(json);
                 Console.WriteLine($"načeno {Pole.Count} záznamů.");
                 return Pole;
-            }
+            //}
         }
 
-        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List List string z a vytvořejí JSON</summary>
+        /// <summary> Načtení dokumentu Excel do třídy List Zařízení </summary>
         public static List<Zarizeni> DataExcel(string cesta, string Tabulka, int Radek)
         {
             Console.WriteLine("Probíná hačítání dat ... ");
@@ -87,7 +87,7 @@ namespace Aplikace.Excel
             public string FilePath { get; set; } = "";
             public string SheetName { get; set; } = "";
             public int StartRow { get; set; } = 8;
-            public Dictionary<string, int> PropertyToColumn { get; set; } = new Dictionary<string, int>();
+            public Dictionary<string, int> PropertyToColumn { get; set; } = [];
         }
 
         private static List<ColumnMappingConfig> LoadAllMappings()
@@ -232,7 +232,7 @@ namespace Aplikace.Excel
                 {
                     form.Text = "Přiřazení sloupců Excelu k vlastnostem";
                     form.Width = 1000;
-                    form.Height = 700;
+                    form.Height = 900;
                     form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
                     form.MaximizeBox = false;
                     form.MinimizeBox = false;
@@ -244,7 +244,7 @@ namespace Aplikace.Excel
                     var panelLeft = new System.Windows.Forms.Panel()
                     {
                         Location = new System.Drawing.Point(10, 10),
-                        Size = new System.Drawing.Size(430, 640),
+                        Size = new System.Drawing.Size(430, 800),
                         BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle,
                         BackColor = System.Drawing.Color.White
                     };
@@ -253,7 +253,7 @@ namespace Aplikace.Excel
                     var panelRight = new System.Windows.Forms.Panel()
                     {
                         Location = new System.Drawing.Point(450, 10),
-                        Size = new System.Drawing.Size(525, 640),
+                        Size = new System.Drawing.Size(525, 800),
                         BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle,
                         BackColor = System.Drawing.Color.White
                     };
@@ -334,7 +334,9 @@ namespace Aplikace.Excel
                         "Popis",
                         "Menic",
                         "Prikon",
-                        "BalenaJednotka"
+                        "BalenaJednotka",
+                        "Pid",
+                        "Pozice"
                     };
 
                     int startY = 175;
@@ -454,6 +456,8 @@ namespace Aplikace.Excel
                                     else if (propLower == "menic" && (colLower.Contains("měnič") || colLower.Contains("menic") || colLower.Contains("vsd") || colLower.Contains("frekv"))) matches = true;
                                     else if (propLower == "prikon" && (colLower.Contains("příkon") || colLower.Contains("prikon") || colLower.Contains("výkon") || colLower.Contains("kw") || colLower.Contains("hp"))) matches = true;
                                     else if (propLower == "balenajednotka" && (colLower.Contains("balená") || colLower.Contains("balena") || colLower.Contains("jednotka") || colLower.Contains("package") || colLower.Contains("pack"))) matches = true;
+                                    else if (propLower == "pid" && (colLower.Contains("pid") || colLower.Contains("schema") || colLower.Contains("proces") )) matches = true;
+                                    else if (propLower == "pozice" && (colLower.Contains("misto") || colLower.Contains("místo") || colLower.Contains("position"))) matches = true;
 
                                     if (matches)
                                     {
@@ -479,7 +483,7 @@ namespace Aplikace.Excel
                     var buttonOk = new System.Windows.Forms.Button()
                     {
                         Text = "Potvrdit a uložit",
-                        Location = new System.Drawing.Point(200, 585),
+                        Location = new System.Drawing.Point(200, 640),
                         Size = new System.Drawing.Size(140, 35),
                         DialogResult = System.Windows.Forms.DialogResult.OK,
                         BackColor = System.Drawing.Color.FromArgb(40, 167, 69),
@@ -493,7 +497,7 @@ namespace Aplikace.Excel
                     var buttonCancel = new System.Windows.Forms.Button()
                     {
                         Text = "Storno",
-                        Location = new System.Drawing.Point(350, 585),
+                        Location = new System.Drawing.Point(350, 640),
                         Size = new System.Drawing.Size(70, 35),
                         DialogResult = System.Windows.Forms.DialogResult.Cancel,
                         BackColor = System.Drawing.Color.FromArgb(108, 117, 125),

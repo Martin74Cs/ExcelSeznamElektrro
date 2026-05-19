@@ -15,17 +15,11 @@ namespace Aplikace.Excel
     /// Obalovací třída (Adapter) pro ClosedXML list (IXLWorksheet), která simuluje chování původního COM rozhraní Microsoft.Office.Interop.Excel.Worksheet.
     /// Zajišťuje zpětnou kompatibilitu a umožňuje volání vlastností jako Range, Cells a Name bez změny původního kódu.
     /// </summary>
-    public class ExcelWorksheetWrapper
-    {
-        private readonly IXLWorksheet _ws;
-
-        /// <summary>
-        /// Inicializuje novou instanci třídy ExcelWorksheetWrapper obalující zadaný ClosedXML list.
-        /// </summary>
-        public ExcelWorksheetWrapper(IXLWorksheet ws)
-        {
-            _ws = ws;
-        }
+    /// <remarks>
+    /// Inicializuje novou instanci třídy ExcelWorksheetWrapper obalující zadaný ClosedXML list.
+    /// </remarks>
+    public class ExcelWorksheetWrapper(IXLWorksheet ws) {
+        private readonly IXLWorksheet _ws = ws;
 
         /// <summary>
         /// Získá podkladový objekt ClosedXML IXLWorksheet.
@@ -40,12 +34,12 @@ namespace Aplikace.Excel
         /// <summary>
         /// Zprostředkuje přístup k rozsahům buněk přes Interop-like syntaxi Range["A1"].
         /// </summary>
-        public ExcelRangeWrapper Range => new ExcelRangeWrapper(_ws);
+        public ExcelRangeWrapper Range => new(_ws);
 
         /// <summary>
         /// Zprostředkuje přístup k buňkám přes indexovaný přístup Cells[radek, sloupec].
         /// </summary>
-        public ExcelCellsWrapper Cells => new ExcelCellsWrapper(_ws);
+        public ExcelCellsWrapper Cells => new(_ws);
 
         /// <summary>
         /// Aktivuje aktuální list (v ClosedXML je to prázdná operace, zachovaná pro kompatibilitu).
@@ -60,24 +54,18 @@ namespace Aplikace.Excel
     /// Zajišťuje indexovaný přístup k buňkám a rozsahům pomocí textové adresy (např. Range["A1"]) 
     /// nebo dvou rohových buněk (např. Range[cell1, cell2]).
     /// </summary>
-    public class ExcelRangeWrapper
-    {
-        private readonly IXLWorksheet _ws;
-
-        /// <summary>
-        /// Inicializuje novou instanci indexeru rozsahů.
-        /// </summary>
-        public ExcelRangeWrapper(IXLWorksheet ws)
-        {
-            _ws = ws;
-        }
+    /// <remarks>
+    /// Inicializuje novou instanci indexeru rozsahů.
+    /// </remarks>
+    public class ExcelRangeWrapper(IXLWorksheet ws) {
+        private readonly IXLWorksheet _ws = ws;
 
         /// <summary>
         /// Získá nebo nastaví buňku na základě textové adresy (např. Range["A2"]).
         /// </summary>
         public ExcelCellWrapper this[string address]
         {
-            get => new ExcelCellWrapper(_ws.Cell(address));
+            get => new(_ws.Cell(address));
             set
             {
                 var cell = _ws.Cell(address);
@@ -176,35 +164,35 @@ namespace Aplikace.Excel
             {
                 if (value == null)
                 {
-                    if (_cell != null) _cell.Clear();
+                    _cell?.Clear();
                     return;
                 }
 
                 if (value is string s)
                 {
                     if (_cell != null) _cell.Value = s;
-                    else if (_range != null) _range.Value = s;
+                    else _range?.Value = s;
                 }
                 else if (value is double d)
                 {
                     if (_cell != null) _cell.Value = d;
-                    else if (_range != null) _range.Value = d;
+                    else _range?.Value = d;
                 }
                 else if (value is int val)
                 {
                     if (_cell != null) _cell.Value = val;
-                    else if (_range != null) _range.Value = val;
+                    else _range?.Value = val;
                 }
                 else if (value is bool b)
                 {
                     if (_cell != null) _cell.Value = b;
-                    else if (_range != null) _range.Value = b;
+                    else _range?.Value = b;
                 }
                 else
                 {
                     string str = value.ToString() ?? "";
                     if (_cell != null) _cell.Value = str;
-                    else if (_range != null) _range.Value = str;
+                    else _range?.Value = str;
                 }
             }
         }
@@ -895,7 +883,7 @@ namespace Aplikace.Excel
                             cell.Value = radek.Tag;
                             break;
                         case 2:
-                            cell.Value = radek.PID;
+                            cell.Value = radek.Pid;
                             break;
                         case 3:
                             cell.Value = radek.Popis;

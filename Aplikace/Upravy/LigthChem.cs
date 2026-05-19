@@ -674,3 +674,4 @@ namespace Aplikace.Upravy
         }
     }
 }
+

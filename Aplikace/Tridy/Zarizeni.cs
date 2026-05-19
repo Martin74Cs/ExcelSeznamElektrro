@@ -26,6 +26,8 @@ namespace Aplikace.Tridy
         private string tagStroj = string.Empty;
         private string tag = string.Empty;
         private string predmet = string.Empty;
+        private string pid = string.Empty;
+        private string pozice = string.Empty;
         private string prikon = string.Empty;
         private string prikonStroj = string.Empty;
         private string balenaJednotka = string.Empty;
@@ -34,7 +36,6 @@ namespace Aplikace.Tridy
         private string proud = string.Empty;
         private string prurezMM2 = string.Empty;
         private int pocetKabelu = 1; //string.Empty;
-        private string pid = string.Empty;
         private int pocet;
         private string popis = string.Empty;
         private string aWG = string.Empty;
@@ -91,8 +92,10 @@ namespace Aplikace.Tridy
         public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
 
         [Display(Name = "Technologické schéma")]
-        public string PID { get => pid; set => SetProperty(ref pid, value); }
+        public string Pid { get => pid; set => SetProperty(ref pid, value); }
         public int Pocet { get => pocet; set => SetProperty(ref pocet, value); }
+
+        public string Pozice { get => pozice; set => SetProperty(ref pozice, value); }
 
         /// <summary>Popis zařízení</summary>
         [Display(Name = "Jméno zařízení")]

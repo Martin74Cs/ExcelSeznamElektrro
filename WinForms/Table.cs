@@ -40,7 +40,7 @@ namespace WinForms
             Rozvadec.Add("All");
             comboBox3.DataSource = Rozvadec; comboBox3.SelectedIndex = Rozvadec.Count - 1;
 
-            var PID = Pole.Select(z => z.PID).Distinct().OrderBy(x => x).ToList();
+            var PID = Pole.Select(z => z.Pid).Distinct().OrderBy(x => x).ToList();
             PID.Add("All");
             comboBox4Pid.DataSource = PID; comboBox4Pid.SelectedIndex = PID.Count - 1;
         }
@@ -446,7 +446,7 @@ namespace WinForms
                 filtrovanaData = filtrovanaData.Where(z => z.RozvadecOznačení == comboBox3.Text);
 
             if (comboBox4Pid.Text != "All")
-                filtrovanaData = filtrovanaData.Where(z => z.PID == comboBox4Pid.Text);
+                filtrovanaData = filtrovanaData.Where(z => z.Pid == comboBox4Pid.Text);
 
             dataGridView1.DataSource = new SortableBindingList<Zarizeni>([.. filtrovanaData]);
         }
