@@ -266,8 +266,16 @@ namespace WinForms
             //Otevřít Json Stroje
 
             //string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
-            var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
+            //string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
+            var cesta1 = InformaceProjektu.Create().BasePath;
+            if(!File.Exists(cesta1)) { 
+                cesta1 = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json");
+                if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
+                    Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje."); return; }
+            }
+            //var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
+            var Data = Soubory.LoadJsonList<Zarizeni>(cesta1);
+            InformaceProjektu.Create().BasePath = cesta1;
 
             var table = new Table(Data);
             SetTable(table);

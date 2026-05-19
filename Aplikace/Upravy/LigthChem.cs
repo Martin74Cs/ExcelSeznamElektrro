@@ -33,6 +33,7 @@ namespace Aplikace.Upravy
 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             Stara.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
+            InformaceProjektu.Create().BasePath = cesta1;
         }
 
         public static List<Zarizeni> DwgToJson(string cesta1)
