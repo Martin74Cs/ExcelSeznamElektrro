@@ -22,7 +22,7 @@ namespace Aplikace.Upravy
         public static void StrojniToJsonCsv()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů (např. N92120_Seznam_stroju_zarizeni_250311_250407.xlsx)...");
+            Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů (např. Seznam_stroju_zarizeni.xlsx)...");
             Console.ResetColor();
             string? cesta1 = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
             if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
