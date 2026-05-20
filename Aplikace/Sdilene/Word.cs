@@ -253,6 +253,7 @@ namespace Aplikace.Sdilene
             foreach (var prop in props)
             {
                 if (prop.Name == "Item") continue;
+
                 var displayAttr = prop.GetCustomAttribute<DisplayAttribute>();
                 string displayName = displayAttr?.Name ?? prop.Name;
 

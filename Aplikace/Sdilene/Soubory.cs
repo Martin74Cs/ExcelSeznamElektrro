@@ -351,18 +351,37 @@ namespace Aplikace.Sdilene
             sb.AppendLine($"<h1>{nadpis}</h1>");
             sb.AppendLine("<table><thead><tr>");
 
+            string[] start = [
+                "Radek",
+                "Tag",
+                "Pocet",
+                "Popis",
+                "Menic",
+                "Prikon",
+                "BalenaJednotka",
+                "Pid",
+                "Pozice",
+                "Poznamka"
+            ];
+
             // Hlavička tabulky
             foreach(var prop in props) {
+                if(!start.Contains(prop.Name)) continue;
                 sb.AppendLine($"<th>{prop.Name}</th>");
             }
 
             sb.AppendLine("</tr></thead><tbody>");
 
+
+
             // Řádky tabulky
             foreach(var item in Pole) {
                 sb.AppendLine("<tr>");
                 foreach(var prop in props) {
+                    //to co se má vynechat u html.
                     if(prop.Name == "Item") continue;
+                    if(!start.Contains(prop.Name)) continue;
+
                     object value = prop.GetValue(item, null) ?? "";
                     sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
                 }

@@ -67,6 +67,8 @@ namespace WinForms
             button14 = new Button();
             label4 = new Label();
             button5 = new Button();
+            nastaveniToolStripMenuItem = new ToolStripMenuItem();
+            cestyToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -217,7 +219,7 @@ namespace WinForms
             // 
             menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, místnostiToolStripMenuItem, pomocToolStripMenuItem, atributyToolStripMenuItem, rozvaděčToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, místnostiToolStripMenuItem, pomocToolStripMenuItem, atributyToolStripMenuItem, rozvaděčToolStripMenuItem, nastaveniToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 3, 0, 3);
@@ -263,14 +265,14 @@ namespace WinForms
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(219, 32);
+            místnostiToolStripMenuItem1.Size = new Size(224, 32);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // generovatToolStripMenuItem
             // 
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(219, 32);
+            generovatToolStripMenuItem.Size = new Size(224, 32);
             generovatToolStripMenuItem.Text = "Generovat ";
             generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
@@ -304,14 +306,14 @@ namespace WinForms
             // propojeniToolStripMenuItem
             // 
             propojeniToolStripMenuItem.Name = "propojeniToolStripMenuItem";
-            propojeniToolStripMenuItem.Size = new Size(223, 32);
+            propojeniToolStripMenuItem.Size = new Size(224, 32);
             propojeniToolStripMenuItem.Text = "Propojeni";
             propojeniToolStripMenuItem.Click += PropojeniToolStripMenuItem_Click;
             // 
             // příkonCelkemToolStripMenuItem
             // 
             příkonCelkemToolStripMenuItem.Name = "příkonCelkemToolStripMenuItem";
-            příkonCelkemToolStripMenuItem.Size = new Size(223, 32);
+            příkonCelkemToolStripMenuItem.Size = new Size(224, 32);
             příkonCelkemToolStripMenuItem.Text = "Příkon Celkem";
             příkonCelkemToolStripMenuItem.Click += PříkonCelkemToolStripMenuItem_Click;
             // 
@@ -461,6 +463,20 @@ namespace WinForms
             button5.UseVisualStyleBackColor = true;
             button5.Click += Button5_Click;
             // 
+            // nastaveniToolStripMenuItem
+            // 
+            nastaveniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cestyToolStripMenuItem });
+            nastaveniToolStripMenuItem.Name = "nastaveniToolStripMenuItem";
+            nastaveniToolStripMenuItem.Size = new Size(112, 32);
+            nastaveniToolStripMenuItem.Text = "Nastaveni";
+            // 
+            // cestyToolStripMenuItem
+            // 
+            cestyToolStripMenuItem.Name = "cestyToolStripMenuItem";
+            cestyToolStripMenuItem.Size = new Size(224, 32);
+            cestyToolStripMenuItem.Text = "Cesty";
+            cestyToolStripMenuItem.Click += cestyToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -542,5 +558,7 @@ namespace WinForms
         private Button button5;
         private ToolStripMenuItem příkonCelkemToolStripMenuItem;
         private ToolStripMenuItem nastavSložkuProjektuToolStripMenuItem;
+        private ToolStripMenuItem nastaveniToolStripMenuItem;
+        private ToolStripMenuItem cestyToolStripMenuItem;
     }
 }

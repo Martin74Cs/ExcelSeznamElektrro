@@ -39,7 +39,7 @@ namespace Aplikace.Tridy {
         public string SouborStrojeJson { get; set; } = string.Empty;
 
         [Display(Name = "Elektro")]
-        public string SouborElektroJson { get; set; } = string.Empty;
+        public string SouborElektroJson = Path.Combine(Adresar, "Elektro.json");
 
         public string Místnost { get; set; } = string.Empty;
         public string Projekt { get; set; } = string.Empty;
@@ -47,7 +47,7 @@ namespace Aplikace.Tridy {
         public string Poznámka { get; set; } = string.Empty;
         public DateTime Datum { get; set; } = DateTime.Now;
 
-        private static readonly string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        public static readonly string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         private static string Adresar => Path.Combine(appData, "Elektro");
         private static string Soubor => Path.Combine(Adresar, "data.txt");
         public static  Informace Create { 
