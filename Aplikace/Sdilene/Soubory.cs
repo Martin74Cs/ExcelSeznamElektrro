@@ -85,6 +85,10 @@ namespace Aplikace.Sdilene
             //var settings = new JsonSerializerSettings { Formatting = Formatting.Indented };
             string Json = JsonConvert.SerializeObject(values, Nastaveni());
             //MessageBox.Show(Json);
+            if (!File.Exists(cesta))            {
+                Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} neexistuje.");
+                return;
+            }    
             File.WriteAllText(cesta, Json);
             Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
             return;
@@ -99,6 +103,11 @@ namespace Aplikace.Sdilene
             //var settings = new JsonSerializerSettings { Formatting = Formatting.Indented };
             string Json = JsonConvert.SerializeObject(values, Nastaveni());
             //MessageBox.Show(Json);
+            if (!File.Exists(cesta))
+            {
+                Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} neexistuje.");
+                return;
+            }
             File.WriteAllText(cesta, Json);
             Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
             return;
@@ -145,8 +154,8 @@ namespace Aplikace.Sdilene
         public static void SaveXML<T>(this T Pole, string cesta) where T : new()
         {
             // Serializace do souboru
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (FileStream fs = new FileStream(cesta, FileMode.Create))
+            XmlSerializer serializer = new(typeof(T));
+            using (FileStream fs = new(cesta, FileMode.Create))
             {
                 serializer.Serialize(fs, Pole);
             }
@@ -244,7 +253,7 @@ namespace Aplikace.Sdilene
             //ruzné varienty vytvoření dokumentu
             //new Word().SaveDocx(Pole, cesta);
             //new Word().SaveDocxList(Pole, cesta);
-            new Word().SaveDocxListClass(Pole, cesta);
+            Word.SaveDocxListClass(Pole, cesta);
         }
 
         public static List<T> LoadFromCsv<T>(string file ) where T : new()
