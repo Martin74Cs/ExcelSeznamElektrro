@@ -337,7 +337,7 @@ namespace WinForms
             Console.WriteLine($"Příkon FAZE 2: {Topeni.Where(x => x.Etapa == "FAZE 2").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
         }
 
-        private void nastavSložkuProjektuToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NastavSložkuProjektuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             //string file = Path.Combine(appData, "ElektroData", "data.txt");
@@ -355,9 +355,11 @@ namespace WinForms
             //};
             //var dialog = openFileDialog.ShowDialog();
 
-            FolderBrowserDialog Folder = new FolderBrowserDialog();
-            Folder.Description = "Vyber složku s projektem";
-            Folder.UseDescriptionForTitle = true; // .NET 6+ moderní styl
+            FolderBrowserDialog Folder = new()
+            {
+                Description = "Vyber složku s projektem",
+                UseDescriptionForTitle = true // .NET 6+ moderní styl
+            };
             if (Folder.ShowDialog() == DialogResult.OK) {
                 Informace informace = new()
                 {

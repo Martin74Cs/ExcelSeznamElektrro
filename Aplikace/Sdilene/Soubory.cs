@@ -122,25 +122,23 @@ namespace Aplikace.Sdilene
             string? selectedPath = null;
             var thread = new System.Threading.Thread(() =>
             {
-                using (var dialog = new System.Windows.Forms.OpenFileDialog())
+                using var dialog = new System.Windows.Forms.OpenFileDialog();
+                dialog.Filter = filter;
+                if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
                 {
-                    dialog.Filter = filter;
-                    if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
+                    dialog.InitialDirectory = defaultPath;
+                }
+                else
+                {
+                    var info = Aplikace.Tridy.InformaceProjektu.Create();
+                    if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
                     {
-                        dialog.InitialDirectory = defaultPath;
+                        dialog.InitialDirectory = info.BasePath;
                     }
-                    else
-                    {
-                        var info = Aplikace.Tridy.InformaceProjektu.Create();
-                        if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
-                        {
-                            dialog.InitialDirectory = info.BasePath;
-                        }
-                    }
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        selectedPath = dialog.FileName;
-                    }
+                }
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    selectedPath = dialog.FileName;
                 }
             });
             thread.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -157,25 +155,23 @@ namespace Aplikace.Sdilene
             string? selectedPath = null;
             var thread = new System.Threading.Thread(() =>
             {
-                using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+                using var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                dialog.Description = description;
+                if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
                 {
-                    dialog.Description = description;
-                    if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
+                    dialog.SelectedPath = defaultPath;
+                }
+                else
+                {
+                    var info = Aplikace.Tridy.InformaceProjektu.Create();
+                    if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
                     {
-                        dialog.SelectedPath = defaultPath;
+                        dialog.SelectedPath = info.BasePath;
                     }
-                    else
-                    {
-                        var info = Aplikace.Tridy.InformaceProjektu.Create();
-                        if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
-                        {
-                            dialog.SelectedPath = info.BasePath;
-                        }
-                    }
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        selectedPath = dialog.SelectedPath;
-                    }
+                }
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    selectedPath = dialog.SelectedPath;
                 }
             });
             thread.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -192,26 +188,24 @@ namespace Aplikace.Sdilene
             string? selectedPath = null;
             var thread = new System.Threading.Thread(() =>
             {
-                using (var dialog = new System.Windows.Forms.SaveFileDialog())
+                using var dialog = new System.Windows.Forms.SaveFileDialog();
+                dialog.Filter = filter;
+                dialog.FileName = defaultName;
+                if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
                 {
-                    dialog.Filter = filter;
-                    dialog.FileName = defaultName;
-                    if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
+                    dialog.InitialDirectory = defaultPath;
+                }
+                else
+                {
+                    var info = Aplikace.Tridy.InformaceProjektu.Create();
+                    if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
                     {
-                        dialog.InitialDirectory = defaultPath;
+                        dialog.InitialDirectory = info.BasePath;
                     }
-                    else
-                    {
-                        var info = Aplikace.Tridy.InformaceProjektu.Create();
-                        if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
-                        {
-                            dialog.InitialDirectory = info.BasePath;
-                        }
-                    }
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        selectedPath = dialog.FileName;
-                    }
+                }
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    selectedPath = dialog.FileName;
                 }
             });
             thread.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -285,8 +279,8 @@ namespace Aplikace.Sdilene
         {
             if (!CanSaveFile(cesta)) return;
             // Serializace do souboru
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (FileStream fs = new FileStream(cesta, FileMode.Create))
+            XmlSerializer serializer = new(typeof(T));
+            using (FileStream fs = new(cesta, FileMode.Create))
             {
                 serializer.Serialize(fs, Pole);
             }

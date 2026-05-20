@@ -22,7 +22,7 @@ namespace Aplikace.Upravy
         public static void StrojniToJsonCsv()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů (např. N92120_Seznam_stroju_zarizeni_250311_250407.xlsx)...");
+            Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů (např. Seznam_stroju_zarizeni.xlsx)...");
             Console.ResetColor();
             string? cesta1 = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
             if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
@@ -258,13 +258,16 @@ namespace Aplikace.Upravy
             Stara.Where(x => x.Druh == "Rozvadeč").ToList()
                         .ForEach(x => x.Druh = "Distributor");
 
-            Stara.Where(x => x.Typ.ToUpper() == "PŘÍVOD").ToList()
+            //Stara.Where(x => x.Typ.ToUpper() == "PŘÍVOD").ToList()
+            Stara.Where(x => x.Typ.Equals("PŘÍVOD", StringComparison.CurrentCultureIgnoreCase)).ToList()
                         .ForEach(x => x.Typ = "Supply");
 
-            Stara.Where(x => x.Typ == "Spojka").ToList()
+            //Stara.Where(x => x.Typ == "Spojka").ToList()
+            Stara.Where(x => x.Typ.Equals("Spojka", StringComparison.CurrentCultureIgnoreCase)).ToList()
                         .ForEach(x => x.Typ = "Coupler");
 
-            Stara.Where(x => x.Typ == "ČERPADLO").ToList()
+            //Stara.Where(x => x.Typ == "ČERPADLO").ToList()
+            Stara.Where(x => x.Typ.Equals("ČERPADLO", StringComparison.CurrentCultureIgnoreCase)).ToList()
                         .ForEach(x => x.Typ = "Pump");
 
             Stara.Where(x => x.Typ == "OKLEP").ToList()

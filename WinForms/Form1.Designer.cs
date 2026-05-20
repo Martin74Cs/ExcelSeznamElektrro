@@ -443,7 +443,7 @@ namespace WinForms
             nastavSložkuProjektuToolStripMenuItem.Name = "nastavSložkuProjektuToolStripMenuItem";
             nastavSložkuProjektuToolStripMenuItem.Size = new Size(238, 26);
             nastavSložkuProjektuToolStripMenuItem.Text = "Nastav složku projektu";
-            nastavSložkuProjektuToolStripMenuItem.Click += nastavSložkuProjektuToolStripMenuItem_Click;
+            nastavSložkuProjektuToolStripMenuItem.Click += NastavSložkuProjektuToolStripMenuItem_Click;
             // 
             // Form1
             // 
