@@ -338,7 +338,7 @@ namespace Aplikace.Excel
             int colCount = ws.LastColumnUsed()?.ColumnNumber() ?? 0;
             Console.WriteLine($"[Rows.Col]=[{rowCount},{colCount}]");
 
-            for (int i = Radek; i <= rowCount; i++)
+            for (int i = Radek+1; i <= rowCount; i++)
             {
                 var jeden = new Zarizeni();
                 bool Prerusit = true;
@@ -359,7 +359,7 @@ namespace Aplikace.Excel
                         Console.WriteLine("Buňka je součástí sloučených buněk.");
                         break;
                     }
-                    string xxx = cell.GetString().Replace('\n', ' ');
+                    string xxx = cell.GetString().Replace('\n', ' ').Replace('\t', ' ');
 
                     if (string.IsNullOrEmpty(xxx) || xxx == "0")
                         continue;
@@ -374,7 +374,9 @@ namespace Aplikace.Excel
                             jeden[dir[j]] = xxx;
                     else
                         //zdroj není int, vloží se jako string
-                        jeden[dir[j]] = xxx;
+                        //kontrla zda je ydroj string
+                        if (jeden[dir[j]].GetType() == typeof(string))
+                            jeden[dir[j]] = xxx;
                 }
                 
 

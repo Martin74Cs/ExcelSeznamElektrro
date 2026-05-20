@@ -24,16 +24,21 @@ namespace Aplikace.Upravy
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů (např. Seznam_stroju_zarizeni.xlsx)...");
             Console.ResetColor();
-            string? cesta1 = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
-            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
+            using var Cesty = Informace.Create;
+            Cesty.SouborStrojeXls = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
+            if (string.IsNullOrEmpty(Cesty.SouborStrojeXls) || !File.Exists(Cesty.SouborStrojeXls)) {
                 Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
                 return;
             }
-            var Stara = ExcelLoad.DataExcelInteractive(cesta1, "Seznam", 5);
+            var Xls = Path.ChangeExtension(Cesty.SouborStrojeXls, ".json");
+            Cesty.SouborStrojeJson = Xls;
 
-            Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
-            Stara.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
+            var Stara = ExcelLoad.DataExcelInteractive(Cesty.SouborStrojeXls, "Seznam", 5);
 
+            Stara.SaveJsonList(Xls);
+
+            //Jen lepší přehled dat.
+            Stara.SaveToCsv(Path.ChangeExtension(Cesty.SouborStrojeXls, ".csv"));
         }
 
         public static List<Zarizeni> DwgToJson(string cesta1)

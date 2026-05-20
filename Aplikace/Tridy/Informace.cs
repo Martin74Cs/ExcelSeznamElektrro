@@ -2,6 +2,7 @@ using Aplikace.Sdilene;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -27,7 +28,19 @@ namespace Aplikace.Tridy {
 
         private static Informace? Info = null ;
         private static List<KeyValuePair<string, string>> Data = [];
+        
+        [Display(Name = "Základní složka projektu")]
         public string BasePath { get; set; } = string.Empty;
+
+        [Display(Name = "Základní soubor strojnů")]
+        public string SouborStrojeXls { get; set; } = string.Empty;
+
+        [Display(Name = "Stroje.json")]
+        public string SouborStrojeJson { get; set; } = string.Empty;
+
+        [Display(Name = "Elektro")]
+        public string SouborElektroJson { get; set; } = string.Empty;
+
         public string Místnost { get; set; } = string.Empty;
         public string Projekt { get; set; } = string.Empty;
         public string Název { get; set; } = string.Empty;
@@ -78,7 +91,8 @@ namespace Aplikace.Tridy {
             }
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Soubory.Nastaveni());
             File.WriteAllText(Soubor, json);
-            Create = this;
+            //Create = this;
+            Console.WriteLine("Cesty k souborům aktualizovány");
         }
 
         private static void Nacti()
