@@ -22,20 +22,18 @@ public class Oez
             MissingFieldFound = null
         };
 
-        using (var reader = new StreamReader(filePath))
-        using (var csv = new CsvReader(reader, config))
+        using var reader = new StreamReader(filePath);
+        using var csv = new CsvReader(reader, config);
+        csv.Context.RegisterClassMap<ProductMap>();
+        var products = csv.GetRecords<Product>().ToList();
+
+        // Parsování Popis
+        foreach (var product in products)
         {
-            csv.Context.RegisterClassMap<ProductMap>();
-            var products = csv.GetRecords<Product>().ToList();
-
-            // Parsování Popis
-            foreach (var product in products)
-            {
-                ParseProductDescription(product);
-            }
-
-            return products;
+            ParseProductDescription(product);
         }
+
+        return products;
     }
 
     private static void ParseProductDescription(Product product)
@@ -183,8 +181,8 @@ public class Priklad
 {
      public static List<Product> FindCircuitBreakers(List<Product> products, 
         double? currentInA = null, 
-        string voltageUe = null, 
-        string characteristic = null, 
+        string voltageUe = "400", 
+        string characteristic = "C", 
         string type = null) {
         return [.. products
             .Where(p => p.Jmeno.Contains("Jistič") || p.Jmeno.Contains("Jističochránič"))

@@ -44,7 +44,7 @@ namespace Aplikace.Excel
         /// <summary>
         /// Aktivuje aktuální list (v ClosedXML je to prázdná operace, zachovaná pro kompatibilitu).
         /// </summary>
-        public void Activate()
+        public static void Activate()
         {
             // Dummy implementace pro zachování kompatibility s Interopem
         }
@@ -83,9 +83,8 @@ namespace Aplikace.Excel
         {
             get
             {
-                var c1 = cell1 as ExcelCellWrapper;
-                var c2 = cell2 as ExcelCellWrapper;
-                if (c1 != null && c2 != null)
+                //porovnání vzorů
+                if (cell1 is ExcelCellWrapper c1 && cell2 is ExcelCellWrapper c2)
                 {
                     return new ExcelCellWrapper(_ws.Range(c1.Cell, c2.Cell));
                 }
@@ -366,19 +365,16 @@ namespace Aplikace.Excel
                         continue;
 
                     //zdroj je int
-                    if (int.TryParse(xxx, out int intVal))
-                        //vložení je int
+                    if (int.TryParse(xxx, out int intVal) )
+                        //proměná pro vložení je int
                         if (jeden[dir[j]].GetType() == typeof(int))
                             jeden[dir[j]] = intVal;
                         else
+                            //proměná není int ale zdroj je int, vloží se jako string
                             jeden[dir[j]] = xxx;
-                    // pokud není int a int tak nic.
                     else
-                        //if (jeden[dir[j]].GetType() == typeof(int))
-                            jeden[dir[j]] = xxx;
-                        //else
-                            //musí být číslo
-                            //jeden[dir[j]] = -1;
+                        //zdroj není int, vloží se jako string
+                        jeden[dir[j]] = xxx;
                 }
                 
 
