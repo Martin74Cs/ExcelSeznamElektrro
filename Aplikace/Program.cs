@@ -20,7 +20,7 @@ AppDomain.CurrentDomain.ProcessExit += (s, e) => {
 bool konec = false;
 while (!konec)
 {
-    var currentInfo = InformaceProjektu.Create();
+    using var currentInfo = Informace.Create;
     string currentPath = string.IsNullOrEmpty(currentInfo.BasePath) ? "[NENASTAVENO]" : currentInfo.BasePath;
 
     Console.Clear();
@@ -45,6 +45,9 @@ while (!konec)
     Console.WriteLine("0. Konec");
     Console.WriteLine("------------------------------------------------------------------");
     Console.Write("Vyberte možnost [0-6]: ");
+
+    //Nastavení cesty 
+    //Data.Instance.Cesta = currentPath;
 
     string? volba = Console.ReadLine();
     Console.WriteLine();
@@ -105,9 +108,9 @@ while (!konec)
                 string? novaCesta = Soubory.ShowFolderBrowserDialog("Vyberte hlavní složku projektu", currentPath);
                 if (!string.IsNullOrEmpty(novaCesta))
                 {
-                    var info = InformaceProjektu.Create();
+                    var info = Informace.Create;
                     info.BasePath = novaCesta;
-                    InformaceProjektu.Ulozit(info);
+                    info.Ulozit();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Projektová složka byla úspěšně změněna na: {novaCesta}");
                     Console.ResetColor();
@@ -122,6 +125,7 @@ while (!konec)
 
             case "0":
                 konec = true;
+                //Informace.Create.Ulozit();
                 Console.WriteLine("Ukončuji aplikaci. Na shledanou!");
                 break;
 

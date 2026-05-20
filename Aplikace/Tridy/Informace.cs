@@ -1,58 +1,106 @@
 using Aplikace.Sdilene;
+using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aplikace.Tridy
-{
-    public class Informace
-    {
+namespace Aplikace.Tridy {
+    //public class Pole {
+    //    public string BasePath { get; set; } = string.Empty;
+    //    public string Místnost { get; set; } = string.Empty;
+    //    public string Projekt { get; set; } = string.Empty;
+    //    public string Název { get; set; } = string.Empty;
+    //    public string Poznámka { get; set; } = string.Empty;
+    //    public DateTime Datum { get; set; } = DateTime.Now;
+    //}
+
+    //Jedná se o singleton, který uchovává informace o aktuálním projektu a umožňuje jejich načítání a ukládání do souboru v AppData
+    public class Informace : IDisposable {
+
+        //skrýtí konstruktoru, aby nebylo možné vytvořit další instance třídy
+        private Informace() { }
+
+        private static Informace? Info = null ;
+        private static List<KeyValuePair<string, string>> Data = [];
         public string BasePath { get; set; } = string.Empty;
         public string Místnost { get; set; } = string.Empty;
         public string Projekt { get; set; } = string.Empty;
         public string Název { get; set; } = string.Empty;
         public string Poznámka { get; set; } = string.Empty;
         public DateTime Datum { get; set; } = DateTime.Now;
-    }
 
-    public class InformaceProjektu
-    {
-        private static Informace informace;
-        private InformaceProjektu() { }
+        private static readonly string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static string Adresar => Path.Combine(appData, "Elektro");
+        private static string Soubor => Path.Combine(Adresar, "data.txt");
+        public static  Informace Create { 
+            get
+            {
+                if (Info == null)
+                {
+                    //informace = new Informace();
+                    if(File.Exists(Informace.Soubor)) {
+                        Nacti();
+                    }
+                    else
+                        Info = new();
+                }
+                return Info!;
+            }
 
-        public static Informace Create() {
-            
-            //if (string.IsNullOrEmpty(informace.BasePath))
-            //{ 
-                //informace = new Informace();
-                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string file = Path.Combine(appData, "Elektro", "data.txt");
-                if (File.Exists(file)) {
-                    informace = Soubory.LoadJson<Informace>(file);
-                }
-                else {
-                    informace = new Informace();
-                }
-            //}
-            return informace;
+            private set;
         }
 
-        public static void Ulozit(Informace info)
-        {
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string dir = Path.Combine(appData, "Elektro");
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
+        public static void Add(string key, string value) {
+            var existing = Data.FirstOrDefault(kv => kv.Key == key);
+            if(!existing.Equals(default(KeyValuePair<string, string>))) {
+                Data.Remove(existing);
             }
-            string file = Path.Combine(dir, "data.txt");
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(info, Soubory.Nastaveni());
-            File.WriteAllText(file, json);
-            informace = info;
+            Data.Add(new KeyValuePair<string, string>(key, value));
+        }
+
+        public static string? Get(string key) {
+            var existing = Data.FirstOrDefault(kv => kv.Key == key);
+            if(!existing.Equals(default(KeyValuePair<string, string>))) {
+                return existing.Value;
+            }
+            return null;
+        }
+
+        public void Ulozit() {
+
+            if(!Directory.Exists(Adresar)) {
+                Directory.CreateDirectory(Adresar);
+            }
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Soubory.Nastaveni());
+            File.WriteAllText(Soubor, json);
+            Create = this;
+        }
+
+        private static void Nacti()
+        {
+            if (!System.IO.File.Exists(Soubor)) return;
+            string jsonString = System.IO.File.ReadAllText(Soubor);
+            Info = Newtonsoft.Json.JsonConvert.DeserializeObject<Informace>(jsonString, Soubory.Nastaveni()) ?? new();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Uložení jen při explicitním volání Dispose
+                Ulozit();
+            }
         }
     }
 

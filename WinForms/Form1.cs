@@ -267,7 +267,7 @@ namespace WinForms
 
             //string cesta1 = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
             //string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
-            var cesta1 = InformaceProjektu.Create().BasePath;
+            var cesta1 = Informace.Create.BasePath;
             if(!File.Exists(cesta1)) { 
                 cesta1 = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json");
                 if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
@@ -275,7 +275,7 @@ namespace WinForms
             }
             //var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
             var Data = Soubory.LoadJsonList<Zarizeni>(cesta1);
-            InformaceProjektu.Create().BasePath = cesta1;
+            Informace.Create.BasePath = cesta1;
 
             var table = new Table(Data);
             SetTable(table);
@@ -361,12 +361,9 @@ namespace WinForms
                 UseDescriptionForTitle = true // .NET 6+ moderní styl
             };
             if (Folder.ShowDialog() == DialogResult.OK) {
-                Informace informace = new()
-                {
-                    BasePath = Folder.SelectedPath,
-                };
-                Console.WriteLine($"Složka nastavena na {informace.BasePath}.");
-                informace.SaveJson(file);
+                using var info = Informace.Create;
+                info.BasePath =  Folder.SelectedPath;
+                Console.WriteLine($"Složka nastavena na {info.BasePath}.");              
             }
 
         }

@@ -47,7 +47,7 @@ namespace Aplikace.Sdilene
                 //else
                 //    return @"G:\Můj disk\Projekty\";
 
-                var Inforamce = InformaceProjektu.Create();
+                var Inforamce = Informace.Create;
                 return Inforamce.BasePath;
             }
         }

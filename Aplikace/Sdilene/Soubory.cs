@@ -130,7 +130,7 @@ namespace Aplikace.Sdilene
                 }
                 else
                 {
-                    var info = Aplikace.Tridy.InformaceProjektu.Create();
+                    var info = Informace.Create;
                     if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
                     {
                         dialog.InitialDirectory = info.BasePath;
@@ -163,7 +163,7 @@ namespace Aplikace.Sdilene
                 }
                 else
                 {
-                    var info = Aplikace.Tridy.InformaceProjektu.Create();
+                    var info = Informace.Create;
                     if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
                     {
                         dialog.SelectedPath = info.BasePath;
@@ -197,7 +197,7 @@ namespace Aplikace.Sdilene
                 }
                 else
                 {
-                    var info = Aplikace.Tridy.InformaceProjektu.Create();
+                    var info = Informace.Create;
                     if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
                     {
                         dialog.InitialDirectory = info.BasePath;

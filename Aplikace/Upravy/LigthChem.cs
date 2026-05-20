@@ -29,11 +29,11 @@ namespace Aplikace.Upravy
                 Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
                 return;
             }
-            var Stara = ExcelLoad.DataExcelInteractive(cesta1, "Seznam", 8);
+            var Stara = ExcelLoad.DataExcelInteractive(cesta1, "Seznam", 5);
 
             Stara.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             Stara.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
-            InformaceProjektu.Create().BasePath = cesta1;
+
         }
 
         public static List<Zarizeni> DwgToJson(string cesta1)
