@@ -38,6 +38,7 @@ namespace Aplikace.Tridy
         private int pocetKabelu = 1; //string.Empty;
         private int pocet;
         private string popis = string.Empty;
+        private string poznamka = string.Empty;
         private string aWG = string.Empty;
         private double delka = 100;
         private double delkaft;
@@ -100,6 +101,8 @@ namespace Aplikace.Tridy
         /// <summary>Popis zařízení</summary>
         [Display(Name = "Jméno zařízení")]
         public string Popis { get => popis; set => SetProperty(ref popis, value); }
+
+        public string Poznamka { get => poznamka; set => SetProperty(ref poznamka, value); }
 
         [Display(Name = "Příkon elektro")]
         [Jednotky("[kW]")]

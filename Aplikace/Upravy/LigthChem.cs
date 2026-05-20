@@ -258,13 +258,16 @@ namespace Aplikace.Upravy
             Stara.Where(x => x.Druh == "Rozvadeč").ToList()
                         .ForEach(x => x.Druh = "Distributor");
 
-            Stara.Where(x => x.Typ.ToUpper() == "PŘÍVOD").ToList()
+            //Stara.Where(x => x.Typ.ToUpper() == "PŘÍVOD").ToList()
+            Stara.Where(x => x.Typ.Equals("PŘÍVOD", StringComparison.CurrentCultureIgnoreCase)).ToList()
                         .ForEach(x => x.Typ = "Supply");
 
-            Stara.Where(x => x.Typ == "Spojka").ToList()
+            //Stara.Where(x => x.Typ == "Spojka").ToList()
+            Stara.Where(x => x.Typ.Equals("Spojka", StringComparison.CurrentCultureIgnoreCase)).ToList()
                         .ForEach(x => x.Typ = "Coupler");
 
-            Stara.Where(x => x.Typ == "ČERPADLO").ToList()
+            //Stara.Where(x => x.Typ == "ČERPADLO").ToList()
+            Stara.Where(x => x.Typ.Equals("ČERPADLO", StringComparison.CurrentCultureIgnoreCase)).ToList()
                         .ForEach(x => x.Typ = "Pump");
 
             Stara.Where(x => x.Typ == "OKLEP").ToList()

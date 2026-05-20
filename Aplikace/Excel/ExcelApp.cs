@@ -44,7 +44,7 @@ namespace Aplikace.Excel
         /// <summary>
         /// Aktivuje aktuální list (v ClosedXML je to prázdná operace, zachovaná pro kompatibilitu).
         /// </summary>
-        public void Activate()
+        public static void Activate()
         {
             // Dummy implementace pro zachování kompatibility s Interopem
         }
@@ -83,9 +83,8 @@ namespace Aplikace.Excel
         {
             get
             {
-                var c1 = cell1 as ExcelCellWrapper;
-                var c2 = cell2 as ExcelCellWrapper;
-                if (c1 != null && c2 != null)
+                //porovnání vzorů
+                if (cell1 is ExcelCellWrapper c1 && cell2 is ExcelCellWrapper c2)
                 {
                     return new ExcelCellWrapper(_ws.Range(c1.Cell, c2.Cell));
                 }
@@ -97,24 +96,19 @@ namespace Aplikace.Excel
     /// <summary>
     /// Zajišťuje indexovaný přístup k jednotlivým buňkám pomocí souřadnic řádku a sloupce (např. Cells[3, 4]).
     /// </summary>
-    public class ExcelCellsWrapper
+    /// <remarks>
+    /// Inicializuje novou instanci indexeru buněk.
+    /// </remarks>
+    public class ExcelCellsWrapper(IXLWorksheet ws)
     {
-        private readonly IXLWorksheet _ws;
-
-        /// <summary>
-        /// Inicializuje novou instanci indexeru buněk.
-        /// </summary>
-        public ExcelCellsWrapper(IXLWorksheet ws)
-        {
-            _ws = ws;
-        }
+        private readonly IXLWorksheet _ws = ws;
 
         /// <summary>
         /// Získá obalenou buňku na zadaném řádku a sloupci (indexováno od 1).
         /// </summary>
         public ExcelCellWrapper this[int row, int col]
         {
-            get => new ExcelCellWrapper(_ws.Cell(row, col));
+            get => new(_ws.Cell(row, col));
         }
     }
 
@@ -214,7 +208,7 @@ namespace Aplikace.Excel
             get => _cell?.FormulaA1 ?? "";
             set
             {
-                if (_cell != null) _cell.FormulaA1 = value;
+                _cell?.FormulaA1 = value;
             }
         }
 
@@ -255,6 +249,7 @@ namespace Aplikace.Excel
             Xls = new ExcelWorksheetWrapper(ws);
             Console.WriteLine("\nVytvořený dokument nastaven Aktivní.");
         }
+
         public void GetSheet(string Nazev)
         {
             if (Doc == null) return;
@@ -268,6 +263,7 @@ namespace Aplikace.Excel
             Xls = new ExcelWorksheetWrapper(newWs);
             Console.WriteLine($"List {Nazev} - Přidán");
         }
+
         public void DokumetExcel(string Cesta)
         {
             Console.Write("\nKontrolaOtevenehoNeboOtevreniSobroruExel - OK");
@@ -294,14 +290,14 @@ namespace Aplikace.Excel
 
         public List<List<string>> ExelLoadTable(string cesta, string zalozka, int Radek, int[] CteniSloupcu)
         {
-            if (!File.Exists(cesta)) return new List<List<string>>();
+            if (!File.Exists(cesta)) return [];
 
             DokumetExcel(cesta);
-            if (Xls == null) return new List<List<string>>();
+            if (Xls == null) return [];
             Console.Write("\nDokument excel - Otevřen");
 
             GetSheet(zalozka);
-            if (Xls == null) { Console.Write("\nChyba KONEC"); return new List<List<string>>(); }
+            if (Xls == null) { Console.Write("\nChyba KONEC"); return []; }
             Console.Write("\nSheet=" + Xls.Name);
 
             var Pole = new List<List<string>>();
@@ -363,23 +359,31 @@ namespace Aplikace.Excel
                         Console.WriteLine("Buňka je součástí sloučených buněk.");
                         break;
                     }
-                    string xxx = cell.GetString();
+                    string xxx = cell.GetString().Replace('\n', ' ');
 
                     if (string.IsNullOrEmpty(xxx) || xxx == "0")
                         continue;
 
-                    if (int.TryParse(xxx, out int intVal))
-                        jeden[dir[j]] = intVal;
+                    //zdroj je int
+                    if (int.TryParse(xxx, out int intVal) )
+                        //proměná pro vložení je int
+                        if (jeden[dir[j]].GetType() == typeof(int))
+                            jeden[dir[j]] = intVal;
+                        else
+                            //proměná není int ale zdroj je int, vloží se jako string
+                            jeden[dir[j]] = xxx;
                     else
+                        //zdroj není int, vloží se jako string
                         jeden[dir[j]] = xxx;
                 }
+                
 
                 jeden.Apid = ExcelLoad.Apid();
                 jeden.Id = pocet;
 
                 if (jeden.Pocet > 1)
                 {
-                    var deleni = jeden.Tag?.Split('\n').ToList() ?? new List<string>();
+                    var deleni = jeden.Tag?.Split('\n').ToList() ?? [];
                     foreach (var item in deleni)
                     {
                         var json = System.Text.Json.JsonSerializer.Serialize(jeden);
@@ -475,14 +479,14 @@ namespace Aplikace.Excel
 
         public List<Zarizeni> ExelLoadTableTrida(string cesta, string zalozka, int Radek, int[] CteniSloupcu, string[] TextPole)
         {
-            if (!File.Exists(cesta)) return new List<Zarizeni>();
+            if (!File.Exists(cesta)) return [];
 
             DokumetExcel(cesta);
-            if (Xls == null) return new List<Zarizeni>();
+            if (Xls == null) return [];
             Console.Write("\nDokument excel - Otevřen");
 
             GetSheet(zalozka);
-            if (Xls == null) { Console.Write("\nChyba KONEC"); return new List<Zarizeni>(); }
+            if (Xls == null) { Console.Write("\nChyba KONEC"); return []; }
             Console.Write("\nSheet=" + Xls.Name);
 
             var Pole = new List<Zarizeni>();
@@ -1012,7 +1016,7 @@ namespace Aplikace.Excel
             return true;
         }
 
-        public bool ExcelQuit(string cesta, bool UkonceniApplikace = true)
+        public bool ExcelQuit(string cesta)
         {
             Console.Write("\nUkončení Excel, ");
             if (Doc != null)

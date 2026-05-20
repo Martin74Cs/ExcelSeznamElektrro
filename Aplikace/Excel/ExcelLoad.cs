@@ -99,14 +99,14 @@ namespace Aplikace.Excel
                 if (File.Exists(file))
                 {
                     string json = File.ReadAllText(file);
-                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<ColumnMappingConfig>>(json) ?? new List<ColumnMappingConfig>();
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<ColumnMappingConfig>>(json) ?? [];
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Chyba při načítání konfigurace mapování sloupců: {ex.Message}");
             }
-            return new List<ColumnMappingConfig>();
+            return [];
         }
 
         private static void SaveMapping(string filePath, string sheetName, int startRow, Dictionary<int, string> mapping)
@@ -121,16 +121,17 @@ namespace Aplikace.Excel
                 }
                 string file = Path.Combine(dir, "column_mappings.json");
                 
-                var allConfigs = LoadAllMappings();
+                //var allConfigs = LoadAllMappings();
                 
-                allConfigs.RemoveAll(x => x.FilePath.Equals(filePath, StringComparison.OrdinalIgnoreCase));
+                //allConfigs.RemoveAll(x => x.FilePath.Equals(filePath, StringComparison.OrdinalIgnoreCase));
                 
                 var propToCol = new Dictionary<string, int>();
                 foreach (var kvp in mapping)
                 {
                     propToCol[kvp.Value] = kvp.Key;
                 }
-                
+
+                List<ColumnMappingConfig> allConfigs = [];
                 allConfigs.Add(new ColumnMappingConfig
                 {
                     FilePath = filePath,
@@ -154,7 +155,7 @@ namespace Aplikace.Excel
             dgv.Rows.Clear();
             dgv.Columns.Clear();
 
-            int rowCount = Math.Min(ws.LastRowUsed()?.RowNumber() ?? 0, 30);
+            int rowCount = Math.Min(ws.LastRowUsed()?.RowNumber() ?? 0, 20);
             int colCount = Math.Min(ws.LastColumnUsed()?.ColumnNumber() ?? 0, 20);
 
             if (rowCount == 0 || colCount == 0) return;
@@ -197,6 +198,19 @@ namespace Aplikace.Excel
             return columnName;
         }
 
+        private static readonly string[] start = [
+                        "Radek",
+                        "Tag",
+                        "Pocet",
+                        "Popis",
+                        "Menic",
+                        "Prikon",
+                        "BalenaJednotka",
+                        "Pid",
+                        "Pozice",
+                        "Poznamka"
+                    ];
+
         /// <summary>
         /// Načtení dokumentu Excel s možností interaktivního přiřazení sloupců pomocí dialogu.
         /// </summary>
@@ -206,13 +220,13 @@ namespace Aplikace.Excel
             if (!File.Exists(cesta)) return [];
 
             var ExcelApp = new ExcelApp(cesta);
-            var workbook = new ClosedXML.Excel.XLWorkbook(cesta);
-            var sheetNames = workbook.Worksheets.Select(x => x.Name).ToList();
+            //var workbook = new ClosedXML.Excel.XLWorkbook(cesta);
+            var sheetNames = ExcelApp.Doc.Worksheets.Select(x => x.Name).ToList();
 
             if (sheetNames.Count == 0)
             {
                 Console.WriteLine("Excel neobsahuje žádné listy.");
-                workbook.Dispose();
+                ExcelApp.Doc.Dispose();
                 ExcelApp.ExcelQuit(cesta);
                 return [];
             }
@@ -228,311 +242,300 @@ namespace Aplikace.Excel
 
             var thread = new System.Threading.Thread(() =>
             {
-                using (var form = new System.Windows.Forms.Form())
+                using var form = new System.Windows.Forms.Form();
+                form.Text = "Přiřazení sloupců Excelu k vlastnostem";
+                form.Width = 1000;
+                form.Height = 900;
+                form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+                form.MaximizeBox = false;
+                form.MinimizeBox = false;
+                form.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+                form.Font = new System.Drawing.Font("Segoe UI", 9F);
+                form.BackColor = System.Drawing.Color.FromArgb(245, 246, 248);
+
+                // Hlavní panel pro rozdělení (Left = Settings, Right = Preview)
+                var panelLeft = new System.Windows.Forms.Panel()
                 {
-                    form.Text = "Přiřazení sloupců Excelu k vlastnostem";
-                    form.Width = 1000;
-                    form.Height = 900;
-                    form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-                    form.MaximizeBox = false;
-                    form.MinimizeBox = false;
-                    form.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-                    form.Font = new System.Drawing.Font("Segoe UI", 9F);
-                    form.BackColor = System.Drawing.Color.FromArgb(245, 246, 248);
+                    Location = new System.Drawing.Point(10, 10),
+                    Size = new System.Drawing.Size(430, 800),
+                    BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle,
+                    BackColor = System.Drawing.Color.White
+                };
+                form.Controls.Add(panelLeft);
 
-                    // Hlavní panel pro rozdělení (Left = Settings, Right = Preview)
-                    var panelLeft = new System.Windows.Forms.Panel()
-                    {
-                        Location = new System.Drawing.Point(10, 10),
-                        Size = new System.Drawing.Size(430, 800),
-                        BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle,
-                        BackColor = System.Drawing.Color.White
-                    };
-                    form.Controls.Add(panelLeft);
+                var panelRight = new System.Windows.Forms.Panel()
+                {
+                    Location = new System.Drawing.Point(450, 10),
+                    Size = new System.Drawing.Size(525, 800),
+                    BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle,
+                    BackColor = System.Drawing.Color.White
+                };
+                form.Controls.Add(panelRight);
 
-                    var panelRight = new System.Windows.Forms.Panel()
-                    {
-                        Location = new System.Drawing.Point(450, 10),
-                        Size = new System.Drawing.Size(525, 800),
-                        BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle,
-                        BackColor = System.Drawing.Color.White
-                    };
-                    form.Controls.Add(panelRight);
+                // --- LEVÝ PANEL (Settings & Mapping) ---
+                var labelTitle = new System.Windows.Forms.Label()
+                {
+                    Text = "Nastavení importu a přiřazení sloupců",
+                    Location = new System.Drawing.Point(15, 15),
+                    Size = new System.Drawing.Size(400, 20),
+                    Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold)
+                };
+                panelLeft.Controls.Add(labelTitle);
 
-                    // --- LEVÝ PANEL (Settings & Mapping) ---
-                    var labelTitle = new System.Windows.Forms.Label()
-                    {
-                        Text = "Nastavení importu a přiřazení sloupců",
-                        Location = new System.Drawing.Point(15, 15),
-                        Size = new System.Drawing.Size(400, 20),
-                        Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold)
-                    };
-                    panelLeft.Controls.Add(labelTitle);
+                // Výběr listu (Sheet)
+                var labelSheet = new System.Windows.Forms.Label()
+                {
+                    Text = "List (Sheet):",
+                    Location = new System.Drawing.Point(15, 55),
+                    Size = new System.Drawing.Size(100, 20),
+                    Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold)
+                };
+                panelLeft.Controls.Add(labelSheet);
 
-                    // Výběr listu (Sheet)
-                    var labelSheet = new System.Windows.Forms.Label()
+                var cbSheet = new System.Windows.Forms.ComboBox()
+                {
+                    Location = new System.Drawing.Point(130, 52),
+                    Width = 280,
+                    DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+                };
+                foreach (var sName in sheetNames) cbSheet.Items.Add(sName);
+
+                if (existingConfig != null && sheetNames.Contains(existingConfig.SheetName))
+                    cbSheet.SelectedItem = existingConfig.SheetName;
+                else if (sheetNames.Contains(Tabulka))
+                    cbSheet.SelectedItem = Tabulka;
+                else
+                    cbSheet.SelectedIndex = 0;
+
+                panelLeft.Controls.Add(cbSheet);
+
+                // Výběr prvního řádku dat (Radek)
+                var labelRow = new System.Windows.Forms.Label()
+                {
+                    Text = "První řádek dat:",
+                    Location = new System.Drawing.Point(15, 95),
+                    Size = new System.Drawing.Size(100, 20),
+                    Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold)
+                };
+                panelLeft.Controls.Add(labelRow);
+
+                var nudRow = new System.Windows.Forms.NumericUpDown()
+                {
+                    Location = new System.Drawing.Point(130, 93),
+                    Width = 80,
+                    Minimum = 1,
+                    Maximum = 100,
+                    Value = existingConfig != null ? existingConfig.StartRow : Radek
+                };
+                panelLeft.Controls.Add(nudRow);
+
+                var labelMappingTitle = new System.Windows.Forms.Label()
+                {
+                    Text = "Přiřazení parametrů:",
+                    Location = new System.Drawing.Point(15, 140),
+                    Size = new System.Drawing.Size(400, 20),
+                    Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
+                    ForeColor = System.Drawing.Color.Navy
+                };
+                panelLeft.Controls.Add(labelMappingTitle);
+
+                // Kontroly pro parametry PARAMETRY které se mají načíst z Excelu do názvů tříd. Myslím že třída musí existovat
+                var targetProperties = start;
+
+                int startY = 175;
+                int spacingY = 48;
+                var comboBoxes = new Dictionary<string, System.Windows.Forms.ComboBox>();
+
+                for (int i = 0; i < targetProperties.Length; i++)
+                {
+                    string prop = targetProperties[i];
+
+                    var labelProp = new System.Windows.Forms.Label()
                     {
-                        Text = "List (Sheet):",
-                        Location = new System.Drawing.Point(15, 55),
-                        Size = new System.Drawing.Size(100, 20),
+                        Text = prop + ":",
+                        Location = new System.Drawing.Point(15, startY + (i * spacingY) + 3),
+                        Size = new System.Drawing.Size(110, 20),
                         Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold)
                     };
-                    panelLeft.Controls.Add(labelSheet);
+                    panelLeft.Controls.Add(labelProp);
 
-                    var cbSheet = new System.Windows.Forms.ComboBox()
+                    var cb = new System.Windows.Forms.ComboBox()
                     {
-                        Location = new System.Drawing.Point(130, 52),
+                        Location = new System.Drawing.Point(130, startY + (i * spacingY)),
                         Width = 280,
                         DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
                     };
-                    foreach (var sName in sheetNames) cbSheet.Items.Add(sName);
-                    
-                    if (existingConfig != null && sheetNames.Contains(existingConfig.SheetName))
-                        cbSheet.SelectedItem = existingConfig.SheetName;
-                    else if (sheetNames.Contains(Tabulka))
-                        cbSheet.SelectedItem = Tabulka;
-                    else
-                        cbSheet.SelectedIndex = 0;
+                    panelLeft.Controls.Add(cb);
+                    comboBoxes[prop] = cb;
+                }
 
-                    panelLeft.Controls.Add(cbSheet);
+                // --- PRAVÝ PANEL (Data Preview) ---
+                var labelPreview = new System.Windows.Forms.Label()
+                {
+                    Text = "Náhled dat v listu (prvních 30 řádků):",
+                    Location = new System.Drawing.Point(15, 15),
+                    Size = new System.Drawing.Size(490, 20),
+                    Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold)
+                };
+                panelRight.Controls.Add(labelPreview);
 
-                    // Výběr prvního řádku dat (Radek)
-                    var labelRow = new System.Windows.Forms.Label()
+                var dgvPreview = new System.Windows.Forms.DataGridView()
+                {
+                    Location = new System.Drawing.Point(15, 52),
+                    Size = new System.Drawing.Size(490, 520),
+                    AllowUserToAddRows = false,
+                    AllowUserToDeleteRows = false,
+                    ReadOnly = true,
+                    BackgroundColor = System.Drawing.Color.White,
+                    ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+                };
+                panelRight.Controls.Add(dgvPreview);
+
+                // Akce při změně listu nebo řádku
+                Action updateSheetAndGrid = () =>
+                {
+                    string selectedSheet = cbSheet.SelectedItem?.ToString() ?? "";
+                    if (string.IsNullOrEmpty(selectedSheet)) return;
+
+                    var ws = ExcelApp.Doc.Worksheet(selectedSheet);
+                    FillPreviewGrid(ws, dgvPreview);
+
+                    // Aktualizace ComboBoxů sloupců
+                    int dataRow = (int)nudRow.Value;
+                    int headerRow = dataRow > 1 ? dataRow - 1 : dataRow;
+
+                    int colCount = ws.LastColumnUsed()?.ColumnNumber() ?? 0;
+                    var excelCols = new List<Tuple<int, string>>();
+
+                    for (int col = 1; col <= colCount; col++)
                     {
-                        Text = "První řádek dat:",
-                        Location = new System.Drawing.Point(15, 95),
-                        Size = new System.Drawing.Size(100, 20),
-                        Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold)
-                    };
-                    panelLeft.Controls.Add(labelRow);
-
-                    var nudRow = new System.Windows.Forms.NumericUpDown()
-                    {
-                        Location = new System.Drawing.Point(130, 93),
-                        Width = 80,
-                        Minimum = 1,
-                        Maximum = 100,
-                        Value = existingConfig != null ? existingConfig.StartRow : Radek
-                    };
-                    panelLeft.Controls.Add(nudRow);
-
-                    var labelMappingTitle = new System.Windows.Forms.Label()
-                    {
-                        Text = "Přiřazení parametrů:",
-                        Location = new System.Drawing.Point(15, 140),
-                        Size = new System.Drawing.Size(400, 20),
-                        Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold),
-                        ForeColor = System.Drawing.Color.Navy
-                    };
-                    panelLeft.Controls.Add(labelMappingTitle);
-
-                    // Kontroly pro parametry
-                    var targetProperties = new string[] {
-                        "Radek",
-                        "Tag",
-                        "Pocet",
-                        "Popis",
-                        "Menic",
-                        "Prikon",
-                        "BalenaJednotka",
-                        "Pid",
-                        "Pozice"
-                    };
-
-                    int startY = 175;
-                    int spacingY = 48;
-                    var comboBoxes = new Dictionary<string, System.Windows.Forms.ComboBox>();
-
-                    for (int i = 0; i < targetProperties.Length; i++)
-                    {
-                        string prop = targetProperties[i];
-
-                        var labelProp = new System.Windows.Forms.Label()
+                        string headerName = ws.Cell(headerRow, col).GetString().Trim();
+                        if (string.IsNullOrEmpty(headerName))
                         {
-                            Text = prop + ":",
-                            Location = new System.Drawing.Point(15, startY + (i * spacingY) + 3),
-                            Size = new System.Drawing.Size(110, 20),
-                            Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold)
-                        };
-                        panelLeft.Controls.Add(labelProp);
-
-                        var cb = new System.Windows.Forms.ComboBox()
-                        {
-                            Location = new System.Drawing.Point(130, startY + (i * spacingY)),
-                            Width = 280,
-                            DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-                        };
-                        panelLeft.Controls.Add(cb);
-                        comboBoxes[prop] = cb;
+                            headerName = $"Sloupec {col}";
+                        }
+                        excelCols.Add(Tuple.Create(col, $"{col}: {headerName}"));
                     }
 
-                    // --- PRAVÝ PANEL (Data Preview) ---
-                    var labelPreview = new System.Windows.Forms.Label()
+                    // Zjistíme, zda existuje uložení pro tento konkrétní soubor a list
+                    var currentMapping = existingConfig?.PropertyToColumn;
+
+                    foreach (var kvp in comboBoxes)
                     {
-                        Text = "Náhled dat v listu (prvních 30 řádků):",
-                        Location = new System.Drawing.Point(15, 15),
-                        Size = new System.Drawing.Size(490, 20),
-                        Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold)
-                    };
-                    panelRight.Controls.Add(labelPreview);
+                        var cb = kvp.Value;
+                        cb.Items.Clear();
+                        cb.Items.Add(new { Key = -1, Value = "-- Nepřiřazeno --" });
 
-                    var dgvPreview = new System.Windows.Forms.DataGridView()
-                    {
-                        Location = new System.Drawing.Point(15, 52),
-                        Size = new System.Drawing.Size(490, 520),
-                        AllowUserToAddRows = false,
-                        AllowUserToDeleteRows = false,
-                        ReadOnly = true,
-                        BackgroundColor = System.Drawing.Color.White,
-                        ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-                    };
-                    panelRight.Controls.Add(dgvPreview);
+                        int selectIndex = 0;
+                        int currentIndex = 1;
 
-                    // Akce při změně listu nebo řádku
-                    Action updateSheetAndGrid = () =>
-                    {
-                        string selectedSheet = cbSheet.SelectedItem?.ToString() ?? "";
-                        if (string.IsNullOrEmpty(selectedSheet)) return;
-
-                        var ws = workbook.Worksheet(selectedSheet);
-                        FillPreviewGrid(ws, dgvPreview);
-
-                        // Aktualizace ComboBoxů sloupců
-                        int dataRow = (int)nudRow.Value;
-                        int headerRow = dataRow > 1 ? dataRow - 1 : dataRow;
-
-                        int colCount = ws.LastColumnUsed()?.ColumnNumber() ?? 0;
-                        var excelCols = new List<Tuple<int, string>>();
-                        for (int col = 1; col <= colCount; col++)
+                        int savedCol = 0;
+                        if (currentMapping != null && currentMapping.TryGetValue(kvp.Key, out int val))
                         {
-                            string headerName = ws.Cell(headerRow, col).GetString().Trim();
-                            if (string.IsNullOrEmpty(headerName))
-                            {
-                                headerName = $"Sloupec {col}";
-                            }
-                            excelCols.Add(Tuple.Create(col, $"{col}: {headerName}"));
+                            savedCol = val;
                         }
 
-                        // Zjistíme, zda existuje uložení pro tento konkrétní soubor a list
-                        var currentMapping = existingConfig?.PropertyToColumn;
-
-                        foreach (var kvp in comboBoxes)
+                        foreach (var col in excelCols)
                         {
-                            var cb = kvp.Value;
-                            cb.Items.Clear();
-                            cb.Items.Add(new { Key = 0, Value = "-- Nepřiřazeno --" });
+                            cb.Items.Add(new { Key = col.Item1, Value = col.Item2 });
 
-                            int selectIndex = 0;
-                            int currentIndex = 1;
-
-                            int savedCol = 0;
-                            if (currentMapping != null && currentMapping.TryGetValue(kvp.Key, out int val))
+                            if (savedCol > 0)
                             {
-                                savedCol = val;
+                                if (col.Item1 == savedCol)
+                                {
+                                    selectIndex = currentIndex;
+                                }
                             }
-
-                            foreach (var col in excelCols)
+                            else
                             {
-                                cb.Items.Add(new { Key = col.Item1, Value = col.Item2 });
+                                // Automatická detekce jako fallback
+                                string colLower = col.Item2.ToLower();
+                                string propLower = kvp.Key.ToLower();
+                                bool matches = false;
 
-                                if (savedCol > 0)
+                                if (propLower == "radek" && (colLower.Contains("řádek") || colLower.Contains("radek") || colLower.Contains("row") || colLower.Contains("no."))) matches = true;
+                                else if (propLower == "tag" && (colLower.Contains("tag") || colLower.Contains("označení") || colLower.Contains("oznaceni") || colLower.Contains("stroj") || colLower.Contains("motor"))) matches = true;
+                                else if (propLower == "pocet" && (colLower.Contains("počet") || colLower.Contains("pocet") || colLower.Contains("kus") || colLower.Contains("qty") || colLower.Contains("count"))) matches = true;
+                                else if (propLower == "popis" && (colLower.Contains("popis") || colLower.Contains("description") || colLower.Contains("název") || colLower.Contains("nazev"))) matches = true;
+                                else if (propLower == "menic" && (colLower.Contains("měnič") || colLower.Contains("menic") || colLower.Contains("vsd") || colLower.Contains("frekv"))) matches = true;
+                                else if (propLower == "prikon" && (colLower.Contains("příkon") || colLower.Contains("prikon") || colLower.Contains("výkon") || colLower.Contains("kw") || colLower.Contains("hp"))) matches = true;
+                                else if (propLower == "balenajednotka" && (colLower.Contains("balená") || colLower.Contains("balena") || colLower.Contains("jednotka") || colLower.Contains("package") || colLower.Contains("pack"))) matches = true;
+                                else if (propLower == "pid" && (colLower.Contains("pid") || colLower.Contains("schema") || colLower.Contains("proces"))) matches = true;
+                                else if (propLower == "pozice" && (colLower.Contains("misto") || colLower.Contains("místo") || colLower.Contains("position"))) matches = true;
+
+                                if (matches)
                                 {
-                                    if (col.Item1 == savedCol)
-                                    {
-                                        selectIndex = currentIndex;
-                                    }
+                                    selectIndex = currentIndex;
                                 }
-                                else
-                                {
-                                    // Automatická detekce jako fallback
-                                    string colLower = col.Item2.ToLower();
-                                    string propLower = kvp.Key.ToLower();
-                                    bool matches = false;
-
-                                    if (propLower == "radek" && (colLower.Contains("řádek") || colLower.Contains("radek") || colLower.Contains("row") || colLower.Contains("no."))) matches = true;
-                                    else if (propLower == "tag" && (colLower.Contains("tag") || colLower.Contains("označení") || colLower.Contains("oznaceni") || colLower.Contains("stroj") || colLower.Contains("motor"))) matches = true;
-                                    else if (propLower == "pocet" && (colLower.Contains("počet") || colLower.Contains("pocet") || colLower.Contains("kus") || colLower.Contains("qty") || colLower.Contains("count"))) matches = true;
-                                    else if (propLower == "popis" && (colLower.Contains("popis") || colLower.Contains("description") || colLower.Contains("název") || colLower.Contains("nazev"))) matches = true;
-                                    else if (propLower == "menic" && (colLower.Contains("měnič") || colLower.Contains("menic") || colLower.Contains("vsd") || colLower.Contains("frekv"))) matches = true;
-                                    else if (propLower == "prikon" && (colLower.Contains("příkon") || colLower.Contains("prikon") || colLower.Contains("výkon") || colLower.Contains("kw") || colLower.Contains("hp"))) matches = true;
-                                    else if (propLower == "balenajednotka" && (colLower.Contains("balená") || colLower.Contains("balena") || colLower.Contains("jednotka") || colLower.Contains("package") || colLower.Contains("pack"))) matches = true;
-                                    else if (propLower == "pid" && (colLower.Contains("pid") || colLower.Contains("schema") || colLower.Contains("proces") )) matches = true;
-                                    else if (propLower == "pozice" && (colLower.Contains("misto") || colLower.Contains("místo") || colLower.Contains("position"))) matches = true;
-
-                                    if (matches)
-                                    {
-                                        selectIndex = currentIndex;
-                                    }
-                                }
-                                currentIndex++;
                             }
-
-                            cb.DisplayMember = "Value";
-                            cb.ValueMember = "Key";
-                            cb.SelectedIndex = selectIndex;
+                            currentIndex++;
                         }
-                    };
 
-                    cbSheet.SelectedIndexChanged += (s, e) => updateSheetAndGrid();
-                    nudRow.ValueChanged += (s, e) => updateSheetAndGrid();
-
-                    // Spustíme první naplnění
-                    updateSheetAndGrid();
-
-                    // Tlačítka OK a Storno
-                    var buttonOk = new System.Windows.Forms.Button()
-                    {
-                        Text = "Potvrdit a uložit",
-                        Location = new System.Drawing.Point(200, 640),
-                        Size = new System.Drawing.Size(140, 35),
-                        DialogResult = System.Windows.Forms.DialogResult.OK,
-                        BackColor = System.Drawing.Color.FromArgb(40, 167, 69),
-                        ForeColor = System.Drawing.Color.White,
-                        FlatStyle = System.Windows.Forms.FlatStyle.Flat
-                    };
-                    buttonOk.FlatAppearance.BorderSize = 0;
-                    buttonOk.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-                    panelLeft.Controls.Add(buttonOk);
-
-                    var buttonCancel = new System.Windows.Forms.Button()
-                    {
-                        Text = "Storno",
-                        Location = new System.Drawing.Point(350, 640),
-                        Size = new System.Drawing.Size(70, 35),
-                        DialogResult = System.Windows.Forms.DialogResult.Cancel,
-                        BackColor = System.Drawing.Color.FromArgb(108, 117, 125),
-                        ForeColor = System.Drawing.Color.White,
-                        FlatStyle = System.Windows.Forms.FlatStyle.Flat
-                    };
-                    buttonCancel.FlatAppearance.BorderSize = 0;
-                    panelLeft.Controls.Add(buttonCancel);
-
-                    form.AcceptButton = buttonOk;
-                    form.CancelButton = buttonCancel;
-
-                    if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        finalSheetName = cbSheet.SelectedItem?.ToString() ?? Tabulka;
-                        finalStartRow = (int)nudRow.Value;
-
-                        foreach (var kvp in comboBoxes)
-                        {
-                            var selectedItem = kvp.Value.SelectedItem;
-                            if (selectedItem != null)
-                            {
-                                var keyProp = selectedItem.GetType().GetProperty("Key");
-                                if (keyProp != null)
-                                {
-                                    int key = (int)keyProp.GetValue(selectedItem)!;
-                                    if (key > 0)
-                                    {
-                                        dir[key] = kvp.Key;
-                                    }
-                                }
-                            }
-                        }
-                        dialogConfirmed = true;
+                        cb.DisplayMember = "Value";
+                        cb.ValueMember = "Key";
+                        cb.SelectedIndex = selectIndex;
                     }
+                };
+
+                cbSheet.SelectedIndexChanged += (s, e) => updateSheetAndGrid();
+                nudRow.ValueChanged += (s, e) => updateSheetAndGrid();
+
+                // Spustíme první naplnění
+                updateSheetAndGrid();
+
+                // Tlačítka OK a Storno
+                var buttonOk = new System.Windows.Forms.Button()
+                {
+                    Text = "Potvrdit a uložit",
+                    Location = new System.Drawing.Point(200, 640),
+                    Size = new System.Drawing.Size(140, 35),
+                    DialogResult = System.Windows.Forms.DialogResult.OK,
+                    BackColor = System.Drawing.Color.FromArgb(40, 167, 69),
+                    ForeColor = System.Drawing.Color.White,
+                    FlatStyle = System.Windows.Forms.FlatStyle.Flat
+                };
+                buttonOk.FlatAppearance.BorderSize = 0;
+                buttonOk.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+                panelLeft.Controls.Add(buttonOk);
+
+                var buttonCancel = new System.Windows.Forms.Button()
+                {
+                    Text = "Storno",
+                    Location = new System.Drawing.Point(350, 640),
+                    Size = new System.Drawing.Size(70, 35),
+                    DialogResult = System.Windows.Forms.DialogResult.Cancel,
+                    BackColor = System.Drawing.Color.FromArgb(108, 117, 125),
+                    ForeColor = System.Drawing.Color.White,
+                    FlatStyle = System.Windows.Forms.FlatStyle.Flat
+                };
+                buttonCancel.FlatAppearance.BorderSize = 0;
+                panelLeft.Controls.Add(buttonCancel);
+
+                form.AcceptButton = buttonOk;
+                form.CancelButton = buttonCancel;
+
+                if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    finalSheetName = cbSheet.SelectedItem?.ToString() ?? Tabulka;
+                    finalStartRow = (int)nudRow.Value;
+
+                    foreach (var kvp in comboBoxes)
+                    {
+                        var selectedItem = kvp.Value.SelectedItem;
+                        if (selectedItem != null)
+                        {
+                            var keyProp = selectedItem.GetType().GetProperty("Key");
+                            if (keyProp != null)
+                            {
+                                int key = (int)keyProp.GetValue(selectedItem)!;
+                                if (key > 0)
+                                {
+                                    dir[key] = kvp.Key;
+                                }
+                            }
+                        }
+                    }
+                    dialogConfirmed = true;
                 }
             });
 
@@ -540,7 +543,6 @@ namespace Aplikace.Excel
             thread.Start();
             thread.Join();
 
-            workbook.Dispose();
 
             if (!dialogConfirmed || dir.Count == 0)
             {
@@ -560,10 +562,11 @@ namespace Aplikace.Excel
             }
 
             // Načtení dat pomocí vybraného listu a mapování
-            ExcelApp.GetSheet(finalSheetName);
+            //ExcelApp.GetSheet(finalSheetName);
             var Pole = ExcelApp.ExelTable(finalStartRow, finalSheetName, dir);
             ExcelApp.ExcelQuit(cesta);
             Console.WriteLine($"načteno {Pole.Count} záznamů.");
+            ExcelApp.Doc.Dispose();
             return Pole;
         }
 

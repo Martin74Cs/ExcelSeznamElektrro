@@ -136,7 +136,7 @@ namespace Aplikace.Tridy
         public string ACS { get; set; } = string.Empty;
 
         [JsonIgnore]
-        internal static string[] Nadpis =>
+        internal static string[] NadpisSlb =>
         [
             "EpsHlasic",
             "EpsSirena",
