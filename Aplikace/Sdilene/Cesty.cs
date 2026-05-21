@@ -32,7 +32,10 @@ namespace Aplikace.Sdilene
         public static string Elektro { get {
                 //if (!Directory.Exists(Cesty.Elektro))
                 //    Directory.CreateDirectory(Cesty.Elektro);
-                return Path.Combine(Lightchem, "Elektro"); } }  
+                return Path.Combine(Lightchem, "Elektro");
+            }
+        }
+
         public static string Data => Path.Combine(BasePath, "Data");
         public static string MotoryJson => Path.Combine(Data, "Motory", "Motory.Json");
         public static string ElektroDataCsv => Path.Combine(Elektro, "ElektroData.Csv");
@@ -47,8 +50,23 @@ namespace Aplikace.Sdilene
                 //else
                 //    return @"G:\Můj disk\Projekty\";
 
-                var Inforamce = Informace.Create;
-                return Inforamce.BasePath;
+                using var Inforamce = Informace.Create;
+                if (!Directory.Exists(Inforamce.AdresarZdrojDat)) {
+                    OpenFileDialog dialog = new() {
+                        Title = "Vyberte soubor s daty pro elektro"
+                        //Filter = "Json files (*.json)|*.json|All files (*.*)|*.*";
+                    };
+                    if (dialog.ShowDialog() == DialogResult.OK) {
+                        Inforamce.AdresarZdrojDat = Path.GetDirectoryName(dialog.FileName) ?? string.Empty;
+                        //MessageBox.Show($"Vybrali jste soubor: {dialog.FileName}");
+                    }
+                    else {
+                        MessageBox.Show("Nebyl vybrán žádný soubor. Aplikace bude ukončena.");
+                        Environment.Exit(0);
+                    }
+                }
+
+                return Inforamce.AdresarZdrojDat;
             }
         }
 

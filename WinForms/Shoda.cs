@@ -37,7 +37,7 @@ namespace WinForms
             SkrytSloupce(dataGridView2);
         }
 
-        private void SkrytSloupce(DataGridView data) {
+        private static void SkrytSloupce(DataGridView data) {
             data.Columns["Patro"].Visible = false;
             data.Columns["HP"].Visible = false;
             data.Columns["Delka"].Visible = false;
@@ -69,7 +69,7 @@ namespace WinForms
         }
 
 
-        private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
@@ -117,7 +117,7 @@ namespace WinForms
             }
         }
 
-        public void SetListBox(DataGridView data)
+        public static void SetListBox(DataGridView data)
         {
             data.AutoGenerateColumns = true;
 
@@ -126,26 +126,26 @@ namespace WinForms
             data.AllowUserToDeleteRows = true;
         }
 
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
 
-        private void dataGridView2_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView2_SelectionChanged(object sender, EventArgs e)
         {
             var ShodaStrojni = new List<Zarizeni>();
             if (dataGridView2.CurrentRow?.DataBoundItem is Zarizeni selectedElektro) {
                 if(selectedElektro.Tag.Length < 2) { return; }
-                ShodaStrojni = Strojni.Where(x => x.Tag.Contains(selectedElektro.Tag[..^1])).ToList();
+                ShodaStrojni = [.. Strojni.Where(x => x.Tag.Contains(selectedElektro.Tag[..^1]))];
                 if(ShodaStrojni.Count < 1 )
-                    ShodaStrojni = Strojni.Where(x => x.Tag.Contains(selectedElektro.Tag[..^2])).ToList();
+                    ShodaStrojni = [.. Strojni.Where(x => x.Tag.Contains(selectedElektro.Tag[..^2]))];
                         if (ShodaStrojni.Count < 1)
-                            ShodaStrojni = Strojni.Where(x => x.Tag.Contains(selectedElektro.Tag[..^3])).ToList();
+                            ShodaStrojni = [.. Strojni.Where(x => x.Tag.Contains(selectedElektro.Tag[..^3]))];
             }
             dataGridView1.DataSource = new SortableBindingList<Zarizeni>(ShodaStrojni);
         }
 
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             //přenos dat --- dole1 -> nahoru2
             if (dataGridView1.CurrentRow?.DataBoundItem is Zarizeni selectedStrojni &&

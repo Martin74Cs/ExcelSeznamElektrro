@@ -392,7 +392,7 @@ namespace Aplikace.Excel
                 panelRight.Controls.Add(dgvPreview);
 
                 // Akce při změně listu nebo řádku
-                Action updateSheetAndGrid = () =>
+                void updateSheetAndGrid()
                 {
                     string selectedSheet = cbSheet.SelectedItem?.ToString() ?? "";
                     if (string.IsNullOrEmpty(selectedSheet)) return;
@@ -475,7 +475,7 @@ namespace Aplikace.Excel
                         cb.ValueMember = "Key";
                         cb.SelectedIndex = selectIndex;
                     }
-                };
+                }
 
                 cbSheet.SelectedIndexChanged += (s, e) => updateSheetAndGrid();
                 nudRow.ValueChanged += (s, e) => updateSheetAndGrid();

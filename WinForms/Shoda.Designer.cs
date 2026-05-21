@@ -41,8 +41,8 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(1086, 116);
             dataGridView1.TabIndex = 0;
-            dataGridView1.CellClick += dataGridView1_CellClick;
-            dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
+            dataGridView1.CellClick += DataGridView1_CellClick;
+            dataGridView1.CellMouseDoubleClick += DataGridView1_CellMouseDoubleClick;
             // 
             // dataGridView2
             // 
@@ -52,8 +52,8 @@
             dataGridView2.Name = "dataGridView2";
             dataGridView2.Size = new Size(1086, 388);
             dataGridView2.TabIndex = 1;
-            dataGridView2.CellContentClick += dataGridView2_CellContentClick;
-            dataGridView2.SelectionChanged += dataGridView2_SelectionChanged;
+            dataGridView2.CellContentClick += DataGridView2_CellContentClick;
+            dataGridView2.SelectionChanged += DataGridView2_SelectionChanged;
             // 
             // Shoda
             // 

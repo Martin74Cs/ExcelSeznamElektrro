@@ -17,10 +17,14 @@ public sealed class Nastaveni : Form
     private readonly TextBox _tbSouborStrojeXls = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbSouborStrojeJson = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbSouborElektroJson = new() { Dock = DockStyle.Fill };
+    //private readonly TextBox _tbSouborData = new() { Dock = DockStyle.Fill };
+
     private readonly TextBox _tbMistnost = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbProjekt = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbNazev = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbPoznamka = new() { Dock = DockStyle.Fill, Multiline = true, ScrollBars = ScrollBars.Vertical, Height = 80 };
+    private readonly TextBox _tbData = new() { Dock = DockStyle.Fill };
+
     private readonly DateTimePicker _dpDatum = new() { Dock = DockStyle.Left, Width = 180, Format = DateTimePickerFormat.Custom, CustomFormat = "dd.MM.yyyy HH:mm" };
 
     public Nastaveni()
@@ -33,7 +37,8 @@ public sealed class Nastaveni : Form
         FormBorderStyle = FormBorderStyle.Sizable;
         AutoScaleMode = AutoScaleMode.Font;
 
-        _info = Informace.Create;
+        using var info = Informace.Create;
+        _info = info;
 
         BuildUi();
         LoadFromInfo();
@@ -63,6 +68,7 @@ public sealed class Nastaveni : Form
         AddRow(table, ref row, nameof(Informace.Projekt), _tbProjekt);
         AddRow(table, ref row, nameof(Informace.Název), _tbNazev);
         AddRow(table, ref row, nameof(Informace.Poznámka), _tbPoznamka);
+        AddRow(table, ref row, nameof(Informace.AdresarZdrojDat), _tbData, CreateBrowseFolderButton(_tbData));
         AddRow(table, ref row, nameof(Informace.Datum), _dpDatum);
 
         var buttons = new FlowLayoutPanel
@@ -192,6 +198,7 @@ public sealed class Nastaveni : Form
         _tbProjekt.Text = _info.Projekt ?? string.Empty;
         _tbNazev.Text = _info.Název ?? string.Empty;
         _tbPoznamka.Text = _info.Poznámka ?? string.Empty;
+        _tbData.Text = _info.AdresarZdrojDat ?? string.Empty;
         _dpDatum.Value = _info.Datum == default ? DateTime.Now : _info.Datum;
     }
 
@@ -205,6 +212,7 @@ public sealed class Nastaveni : Form
         _info.Projekt = _tbProjekt.Text.Trim();
         _info.Název = _tbNazev.Text.Trim();
         _info.Poznámka = _tbPoznamka.Text;
+        _info.AdresarZdrojDat = _tbData.Text.Trim();
         _info.Datum = _dpDatum.Value;
     }
 

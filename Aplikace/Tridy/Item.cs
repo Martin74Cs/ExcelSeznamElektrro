@@ -9,8 +9,8 @@ namespace Aplikace.Tridy
     public class Item
     {
         public int Id { get; set; }
-        public Unit Cunit { get; set; } = new();
-        public Unit Munit { get; set; } = new();    
+        public Jednotky Cunit { get; set; } = new();
+        public Jednotky Munit { get; set; } = new();    
         
         //public string revNo { get; set; } = string.Empty;
         //public string tag { get; set; } = string.Empty;
@@ -35,7 +35,7 @@ namespace Aplikace.Tridy
         public List<Item> Subitem { get; set; } = [];
     }
 
-    public class Unit
+    public class Jednotky
     {
         public int Id { get; set; }
         public string Pfx { get; set; } = string.Empty;

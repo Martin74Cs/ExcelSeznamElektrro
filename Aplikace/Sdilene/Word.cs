@@ -16,7 +16,7 @@ namespace Aplikace.Sdilene
 {
     public class Word
     {
-        public void SaveDocx<T>(List<T> list, string cesta)
+        public static void SaveDocx<T>(List<T> list, string cesta)
         {
             if (!SouborDelete(cesta)) return;
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(cesta, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
@@ -32,7 +32,7 @@ namespace Aplikace.Sdilene
                 var table = new Table();
 
                 // Styl tabulky
-                TableProperties tblProps = new TableProperties(
+                TableProperties tblProps = new(
                     new TableBorders(
                         new TopBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
                         new BottomBorder { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
@@ -117,7 +117,7 @@ namespace Aplikace.Sdilene
         }
 
       
-        public void SaveDocxList<T>(List<T> list, string cesta)
+        public static void SaveDocxList<T>(List<T> list, string cesta)
         {
             if (!SouborDelete(cesta)) return;
             using (var wordDoc = WordprocessingDocument.Create(cesta, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
@@ -211,7 +211,7 @@ namespace Aplikace.Sdilene
 
         
 
-        public void SaveDocxListClass<T>(List<T> list, string cesta)
+        public static void SaveDocxListClass<T>(List<T> list, string cesta)
         {
             if (!SouborDelete(cesta)) return;
             using (var wordDoc = WordprocessingDocument.Create(cesta, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
@@ -227,7 +227,7 @@ namespace Aplikace.Sdilene
                 settingsPart.Settings.AppendChild(new Languages() { Val = "cs-CZ" });
                 settingsPart.Settings.Save();
 
-                var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                //var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
                 int counter = 1;
 

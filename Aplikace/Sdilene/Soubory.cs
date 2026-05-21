@@ -399,7 +399,7 @@ namespace Aplikace.Sdilene
             //ruzné varienty vytvoření dokumentu
             //new Word().SaveDocx(Pole, cesta);
             //new Word().SaveDocxList(Pole, cesta);
-            new Word().SaveDocxListClass(Pole, cesta);
+            Word.SaveDocxListClass(Pole, cesta);
         }
 
         public static List<T> LoadFromCsv<T>(string file ) where T : new()

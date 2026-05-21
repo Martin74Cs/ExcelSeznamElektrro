@@ -29,7 +29,7 @@ namespace Aplikace.Tridy
         // Interní úložiště
         // =========================
 
-        private readonly Dictionary<string, object> Seznam = new();
+        private readonly Dictionary<string, object> Seznam = [];
 
         // =========================
         // TEST
@@ -160,7 +160,7 @@ namespace Aplikace.Tridy
                     MethodAttributes.SpecialName |
                     MethodAttributes.HideBySig,
                     null,
-                    new[] { propertyType });
+                    [propertyType]);
 
             ILGenerator setIL =
                 setMethodBuilder.GetILGenerator();

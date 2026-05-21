@@ -1,4 +1,5 @@
 ﻿using Aplikace.Excel;
+using Aplikace.Export;
 using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Aplikace.Upravy;
@@ -56,7 +57,7 @@ namespace WinForms
 
         private void Button8_Click(object sender, EventArgs e) {
             //string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
-            System.Diagnostics.Process.Start("explorer.exe", Cesty.Elektro);
+            System.Diagnostics.Process.Start("explorer.exe", Informace.Adresar);
         }
 
         private async void Button9_Click(object sender, EventArgs e) {
@@ -64,8 +65,9 @@ namespace WinForms
             await Task.Run(() => LigthChem.Rozvadec());
         }
 
+        //Otevřít složku projektu v Průzkumníku
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e) {
-            string cesta = Cesty.BasePath;
+            string cesta = Informace.Adresar;
             System.Diagnostics.Process.Start("explorer.exe", cesta);
         }
 
@@ -142,7 +144,9 @@ namespace WinForms
                     Data.SaveToCsv(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".csv"));
                     Data.SaveXML(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".xml"));
                     Data.SaveHtmlStyle(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".html"));
-                    Data.SaveDocx(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".docx"));
+                    //Data.SaveDocx(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".docx"));
+                    Data.SavePdfGen(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".pdf"));
+                    Data.SaveDocxGen(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".docx"));
                 }
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
@@ -366,7 +370,7 @@ namespace WinForms
 
         }
 
-        private void cestyToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void CestyToolStripMenuItem_Click(object sender, EventArgs e) {
             using var f = new Aplikace.Forms.Nastaveni(); f.ShowDialog(this);
         }
     }

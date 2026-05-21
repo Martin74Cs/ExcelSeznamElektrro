@@ -475,7 +475,7 @@ namespace WinForms
             cestyToolStripMenuItem.Name = "cestyToolStripMenuItem";
             cestyToolStripMenuItem.Size = new Size(224, 32);
             cestyToolStripMenuItem.Text = "Cesty";
-            cestyToolStripMenuItem.Click += cestyToolStripMenuItem_Click;
+            cestyToolStripMenuItem.Click += CestyToolStripMenuItem_Click;
             // 
             // Form1
             // 

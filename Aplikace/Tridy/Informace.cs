@@ -32,23 +32,35 @@ namespace Aplikace.Tridy {
         [Display(Name = "Základní složka projektu")]
         public string BasePath { get; set; } = string.Empty;
 
+        //Soubor od strojařů, XLSX
         [Display(Name = "Základní soubor strojnů")]
         public string SouborStrojeXls { get; set; } = string.Empty;
 
-        [Display(Name = "Stroje.json")]
+        //Převenen XLSx na json s výběrem potřebných sloupců, které se budou používat v aplikaci
+        [Display(Name = "Stroje")]
         public string SouborStrojeJson { get; set; } = string.Empty;
 
+        //Hlavní soubor pro elektro, který obsahuje všechny potřebné informace o vývodech
         [Display(Name = "Elektro")]
         public string SouborElektroJson = Path.Combine(Adresar, "Elektro.json");
 
+        //Soubor kde se nachází databáze výrobců a typů komponentů, které se používají v elektro
+        [Display(Name = "Zdroj dat")]
+        public string AdresarZdrojDat { get; set; } = string.Empty;
+
+
         public string Místnost { get; set; } = string.Empty;
+
         public string Projekt { get; set; } = string.Empty;
+
         public string Název { get; set; } = string.Empty;
+
         public string Poznámka { get; set; } = string.Empty;
+
         public DateTime Datum { get; set; } = DateTime.Now;
 
         public static readonly string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private static string Adresar => Path.Combine(appData, "Elektro");
+        public static string Adresar => Path.Combine(appData, "Elektro");
         private static string Soubor => Path.Combine(Adresar, "data.txt");
         public static  Informace Create { 
             get

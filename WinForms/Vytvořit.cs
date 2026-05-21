@@ -60,7 +60,7 @@ namespace WinForms
             //var Motory1 = Soubory.LoadFromCsv<Motor>(CestaMotor);
             var Motory1 = Soubory.LoadJsonList<Motor>(CestaMotor);
             label2.Text = "Cesta = " + CestaMotor;
-            Motor = new BindingList<Motor>(Motory1);
+            Motor = [with(Motory1)];
             dataGridView1.DataSource = Motor;
             SetListBox();
         }
@@ -70,7 +70,7 @@ namespace WinForms
             //await Task.Run(() => LigthChem.VyvoritFM());
             var FM1 = Soubory.LoadFromCsv<Menic>(CestaFM);
             label2.Text = "Cesta = " + CestaFM;
-            FM = new BindingList<Menic>(FM1);
+            FM = [with(FM1)];
             SetListBox();
             dataGridView1.DataSource = FM;
         }
@@ -95,7 +95,7 @@ namespace WinForms
             //await Task.Run(() => LigthChem.VyvoritKM());
             var KM1 = Soubory.LoadFromCsv<Stykac>(CestaKM);
             label2.Text = "Cesta = " + CestaKM;
-            KM = new BindingList<Stykac>(KM1);
+            KM = [with(KM1)];
             SetListBox();
             dataGridView1.DataSource = KM;
         }
@@ -103,18 +103,18 @@ namespace WinForms
         private string SaveCesta { get; set; }
 
         private BindingList<Stykac> KM = [];
-        private readonly string CestaKM = Path.Combine(Cesty.Data, "KM.csv");
+        private readonly string CestaKM = Path.Combine(Informace.Create.AdresarZdrojDat, "KM.csv");
 
         private BindingList<Menic> FM = [];
-        private readonly string CestaFM = Path.Combine(Cesty.Data, "FM.csv");
+        private readonly string CestaFM = Path.Combine(Informace.Create.AdresarZdrojDat, "FM.csv");
 
         private BindingList<Jistic> FA = [];
-        private readonly string CestaJistic = Path.Combine(Cesty.Data, "Jištení", "Jističe3VA.csv");
+        private readonly string CestaJistic = Path.Combine(Informace.Create.AdresarZdrojDat, "Jištení", "Jističe3VA.csv");
 
         private BindingList<Motor> Motor = [];
         //private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "Motory.csv");
 
-        private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "MotoryList.json");
+        private readonly string CestaMotor = Path.Combine(Informace.Create.AdresarZdrojDat, "Motory", "MotoryList.json");
 
         private void Button8_Click(object sender, EventArgs e) {
             //save Stykače
@@ -146,7 +146,7 @@ namespace WinForms
             var FA1 = Soubory.LoadJsonList<Jistic>(Path.ChangeExtension(CestaJistic , ".json"));
 
             label2.Text = "Cesta = " + CestaJistic;
-            FA = new BindingList<Jistic>(FA1);
+            FA = [with(FA1)];
             SetListBox();
             dataGridView1.DataSource = FA;
 

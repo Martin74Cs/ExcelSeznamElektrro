@@ -22,7 +22,7 @@ namespace WinForms {
             Set(listViewProducts);
         }
 
-        private void Set(ListView list) {
+        private static void Set(ListView list) {
             list.View = View.Details;
             list.FullRowSelect = true;
             list.GridLines = true;
