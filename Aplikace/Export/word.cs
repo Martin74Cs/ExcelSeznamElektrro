@@ -15,6 +15,20 @@ namespace Aplikace.Export
             //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0).ToArray();
 
+            //filtr vlastností - pouze ty, které jsou v seznamu start
+            string[] start = {
+                "Radek",
+                "Tag",
+                "Pocet",
+                "Popis",
+                "Menic",
+                "Prikon",
+                "BalenaJednotka",
+                "Pid",
+                "Pozice",
+                "Poznamka" };
+            properties = [.. properties.Where(p => start.Contains(p.Name))];
+
             var outDir = Path.GetDirectoryName(Path.GetFullPath(docxPath));
 
             if (!string.IsNullOrWhiteSpace(outDir))

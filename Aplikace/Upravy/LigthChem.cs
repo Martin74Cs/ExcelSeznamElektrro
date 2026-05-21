@@ -93,7 +93,7 @@ namespace Aplikace.Upravy
 
         public static void DoplněníDat()
         {
-            string cestaData = Cesty.ElektroDataJson;
+            string cestaData = Informace.Create.SouborElektroJson;
             if (!File.Exists(cestaData))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -132,7 +132,7 @@ namespace Aplikace.Upravy
                 }
             }
             //testovací verze
-            string testCsv = Path.Combine(Path.GetDirectoryName(cesta1) ?? Cesty.Elektro, "Test.csv");
+            string testCsv = Path.Combine(Path.GetDirectoryName(cesta1) ?? Informace.Create.BasePath, "Test.csv");
             Nove.SaveToCsv(testCsv);
             //Verze přepsání původního Jsonu
             //Nove.SaveJsonList(cestaData);
@@ -140,7 +140,7 @@ namespace Aplikace.Upravy
 
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
         public static void JsonToExcel() {
-            string cestaData = Cesty.ElektroDataJson;
+            string cestaData = Informace.Create.SouborElektroJson;
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
             //Vývody pro doplnění
@@ -151,8 +151,8 @@ namespace Aplikace.Upravy
             //Stara = [.. Stara, .. Vývody];
 
             //Vývody pro doplnění
-            var cestaStavba = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
-            var VývodyStavba = Soubory.LoadJsonList<Zarizeni>(cestaStavba);
+            //var cestaStavba = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
+            var VývodyStavba = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
 
             //Spojení původních s doplněnými
             Stara = [.. Stara, .. VývodyStavba];
@@ -179,7 +179,7 @@ namespace Aplikace.Upravy
             var StaraBezVSD = Stara.Where(x => x.Menic != "VSD").ToList(); // vyloučí všechny s Menic == "VSD"
 
             string filename = "Seznam.xlsx";
-            var cesta = Path.Combine(Cesty.Elektro, filename);
+            var cesta = Path.Combine(Informace.Create.BasePath, filename);
             //vytvoření nebo otevření dokumentu elektro
             var ExcelApp = new ExcelApp(cesta);
 
@@ -329,25 +329,24 @@ namespace Aplikace.Upravy
 
 
 
-        public static void Hlavni()
-        {
-            string cesta = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-            string json = Path.ChangeExtension(cesta, ".json");
-            if (!File.Exists(json))
-                return;
+        //public static void Hlavni()
+        //{
+        //    string cesta = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
+        //    string json = Path.ChangeExtension(cesta, ".json");
+        //    if (!File.Exists(json))
+        //        return;
 
-            //var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
-            //Prevod.UpdateCsvToJson(Source, Target);
-        }
+        //    //var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
+        //    //Prevod.UpdateCsvToJson(Source, Target);
+        //}
 
         public static void AddProud()
         {
-            string cestaData = Cesty.ElektroDataJson;
-            var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
+            var Stara = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
 
             //Možná proud asi jen tam kde není.
             var Add = Stara.AddProud();
-            Add.ToList().SaveJsonList(cestaData);
+            Add.ToList().SaveJsonList(Informace.Create.SouborElektroJson);
         }
 
         /// <summary>Seznam vývodů pro doplnění </summary>
@@ -526,7 +525,7 @@ namespace Aplikace.Upravy
         public static void DoplneniCsvToJson()
         {
             //Soubor kam bude doplněno
-            string cestaData = Path.Combine(Cesty.ElektroDataJson);
+            string cestaData = Path.Combine(Informace.Create.SouborElektroJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cestaData);
             
             //Data pro doplnění
@@ -552,7 +551,7 @@ namespace Aplikace.Upravy
         /// <summary> Převod seznamu frekvenčních měničů na Json </summary>
         public static void VyvoritFM()
         {
-            string basePath = Path.Combine(Cesty.BasePath, "Data");
+            string basePath = Path.Combine(Informace.Create.BasePath, "Data");
             string CestaKM = Path.Combine(basePath, "KM.csv"); 
            
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
@@ -565,7 +564,7 @@ namespace Aplikace.Upravy
         /// <summary> Převod seznamu stykačů na Json </summary>
         public static void VyvoritKM()
         {
-            string basePath = Path.Combine(Cesty.BasePath, "Data");
+            string basePath = Path.Combine(Informace.Create.BasePath, "Data");
             string CestaKM = Path.Combine(basePath, "KM.csv"); 
            
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
@@ -578,26 +577,26 @@ namespace Aplikace.Upravy
         /// <summary> Převod seznamu motorů a motorů3000 na jeden Json </summary>
         public static void VyvoritMotor()
         {
-            string basePath = Path.Combine(Cesty.Data, "Motory");
-            string CestaMotor = Path.Combine(basePath, "Motory.csv");
-            var Motor = Soubory.LoadFromCsv<Motor>(CestaMotor);
+            //string basePath = Path.Combine(Cesty.Data, "Motory");
+            //string CestaMotor = Path.Combine(basePath, "Motory.csv");
+            var Motor = Soubory.LoadFromCsv<Motor>(Cesty.CestaMotorCsv);
             Console.WriteLine($"Pocet motorů: {Motor.Count}");
 
-            string CestaMotor3000 = Path.Combine(basePath, "Motory3000.csv");
-            var Motor3000 = Soubory.LoadFromCsv<Motor>(CestaMotor3000);
+            //string CestaMotor3000 = Path.Combine(basePath, "Motory3000.csv");
+            var Motor3000 = Soubory.LoadFromCsv<Motor>(Cesty.CestaMotor3000Csv);
             Console.WriteLine($"Pocet motorů: {Motor3000.Count}");
 
             Motor.AddRange(Motor3000);
             Console.WriteLine($"Pocet motorů: {Motor.Count}");
 
-            Motor.SaveJsonList(Path.ChangeExtension(CestaMotor, ".json"));
+            Motor.SaveJsonList(Cesty.CestaMotor);
             Console.WriteLine($"Motory uloženy jako Json");
         }
 
         public static void Rozvadec() {
-            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
-            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
-            var Data2 = Soubory.LoadJsonList<Zarizeni>(Vývody);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+            //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+            var Data2 = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
 
             Data = [.. Data, .. Data2];
 
@@ -634,7 +633,7 @@ namespace Aplikace.Upravy
         }
         public static void SpojitSeznamy()
         {
-            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
             Data = [.. Data.Where(x => x.Etapa == "FAZE 1")];
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -652,7 +651,7 @@ namespace Aplikace.Upravy
             Data = [.. Data, .. Data2];
             //Data.SaveJsonList(Path.Combine(Cesty.Elektro, "Pid", @"Test.json" ));
             //Data.SaveToCsv(Path.Combine(Cesty.Elektro, "Pid", @"Test.csv"));
-            Data.SaveJsonList(Cesty.ElektroDataJson);
+            Data.SaveJsonList(Informace.Create.SouborElektroJson);
         }
         /// <summary>Převod stringu na enum</summary>
         private static void StringToEnum(IGrouping<string, Zarizeni> skupina) {
@@ -668,7 +667,7 @@ namespace Aplikace.Upravy
 
         internal static void Duplicity()
         {
-            string cestaData = Cesty.ElektroDataJson;
+            string cestaData = Informace.Create.SouborElektroJson;
             var Data = Soubory.LoadJsonList<Zarizeni>(cestaData);
             Console.WriteLine($"Pocet záznamů: {Data.Count}");
             Data = [.. Data.DistinctBy(x => x.Apid)];

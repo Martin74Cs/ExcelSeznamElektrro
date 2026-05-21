@@ -226,7 +226,6 @@ namespace Aplikace.Seznam
                 VypisVlastnosti(item);
             }
 
-
             // Najít jističe s proudem 16 A, napětím AC 230 V a charakteristikou B
             var breakers = FindCircuitBreakers(products, currentInA: 16, voltageUe: "AC 230", characteristic: "B");
             Console.WriteLine($"Nalezeno {breakers.Count} jističů (16 A, AC 230 V, charakteristika B):");

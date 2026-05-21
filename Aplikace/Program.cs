@@ -33,7 +33,7 @@ while (!konec)
     Console.WriteLine($"Aktuální složka projektu: {currentPath}");
     Console.WriteLine("------------------------------------------------------------------");
     Console.ResetColor();
-    Console.WriteLine("1. Načíst seznam výkresů z XLS (Lightchem)");
+    Console.WriteLine("1. Načíst seznam výkresů z XLS");
     Console.WriteLine("2. Spustit kompletní Elektro / Revizní proces");
     Console.WriteLine("3. Zpracovat místnosti (Vytvořit seznamy)");
     Console.WriteLine("4. Zpracovat Povrly (JSON -> XML/CSV)");
@@ -108,9 +108,9 @@ while (!konec)
                 string? novaCesta = Soubory.ShowFolderBrowserDialog("Vyberte hlavní složku projektu", currentPath);
                 if (!string.IsNullOrEmpty(novaCesta))
                 {
-                    var info = Informace.Create;
+                    using var info = Informace.Create;
                     info.BasePath = novaCesta;
-                    info.Ulozit();
+                    //info.Ulozit();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Projektová složka byla úspěšně změněna na: {novaCesta}");
                     Console.ResetColor();

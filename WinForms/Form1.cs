@@ -57,7 +57,7 @@ namespace WinForms
 
         private void Button8_Click(object sender, EventArgs e) {
             //string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
-            System.Diagnostics.Process.Start("explorer.exe", Informace.Adresar);
+            System.Diagnostics.Process.Start("explorer.exe", Informace.Create.BasePath);
         }
 
         private async void Button9_Click(object sender, EventArgs e) {
@@ -153,11 +153,14 @@ namespace WinForms
             }
         }
 
+        /// <summary>
+        /// Vlastní vývody mimo stroje
+        /// </summary>
         private void Button11_Click(object sender, EventArgs e) {
             //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
             //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
 
-            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+            var Vývody = Path.Combine(Cesty.VyvodyJson);
             if(!File.Exists(Vývody)) { Console.WriteLine("Soubor nebyl nalezen " + Vývody); return; }
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
 
@@ -211,9 +214,9 @@ namespace WinForms
             //data.Columns["Motor"].Visible = false;
         }
 
-
+        /// <summary> Průzkumník tedy složka projektu </summary>
         private void Button12_Click(object sender, EventArgs e) {
-            System.Diagnostics.Process.Start("explorer.exe", Cesty.Elektro);
+            System.Diagnostics.Process.Start("explorer.exe", Informace.Create.BasePath);
         }
 
         //Doplmění dat do Elektro z aktualizovaného Strojního seznamu,
@@ -314,8 +317,8 @@ namespace WinForms
 
         //Vývody stavba
         private void Button5_Click(object sender, EventArgs e) {
-            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
-            var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
+
+            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
 
             var table = new Table(Data);
             SkrytSloupce(table.dataGridView1);
@@ -324,12 +327,12 @@ namespace WinForms
             if(result == DialogResult.OK) {
                 //přidat prázdný záznam
                 if(Data.Count < 1) Data.Add(new Zarizeni());
-                Data.SaveJsonList(Vývody);
+                Data.SaveJsonList(Cesty.VyvodyStavbaJson);
             }
         }
 
         private void PříkonCelkemToolStripMenuItem_Click(object sender, EventArgs e) {
-            var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
             Console.WriteLine($"Příkon celkem: {Data.Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
             Console.WriteLine($"Příkon FAZE 1: {Data.Where(x => x.Etapa == "FAZE 1").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
             Console.WriteLine($"Příkon FAZE 2: {Data.Where(x => x.Etapa == "FAZE 2").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");

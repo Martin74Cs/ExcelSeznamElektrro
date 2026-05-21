@@ -103,18 +103,18 @@ namespace WinForms
         private string SaveCesta { get; set; }
 
         private BindingList<Stykac> KM = [];
-        private readonly string CestaKM = Path.Combine(Informace.Create.AdresarZdrojDat, "KM.csv");
+        private readonly string CestaKM = Cesty.CestaKM;
 
         private BindingList<Menic> FM = [];
-        private readonly string CestaFM = Path.Combine(Informace.Create.AdresarZdrojDat, "FM.csv");
+        private readonly string CestaFM = Cesty.CestaFM;
 
         private BindingList<Jistic> FA = [];
-        private readonly string CestaJistic = Path.Combine(Informace.Create.AdresarZdrojDat, "Jištení", "Jističe3VA.csv");
+        private readonly string CestaJistic = Cesty.CestaJistic;
 
         private BindingList<Motor> Motor = [];
         //private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "Motory.csv");
 
-        private readonly string CestaMotor = Path.Combine(Informace.Create.AdresarZdrojDat, "Motory", "MotoryList.json");
+        private readonly string CestaMotor = Cesty.CestaMotor;
 
         private void Button8_Click(object sender, EventArgs e) {
             //save Stykače
