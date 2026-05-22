@@ -21,10 +21,10 @@ namespace Aplikace.Sdilene
         public static string ProgramFiles { get => Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles); }
 
         public static string UserProfile { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
-        public static string Cesta { get => Path.Combine(UserProfile, @"AppData\Roaming\Autodesk\ApplicationPlugins\Elektro.bundle"); }
-        public static string CestaSichAcad => Path.Combine(Cesta, "Sichr");
-        public static string CuJsonAcad => Path.Combine(CestaSichAcad, "Cu.Json");
-        public static string AlJsonAcad => CestaSichAcad + @"Al.Json";
+        public static string Bundle { get => Path.Combine(UserProfile, @"AppData\Roaming\Autodesk\ApplicationPlugins\Elektro.bundle"); }
+        public static string SichrAcad => Path.Combine(Bundle, "Sichr");
+        public static string CuJsonAcad => Path.Combine(SichrAcad, "Cu.Json");
+        public static string AlJsonAcad => SichrAcad + @"Al.Json";
 
         /// <summary>...LightChem\Elektro\Lightchem </summary>
         //public static string Lightchem => Path.Combine(BasePath, "Lightchem");
@@ -85,25 +85,27 @@ namespace Aplikace.Sdilene
         }
         //public static string Data => Path.Combine(BasePath, "Data");
         public static string MistnostiXLs => Path.Combine(Místnost, "Místnosti.celek.xlsx");
-        public static string MistnostiJson => Path.ChangeExtension(MistnostiXLs, ".json");
+        public static string Mistnosti => Path.ChangeExtension(MistnostiXLs, ".json");
 
         //Cesta ke zdroji dat pro stykače, měniče a jističe, motory.
-        public static string CestaKM => Path.Combine(Informace.Create.AdresarZdrojDat,"Stykac", "KM.csv");
+        public static string KM => Path.Combine(Informace.Create.AdresarZdrojDat, "Stykac", "KM.json");
+        public static string KMCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Stykac", "KM.csv");
 
-        public static string CestaFM => Path.Combine(Informace.Create.AdresarZdrojDat, "Menic", "FM.csv");
+        public static string FM => Path.Combine(Informace.Create.AdresarZdrojDat, "Menic", "FM.json");
+        public static string FMCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Menic", "FM.csv");
 
         public static string CuJson => Path.Combine(Informace.Create.AdresarZdrojDat, "Kabel", "Cu.json");
         public static string AlJson => Path.Combine(Informace.Create.AdresarZdrojDat, "Kabel", "Al.json");
 
-        public static string CestaJistic => Path.Combine(Informace.Create.AdresarZdrojDat, "Jistic", "Jističe3VA.csv");
+        public static string JisticCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Jistic", "Jističe3VA.csv");
+        public static string Jistic => Path.Combine(Informace.Create.AdresarZdrojDat, "Jistic", "Jističe3VA.json");
 
-        public static string CestaMotor => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "MotoryList.json");
-        public static string CestaMotorCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "MotoryList.csv");
-        public static string CestaMotor3000Csv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "Motory3000.csv");
+        public static string Motor => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "MotoryList.json");
+        public static string MotorCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "MotoryList.csv");
+        public static string Motor3000Csv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "Motory3000.csv");
 
-
-        //public static string MotoryJson => Path.Combine(Informace.Create.AdresarZdrojDat, "Motory", "Motory.Json");
-        
+        public static string Motory => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "Motory.Json");
+        public static string MotoryCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "Motory.Csv");
 
         //Projekt
         public static string Projekt => Path.Combine(Informace.Create.BasePath);

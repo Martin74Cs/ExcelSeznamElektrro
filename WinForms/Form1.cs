@@ -116,9 +116,11 @@ namespace WinForms
             if(Data.Count < 1) {
                 Console.WriteLine("Soubor je prázdný " + Informace.Create.SouborElektroJson);
                 if(MessageBox.Show("Kopie souborů ze souboru Strojni", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+
                     var Adresar = Path.GetDirectoryName(Informace.Create.SouborStrojeJson);
                     using var info = Informace.Create;
                     info.SouborElektroJson = Path.Combine(Adresar,"Elektro.Data.json");
+
                     if(!File.Exists(Informace.Create.SouborStrojeJson)) {
                         Console.WriteLine("Soubor nebyl nalezen " + Informace.Create.SouborStrojeJson); return;
                     }
@@ -135,11 +137,13 @@ namespace WinForms
 
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
+
             if(result == DialogResult.OK) {
                 //if (Data.Count < 1) Data.Add(new Zarizeni());
 
                 //Soubou znovu uložit je možné že nastaly změny v souboru
                 Data.SaveJsonList(Informace.Create.SouborElektroJson);
+
                 if(MessageBox.Show("Aktualizace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                     Data.SaveToCsv(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".csv"));
                     Data.SaveXML(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".xml"));

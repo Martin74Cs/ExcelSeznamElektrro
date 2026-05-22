@@ -189,14 +189,14 @@ namespace Aplikace.Seznam
             .Where(p => type == null || p.Type == type)];
         }
 
-        public static void Main()
+        public static void Main(string cesta)
         {
             string file = "OEZExportZbozi2025-05-29.csv";
-            string Cesta = Path.Combine(Cesty.Data, "Jištení", file);
+            string Cesta = Path.Combine(cesta, "Jištení", file);
             List<Oez.Product> products = Oez.LoadProductsFromCsv(Cesta);
 
             List<string> Druhy = [.. products.Select(x => x.Skupina).Distinct()];
-            Druhy.SaveJsonList(Path.Combine(Cesty.Data, "Jištení", "Druhy.json"));
+            Druhy.SaveJsonList(Path.Combine(cesta, "Jištení", "Druhy.json"));
 
             var Pole = products.GroupBy(x => x.Skupina).OrderBy(x => x.Key);
             //foreach(var item in Pole) 
@@ -206,8 +206,8 @@ namespace Aplikace.Seznam
             {
                 Console.WriteLine(item.Key);
                 var Data = Pole.Where(x => x.Key.Contains(item.Key)).SelectMany(g => g).ToList();
-                Data.SaveJsonList(Path.Combine(Cesty.Data, "Jištení", "Dělení", $"{item.Key.Replace("/", " ")}.json"));
-                Data.SaveToCsv(Path.Combine(Cesty.Data, "Jištení", "Dělení", $"{item.Key}.csv"));
+                Data.SaveJsonList(Path.Combine(cesta, "Jištení", "Dělení", $"{item.Key.Replace("/", " ")}.json"));
+                Data.SaveToCsv(Path.Combine(cesta, "Jištení", "Dělení", $"{item.Key}.csv"));
             }
 
             Console.WriteLine("\n" + "Pojistková vložka");

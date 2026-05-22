@@ -16,8 +16,8 @@ namespace WinForms {
         public Rozvaděč() {
             InitializeComponent();
             //Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
-            var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
-            Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
+            //var Vývody = Path.Combine(Cesty.VyvodyJson, "Vývody.json");
+            Data = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyJson);
             Set(listViewCategories);
             Set(listViewProducts);
         }

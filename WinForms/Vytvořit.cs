@@ -103,24 +103,24 @@ namespace WinForms
         private string SaveCesta { get; set; }
 
         private BindingList<Stykac> KM = [];
-        private readonly string CestaKM = Cesty.CestaKM;
+        private readonly string CestaKM = Cesty.FM;
 
         private BindingList<Menic> FM = [];
-        private readonly string CestaFM = Cesty.CestaFM;
+        private readonly string CestaFM = Cesty.FM;
 
         private BindingList<Jistic> FA = [];
-        private readonly string CestaJistic = Cesty.CestaJistic;
+        private readonly string CestaJistic = Cesty.Jistic;
 
         private BindingList<Motor> Motor = [];
         //private readonly string CestaMotor = Path.Combine(Cesty.Data, "Motory", "Motory.csv");
 
-        private readonly string CestaMotor = Cesty.CestaMotor;
+        private readonly string CestaMotor = Cesty.Motor;
 
         private void Button8_Click(object sender, EventArgs e) {
             //save Stykače
             Console.WriteLine($"Stykače uloženy jako Json a CSV");
-            KM.ToList().SaveJsonList(Path.ChangeExtension(CestaKM, ".json"));
-            KM.ToList().SaveToCsv(CestaKM);
+            KM.ToList().SaveJsonList(Cesty.KM);
+            KM.ToList().SaveToCsv(Cesty.KMCsv);
             dataGridView1.DataSource = null;
         }
 
@@ -143,7 +143,7 @@ namespace WinForms
         private void Button11_Click(object sender, EventArgs e) {
             //Open oEz 3VA
             //var FA1 = Soubory.LoadFromCsv<Jistic>(CestaJistic);
-            var FA1 = Soubory.LoadJsonList<Jistic>(Path.ChangeExtension(CestaJistic , ".json"));
+            var FA1 = Soubory.LoadJsonList<Jistic>(Cesty.Jistic);
 
             label2.Text = "Cesta = " + CestaJistic;
             FA = [with(FA1)];

@@ -579,17 +579,17 @@ namespace Aplikace.Upravy
         {
             //string basePath = Path.Combine(Cesty.Data, "Motory");
             //string CestaMotor = Path.Combine(basePath, "Motory.csv");
-            var Motor = Soubory.LoadFromCsv<Motor>(Cesty.CestaMotorCsv);
+            var Motor = Soubory.LoadFromCsv<Motor>(Cesty.MotorCsv);
             Console.WriteLine($"Pocet motorů: {Motor.Count}");
 
             //string CestaMotor3000 = Path.Combine(basePath, "Motory3000.csv");
-            var Motor3000 = Soubory.LoadFromCsv<Motor>(Cesty.CestaMotor3000Csv);
+            var Motor3000 = Soubory.LoadFromCsv<Motor>(Cesty.Motor3000Csv);
             Console.WriteLine($"Pocet motorů: {Motor3000.Count}");
 
             Motor.AddRange(Motor3000);
             Console.WriteLine($"Pocet motorů: {Motor.Count}");
 
-            Motor.SaveJsonList(Cesty.CestaMotor);
+            Motor.SaveJsonList(Cesty.Motor);
             Console.WriteLine($"Motory uloženy jako Json");
         }
 
@@ -676,6 +676,9 @@ namespace Aplikace.Upravy
             Data.SaveJsonList(cestaData);
         }
 
+        /// <summary> Asi se jedná o náčítání seznamu výkresů z excelu pro další zpracování</summary>
+        /// 17 je rádek kde to má začínat načítat
+        /// V souboru pak vypsáno co se kam má načítat.
         internal static void NačtiSeznamVýkresůXls(string v) {
             var data = ExcelLoad.DataExcelVykres(v, "seznam dokumentace", 17);
             data.SaveJsonList(Path.ChangeExtension(v, ".json"));

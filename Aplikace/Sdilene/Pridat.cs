@@ -15,11 +15,11 @@ namespace Aplikace.Sdilene
         /// <summary>výpočet proudu </summary>
         public static IEnumerable<Zarizeni> AddProud(this IEnumerable<Zarizeni> pole)
         {
-            string Cesta = Path.Combine(Cesty.MotoryJson);
+            string Cesta = Path.Combine(Cesty.Motory);
             var Motory = Soubory.LoadJsonList<Motor>(Cesta).Where(x => x.Otacky50 > 2800).OrderBy(x => x.Vykon50).ToList();
             if (Motory.Count < 1) 
             {
-                Console.WriteLine($"Nebyly nanačteny motory z {Cesta}");
+                Console.WriteLine($"Nebyly nanačteny motory z {Cesty.Motory}");
                 return pole;
             }
             // Přidání vlastnosti "Proud" do každého zařízení
