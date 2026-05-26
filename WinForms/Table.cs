@@ -1,4 +1,4 @@
-﻿using Aplikace.Excel;
+using Aplikace.Excel;
 using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Aplikace.Upravy;
@@ -6,6 +6,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace WinForms
 {
@@ -43,6 +44,25 @@ namespace WinForms
             var PID = Pole.Select(z => z.Pid).Distinct().OrderBy(x => x).ToList();
             PID.Add("All");
             comboBox4Pid.DataSource = PID; comboBox4Pid.SelectedIndex = PID.Count - 1;
+
+            // Propojíme výběr v DataGridView se zobrazením v PropertyGridu
+            dataGridView1.SelectionChanged += (s, e) =>
+            {
+                if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z)
+                {
+                    propertyGrid1.SelectedObject = z;
+                }
+                else
+                {
+                    propertyGrid1.SelectedObject = null;
+                }
+            };
+
+            // Když v PropertyGridu dojde ke změně hodnoty, překreslíme DataGridView
+            propertyGrid1.PropertyValueChanged += (s, e) =>
+            {
+                dataGridView1.Refresh();
+            };
         }
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -169,7 +189,7 @@ namespace WinForms
                 var nameColumn = new DataGridViewTextBoxColumn
                 {
                     DataPropertyName = name,
-                    HeaderText = name,
+                    HeaderText = GetPropertyHeader(name),
                     Name = name
                 };
                 dataGridView1.Columns.Add(nameColumn);
@@ -191,7 +211,7 @@ namespace WinForms
                 //Name = "Vyber",
                 //DataPropertyName = "Druh", 
                 //DataSource = Vyber,
-                HeaderText = "Druh",          // Nadpis sloupce
+                HeaderText = GetPropertyHeader("Druh"),          // Nadpis sloupce
                 Name = "Druh",                // Jméno sloupce
                 DataPropertyName = "Druh",   // Vlastnost objektu Zarizeni
                 DataSource = Vyber,
@@ -209,6 +229,24 @@ namespace WinForms
 
             dataGridView1.AllowUserToDeleteRows = true;
             dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
+        }
+
+
+
+        private static string GetPropertyHeader(string propertyName)
+        {
+            var prop = typeof(Zarizeni).GetProperty(propertyName);
+            if (prop == null) return propertyName;
+
+            var displayAttr = prop.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>();
+            var jednotkyAttr = prop.GetCustomAttribute<JednotkyAttribute>();
+
+            string header = displayAttr?.Name ?? propertyName;
+            if (jednotkyAttr != null && !string.IsNullOrEmpty(jednotkyAttr.Text))
+            {
+                header += $" {jednotkyAttr.Text}";
+            }
+            return header;
         }
 
         private void Button1_Click(object sender, EventArgs e)

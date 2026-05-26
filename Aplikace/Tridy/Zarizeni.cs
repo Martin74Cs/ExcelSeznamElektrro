@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -23,181 +23,286 @@ namespace Aplikace.Tridy
 
     public class Zarizeni : Entity , INotifyPropertyChanged
     {
-        private string tagStroj = string.Empty;
-        private string tag = string.Empty;
-        private string predmet = string.Empty;
-        private string pid = string.Empty;
-        private string pozice = string.Empty;
-        private string prikon = string.Empty;
-        private string prikonStroj = string.Empty;
-        private string balenaJednotka = string.Empty;
-        private string menic = string.Empty;
-        private string nic = string.Empty;
-        private string proud = string.Empty;
-        private string prurezMM2 = string.Empty;
-        private int pocetKabelu = 1; //string.Empty;
-        private int pocet;
-        private string popis = string.Empty;
-        private string poznamka = string.Empty;
-        private string aWG = string.Empty;
-        private double delka = 100;
-        private double delkaft;
-        private string rozvadec = string.Empty;
-        private string rozvadecCislo = string.Empty;
-        private string druh = string.Empty;
-        private string typ = string.Empty;
-        private string etapa = string.Empty;
-        private Druhy druhenum = Druhy.Rozvadeč; // Výchozí hodnota pro enum Druhy
-        private string napeti = "400";
-        private int radek;
-        private string vodice = string.Empty;
-        private Kabel kabel = new();
-        private Motor motor = new();
-        private string patro = string.Empty;
-        private string vykres = string.Empty;
-        private bool isExist = false;
-        private string bod = string.Empty;
-        private bool isExistElektro = false;
-        //private string bodElektro = string.Empty;
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        //public Zarizeni() { }
-
-        //public Zarizeni(string Tag, string PID, string Popis, string Prikon ,string BalenaJednotka, string Menic , string Nic, string HPstr , string Proud, string PrurezMM2, string AWG, 
-        //string Delka, string Delkaft , string Rozvadec , string RozvadecCislo )
-        //{
-        //    this.Tag = Tag;
-        //    this.PID = PID;
-        //    this.Popis = Popis;
-        //    this.Prikon = Prikon;
-        //    this.BalenaJednotka = BalenaJednotka;
-        //    this.Menic = Menic;
-        //    this.Nic = Nic;
-        //    //hp
-        //    this.Proud = Proud;
-        //    this.PrurezMM2 = PrurezMM2;
-        //    this.AWG = AWG;
-        //    this.Delka = Delka;
-        //    this.Delkaft = Delkaft;
-        //    this.Rozvadec = Rozvadec;
-        //    this.RozvadecCislo = RozvadecCislo;
-        //    //this.Druh = Druh;
-        //}
-        /// <summary>Druh zařízení čerpadlo, motor, trafo</summary>
-
-        //var TextPole = new string[] { "Tag", "PID", "Equipment name", "kW", "BalenaJednotka", "Menic", "Nic", "Power [HP]", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
-
-        /// <summary>Označení zařízení </summary>
+        #region 1. Identifikace a popis
+        private string tag = string.Empty;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Označení (Tag)")]
+        [Description("Unikátní kód / označení zařízení.")]
         public string Tag { get => tag; set => SetProperty(ref tag , value); }
+
+        private string tagStroj = string.Empty;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Tag stroje")]
+        [Description("Označení odpovídajícího strojního zařízení.")]
+        public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
+
+        private string predmet = string.Empty;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Předmět")]
+        [Description("Předmět / název zařízení.")]
         public string Predmet { get => predmet; set => SetProperty(ref predmet , value); }
 
+        private string pid = string.Empty;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("P&ID Schéma")]
+        [Description("Označení příslušného P&ID technologického schématu.")]
         [Display(Name = "Technologické schéma")]
         public string Pid { get => pid; set => SetProperty(ref pid, value); }
-        public int Pocet { get => pocet; set => SetProperty(ref pocet, value); }
 
-        public string Pozice { get => pozice; set => SetProperty(ref pozice, value); }
-
-        /// <summary>Popis zařízení</summary>
+        private string popis = string.Empty;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Popis zařízení")]
+        [Description("Jméno nebo popis zařízení.")]
         [Display(Name = "Jméno zařízení")]
         public string Popis { get => popis; set => SetProperty(ref popis, value); }
 
+        private string pozice = string.Empty;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Pozice")]
+        [Description("Označení pozice.")]
+        public string Pozice { get => pozice; set => SetProperty(ref pozice, value); }
+
+        private string poznamka = string.Empty;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Poznámka")]
+        [Description("Doplňující poznámky k zařízení.")]
         public string Poznamka { get => poznamka; set => SetProperty(ref poznamka, value); }
 
+        private int pocet;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Počet")]
+        [Description("Počet kusů.")]
+        public int Pocet { get => pocet; set => SetProperty(ref pocet, value); }
+
+        private int radek;
+        [Category("1. Identifikace a popis")]
+        [DisplayName("Řádek stroje")]
+        [Description("Řádek odpovídající strojnímu zařízení.")]
+        public int Radek { get => radek; set => SetProperty(ref radek, value); }
+        #endregion
+
+        #region 2. Umístění a fáze
+        private string patro = string.Empty;
+        [Category("2. Umístění a fáze")]
+        [DisplayName("Patro")]
+        [Description("Patro budovy / podlaží.")]
+        public string Patro { get => patro; set => SetProperty(ref patro, value); }
+
+        private string vykres = string.Empty;
+        [Category("2. Umístění a fáze")]
+        [DisplayName("Výkres")]
+        [Description("Identifikační číslo výkresu.")]
+        public string Vykres { get => vykres; set => SetProperty(ref vykres, value); }
+
+        private string etapa = string.Empty;
+        [Category("2. Umístění a fáze")]
+        [DisplayName("Fáze výstavby")]
+        [Description("Fáze nebo etapa výstavby.")]
+        [Display(Name = "Fáze výstavby")]
+        public string Etapa { get => etapa; set => SetProperty(ref etapa, value); }
+        #endregion
+
+        #region 3. Elektrické parametry
+        private string prikon = string.Empty;
+        [Category("3. Elektro parametry")]
+        [DisplayName("Příkon elektro")]
+        [Description("Elektrický příkon zařízení [kW].")]
         [Display(Name = "Příkon elektro")]
         [Jednotky("[kW]")]
         public string Prikon { get => prikon; set => SetProperty(ref prikon , value); }
 
+        private string prikonStroj = string.Empty;
+        [Category("3. Elektro parametry")]
+        [DisplayName("Příkon strojní")]
+        [Description("Strojní příkon zařízení [kW].")]
         [Display(Name = "Příkon strojní")]
         [Jednotky("[kW]")]
         public string PrikonStroj { get => prikonStroj; set => SetProperty(ref prikonStroj, value); }
-        public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
 
-        [Display(Name = "Měnič")]
-        public string Menic { get => menic; set => SetProperty(ref menic, value); }
-
-        public string Nic { get => nic; set => SetProperty(ref nic, value); }
-        public string TagStroj { get => tagStroj; set => SetProperty(ref tagStroj , value); }
-
-        [JsonIgnore]
-        [Display(Name = "Příkon")]
-        [Jednotky("[hp]")]
-        public double HP => Math.Round(double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0, 2); // Převod textu na číslo a na koně
-
+        private string proud = string.Empty;
+        [Category("3. Elektro parametry")]
+        [DisplayName("Proud")]
+        [Description("Jmenovitý proud [A].")]
         [Display(Name = "Proud")]
         [Jednotky("[A]")]
         public string Proud { get => proud; set => SetProperty(ref proud, value); }
 
+        private string napeti = "400";
+        [Category("3. Elektro parametry")]
+        [DisplayName("Napětí")]
+        [Description("Jmenovité napětí [V].")]
+        [Display(Name = "Napětí")]
+        public string Napeti { get => napeti; set => SetProperty(ref napeti, value); }
+
+        [JsonIgnore]
+        [Category("3. Elektro parametry")]
+        [DisplayName("Příkon (HP)")]
+        [Description("Přepočtený příkon v koních (pouze pro čtení).")]
+        [Display(Name = "Příkon")]
+        [Jednotky("[hp]")]
+        public double HP => Math.Round(double.TryParse(Prikon, out double hodnota) ? hodnota * 1.341022 : 0, 2); // Převod textu na číslo a na koně
+        #endregion
+
+        #region 4. Napájení a řízení
+        private string druh = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Druh zařízení")]
+        [Description("Druh zařízení (Motor, Přívod, Spojka, Rozvaděč atd.).")]
+        [Display(Name = "Druh zařízení")]
+        public string Druh { get => druh; set => SetProperty(ref druh, value); }
+
+        private string typ = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Typ")]
+        [Description("Konkrétní typ zařízení (např. čerpadlo, vývěva, míchadlo).")]
+        public string Typ { get => typ; set => SetProperty(ref typ, value); }
+
+        private Druhy druhenum = Druhy.Rozvadeč; // Výchozí hodnota pro enum Druhy
+        [JsonIgnore]
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Druh (Enum)")]
+        [Description("Výběr druhu ze seznamu možností (Enum).")]
+        public Druhy DruhEnum { get => druhenum; set => SetProperty(ref druhenum, value); }
+
+        private string menic = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Měnič")]
+        [Description("Typ nebo přítomnost frekvenčního měniče.")]
+        [Display(Name = "Měnič")]
+        public string Menic { get => menic; set => SetProperty(ref menic, value); }
+
+        private string balenaJednotka = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Balená jednotka")]
+        [Description("Označení balené jednotky (Package Unit).")]
+        public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
+
+        private string nic = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Nic (Rezerva)")]
+        [Description("Rezervní pole.")]
+        public string Nic { get => nic; set => SetProperty(ref nic, value); }
+
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Vývod")]
+        [Description("Označení vývodu z rozvaděče.")]
+        public string Vyvod { get; set; } = string.Empty;
+
+        private string vodice = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Počet silových vodičů")]
+        [Description("Odpovídá počtu silových vodičů.")]
+        public string Vodice { get => vodice; set => SetProperty(ref vodice, value); }
+
+        private string rozvadec = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Rozvaděč (Text)")]
+        [Description("Označení nebo zkratka rozvaděče.")]
+        [Display(Name = "Rozvaděč text")]
+        public string Rozvadec { get => rozvadec; set => SetProperty(ref rozvadec, value); }
+
+        private string rozvadecCislo = string.Empty;
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Rozvaděč (Číslo)")]
+        [Description("Doplňující číslo rozvaděče.")]
+        [Display(Name = "Rozvaděč číslo")]
+        public string RozvadecCislo { get => rozvadecCislo; set => SetProperty(ref rozvadecCislo, value); }
+
+        [JsonIgnore]
+        [Category("4. Napájení a řízení")]
+        [DisplayName("Označení rozvaděče")]
+        [Description("Celé spojené označení rozvaděče (pouze pro čtení).")]
+        [Display(Name = "Označení rozvaděče")]
+        public string RozvadecOznačení => Rozvadec + RozvadecCislo;
+        #endregion
+
+        #region 5. Kabelové připojení
+        private Kabel kabel = new();
+        [Category("5. Kabelové připojení")]
+        [DisplayName("Kabel (Objekt)")]
+        [Description("Interní data kabelu.")]
+        public Kabel Kabel { get => kabel; set => SetProperty(ref kabel, value); }
+
+        private int pocetKabelu = 1; //string.Empty;
+        [Category("5. Kabelové připojení")]
+        [DisplayName("Počet kabelů")]
+        [Description("Počet kabelů [ks].")]
         [Display(Name = "Počet kabelů")]
         [Jednotky("[ks]")]
         public int PocetKabelu { get => pocetKabelu; set => SetProperty(ref pocetKabelu, value); }
 
+        private string prurezMM2 = string.Empty;
+        [Category("5. Kabelové připojení")]
+        [DisplayName("Průřez [mm2]")]
+        [Description("Průřez silových vodičů v mm2.")]
         [Display(Name = "Průřez")]
         [Jednotky("[mm2]")]
         public string PrurezMM2 { get => prurezMM2; set => SetProperty(ref prurezMM2, value); }
 
+        private string aWG = string.Empty;
+        [Category("5. Kabelové připojení")]
+        [DisplayName("AWG")]
+        [Description("Průřez kabelu v jednotkách AWG.")]
         public string AWG { get => aWG; set => SetProperty(ref aWG, value); }
 
+        private double delka = 100;
+        [Category("5. Kabelové připojení")]
+        [DisplayName("Délka [m]")]
+        [Description("Délka kabelové trasy v metrech.")]
         [Display(Name = "Délka")]
         [Jednotky("[m]")]
         public double Delka { get => delka; set => SetProperty(ref delka, value); }
 
+        private double delkaft;
+        [Category("5. Kabelové připojení")]
+        [DisplayName("Délka [ft]")]
+        [Description("Délka kabelové trasy ve stopách.")]
         [Display(Name = "Délka")]
         [Jednotky("[ft]")]
         public double Delkaft { get => delkaft; set => SetProperty(ref delkaft, value); }
+        #endregion
 
-        [Display(Name = "Rozvaděč text")]
-        public string Rozvadec { get => rozvadec; set => SetProperty(ref rozvadec, value); }
-
-        [Display(Name = "Rozvaděč číslo")]
-        public string RozvadecCislo { get => rozvadecCislo; set => SetProperty(ref rozvadecCislo, value); }
-        
-        /// <summary>Označení celého rozvaděče</summary>
-        [JsonIgnore]
-        [Display(Name = "Označení rozvaděče")]
-        public string RozvadecOznačení => Rozvadec + RozvadecCislo;
-        public string Vyvod { get; set; } = string.Empty;
-
-        /// <summary>Druh Motor, Přívod, Spojka, Rozvaěděč</summary>
-        [Display(Name = "Druh zařízení")]
-        public string Druh { get => druh; set => SetProperty(ref druh, value); }
-
-        /// <summary>Druh zařízení čerpadlo, vývěva, Míchadlo</summary>
-        public string Typ { get => typ; set => SetProperty(ref typ, value); }
-
-        /// <summary> Fáze výstavba </summary>
-        [Display(Name = "Fáze výstavby")]
-        public string Etapa { get => etapa; set => SetProperty(ref etapa, value); }
-
-        [JsonIgnore]
-        public Druhy DruhEnum { get => druhenum; set => SetProperty(ref druhenum, value); }
-
-        [Display(Name = "Napětí")]
-        public string Napeti { get => napeti; set => SetProperty(ref napeti, value); }
-        /// <summary>Odpovídá radku strojního zařízení</summary>
-        public int Radek { get => radek; set => SetProperty(ref radek, value); }
-
-        /// <summary>Odpovídá počtu silových vodičů </summary>
-        public string Vodice { get => vodice; set => SetProperty(ref vodice, value); }
-
-        //[JsonIgnore]
-        public Kabel Kabel { get => kabel; set => SetProperty(ref kabel, value); }
-        //[JsonIgnore]
+        #region 6. Motor
+        private Motor motor = new();
+        [Category("6. Motor")]
+        [DisplayName("Motor (Objekt)")]
+        [Description("Interní data motoru.")]
         public Motor Motor { get => motor; set => SetProperty(ref motor, value); }
-        public string Patro { get => patro; set => SetProperty(ref patro, value); }
-        public string Vykres { get => vykres; set => SetProperty(ref vykres, value); }         /// <summary>false=neexistuje</summary>
+        #endregion
+
+        #region 7. CAD koordinace
+        private bool isExist = false;
+        [Category("7. CAD koordinace")]
+        [DisplayName("Existuje v projektu")]
+        [Description("Indikuje, zda zařízení fyzicky existuje (false = neexistuje).")]
         public bool IsExist { get => isExist; set => SetProperty(ref isExist, value); }
 
+        private string bod = string.Empty;
+        [Category("7. CAD koordinace")]
+        [DisplayName("Bod (Souřadnice)")]
+        [Description("Souřadnice bodu v CAD.")]
         [JsonConverter(typeof(PointToStringConverter))]
         public string Bod { get => bod; set => SetProperty(ref bod, value); }
 
-        /// <summary>Definice bloku elektro</summary>
+        private bool isExistElektro = false;
+        [Category("7. CAD koordinace")]
+        [DisplayName("Elektro blok existuje")]
+        [Description("Indikuje přítomnost elektro bloku v CAD.")]
         public bool IsExistElektro { get => isExistElektro; set => SetProperty(ref isExistElektro, value); }
 
+        [Category("7. CAD koordinace")]
+        [DisplayName("Otočení bloku")]
+        [Description("Úhel otočení elektro bloku v CAD.")]
         public double Otoceni { get; set; } = 0.0;
 
+        [Category("7. CAD koordinace")]
+        [DisplayName("Bod Elektro")]
+        [Description("Souřadnice elektro bodu v CAD.")]
         [JsonConverter(typeof(PointToStringConverter))]
         public string BodElektro { get;  set;} = string.Empty; // = MyPoint3d.Origin;
+        #endregion
 
         // Vypsání hodnot záznamů podle názvů parametrů
         /// <summary>Rozvaděč</summary>
