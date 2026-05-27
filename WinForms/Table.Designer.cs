@@ -54,6 +54,7 @@ namespace WinForms
             comboBox1 = new ComboBox();
             splitContainer1 = new SplitContainer();
             propertyGrid1 = new PropertyGrid();
+            filtToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             panelFilters.SuspendLayout();
@@ -155,7 +156,7 @@ namespace WinForms
             // 
             // zobrazeniToolStripMenuItem
             // 
-            zobrazeniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { vsechnySloupceToolStripMenuItem, rozvadecSloupceToolStripMenuItem, datoveSloupceToolStripMenuItem });
+            zobrazeniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { vsechnySloupceToolStripMenuItem, rozvadecSloupceToolStripMenuItem, datoveSloupceToolStripMenuItem, filtToolStripMenuItem });
             zobrazeniToolStripMenuItem.Name = "zobrazeniToolStripMenuItem";
             zobrazeniToolStripMenuItem.Size = new Size(90, 24);
             zobrazeniToolStripMenuItem.Text = "Zobrazení";
@@ -163,21 +164,21 @@ namespace WinForms
             // vsechnySloupceToolStripMenuItem
             // 
             vsechnySloupceToolStripMenuItem.Name = "vsechnySloupceToolStripMenuItem";
-            vsechnySloupceToolStripMenuItem.Size = new Size(217, 26);
+            vsechnySloupceToolStripMenuItem.Size = new Size(224, 26);
             vsechnySloupceToolStripMenuItem.Text = "Všechny sloupce";
             vsechnySloupceToolStripMenuItem.Click += Button6_Click;
             // 
             // rozvadecSloupceToolStripMenuItem
             // 
             rozvadecSloupceToolStripMenuItem.Name = "rozvadecSloupceToolStripMenuItem";
-            rozvadecSloupceToolStripMenuItem.Size = new Size(217, 26);
+            rozvadecSloupceToolStripMenuItem.Size = new Size(224, 26);
             rozvadecSloupceToolStripMenuItem.Text = "Sloupce rozvaděče";
             rozvadecSloupceToolStripMenuItem.Click += Button5_Click;
             // 
             // datoveSloupceToolStripMenuItem
             // 
             datoveSloupceToolStripMenuItem.Name = "datoveSloupceToolStripMenuItem";
-            datoveSloupceToolStripMenuItem.Size = new Size(217, 26);
+            datoveSloupceToolStripMenuItem.Size = new Size(224, 26);
             datoveSloupceToolStripMenuItem.Text = "Datové sloupce";
             datoveSloupceToolStripMenuItem.Click += Button8_Click;
             // 
@@ -321,6 +322,13 @@ namespace WinForms
             propertyGrid1.Size = new Size(392, 673);
             propertyGrid1.TabIndex = 0;
             // 
+            // filtToolStripMenuItem
+            // 
+            filtToolStripMenuItem.Name = "filtToolStripMenuItem";
+            filtToolStripMenuItem.Size = new Size(224, 26);
+            filtToolStripMenuItem.Text = "Filtr";
+            filtToolStripMenuItem.Click += filtToolStripMenuItem_Click;
+            // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
@@ -378,5 +386,6 @@ namespace WinForms
         private ComboBox comboBox4Pid;
         public SplitContainer splitContainer1;
         public PropertyGrid propertyGrid1;
+        private ToolStripMenuItem filtToolStripMenuItem;
     }
 }

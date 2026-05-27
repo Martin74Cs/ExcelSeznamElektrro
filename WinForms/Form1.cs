@@ -300,6 +300,9 @@ namespace WinForms
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
             if(result == DialogResult.OK) {
+
+                Data.SaveJsonList(Informace.Create.SouborStrojeJson);
+
                 //if (Data.Count < 1) Data.Add(new Zarizeni());
                 //Data.SaveJsonList(Informace.Create.SouborStrojeJson);
 
