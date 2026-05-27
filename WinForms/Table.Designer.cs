@@ -100,14 +100,14 @@ namespace WinForms
             // 
             uložitToolStripMenuItem.Name = "uložitToolStripMenuItem";
             uložitToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            uložitToolStripMenuItem.Size = new Size(179, 22);
+            uložitToolStripMenuItem.Size = new Size(180, 22);
             uložitToolStripMenuItem.Text = "Uložit (Save)";
             uložitToolStripMenuItem.Click += Button2_Click;
             // 
             // zavřítToolStripMenuItem
             // 
             zavřítToolStripMenuItem.Name = "zavřítToolStripMenuItem";
-            zavřítToolStripMenuItem.Size = new Size(179, 22);
+            zavřítToolStripMenuItem.Size = new Size(180, 22);
             zavřítToolStripMenuItem.Text = "Zavřít (Konec)";
             zavřítToolStripMenuItem.Click += Button1_Click;
             // 
