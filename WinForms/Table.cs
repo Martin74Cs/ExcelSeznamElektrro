@@ -165,7 +165,7 @@ namespace WinForms
         public void SetListBox()
         {
             //var namesToRemove = new[] { "TagStroj", "Tag", "Predmet", "Popis", "Druh", "Typ", "Pid", "Menic", "Prikon", "PrikonStroj", "Rozvadec", "RozvadecCislo", "RozvadecOznačení", "Nic", "Delka", "Vyvod", "Patro", "Vykres" };
-            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "Menic","Napeti", "Prikon", "Rozvadec", "RozvadecCislo", "Vyvod", };
+            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "Menic", "Napeti", "Prikon", "Rozvadec", "RozvadecCislo", "Vyvod", };
             SetListBox(namesToRemove);
         }
         public void SetListBoxData()

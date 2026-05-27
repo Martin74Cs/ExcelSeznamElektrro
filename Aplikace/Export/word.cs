@@ -1,7 +1,8 @@
-using System.Reflection;
+using Aplikace.Tridy;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System.Reflection;
 
 namespace Aplikace.Export
 {
@@ -34,41 +35,41 @@ namespace Aplikace.Export
             if (!string.IsNullOrWhiteSpace(outDir))
                 Directory.CreateDirectory(outDir);
 
-            using var wordDoc = WordprocessingDocument.Create(
-                docxPath,
-                WordprocessingDocumentType.Document);
-
+            using var wordDoc = WordprocessingDocument.Create(docxPath,WordprocessingDocumentType.Document);
             var mainPart = wordDoc.AddMainDocumentPart();
 
             mainPart.Document = new Document(new Body());
-
             var body = mainPart.Document.Body!;
-
-            var heading = string.IsNullOrWhiteSpace(title)
-                ? $"Přehled {typeof(T).Name}"
-                : title;
+            var heading = string.IsNullOrWhiteSpace(title) ? $"Přehled {typeof(T).Name}" : title;
 
             // Nadpis
+            //body.Append(ParagraphOf(heading,bold: true,fontSizeHalfPoints: 32,spacingAfter: 120),ParagraphOf(
+            //        DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
+            //        bold: false,
+            //        fontSizeHalfPoints: 20,
+            //        spacingAfter: 200)
+            //);
             body.Append(
-                ParagraphOf(
-                    heading,
-                    bold: true,
-                    fontSizeHalfPoints: 32,
-                    spacingAfter: 120),
-
-                ParagraphOf(
-                    DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
-                    bold: false,
-                    fontSizeHalfPoints: 20,
-                    spacingAfter: 200)
+                new SectionProperties(new PageSize()
+                    {
+                        Width = 16838,   // A4 landscape
+                        Height = 11906,
+                        Orient = PageOrientationValues.Landscape
+                    },
+                    new PageMargin()
+                    {
+                        Top = 720,
+                        Right = 720,
+                        Bottom = 720,
+                        Left = 720
+                    }
+                )
             );
 
             // Tabulka
             var table = new Table();
 
-            table.AppendChild(new TableProperties(
-                new TableStyle { Val = "TableGrid" },
-                new TableWidth
+            table.AppendChild(new TableProperties(new TableStyle { Val = "TableGrid" },new TableWidth
                 {
                     Type = TableWidthUnitValues.Pct,
                     Width = "5000"
@@ -85,7 +86,6 @@ namespace Aplikace.Export
                     Tc(prop.Name, header: true, altRow: false)
                 );
             }
-
             table.Append(headerRow);
 
             // Data
@@ -101,26 +101,21 @@ namespace Aplikace.Export
                 {
                     var value = prop.GetValue(item);
 
-                    row.Append(
-                        Tc(
+                    row.Append(Tc(
                             FormatValue(value),
                             header: false,
                             altRow: alt)
                     );
                 }
-
                 table.Append(row);
             }
 
             body.Append(table);
-
             mainPart.Document.Save();
+            Console.WriteLine($"Hotovo! Soubor DOCX byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
         }
 
-        private static TableCell Tc(
-            string text,
-            bool header,
-            bool altRow)
+        private static TableCell Tc(string text,bool header,bool altRow)
         {
             var bg = header
                 ? "E6E6E6"

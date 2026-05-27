@@ -156,7 +156,7 @@ namespace Aplikace.Excel
             dgv.Columns.Clear();
 
             int rowCount = Math.Min(ws.LastRowUsed()?.RowNumber() ?? 0, 20);
-            int colCount = Math.Min(ws.LastColumnUsed()?.ColumnNumber() ?? 0, 20);
+            int colCount = Math.Min(ws.LastColumnUsed()?.ColumnNumber() ?? 0, 30);
 
             if (rowCount == 0 || colCount == 0) return;
 

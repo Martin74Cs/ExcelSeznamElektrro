@@ -97,7 +97,9 @@ namespace Aplikace.Sdilene
                     writer.WriteLine(string.Join(";", values));
                 }
             }
-            Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
+            //Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
+            //Console.WriteLine($"Hotovo! Soubor CSV. Uloženo do {Path.GetFileName(file)}");
+            Console.WriteLine($"Hotovo! Soubor CSV byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
         }
 
         //Od umělé inteligence

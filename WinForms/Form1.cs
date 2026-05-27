@@ -127,7 +127,7 @@ namespace WinForms
                     File.Copy(Informace.Create.SouborStrojeJson, Informace.Create.SouborElektroJson);
                     if(File.Exists(Informace.Create.SouborElektroJson))
                         Console.WriteLine($"Soubor {Informace.Create.SouborElektroJson} -  zkopírován ze {Informace.Create.SouborStrojeJson}.");
-                    //nové načtení bylo prázdné, takže načteme znovu po kopírování
+                    //Nové načtení bylo prázdné, takže načteme znovu po kopírování
                     Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
                 }
             }
@@ -142,9 +142,10 @@ namespace WinForms
                 //if (Data.Count < 1) Data.Add(new Zarizeni());
 
                 //Soubou znovu uložit je možné že nastaly změny v souboru
+                Console.WriteLine($"Hotovo! Soubor JSON byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
                 Data.SaveJsonList(Informace.Create.SouborElektroJson);
 
-                if(MessageBox.Show("Aktualizace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+                if(MessageBox.Show("Aktualizace CSV, XML, HTML, PDF, DOCX", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                     Data.SaveToCsv(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".csv"));
                     Data.SaveXML(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".xml"));
                     Data.SaveHtmlStyle(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".html"));
