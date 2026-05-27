@@ -284,7 +284,8 @@ namespace Aplikace.Sdilene
             {
                 serializer.Serialize(fs, Pole);
             }
-            Console.WriteLine($"Hotovo! Uloženo do {cesta}");
+            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
+            Console.WriteLine($"Hotovo! Soubor XML byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
         }
         public static void SaveHtml<T>(this List<T> Pole, string cesta) where T : new()
         {
@@ -391,7 +392,8 @@ namespace Aplikace.Sdilene
 
             File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
 
-            Console.WriteLine($"Hotovo! Uloženo do {cesta}");
+            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
+            Console.WriteLine($"Hotovo! Soubor HTML byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
         }
 
 
