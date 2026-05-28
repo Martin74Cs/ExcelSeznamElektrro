@@ -290,9 +290,9 @@ namespace WinForms
 
             var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborStrojeJson);
             if(Data.Count > 0)
-                Console.WriteLine($"Soubor {Informace.Create.SouborStrojeJson} -  načten.\npočet záznamů: {Data.Count}");
+                Console.WriteLine($"Soubor {Path.GetFileName(Informace.Create.SouborStrojeJson)} -  načten.\npočet záznamů: {Data.Count}");
             else {
-                Console.WriteLine($"Soubor je prázdný: {Informace.Create.SouborStrojeJson}");
+                Console.WriteLine($"Soubor je prázdný: {Path.GetFileName(Informace.Create.SouborStrojeJson)}");
                 return;
             }
             var table = new Table(Data);
@@ -301,7 +301,8 @@ namespace WinForms
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
             if(result == DialogResult.OK) {
-
+                Console.WriteLine($"DialogResult.OK");
+                Console.WriteLine($"Soubor : {Path.GetFileName(Informace.Create.SouborStrojeJson)} - ULOŽEN.");
                 Data.SaveJsonList(Informace.Create.SouborStrojeJson);
 
                 //if (Data.Count < 1) Data.Add(new Zarizeni());
@@ -309,6 +310,11 @@ namespace WinForms
 
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
+            }
+            else if(result == DialogResult.Cancel) {
+                Console.WriteLine($"DialogResult.Cancel");
+                Console.WriteLine($"Soubor : {Path.GetFileName(Informace.Create.SouborStrojeJson)} - ULOŽEN.");
+                Data.SaveJsonList(Informace.Create.SouborStrojeJson);
             }
         }
 
