@@ -1,11 +1,11 @@
-using Aplikace.Tridy;
+﻿using Aplikace.Tridy;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Knihovna.Tridy;
 using System.Reflection;
 
-namespace Aplikace.Export
-{
+namespace Knihovna.Export {
     public static class DocxGenerator
     {
         public static void SaveDocxGen<T>(this List<T> data,string docxPath,string? title = null)
@@ -17,7 +17,7 @@ namespace Aplikace.Export
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0).ToArray();
 
             //filtr vlastností - pouze ty, které jsou v seznamu start
-            string[] start = {
+            string[] start = [
                 "Radek",
                 "Tag",
                 "Pocet",
@@ -27,7 +27,7 @@ namespace Aplikace.Export
                 "BalenaJednotka",
                 "Pid",
                 "Pozice",
-                "Poznamka" };
+                "Poznamka" ];
             properties = [.. properties.Where(p => start.Contains(p.Name))];
 
             var outDir = Path.GetDirectoryName(Path.GetFullPath(docxPath));
@@ -112,7 +112,7 @@ namespace Aplikace.Export
 
             body.Append(table);
             mainPart.Document.Save();
-            Console.WriteLine($"Hotovo! Soubor DOCX byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
+            Console.WriteLine($"Hotovo! Soubor DOCX byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
         }
 
         private static TableCell Tc(string text,bool header,bool altRow)

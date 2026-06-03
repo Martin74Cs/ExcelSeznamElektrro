@@ -1,12 +1,11 @@
-using Aplikace.Excel;
-using Aplikace.Sdilene;
-using Aplikace.Tridy;
+﻿using Aplikace.Sdilene;
 using Aplikace.Upravy;
+using Knihovna.Excel;
+using Knihovna.Tridy;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
-using System.Windows.Forms;
 
 namespace WinForms
 {
@@ -578,7 +577,7 @@ namespace WinForms
             SetListBoxData();
         }
 
-        private void filtToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void FiltToolStripMenuItem_Click(object sender, EventArgs e) {
             //Data ze třídy Zarizeni.
             //Zarizeni
             var namesToRemove = new[] { "IsExist", "Poznamka", "Etapa", "Tag", "Predmet", "Popis", "Typ", "Napeti", "Prikon", };

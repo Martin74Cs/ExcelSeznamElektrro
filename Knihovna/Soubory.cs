@@ -1,29 +1,15 @@
-using Aplikace.Tridy;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
-
+﻿
+using Knihovna.Export;
+using Knihovna.Tridy;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
-//using static System.Net.Mime.MediaTypeNames;
-//using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Aplikace.Sdilene
+namespace Knihovna
 {
-    public static partial class Soubory
-    {
+    public static partial class Soubory {
         //readonly static Encoding čeština = Encoding.GetEncoding(1250); //funguje čeština
 
         public static JsonSerializerSettings Nastaveni()
@@ -130,10 +116,10 @@ namespace Aplikace.Sdilene
                 }
                 else
                 {
-                    var info = Informace.Create;
-                    if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
+                    //var info = Informace.Create;
+                    if (!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData))
                     {
-                        dialog.InitialDirectory = info.BasePath;
+                        dialog.InitialDirectory = Informace.AppData;
                     }
                 }
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -164,9 +150,9 @@ namespace Aplikace.Sdilene
                 else
                 {
                     var info = Informace.Create;
-                    if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
+                    if (!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData))
                     {
-                        dialog.SelectedPath = info.BasePath;
+                        dialog.SelectedPath = Informace.AppData;
                     }
                 }
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -197,10 +183,10 @@ namespace Aplikace.Sdilene
                 }
                 else
                 {
-                    var info = Informace.Create;
-                    if (!string.IsNullOrEmpty(info.BasePath) && System.IO.Directory.Exists(info.BasePath))
+                    //var info = Informace.Create;
+                    if (!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData))
                     {
-                        dialog.InitialDirectory = info.BasePath;
+                        dialog.InitialDirectory = Informace.AppData;
                     }
                 }
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -285,7 +271,7 @@ namespace Aplikace.Sdilene
                 serializer.Serialize(fs, Pole);
             }
             //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
-            Console.WriteLine($"Hotovo! Soubor XML byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
+            Console.WriteLine($"Hotovo! Soubor XML byl uložen do {Path.GetFileName(Informace.Adresar)}");
         }
         public static void SaveHtml<T>(this List<T> Pole, string cesta) where T : new()
         {
@@ -393,7 +379,7 @@ namespace Aplikace.Sdilene
             File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
 
             //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
-            Console.WriteLine($"Hotovo! Soubor HTML byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
+            Console.WriteLine($"Hotovo! Soubor HTML byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
         }
 
 
@@ -522,9 +508,9 @@ namespace Aplikace.Sdilene
 
         }
 
-        [LibraryImport("user32.dll", SetLastError = true)]
         //[LibraryImport("user32.dll", SetLastError = true)]
-        private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        ////[LibraryImport("user32.dll", SetLastError = true)]
+        //private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         //[LibraryImport("user32.dll", SetLastError = true)]
         //public static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);

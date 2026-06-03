@@ -12,8 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aplikace.Sdilene
-{
+namespace Knihovna.Export {
     public class Word
     {
         public static void SaveDocx<T>(List<T> list, string cesta)

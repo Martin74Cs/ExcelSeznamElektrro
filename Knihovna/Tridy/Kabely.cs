@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aplikace.Tridy
+namespace Knihovna.Tridy
 {
     public class Trasa
     {

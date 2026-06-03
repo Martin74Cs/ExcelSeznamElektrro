@@ -1,12 +1,8 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Windows.Forms;
-using Aplikace.Tridy;
+using Knihovna.Tridy;
 
-namespace Aplikace.Forms;
+namespace WinForms;
 
 // Jednoduchý WinForms formulář pro editaci třídy Informace (singleton).
 public sealed class Nastaveni : Form
@@ -37,7 +33,7 @@ public sealed class Nastaveni : Form
         FormBorderStyle = FormBorderStyle.Sizable;
         AutoScaleMode = AutoScaleMode.Font;
 
-        using var info = Informace.Create;
+        var info = Informace.Instance;
         _info = info;
 
         BuildUi();

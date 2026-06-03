@@ -1,20 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Reflection.PortableExecutable;
+using Knihovna;
+using Knihovna.Tridy;
 using System.Data;
-using System.Text.Json.Nodes;
-using Aplikace.Tridy;
+using System.Xml.Linq;
 using System.Reflection;
-using System.Drawing;
 
-namespace Aplikace.Sdilene
-{
+namespace PrvniTest.Sdilene {
     public static class Prevod
     {
         public static void DataTabletoToCsv(DataTable Table, string Soubor)
@@ -71,7 +63,7 @@ namespace Aplikace.Sdilene
 
             // Prepare the CSV file
             //using (var writer = new StreamWriter(file, false ,Encoding.UTF8))
-            using var writer = new StreamWriter(file, false, new UTF8Encoding(true));
+            using var writer = new StreamWriter(file, false, new System.Text.UTF8Encoding(true));
             // Write the Hlavička
             writer.WriteLine(string.Join(";", headers));
 
@@ -99,7 +91,7 @@ namespace Aplikace.Sdilene
             }
             //Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
             //Console.WriteLine($"Hotovo! Soubor CSV. Uloženo do {Path.GetFileName(file)}");
-            Console.WriteLine($"Hotovo! Soubor CSV byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
+            Console.WriteLine($"Hotovo! Soubor CSV byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
         }
 
         //Od umělé inteligence

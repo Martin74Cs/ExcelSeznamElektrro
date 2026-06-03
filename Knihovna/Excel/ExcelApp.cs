@@ -1,16 +1,9 @@
-using ClosedXML.Excel;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using ClosedXML.Excel;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
-using Aplikace.Sdilene;
-using Aplikace.Tridy;
+using Knihovna.Tridy;
 
-namespace Aplikace.Excel
-{
+namespace Knihovna.Excel {
     /// <summary>
     /// Obalovací třída (Adapter) pro ClosedXML list (IXLWorksheet), která simuluje chování původního COM rozhraní Microsoft.Office.Interop.Excel.Worksheet.
     /// Zajišťuje zpětnou kompatibilitu a umožňuje volání vlastností jako Range, Cells a Name bez změny původního kódu.
@@ -154,41 +147,65 @@ namespace Aplikace.Excel
         public object Value
         {
             get => _cell?.Value ?? "";
+
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     _cell?.Clear();
                     return;
                 }
 
-                if (value is string s)
+                object normalized = value switch
                 {
-                    if (_cell != null) _cell.Value = s;
-                    else _range?.Value = s;
-                }
-                else if (value is double d)
-                {
-                    if (_cell != null) _cell.Value = d;
-                    else _range?.Value = d;
-                }
-                else if (value is int val)
-                {
-                    if (_cell != null) _cell.Value = val;
-                    else _range?.Value = val;
-                }
-                else if (value is bool b)
-                {
-                    if (_cell != null) _cell.Value = b;
-                    else _range?.Value = b;
-                }
-                else
-                {
-                    string str = value.ToString() ?? "";
-                    if (_cell != null) _cell.Value = str;
-                    else _range?.Value = str;
-                }
+                    string s => s,
+                    double d => d,
+                    int i => i,
+                    bool b => b,
+                    _ => value.ToString() ?? ""
+                };
+                var xlValue = XLCellValue.FromObject(normalized);
+                if (_cell is not null)
+                    _cell.Value = xlValue;
+                else if (_range is not null)
+                    _range.Value = xlValue;
             }
+            //get => _cell?.Value ?? "";
+            //set
+            //{
+            //    if (value == null)
+            //    {
+            //        _cell?.Clear();
+            //        return;
+            //    }
+
+            //    if (value is string s)
+            //    {
+            //        if (_cell != null) _cell.Value = s;
+            //        else _range?.Value = s;
+            //    }
+            //    else if (value is double d)
+            //    {
+            //        if (_cell != null) _cell.Value = d;
+            //        else _range?.Value = d;
+            //    }
+            //    else if (value is int val)
+            //    {
+            //        if (_cell != null) _cell.Value = val;
+            //        else _range?.Value = val;
+            //    }
+            //    else if (value is bool b)
+            //    {
+            //        if (_cell != null) _cell.Value = b;
+            //        else _range?.Value = b;
+            //    }
+            //    else
+            //    {
+            //        string str = value.ToString() ?? "";
+            //        if (_cell != null) _cell.Value = str;
+            //        else _range?.Value = str;
+            //    }
+            //}
         }
 
         /// <summary>
@@ -205,10 +222,11 @@ namespace Aplikace.Excel
         /// </summary>
         public string Formula
         {
-            get => _cell?.FormulaA1 ?? "";
+            get => _cell?.FormulaA1 ?? string.Empty;
             set
             {
-                _cell?.FormulaA1 = value;
+                if (_cell is not null)
+                    _cell.FormulaA1 = value;
             }
         }
 
@@ -569,7 +587,7 @@ namespace Aplikace.Excel
             string cesta1 = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
             var Motory500 = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2);
-            Motory500.Vypis();
+            //Motory500.Vypis();
 
             if (!File.Exists(cesta)) return;
 

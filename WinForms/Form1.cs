@@ -1,16 +1,11 @@
-﻿using Aplikace.Excel;
-using Aplikace.Export;
+﻿
 using Aplikace.Sdilene;
-using Aplikace.Tridy;
 using Aplikace.Upravy;
-using System.ComponentModel;
-using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
+using Knihovna;
+using Knihovna.Export;
+using Knihovna.Tridy;
+using PrvniTest.Sdilene;
 using System.Text;
-using System.Windows.Forms;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static System.Windows.Forms.DataFormats;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace WinForms
 {
@@ -29,7 +24,6 @@ namespace WinForms
 
         private void Form1_Load(object sender, EventArgs e) {
             Console.SetOut(new ListBoxWriter(listBox1));
-
         }
 
 
@@ -57,7 +51,7 @@ namespace WinForms
 
         private void Button8_Click(object sender, EventArgs e) {
             //string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
-            System.Diagnostics.Process.Start("explorer.exe", Informace.Create.BasePath);
+            System.Diagnostics.Process.Start("explorer.exe", Informace.Instance.BasePath);
         }
 
         private async void Button9_Click(object sender, EventArgs e) {
@@ -112,23 +106,25 @@ namespace WinForms
 
 
         private void Button10_Click(object sender, EventArgs e) {
-            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+            Console.WriteLine("Informace.Instance.BasePath " + Informace.Instance.BasePath);
+            Console.WriteLine("Informace.Instance.SouborElektroJson " + Informace.Instance.SouborElektroJson);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json"));
             if(Data.Count < 1) {
-                Console.WriteLine("Soubor je prázdný " + Informace.Create.SouborElektroJson);
+                Console.WriteLine("Soubor je prázdný " + Informace.Instance.SouborElektroJson);
                 if(MessageBox.Show("Kopie souborů ze souboru Strojni", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
 
-                    var Adresar = Path.GetDirectoryName(Informace.Create.SouborStrojeJson);
-                    using var info = Informace.Create;
+                    var Adresar = Path.GetDirectoryName(Informace.Instance.SouborStrojeJson);
+                    var info = Informace.Instance;
                     info.SouborElektroJson = Path.Combine(Adresar,"Elektro.Data.json");
 
-                    if(!File.Exists(Informace.Create.SouborStrojeJson)) {
-                        Console.WriteLine("Soubor nebyl nalezen " + Informace.Create.SouborStrojeJson); return;
+                    if(!File.Exists(Informace.Instance.SouborStrojeJson)) {
+                        Console.WriteLine("Soubor nebyl nalezen " + Informace.Instance.SouborStrojeJson); return;
                     }
-                    File.Copy(Informace.Create.SouborStrojeJson, Informace.Create.SouborElektroJson);
-                    if(File.Exists(Informace.Create.SouborElektroJson))
-                        Console.WriteLine($"Soubor {Informace.Create.SouborElektroJson} -  zkopírován ze {Informace.Create.SouborStrojeJson}.");
+                    File.Copy(Informace.Instance.SouborStrojeJson, Informace.Instance.SouborElektroJson);
+                    if(File.Exists(Informace.Instance.SouborElektroJson))
+                        Console.WriteLine($"Soubor {Informace.Instance.SouborElektroJson} -  zkopírován ze {Informace.Instance.SouborStrojeJson}.");
                     //Nové načtení bylo prázdné, takže načteme znovu po kopírování
-                    Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+                    Data = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborElektroJson);
                 }
             }
 
@@ -142,16 +138,18 @@ namespace WinForms
                 //if (Data.Count < 1) Data.Add(new Zarizeni());
 
                 //Soubou znovu uložit je možné že nastaly změny v souboru
-                Console.WriteLine($"Hotovo! Soubor JSON byl uložen do {Path.GetFileName(Informace.Create.SouborElektroJson)}");
-                Data.SaveJsonList(Informace.Create.SouborElektroJson);
+                string Cesta = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.Json");
+                Console.WriteLine($"Hotovo! Soubor JSON byl uložen do {Path.GetFileName(Cesta)}");
+                Data.SaveJsonList(Cesta);
 
                 if(MessageBox.Show("Aktualizace CSV, XML, HTML, PDF, DOCX", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                    Data.SaveToCsv(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".csv"));
-                    Data.SaveXML(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".xml"));
-                    Data.SaveHtmlStyle(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".html"));
-                    //Data.SaveDocx(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".docx"));
-                    Data.SavePdfGen(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".pdf"));
-                    Data.SaveDocxGen(Path.ChangeExtension(Informace.Create.SouborElektroJson, ".docx"));
+                    Data.SaveToCsv(Path.ChangeExtension(Cesta, ".csv"));
+                    Data.SaveXML(Path.ChangeExtension(Cesta, ".xml"));
+                    Data.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"));
+                    //Data.SaveDocx(Path.ChangeExtension(Cesta, ".docx"));
+                    //PdfGenerator
+                    Data.SavePdfGen(Path.ChangeExtension(Cesta, ".pdf"));
+                    Data.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"));
                 }
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
@@ -221,7 +219,7 @@ namespace WinForms
 
         /// <summary> Průzkumník tedy složka projektu </summary>
         private void Button12_Click(object sender, EventArgs e) {
-            System.Diagnostics.Process.Start("explorer.exe", Informace.Create.BasePath);
+            System.Diagnostics.Process.Start("explorer.exe", Informace.Instance.BasePath);
         }
 
         //Doplmění dat do Elektro z aktualizovaného Strojního seznamu,
@@ -231,16 +229,16 @@ namespace WinForms
             //string cesta1 = Path.Combine(Cesty.Elektro, "Pid", @"UpravaZnovu.006.json");
 
             //var Strojni = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
-            var Strojni = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborStrojeJson);
+            var Strojni = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborStrojeJson);
 
-            var Elektro = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+            var Elektro = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborElektroJson);
             var table = new Shoda(Strojni, Elektro);
             var result = table.ShowDialog();
             if(result == DialogResult.OK) {
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
-                Elektro.SaveJsonList(Informace.Create.SouborElektroJson);
-                Console.WriteLine($"Soubor {Informace.Create.SouborElektroJson} -  aktualizován.");
+                Elektro.SaveJsonList(Informace.Instance.SouborElektroJson);
+                Console.WriteLine($"Soubor {Informace.Instance.SouborElektroJson} -  aktualizován.");
             }
 
             //foreach (var itemEl in Elektro.ToHashSet())
@@ -274,25 +272,25 @@ namespace WinForms
 
         //Otevřít Json seznamu strojů a zařízení, jen kontrola převodu XLS na Json
         private void Button14_Click(object sender, EventArgs e) {
-            //var cesta1 = Informace.Create.SouborStrojeJson;
-            if(!File.Exists(Informace.Create.SouborStrojeJson)) {
+            //var cesta1 = Informace.Instance.SouborStrojeJson;
+            if(!File.Exists(Informace.Instance.SouborStrojeJson)) {
                 var cesta1 = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json");
                 if(string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
                     Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje."); return;
                 }
                 else {
                     //uložíme cestu do singletonu pro další použití pokud tam již nebyla
-                    using var Cesta = Informace.Create;
+                    var Cesta = Informace.Instance;
                     Cesta.SouborStrojeJson = cesta1;
                 }
             }
             //var Data = Soubory.LoadJsonList<Zarizeni>(Path.ChangeExtension(cesta1, ".json"));
 
-            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborStrojeJson);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborStrojeJson);
             if(Data.Count > 0)
-                Console.WriteLine($"Soubor {Informace.Create.SouborStrojeJson} -  načten.\npočet záznamů: {Data.Count}");
+                Console.WriteLine($"Soubor {Informace.Instance.SouborStrojeJson} -  načten.\npočet záznamů: {Data.Count}");
             else {
-                Console.WriteLine($"Soubor je prázdný: {Informace.Create.SouborStrojeJson}");
+                Console.WriteLine($"Soubor je prázdný: {Informace.Instance.SouborStrojeJson}");
                 return;
             }
             var table = new Table(Data);
@@ -302,7 +300,7 @@ namespace WinForms
             var result = table.ShowDialog();
             if(result == DialogResult.OK) {
 
-                Data.SaveJsonList(Informace.Create.SouborStrojeJson);
+                Data.SaveJsonList(Informace.Instance.SouborStrojeJson);
 
                 //if (Data.Count < 1) Data.Add(new Zarizeni());
                 //Data.SaveJsonList(Informace.Create.SouborStrojeJson);
@@ -340,7 +338,7 @@ namespace WinForms
         }
 
         private void PříkonCelkemToolStripMenuItem_Click(object sender, EventArgs e) {
-            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborElektroJson);
             Console.WriteLine($"Příkon celkem: {Data.Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
             Console.WriteLine($"Příkon FAZE 1: {Data.Where(x => x.Etapa == "FAZE 1").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
             Console.WriteLine($"Příkon FAZE 2: {Data.Where(x => x.Etapa == "FAZE 2").Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} kW");
@@ -374,15 +372,17 @@ namespace WinForms
                 UseDescriptionForTitle = true // .NET 6+ moderní styl
             };
             if(Folder.ShowDialog() == DialogResult.OK) {
-                using var info = Informace.Create;
-                info.BasePath = Folder.SelectedPath;
-                Console.WriteLine($"Složka nastavena na {info.BasePath}.");
+                //var info = 
+                Informace.Instance.BasePath = Folder.SelectedPath;
+                //info.BasePath = Folder.SelectedPath;
+                Console.WriteLine($"Složka nastavena na {Informace.Instance.BasePath}.");
+                Informace.Instance.Ulozit();
             }
 
         }
 
         private void CestyToolStripMenuItem_Click(object sender, EventArgs e) {
-            using var f = new Aplikace.Forms.Nastaveni(); f.ShowDialog(this);
+            using var f = new WinForms.Nastaveni(); f.ShowDialog(this);
         }
     }
 

@@ -1,16 +1,7 @@
-using Aplikace.Sdilene;
-using Aplikace.Tridy;
+﻿using Knihovna;
+using Knihovna.Tridy;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aplikace.Excel
-{
+namespace Knihovna.Excel {
     public class ExcelLoad
     {
 

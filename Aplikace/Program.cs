@@ -1,9 +1,11 @@
-// See https://aka.ms/new-console-template for more information
-using Aplikace.Excel;
-using Aplikace.Sdilene;
+﻿// See https://aka.ms/new-console-template for more information
+using Aplikace;
 using Aplikace.Seznam;
-using Aplikace.Tridy;
 using Aplikace.Upravy;
+using Knihovna;
+using Knihovna.Tridy;
+using Parametr.MAcad;
+using System.ComponentModel;
 
 
 // Setup console logging to a file in Windows-1250 encoding
@@ -18,9 +20,8 @@ AppDomain.CurrentDomain.ProcessExit += (s, e) => {
 };
 
 bool konec = false;
-while (!konec)
-{
-    using var currentInfo = Informace.Create;
+while(!konec) {
+    var currentInfo = Informace.Instance;
     string currentPath = string.IsNullOrEmpty(currentInfo.BasePath) ? "[NENASTAVENO]" : currentInfo.BasePath;
 
     Console.Clear();
@@ -41,10 +42,12 @@ while (!konec)
     Console.WriteLine("5. Zobrazit podrobnou nápovědu a strukturu aplikace");
     Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine("6. Nastavit složku projektu");
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine("7. Test nahrat a uložit json");
     Console.ResetColor();
     Console.WriteLine("0. Konec");
     Console.WriteLine("------------------------------------------------------------------");
-    Console.Write("Vyberte možnost [0-6]: ");
+    Console.Write("Vyberte možnost [0-100]: ");
 
     //Nastavení cesty 
     //Data.Instance.Cesta = currentPath;
@@ -52,17 +55,14 @@ while (!konec)
     string? volba = Console.ReadLine();
     Console.WriteLine();
 
-    try
-    {
-        switch (volba)
-        {
+    try {
+        switch(volba) {
             case "1":
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Otevírám dialog pro výběr XLS/XLSX výkresového souboru...");
                 Console.ResetColor();
                 string? cesta = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
-                if (string.IsNullOrEmpty(cesta))
-                {
+                if(string.IsNullOrEmpty(cesta)) {
                     Console.WriteLine("Výběr souboru byl stornován.");
                     Console.WriteLine("\nStiskněte libovolnou klávesu...");
                     Console.ReadKey();
@@ -106,22 +106,36 @@ while (!konec)
                 Console.WriteLine($"Současná složka: {currentPath}");
                 Console.WriteLine("Otevírám dialog pro výběr složky...");
                 string? novaCesta = Soubory.ShowFolderBrowserDialog("Vyberte hlavní složku projektu", currentPath);
-                if (!string.IsNullOrEmpty(novaCesta))
-                {
-                    using var info = Informace.Create;
+                if(!string.IsNullOrEmpty(novaCesta)) {
+                    var info = Informace.Instance;
                     info.BasePath = novaCesta;
                     //info.Ulozit();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Projektová složka byla úspěšně změněna na: {novaCesta}");
                     Console.ResetColor();
+                    Informace.Instance.BasePath = novaCesta;
+                    Informace.Instance.Ulozit();  
                 }
-                else
-                {
+                else {
                     Console.WriteLine("Změna byla zrušena.");
                 }
                 Console.WriteLine("\nStiskněte libovolnou klávesu...");
                 Console.ReadKey();
                 break;
+
+            case "7":
+                Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
+                string Data = Soubory.ShowOpenFileDialog("(*.json)|*.json",Informace.Instance.BasePath);
+                //var Json = Soubory.LoadJsonEn<SumoResult>(Data);
+                var Json = Soubory.LoadJsonEn<Zarizeni>(Data);
+                foreach(var item in Json) {
+                    Console.WriteLine($"Jmeno zařízení : {item.Popis}, {item.Napeti},{item.Prikon} ");
+                }
+                Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
+                Console.WriteLine("\nHotovo. Stiskněte libovolnou klávesu...");
+                Console.ReadKey();
+                break;
+
 
             case "0":
                 konec = true;
@@ -136,9 +150,7 @@ while (!konec)
                 System.Threading.Thread.Sleep(1000);
                 break;
         }
-    }
-    catch (Exception ex)
-    {
+    } catch(Exception ex) {
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($"Došlo k chybě při provádění operace: {ex.Message}");
         Console.ResetColor();
@@ -147,8 +159,7 @@ while (!konec)
     }
 }
 
-void ZobrazitNapovedu()
-{
+static void ZobrazitNapovedu() {
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("==================================================================");
@@ -185,45 +196,37 @@ void ZobrazitNapovedu()
     Console.ReadKey();
 }
 
-public class DoubleWriter : System.IO.TextWriter
-{
-    private readonly System.IO.TextWriter _w1;
-    private readonly System.IO.TextWriter _w2;
+namespace Aplikace {
 
-    public DoubleWriter(System.IO.TextWriter w1, System.IO.TextWriter w2)
-    {
-        _w1 = w1;
-        _w2 = w2;
-    }
+    public class DoubleWriter(System.IO.TextWriter w1, System.IO.TextWriter w2): System.IO.TextWriter {
+        private readonly System.IO.TextWriter _w1 = w1;
+        private readonly System.IO.TextWriter _w2 = w2;
 
-    public override System.Text.Encoding Encoding => _w1.Encoding;
+        public override System.Text.Encoding Encoding => _w1.Encoding;
 
-    public override void Write(char value)
-    {
-        _w1.Write(value);
-        _w2.Write(value);
-    }
-
-    public override void Write(string? value)
-    {
-        _w1.Write(value);
-        _w2.Write(value);
-    }
-
-    public override void Flush()
-    {
-        _w1.Flush();
-        _w2.Flush();
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            _w1.Dispose();
-            _w2.Dispose();
+        public override void Write(char value) {
+            _w1.Write(value);
+            _w2.Write(value);
         }
-        base.Dispose(disposing);
+
+        public override void Write(string? value) {
+            _w1.Write(value);
+            _w2.Write(value);
+        }
+
+        public override void Flush() {
+            _w1.Flush();
+            _w2.Flush();
+        }
+
+        protected override void Dispose(bool disposing) {
+            if(disposing) {
+                _w1.Dispose();
+                _w2.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
+
 }
 

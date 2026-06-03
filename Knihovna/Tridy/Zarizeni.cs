@@ -1,17 +1,12 @@
+﻿using Knihovna.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace Aplikace.Tridy
+namespace Knihovna.Tridy
 {
 
     //Pokud chceš jednotky ukládat přímo jako atribut, přidej si vlastní:

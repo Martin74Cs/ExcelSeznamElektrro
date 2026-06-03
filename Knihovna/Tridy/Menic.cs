@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aplikace.Tridy
+namespace Knihovna.Tridy
 {
     //Data jsou ze stránky ABB
     //https://search.abb.com/library/Download.aspx?DocumentID=CZZPA200516021233-J&LanguageCode=cs&DocumentPartId=1&Action=Launch

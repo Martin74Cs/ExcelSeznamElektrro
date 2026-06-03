@@ -1,13 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
-using System.Threading.Tasks;
-
-namespace Aplikace.Tridy {
+namespace Knihovna.Tridy {
     public class Vykres {
         public string Orientačníčíslo { get {
                 if(string.IsNullOrEmpty(OrientačníčísloF))

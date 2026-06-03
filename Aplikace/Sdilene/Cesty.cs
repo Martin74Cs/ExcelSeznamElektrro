@@ -1,4 +1,5 @@
 ﻿using Aplikace.Tridy;
+using Knihovna.Tridy;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -71,7 +72,7 @@ namespace Aplikace.Sdilene
 
         public static string Místnost  {
             get {
-                var Místnosti = Path.Combine(Informace.Create.BasePath, "Místnosti");
+                var Místnosti = Path.Combine(Informace.Instance.BasePath, "Místnosti");
                 if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);
                 return Místnosti;
             }
@@ -88,32 +89,32 @@ namespace Aplikace.Sdilene
         public static string Mistnosti => Path.ChangeExtension(MistnostiXLs, ".json");
 
         //Cesta ke zdroji dat pro stykače, měniče a jističe, motory.
-        public static string KM => Path.Combine(Informace.Create.AdresarZdrojDat, "Stykac", "KM.json");
-        public static string KMCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Stykac", "KM.csv");
+        public static string KM => Path.Combine(Informace.Instance.AdresarZdrojDat, "Stykac", "KM.json");
+        public static string KMCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Stykac", "KM.csv");
 
-        public static string FM => Path.Combine(Informace.Create.AdresarZdrojDat, "Menic", "FM.json");
-        public static string FMCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Menic", "FM.csv");
+        public static string FM => Path.Combine(Informace.Instance.AdresarZdrojDat, "Menic", "FM.json");
+        public static string FMCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Menic", "FM.csv");
 
-        public static string CuJson => Path.Combine(Informace.Create.AdresarZdrojDat, "Kabel", "Cu.json");
-        public static string AlJson => Path.Combine(Informace.Create.AdresarZdrojDat, "Kabel", "Al.json");
+        public static string CuJson => Path.Combine(Informace.Instance.AdresarZdrojDat, "Kabel", "Cu.json");
+        public static string AlJson => Path.Combine(Informace.Instance.AdresarZdrojDat, "Kabel", "Al.json");
 
-        public static string JisticCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Jistic", "Jističe3VA.csv");
-        public static string Jistic => Path.Combine(Informace.Create.AdresarZdrojDat, "Jistic", "Jističe3VA.json");
+        public static string JisticCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Jistic", "Jističe3VA.csv");
+        public static string Jistic => Path.Combine(Informace.Instance.AdresarZdrojDat, "Jistic", "Jističe3VA.json");
 
-        public static string Motor => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "MotoryList.json");
-        public static string MotorCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "MotoryList.csv");
-        public static string Motor3000Csv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "Motory3000.csv");
+        public static string Motor => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "MotoryList.json");
+        public static string MotorCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "MotoryList.csv");
+        public static string Motor3000Csv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "Motory3000.csv");
 
-        public static string Motory => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "Motory.Json");
-        public static string MotoryCsv => Path.Combine(Informace.Create.AdresarZdrojDat, "Motor", "Motory.Csv");
+        public static string Motory => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "Motory.Json");
+        public static string MotoryCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "Motory.Csv");
 
         //Projekt
-        public static string Projekt => Path.Combine(Informace.Create.BasePath);
-        public static string VyvodyJson => Path.Combine(Informace.Create.BasePath, "Vývody.json");
+        public static string Projekt => Path.Combine(Informace.Instance.BasePath);
+        public static string VyvodyJson => Path.Combine(Informace.Instance.BasePath, "Vývody.json");
 
-        public static string VyvodyStavbaJson => Path.Combine(Informace.Create.BasePath, "Vývody.Stavba.json");
+        public static string VyvodyStavbaJson => Path.Combine(Informace.Instance.BasePath, "Vývody.Stavba.json");
         
-        public static string ElektroDataCsv => Path.Combine(Informace.Create.BasePath, "ElektroData.Csv");
+        public static string ElektroDataCsv => Path.Combine(Informace.Instance.BasePath, "ElektroData.Csv");
         
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aplikace.Tridy {
+namespace Knihovna.Tridy {
     public class Jistic {
         public string Druh { get; set; } = string.Empty;
         public string Velikost { get; set; } = string.Empty;

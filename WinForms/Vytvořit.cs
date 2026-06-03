@@ -1,15 +1,9 @@
-﻿using Aplikace.Sdilene;
-using Aplikace.Tridy;
-using Aplikace.Upravy;
-using System;
-using System.Collections.Generic;
+﻿
+using Aplikace.Sdilene;
+using Knihovna;
+using Knihovna.Tridy;
+using PrvniTest.Sdilene;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace WinForms
 {

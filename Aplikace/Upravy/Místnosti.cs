@@ -1,14 +1,9 @@
-using Aplikace.Excel;
-using Aplikace.Sdilene;
-using Aplikace.Tridy;
+﻿using Aplikace.Sdilene;
+using Knihovna;
+using Knihovna.Excel;
+using Knihovna.Tridy;
+using PrvniTest.Sdilene;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aplikace.Upravy
 {

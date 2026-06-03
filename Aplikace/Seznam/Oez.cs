@@ -1,6 +1,7 @@
-﻿using Aplikace.Sdilene;
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
+using Knihovna;
+using PrvniTest.Sdilene;
 using System.Globalization;
 
 namespace Aplikace.Seznam
@@ -196,8 +197,8 @@ namespace Aplikace.Seznam
             List<Oez.Product> products = Oez.LoadProductsFromCsv(Cesta);
 
             List<string> Druhy = [.. products.Select(x => x.Skupina).Distinct()];
+            
             Druhy.SaveJsonList(Path.Combine(cesta, "Jištení", "Druhy.json"));
-
             var Pole = products.GroupBy(x => x.Skupina).OrderBy(x => x.Key);
             //foreach(var item in Pole) 
             //    Console.WriteLine(item.Key);

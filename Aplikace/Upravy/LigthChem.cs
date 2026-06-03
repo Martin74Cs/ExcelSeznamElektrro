@@ -1,18 +1,12 @@
-using Aplikace.Excel;
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Seznam;
-using Aplikace.Tridy;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+using Knihovna;
+using Knihovna.Excel;
+using Knihovna.Tridy;
+using PrvniTest.Sdilene;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using static Aplikace.Tridy.Motor;
-using static Aplikace.Tridy.Zarizeni;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
+using static Knihovna.Tridy.Zarizeni;
 
 namespace Aplikace.Upravy
 {
@@ -24,7 +18,7 @@ namespace Aplikace.Upravy
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů ...");
             Console.ResetColor();
-            using var Cesty = Informace.Create;
+            var Cesty = Informace.Instance;
             Cesty.SouborStrojeXls = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
             if (string.IsNullOrEmpty(Cesty.SouborStrojeXls) || !File.Exists(Cesty.SouborStrojeXls)) {
                 Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
@@ -93,7 +87,7 @@ namespace Aplikace.Upravy
 
         public static void DoplněníDat()
         {
-            string cestaData = Informace.Create.SouborElektroJson;
+            string cestaData = Informace.Instance.SouborElektroJson;
             if (!File.Exists(cestaData))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -132,7 +126,7 @@ namespace Aplikace.Upravy
                 }
             }
             //testovací verze
-            string testCsv = Path.Combine(Path.GetDirectoryName(cesta1) ?? Informace.Create.BasePath, "Test.csv");
+            string testCsv = Path.Combine(Path.GetDirectoryName(cesta1) ?? Informace.Instance.BasePath, "Test.csv");
             Nove.SaveToCsv(testCsv);
             //Verze přepsání původního Jsonu
             //Nove.SaveJsonList(cestaData);
@@ -140,7 +134,8 @@ namespace Aplikace.Upravy
 
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
         public static void JsonToExcel() {
-            string cestaData = Informace.Create.SouborElektroJson;
+            string cestaData = Informace.Instance.SouborElektroJson;
+            cestaData = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json");
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
             //Vývody pro doplnění
@@ -179,7 +174,7 @@ namespace Aplikace.Upravy
             var StaraBezVSD = Stara.Where(x => x.Menic != "VSD").ToList(); // vyloučí všechny s Menic == "VSD"
 
             string filename = "Seznam.xlsx";
-            var cesta = Path.Combine(Informace.Create.BasePath, filename);
+            var cesta = Path.Combine(Informace.Instance.BasePath, filename);
             //vytvoření nebo otevření dokumentu elektro
             var ExcelApp = new ExcelApp(cesta);
 
@@ -342,11 +337,11 @@ namespace Aplikace.Upravy
 
         public static void AddProud()
         {
-            var Stara = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+            var Stara = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborElektroJson);
 
             //Možná proud asi jen tam kde není.
             var Add = Stara.AddProud();
-            Add.ToList().SaveJsonList(Informace.Create.SouborElektroJson);
+            Add.ToList().SaveJsonList(Informace.Instance.SouborElektroJson);
         }
 
         /// <summary>Seznam vývodů pro doplnění </summary>
@@ -418,7 +413,7 @@ namespace Aplikace.Upravy
         //public static void AddKabely()
         //{
         //    //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-        //    string cesta1 = Path.Combine(Cesty.ElektroDataJson);
+        //    string cesta1 = Path.Combine(Informace.Instance.ElektroDataJson);
         //    var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
 
         //    Target.AddKabelCyky(1.6);
@@ -525,7 +520,7 @@ namespace Aplikace.Upravy
         public static void DoplneniCsvToJson()
         {
             //Soubor kam bude doplněno
-            string cestaData = Path.Combine(Informace.Create.SouborElektroJson);
+            string cestaData = Path.Combine(Informace.Instance.SouborElektroJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cestaData);
             
             //Data pro doplnění
@@ -551,7 +546,7 @@ namespace Aplikace.Upravy
         /// <summary> Převod seznamu frekvenčních měničů na Json </summary>
         public static void VyvoritFM()
         {
-            string basePath = Path.Combine(Informace.Create.BasePath, "Data");
+            string basePath = Path.Combine(Informace.Instance.BasePath, "Data");
             string CestaKM = Path.Combine(basePath, "KM.csv"); 
            
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
@@ -564,7 +559,7 @@ namespace Aplikace.Upravy
         /// <summary> Převod seznamu stykačů na Json </summary>
         public static void VyvoritKM()
         {
-            string basePath = Path.Combine(Informace.Create.BasePath, "Data");
+            string basePath = Path.Combine(Informace.Instance.BasePath, "Data");
             string CestaKM = Path.Combine(basePath, "KM.csv"); 
            
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
@@ -594,7 +589,7 @@ namespace Aplikace.Upravy
         }
 
         public static void Rozvadec() {
-            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborElektroJson);
             //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
             var Data2 = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
 
@@ -633,7 +628,7 @@ namespace Aplikace.Upravy
         }
         public static void SpojitSeznamy()
         {
-            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Create.SouborElektroJson);
+            var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborElektroJson);
             Data = [.. Data.Where(x => x.Etapa == "FAZE 1")];
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -651,7 +646,7 @@ namespace Aplikace.Upravy
             Data = [.. Data, .. Data2];
             //Data.SaveJsonList(Path.Combine(Cesty.Elektro, "Pid", @"Test.json" ));
             //Data.SaveToCsv(Path.Combine(Cesty.Elektro, "Pid", @"Test.csv"));
-            Data.SaveJsonList(Informace.Create.SouborElektroJson);
+            Data.SaveJsonList(Informace.Instance.SouborElektroJson);
         }
         /// <summary>Převod stringu na enum</summary>
         private static void StringToEnum(IGrouping<string, Zarizeni> skupina) {
@@ -667,7 +662,7 @@ namespace Aplikace.Upravy
 
         internal static void Duplicity()
         {
-            string cestaData = Informace.Create.SouborElektroJson;
+            string cestaData = Informace.Instance.SouborElektroJson;
             var Data = Soubory.LoadJsonList<Zarizeni>(cestaData);
             Console.WriteLine($"Pocet záznamů: {Data.Count}");
             Data = [.. Data.DistinctBy(x => x.Apid)];

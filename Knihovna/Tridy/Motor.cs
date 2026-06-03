@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aplikace.Tridy
+namespace Knihovna.Tridy
 {
     public class Motor
     {

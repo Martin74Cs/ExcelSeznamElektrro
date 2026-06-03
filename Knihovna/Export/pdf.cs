@@ -1,16 +1,15 @@
-using Aplikace.Sdilene;
-using Aplikace.Tridy;
+﻿using Knihovna;
+//pouze pro generování PDF, vyžaduje Windows
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using System.Reflection;
 
-namespace Aplikace.Export
-{
+namespace Knihovna.Export {
     public static class PdfGenerator
     {
-        public static void SavePdfGen<T>(this List<T> data, string pdfPath, string? title = null)
+        public static void SavePdfGen<T>(this IEnumerable<T> data, string pdfPath, string? title = null)
         {
-            if (data == null || data.Count == 0)
+            if (data == null || !data.Any())
                 throw new InvalidOperationException("Seznam je prázdný.");
 
             var heading = string.IsNullOrWhiteSpace(title)
@@ -73,7 +72,7 @@ namespace Aplikace.Export
                 "Poznamka"
             ];
 
-            properties = properties.Where(p => start.Contains(p.Name)).ToArray();
+            properties = [.. properties.Where(p => start.Contains(p.Name))];
 
             // ======================
             // VÝPOČET ŠÍŘEK
@@ -148,14 +147,15 @@ namespace Aplikace.Export
             // ======================
             // DATA
             // ======================
-            for (int r = 0; r < data.Count; r++)
+            var dataList = data.ToList();
+            for (int r = 0; r < dataList.Count; r++)
             {
                 var row = table.AddRow();
 
                 if (r % 2 == 1)
                     row.Shading.Color = Colors.WhiteSmoke;
 
-                var item = data[r];
+                var item = dataList[r];
 
                 for (int c = 0; c < properties.Length; c++)
                 {

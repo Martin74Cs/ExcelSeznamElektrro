@@ -1,14 +1,8 @@
-using Aplikace.Excel;
-using Aplikace.Sdilene;
-using Aplikace.Tridy;
-
-using System;
-using System.Collections.Generic;
+﻿using Knihovna;
+using Knihovna.Excel;
+using PrvniTest.Sdilene;
 using System.Data;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Aplikace.Upravy
 {
@@ -49,7 +43,7 @@ namespace Aplikace.Upravy
             data.ReadXml(CestaXML2);
             Prevod.DataTabletoToCsv(data.Tables[0], CestaCsv);
 
-            var pokus = Soubory.LoadJsonEn<Item>(cesta1);
+            var pokus = Soubory.LoadJsonEn<Knihovna.Tridy.Item>(cesta1);
 
             Console.Write($"\nCelkem={pokus.Count}");
             Console.Write($"\n");
@@ -68,7 +62,7 @@ namespace Aplikace.Upravy
             //xlsc.Close();
             ExcelApp.ExcelQuit(cestacelek);
         }
-        static void Vypis(List<Item> item)
+        static void Vypis(List<Knihovna.Tridy.Item> item)
         {
             foreach (var i in item)
             {
