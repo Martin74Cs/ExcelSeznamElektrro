@@ -1,7 +1,7 @@
-﻿
-using Knihovna.Export;
+﻿using Knihovna.Export;
 using Knihovna.Tridy;
 using Newtonsoft.Json;
+using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -316,7 +316,7 @@ namespace Knihovna
         {
             if (!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
-            if(Pole == null || Pole.Count == 0) { 
+            if(Pole == null || Pole.Count < 1) { 
                 sb.Append("<p>Seznam je prázdný.</p>");
                 File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
                 return;
@@ -381,6 +381,248 @@ namespace Knihovna
             //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
             Console.WriteLine($"Hotovo! Soubor HTML byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
         }
+
+        public static void SaveHtmlStyleFlat<T>(this List<T> Pole, string cesta) where T : new()
+        {
+            if (!CanSaveFile(cesta)) return;
+            var sb = new StringBuilder();
+            if (Pole == null || Pole.Count < 1)
+            {
+                sb.Append("<p>Seznam je prázdný.</p>");
+                File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+                return;
+            }
+
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Seznam zařízení</title>");
+            sb.AppendLine("<style>");
+            sb.AppendLine("body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9; }");
+            sb.AppendLine("h1 { color: #333; }");
+            sb.AppendLine("table { border-collapse: collapse; width: 100%; background-color: #fff; box-shadow: 0 0 10px #ccc; }");
+            sb.AppendLine("th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }");
+            sb.AppendLine("th { background-color: #f0f0f0; }");
+            sb.AppendLine("tr:nth-child(even) { background-color: #f7f7f7; }");
+            sb.AppendLine("</style></head><body>");
+            string nadpis = "Seznam zařízení";
+            sb.AppendLine($"<h1>{nadpis}</h1>");
+            sb.AppendLine("<table><thead><tr>");
+
+            // Hlavička tabulky
+            foreach (var prop in props)
+                sb.AppendLine($"<th>{prop.Name}</th>");
+            sb.AppendLine("</tr></thead><tbody>");
+
+            // Řádky tabulky
+            foreach (var item in Pole)
+            {
+                sb.AppendLine("<tr>");
+                foreach (var prop in props)
+                {
+                    object value = prop.GetValue(item, null) ?? "";
+                    sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
+                }
+                sb.AppendLine("</tr>");
+            }
+            sb.AppendLine("</tbody></table></body></html>");
+
+            File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+
+            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
+            Console.WriteLine($"Hotovo! Soubor {Path.GetFileName(cesta)} Uložen.");
+        }
+
+
+        public static void SaveHtmlStyleJinaK<T>(this List<T> Pole, string cesta) where T : new()
+        {
+            if (!CanSaveFile(cesta)) return;
+            var sb = new StringBuilder();
+            if (Pole == null || Pole.Count < 1)
+            {
+                sb.Append("<p>Seznam je prázdný.</p>");
+                File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+                return;
+            }
+
+
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Seznam zařízení</title>");
+            sb.AppendLine("<style>");
+            sb.AppendLine("body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9; }");
+            sb.AppendLine("h1 { color: #333; }");
+            sb.AppendLine("table { border-collapse: collapse; width: 100%; background-color: #fff; box-shadow: 0 0 10px #ccc; }");
+            sb.AppendLine("th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }");
+            sb.AppendLine("th { background-color: #f0f0f0; }");
+            sb.AppendLine("tr:nth-child(even) { background-color: #f7f7f7; }");
+            sb.AppendLine("</style></head><body>");
+            string nadpis = "Seznam zařízení";
+            sb.AppendLine($"<h1>{nadpis}</h1>");
+            sb.AppendLine("<table><thead><tr>");
+                        
+            GenerateHeaders(typeof(T), sb);
+            sb.AppendLine("</tr></thead><tbody>");
+            GenerateRows(Pole, sb);
+
+            // Řádky tabulky
+            //foreach (var item in Pole)
+            //{
+            //    sb.AppendLine("<tr>");
+            //    foreach (var prop in props)
+            //    {
+            //        //to co se má vynechat u html.
+            //        if (prop.Name == "Item") continue;
+            //        //if (!start.Contains(prop.Name)) continue;
+
+            //        object value = prop.GetValue(item, null) ?? "";
+            //        sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
+
+            //    }
+            //    sb.AppendLine("</tr>");
+            //}
+            sb.AppendLine("</tbody></table></body></html>");
+
+            File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
+
+            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
+            Console.WriteLine($"Hotovo! Soubor {Path.GetFileName(cesta)} Uložen.");
+        }
+
+
+        public static void GenerateHeaders(Type type, StringBuilder sb, string prefix = "")
+        {
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var prop in props)
+            {
+                Type propType = prop.PropertyType;
+
+                // List<T>
+                if (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    Type innerType = propType.GetGenericArguments()[0];
+
+                    // 🔥 rekurze – rozbalení inner třídy
+                    GenerateHeaders(innerType, sb, prefix + prop.Name + "_");
+                }
+                // jednoduchý typ
+                else if (propType.IsPrimitive || propType == typeof(string))
+                {
+                    sb.AppendLine($"<th>{prefix}{prop.Name}</th>");
+                }
+                // vnořený objekt
+                else
+                {
+                    GenerateHeaders(propType, sb, prefix + prop.Name + "_");
+                }
+            }
+        }
+
+
+        public static void GenerateRows(object obj, StringBuilder sb)
+        {
+            if (obj == null) return;
+
+            if (obj is IEnumerable list && obj is not string)
+            {
+                foreach (var item in list)
+                {
+                    GenerateRows(item, sb);
+                }
+                return;
+            }
+            sb.AppendLine("<tr>");
+            var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var prop in props)
+            {
+                var value = prop.GetValue(obj);
+
+                if (value == null)
+                {
+                    sb.AppendLine("<td></td>");
+                }
+                else if (value is IEnumerable List && value is not string)
+                {
+                    // vezmeme první prvek (nebo můžeš expandovat řádky)
+                    //var first = List.Cast<object>().FirstOrDefault();
+                    GenerateCells(List, sb);
+                }
+                else if (prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string))
+                {
+                    sb.AppendLine($"<td>{value}</td>");
+                }
+                else
+                {
+                    GenerateCells(value, sb);
+                }
+            }
+
+            sb.AppendLine("</tr>");
+        }
+
+
+        public static void GenerateCells(object obj, StringBuilder sb)
+        {
+            if (obj == null)
+            {
+                sb.AppendLine("<td></td>");
+                return;
+            }
+
+            // kolekce (List<T>)
+            if (obj is IEnumerable list && obj is not string)
+            {
+                foreach (var item in list)
+                {
+                    GenerateCells(item, sb); // 🔥 rekurze místo First()
+                }
+                return;
+            }
+
+            var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var prop in props)
+            {
+                var value = prop.GetValue(obj);
+
+                if (value == null)
+                {
+                    sb.AppendLine("<td></td>");
+                }
+                else if (value is IEnumerable subList && value is not string)
+                {
+                    GenerateCells(subList, sb); // 🔥 další úroveň
+                }
+                else if (prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string))
+                {
+                    sb.AppendLine($"<td>{value}</td>");
+                }
+                else
+                {
+                    GenerateCells(value, sb); // 🔥 vnořený objekt
+                }
+            }
+        }
+
+
+
+        //public static void GenerateCells(object obj, StringBuilder sb)
+        //{
+        //    if (obj == null)
+        //    {
+        //        sb.AppendLine("<td></td>");
+        //        return;
+        //    }
+
+        //    var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        //    foreach (var prop in props)
+        //    {
+        //        var value = prop.GetValue(obj);
+        //        sb.AppendLine($"<td>{value}</td>");
+        //    }
+        //}
 
 
         public static void SaveDocx<T>(this List<T> Pole, string cesta){

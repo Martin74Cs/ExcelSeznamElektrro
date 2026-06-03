@@ -2,8 +2,8 @@
 using Aplikace.Seznam;
 using Knihovna;
 using Knihovna.Excel;
+using Knihovna.Sdilene;
 using Knihovna.Tridy;
-using PrvniTest.Sdilene;
 using System.Globalization;
 using System.Reflection;
 using static Knihovna.Tridy.Zarizeni;

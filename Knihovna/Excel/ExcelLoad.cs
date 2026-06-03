@@ -1,5 +1,4 @@
-﻿using Knihovna;
-using Knihovna.Tridy;
+﻿using Knihovna.Tridy;
 
 namespace Knihovna.Excel {
     public class ExcelLoad

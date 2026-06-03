@@ -2,12 +2,94 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Knihovna.Tridy;
 using System.Reflection;
 
 namespace Knihovna.Export {
     public static class DocxGenerator
     {
+        public static void SaveDocxGenFlat<T>(this List<T> data, string docxPath, string? title = null)
+        {
+            if (data == null || data.Count == 0)
+                throw new InvalidOperationException("Seznam je prázdný.");
+
+            if (!Soubory.CanSaveFile(docxPath)) return;
+
+            //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0).ToArray();
+
+            using var wordDoc = WordprocessingDocument.Create(docxPath, WordprocessingDocumentType.Document);
+            var mainPart = wordDoc.AddMainDocumentPart();
+
+            mainPart.Document = new Document(new Body());
+            var body = mainPart.Document.Body!;
+            var heading = string.IsNullOrWhiteSpace(title) ? $"Přehled {typeof(T).Name}" : title;
+
+            body.Append(
+                new SectionProperties(new PageSize()
+                {
+                    Width = 16838,   // A4 landscape
+                    Height = 11906,
+                    Orient = PageOrientationValues.Landscape
+                },
+                    new PageMargin()
+                    {
+                        Top = 720,
+                        Right = 720,
+                        Bottom = 720,
+                        Left = 720
+                    }
+                )
+            );
+
+            // Tabulka
+            var table = new Table();
+
+            table.AppendChild(new TableProperties(new TableStyle { Val = "TableGrid" }, new TableWidth
+            {
+                Type = TableWidthUnitValues.Pct,
+                Width = "5000"
+            },
+                new TableLook { Val = "04A0" }
+            ));
+
+            // Header
+            var headerRow = new TableRow();
+
+            foreach (var prop in properties)
+            {
+                headerRow.Append(
+                    Tc(prop.Name, header: true, altRow: false)
+                );
+            }
+            table.Append(headerRow);
+
+            // Data
+            for (int i = 0; i < data.Count; i++)
+            {
+                var item = data[i];
+
+                bool alt = (i % 2) == 1;
+
+                var row = new TableRow();
+
+                foreach (var prop in properties)
+                {
+                    var value = prop.GetValue(item);
+
+                    row.Append(Tc(
+                            FormatValue(value),
+                            header: false,
+                            altRow: alt)
+                    );
+                }
+                table.Append(row);
+            }
+
+            body.Append(table);
+            mainPart.Document.Save();
+            Console.WriteLine($"Soubor {Path.GetFileName(docxPath)} Uložen.");
+        }
+
         public static void SaveDocxGen<T>(this List<T> data,string docxPath,string? title = null)
         {
             if (data == null || data.Count == 0)
@@ -112,7 +194,7 @@ namespace Knihovna.Export {
 
             body.Append(table);
             mainPart.Document.Save();
-            Console.WriteLine($"Hotovo! Soubor DOCX byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
+            Console.WriteLine($"Soubor {Path.GetFileName(docxPath)} Uložen.");
         }
 
         private static TableCell Tc(string text,bool header,bool altRow)

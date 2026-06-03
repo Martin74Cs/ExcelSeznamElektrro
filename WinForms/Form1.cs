@@ -4,7 +4,7 @@ using Aplikace.Upravy;
 using Knihovna;
 using Knihovna.Export;
 using Knihovna.Tridy;
-using PrvniTest.Sdilene;
+using Knihovna.Sdilene;
 using System.Text;
 
 namespace WinForms

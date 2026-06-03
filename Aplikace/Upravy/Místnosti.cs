@@ -2,8 +2,6 @@
 using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Tridy;
-using PrvniTest.Sdilene;
-
 
 namespace Aplikace.Upravy
 {
@@ -58,7 +56,9 @@ namespace Aplikace.Upravy
 
             //Soubory pro upravení
             Slabo.SaveJsonList(Path.ChangeExtension(Cesty.MistnostiXLs, ".json"));
-            Slabo.SaveToCsv(Path.ChangeExtension(Cesty.MistnostiXLs, ".csv"));
+            
+            Knihovna.Sdilene.Prevod.SaveToCsv(Slabo, Path.ChangeExtension(Cesty.MistnostiXLs, ".csv"));
+            //Slabo.SaveToCsv(Path.ChangeExtension(Cesty.MistnostiXLs, ".csv"));
 
             //Vyvořit nebo otevřít excel
             var ExcelApp = new ExcelApp(Cesty.MistnostiXLs);

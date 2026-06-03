@@ -1,8 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using Knihovna;
-using PrvniTest.Sdilene;
 using System.Globalization;
+using Knihovna;
 
 namespace Aplikace.Seznam
 {
@@ -208,7 +207,7 @@ namespace Aplikace.Seznam
                 Console.WriteLine(item.Key);
                 var Data = Pole.Where(x => x.Key.Contains(item.Key)).SelectMany(g => g).ToList();
                 Data.SaveJsonList(Path.Combine(cesta, "Jištení", "Dělení", $"{item.Key.Replace("/", " ")}.json"));
-                Data.SaveToCsv(Path.Combine(cesta, "Jištení", "Dělení", $"{item.Key}.csv"));
+                Knihovna.Sdilene.Prevod.SaveToCsv(Data, Path.Combine(cesta, "Jištení", "Dělení", $"{item.Key}.csv"));
             }
 
             Console.WriteLine("\n" + "Pojistková vložka");

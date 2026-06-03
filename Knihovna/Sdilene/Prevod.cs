@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using Knihovna;
 using Knihovna.Tridy;
 using System.Data;
 using System.Xml.Linq;
 using System.Reflection;
 
-namespace PrvniTest.Sdilene {
+namespace Knihovna.Sdilene {
     public static class Prevod
     {
         public static void DataTabletoToCsv(DataTable Table, string Soubor)
@@ -48,6 +47,7 @@ namespace PrvniTest.Sdilene {
 
         public static void SaveToCsv(string json, string file)
         {
+            if (!Soubory.CanSaveFile(file)) return;
             // Deserialize JSON to JArray
             JArray jsonArray = JArray.Parse(json);
 
@@ -91,7 +91,7 @@ namespace PrvniTest.Sdilene {
             }
             //Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
             //Console.WriteLine($"Hotovo! Soubor CSV. Uloženo do {Path.GetFileName(file)}");
-            Console.WriteLine($"Hotovo! Soubor CSV byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
+            Console.WriteLine($"Hotovo! Soubor {Path.GetFileName(file)} Uložen");
         }
 
         //Od umělé inteligence

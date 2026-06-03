@@ -1,16 +1,7 @@
-﻿using Aplikace.Tridy;
-using Knihovna;
+﻿using Knihovna;
 using Knihovna.Excel;
+using Knihovna.Sdilene;
 using Knihovna.Tridy;
-using PrvniTest.Sdilene;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Aplikace.Seznam
 {

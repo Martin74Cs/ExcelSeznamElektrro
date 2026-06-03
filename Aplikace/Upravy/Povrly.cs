@@ -1,8 +1,7 @@
 ﻿using Knihovna;
 using Knihovna.Excel;
-using PrvniTest.Sdilene;
+using Knihovna.Sdilene;
 using System.Data;
-
 
 namespace Aplikace.Upravy
 {
@@ -52,6 +51,7 @@ namespace Aplikace.Upravy
             //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
             string cestacelek = Path.Combine(BaseAdres, @"zarizeni_vse.xlsx");
+            //ExcelApp
             var ExcelApp = new ExcelApp(cestacelek);
             //ExcelApp.NovyExcelSablona(cestacelek);
             //Worksheet Xls = Doc.Worksheets[1];

@@ -3,7 +3,6 @@ using Knihovna;
 using Knihovna.Tridy;
 using System.Data;
 
-
 namespace WinForms {
     public partial class Rozvaděč: Form {
         private List<Zarizeni> Data = [];

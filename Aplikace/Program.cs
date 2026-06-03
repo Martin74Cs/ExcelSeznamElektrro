@@ -2,11 +2,11 @@
 using Aplikace;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
+using Knihovna.Export;
+using Knihovna.Tridy;
+using Knihovna.Sdilene;
 using Knihovna;
 using Knihovna.Tridy;
-using Parametr.MAcad;
-using System.ComponentModel;
-
 
 // Setup console logging to a file in Windows-1250 encoding
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
@@ -50,7 +50,7 @@ while(!konec) {
     Console.Write("Vyberte možnost [0-100]: ");
 
     //Nastavení cesty 
-    //Data.Instance.Cesta = currentPath;
+    //CestaSoubor.Instance.Cesta = currentPath;
 
     string? volba = Console.ReadLine();
     Console.WriteLine();
@@ -125,13 +125,30 @@ while(!konec) {
 
             case "7":
                 Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
-                string Data = Soubory.ShowOpenFileDialog("(*.json)|*.json",Informace.Instance.BasePath);
-                //var Json = Soubory.LoadJsonEn<SumoResult>(Data);
-                var Json = Soubory.LoadJsonEn<Zarizeni>(Data);
-                foreach(var item in Json) {
-                    Console.WriteLine($"Jmeno zařízení : {item.Popis}, {item.Napeti},{item.Prikon} ");
-                }
+                string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json",Informace.Instance.BasePath);
+                //var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
+                var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
                 Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
+                foreach(var item in Json) {
+                    Console.WriteLine($"Jmeno zařízení : {item.Text}, {item.KksCount},{item.SumoHandle} ");
+                }
+                //Json.SaveHtmlStyleJinaK(Path.ChangeExtension(CestaSoubor, ".html"));
+
+                var FlatJson = FlatRow.Flatten(Json);
+                FlatJson.SaveHtmlStyleFlat(Path.ChangeExtension(CestaSoubor, ".html"));
+                Json.SaveXML(Path.ChangeExtension(CestaSoubor, ".xml"));
+
+                //DocxGenerator
+                FlatJson.SaveDocxGenFlat(Path.ChangeExtension(CestaSoubor, ".docx"));
+                //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
+                //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
+
+                FlatJson.SavePdfGenFlat(Path.ChangeExtension(CestaSoubor, ".pdf"));
+
+                FlatJson.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
+                //Prevod.SaveToCsv(FlatJson, Path.ChangeExtension(CestaSoubor, ".csv"));
+                //CestaSoubor.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
+
                 Console.WriteLine("\nHotovo. Stiskněte libovolnou klávesu...");
                 Console.ReadKey();
                 break;
@@ -157,6 +174,7 @@ while(!konec) {
         Console.WriteLine("\nStiskněte libovolnou klávesu...");
         Console.ReadKey();
     }
+    return;
 }
 
 static void ZobrazitNapovedu() {

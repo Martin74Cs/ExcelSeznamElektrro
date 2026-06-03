@@ -1,9 +1,9 @@
 ﻿
 using Aplikace.Sdilene;
-using Knihovna;
 using Knihovna.Tridy;
-using PrvniTest.Sdilene;
+using Knihovna.Sdilene;
 using System.ComponentModel;
+using Knihovna;
 
 namespace WinForms
 {

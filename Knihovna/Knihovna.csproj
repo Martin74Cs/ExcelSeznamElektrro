@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>PrvniTest</AssemblyName>
+    <AssemblyName>Knihovna</AssemblyName>
     <Authors>Martin</Authors>
     <VersionPrefix>1.0.2</VersionPrefix>
-    <RootNamespace>PrvniTest</RootNamespace>
+    <RootNamespace>Knihovna</RootNamespace>
     <Company>Cs_to</Company>
     <Description>První testovací knihovna pro sdílení tříd a metod mezi projekty</Description>
     

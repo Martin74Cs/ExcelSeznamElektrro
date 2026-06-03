@@ -1,15 +1,7 @@
 ﻿
 using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Knihovna.Tridy {
     //public class Pole {
