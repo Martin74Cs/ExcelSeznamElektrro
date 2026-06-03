@@ -300,13 +300,18 @@ namespace WinForms
             var result = table.ShowDialog();
             if(result == DialogResult.OK) {
 
-                Data.SaveJsonList(Informace.Instance.SouborStrojeJson);
+                Data.SaveJsonList(Informace.Create.SouborStrojeJson);
 
                 //if (Data.Count < 1) Data.Add(new Zarizeni());
                 //Data.SaveJsonList(Informace.Create.SouborStrojeJson);
 
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
+            }
+            else if(result == DialogResult.Cancel) {
+                Console.WriteLine($"DialogResult.Cancel");
+                Console.WriteLine($"Soubor : {Path.GetFileName(Informace.Create.SouborStrojeJson)} - ULOŽEN.");
+                Data.SaveJsonList(Informace.Create.SouborStrojeJson);
             }
         }
 

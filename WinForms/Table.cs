@@ -226,8 +226,6 @@ namespace WinForms
             dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
         }
 
-
-
         private static string GetPropertyHeader(string propertyName) {
             var prop = typeof(Zarizeni).GetProperty(propertyName);
             if(prop == null) return propertyName;
