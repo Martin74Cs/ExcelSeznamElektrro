@@ -2,11 +2,12 @@
 using Aplikace;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
-using Knihovna.Export;
-using Knihovna.Tridy;
-using Knihovna.Sdilene;
 using Knihovna;
+using Knihovna.Export;
+using Knihovna.Sdilene;
 using Knihovna.Tridy;
+using Knihovna.Tridy;
+using Parametr.MAcad;
 
 // Setup console logging to a file in Windows-1250 encoding
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
@@ -114,7 +115,7 @@ while(!konec) {
                     Console.WriteLine($"Projektová složka byla úspěšně změněna na: {novaCesta}");
                     Console.ResetColor();
                     Informace.Instance.BasePath = novaCesta;
-                    Informace.Instance.Ulozit();  
+                    Informace.Instance.Ulozit();
                 }
                 else {
                     Console.WriteLine("Změna byla zrušena.");
@@ -125,7 +126,7 @@ while(!konec) {
 
             case "7":
                 Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
-                string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json",Informace.Instance.BasePath);
+                string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath);
                 //var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
                 var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
                 Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
@@ -153,6 +154,9 @@ while(!konec) {
                 Console.ReadKey();
                 break;
 
+            case "8":
+                SumoKKs();
+                break;
 
             case "0":
                 konec = true;
@@ -175,6 +179,34 @@ while(!konec) {
         Console.ReadKey();
     }
     return;
+}
+
+static void SumoKKs() {
+    Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
+    string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath);
+    //var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
+    var Json = Soubory.LoadJsonEn<SumoDivisionLog>(CestaSoubor);
+    Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
+
+    //Json.SaveHtmlStyleJinaK(Path.ChangeExtension(CestaSoubor, ".html"));
+
+    var FlatJson = Json.ToFlatRows();
+    FlatJson.SaveHtmlStyleFlat(Path.ChangeExtension(CestaSoubor, ".html"));
+    Json.SaveXML(Path.ChangeExtension(CestaSoubor, ".xml"));
+
+    //DocxGenerator
+    FlatJson.SaveDocxGenFlat(Path.ChangeExtension(CestaSoubor, ".docx"));
+    //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
+    //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
+
+    FlatJson.SavePdfGenFlat(Path.ChangeExtension(CestaSoubor, ".pdf"));
+
+    FlatJson.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
+    //Prevod.SaveToCsv(FlatJson, Path.ChangeExtension(CestaSoubor, ".csv"));
+    //CestaSoubor.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
+
+    Console.WriteLine("\nHotovo. Stiskněte libovolnou klávesu...");
+    Console.ReadKey();
 }
 
 static void ZobrazitNapovedu() {
