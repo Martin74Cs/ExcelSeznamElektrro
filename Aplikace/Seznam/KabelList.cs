@@ -163,8 +163,8 @@ namespace Aplikace.Seznam
                 };
                 Data.AddRange(Data2);
 
-                trasa.Druh = radek.Druh; //9. zařízení
-                Data.Add(radek.Druh);
+                trasa.Druh = radek.Druh.ToString(); //9. zařízení
+                Data.Add(radek.Druh.ToString());
 
                 //10.11.12.13
                 //dtto trasa - trasa.Tag; 
@@ -487,7 +487,7 @@ namespace Aplikace.Seznam
                 //        trasa.Druh = "Odhad" + "Rozvaděč"; //9. zařízení
                 //}
                 //else
-                trasa.Druh = radek.Druh; //9. zařízení
+                trasa.Druh = radek.Druh.ToString(); //9. zařízení
                 //10.11.12.13
                 //trasa.Tag = trasa.Tag;             //10. odkud tag
                 //trasa.Rozvadec = trasa.Rozvadec;   //11. odkud Mcc
@@ -511,7 +511,7 @@ namespace Aplikace.Seznam
                                       //
                                       //Ovládací kabel PTC
                                       //if (!radek.BalenaJednotka.StartsWith('P') && !radek.BalenaJednotka.StartsWith('B'))
-                if (radek.Druh == Zarizeni.Druhy.Motor.ToString())
+                if (radek.Druh == Zarizeni.Druhy.Motor)
                 {
                     var PTC = KabelPTCTrida(radek);
                     NovaData.Add(PTC);

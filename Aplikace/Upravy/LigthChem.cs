@@ -252,11 +252,13 @@ namespace Aplikace.Upravy
         }
 
         private static void Preklad(List<Zarizeni> Stara) {
-            Stara.Where(x => x.Druh == "Otop").ToList()
-                        .ForEach(x => x.Druh = "Heating");
+            Stara.Where(x => x.Druh == Druhy.Otop).ToList()
+                .ForEach(x => x.Druh = Druhy.Otop);
+                        //.ForEach(x => x.Druh = "Heating");
 
-            Stara.Where(x => x.Druh == "Rozvadeč").ToList()
-                        .ForEach(x => x.Druh = "Distributor");
+            Stara.Where(x => x.Druh == Druhy.Rozvadeč).ToList()
+                        //.ForEach(x => x.Druh = "Distributor");
+                        .ForEach(x => x.Druh = Druhy.Rozvadeč);
 
             //Stara.Where(x => x.Typ.ToUpper() == "PŘÍVOD").ToList()
             Stara.Where(x => x.Typ.Equals("PŘÍVOD", StringComparison.CurrentCultureIgnoreCase)).ToList()
@@ -651,7 +653,7 @@ namespace Aplikace.Upravy
         /// <summary>Převod stringu na enum</summary>
         private static void StringToEnum(IGrouping<string, Zarizeni> skupina) {
             foreach(var ukol in skupina) {
-                if(Enum.TryParse<Druhy>(ukol.Druh, true, out var priorita)) {
+                if(Enum.TryParse<Druhy>(ukol.Druh.ToString(), true, out var priorita)) {
                     ukol.DruhEnum = priorita;
                 }
                 else {

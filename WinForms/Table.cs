@@ -81,72 +81,72 @@ namespace WinForms
             return attribute == null ? value.ToString() : attribute.Description;
         }
 
-        public void SetListBoxOld() {
-            dataGridView1.AutoGenerateColumns = true;
-            //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
+        //public void SetListBoxOld() {
+        //    dataGridView1.AutoGenerateColumns = true;
+        //    //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
 
-            // Po připojení datového zdroje nahradíme sloupec Stav za ComboBox
-            dataGridView1.DataSourceChanged += (s, e) => {
-                var DruhColumn = dataGridView1.Columns["Druh"];
-                DruhColumn.Visible = false;
-                dataGridView1.Columns["DruhEnum"]?.Visible = false;
-                //int index = stavColumn?.Index ?? 0;
+        //    // Po připojení datového zdroje nahradíme sloupec Stav za ComboBox
+        //    dataGridView1.DataSourceChanged += (s, e) => {
+        //        var DruhColumn = dataGridView1.Columns["Druh"];
+        //        DruhColumn.Visible = false;
+        //        dataGridView1.Columns["DruhEnum"]?.Visible = false;
+        //        //int index = stavColumn?.Index ?? 0;
 
-                // Najdeme existující sloupec Stav
-                //var stavColumn = dataGridView1.Columns["DruhEnum"];
-                if(DruhColumn != null) {
-                    // Získáme index sloupce
-                    int columnIndex = DruhColumn.Index;
+        //        // Najdeme existující sloupec Stav
+        //        //var stavColumn = dataGridView1.Columns["DruhEnum"];
+        //        if(DruhColumn != null) {
+        //            // Získáme index sloupce
+        //            int columnIndex = DruhColumn.Index;
 
-                    // Odstraníme původní sloupec
-                    //dataGridView1.Columns.Remove(stavColumn);
+        //            // Odstraníme původní sloupec
+        //            //dataGridView1.Columns.Remove(stavColumn);
 
-                    // Vytvoříme seznam pro ComboBox s popisy
-                    var Vyber = Enum.GetValues<Zarizeni.Druhy>()
-                    .Cast<Zarizeni.Druhy>().Select(s => new {
-                        //Value = s.ToString(), // Ukládáme jako string
-                        //Value = s, // Ukládáme jako string
-                        Value = s.ToString(), // Ukládáme jako string
-                        Display = GetEnumDescription(s) // Zobrazujeme popis
-                    }).ToList();
+        //            // Vytvoříme seznam pro ComboBox s popisy
+        //            var Vyber = Enum.GetValues<Zarizeni.Druhy>()
+        //            .Cast<Zarizeni.Druhy>().Select(s => new {
+        //                //Value = s.ToString(), // Ukládáme jako string
+        //                //Value = s, // Ukládáme jako string
+        //                Value = s.ToString(), // Ukládáme jako string
+        //                Display = GetEnumDescription(s) // Zobrazujeme popis
+        //            }).ToList();
 
-                    // Vytvoříme nový ComboBox sloupec
-                    var comboBoxColumn = new DataGridViewComboBoxColumn {
-                        HeaderText = "Vyber",
-                        Name = "Vyber",
-                        DataPropertyName = "Druh", // Propojení s vlastností Druh v Zarizeni
-                        //DataSource = Enum.GetValues(typeof(Zarizeni.Druhy)), // Naplní ComboBox hodnotami z enumu
-                        DataSource = Vyber,
+        //            // Vytvoříme nový ComboBox sloupec
+        //            var comboBoxColumn = new DataGridViewComboBoxColumn {
+        //                HeaderText = "Vyber",
+        //                Name = "Vyber",
+        //                DataPropertyName = "Druh", // Propojení s vlastností Druh v Zarizeni
+        //                //DataSource = Enum.GetValues(typeof(Zarizeni.Druhy)), // Naplní ComboBox hodnotami z enumu
+        //                DataSource = Vyber,
 
-                        ValueMember = "Value", // String hodnota pro vlastnost Druh
-                        DisplayMember = "Display", // Zobrazení popisu
-                        ValueType = typeof(string)
-                        //ValueType = typeof(Zarizeni.Druhy), // Zajistí správný typ hodnot
-                    };
+        //                ValueMember = "Value", // String hodnota pro vlastnost Druh
+        //                DisplayMember = "Display", // Zobrazení popisu
+        //                ValueType = typeof(string)
+        //                //ValueType = typeof(Zarizeni.Druhy), // Zajistí správný typ hodnot
+        //            };
 
-                    // Vložíme ComboBox sloupec na původní pozici
-                    dataGridView1.Columns.Insert(columnIndex, comboBoxColumn);
-                }
-            };
+        //            // Vložíme ComboBox sloupec na původní pozici
+        //            dataGridView1.Columns.Insert(columnIndex, comboBoxColumn);
+        //        }
+        //    };
 
-            // Přidání sloupce s ComboBoxem pro enum Stav   
-            //DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn
-            //{
-            //    HeaderText = "Druh",
-            //    Name = "Druh",
-            //    DataPropertyName = "Druh", // Propojení s vlastností Stav v Zarizeni
-            //    DataSource = Enum.GetValues(typeof(Zarizeni.Druhy)), // Naplní ComboBox hodnotami z enumu
-            //    ValueType = typeof(Zarizeni.Druhy) // Zajistí správný typ hodnot
-            //};
-            //dataGridView1.Columns.Add(comboBoxColumn);
+        //    // Přidání sloupce s ComboBoxem pro enum Stav   
+        //    //DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn
+        //    //{
+        //    //    HeaderText = "Druh",
+        //    //    Name = "Druh",
+        //    //    DataPropertyName = "Druh", // Propojení s vlastností Stav v Zarizeni
+        //    //    DataSource = Enum.GetValues(typeof(Zarizeni.Druhy)), // Naplní ComboBox hodnotami z enumu
+        //    //    ValueType = typeof(Zarizeni.Druhy) // Zajistí správný typ hodnot
+        //    //};
+        //    //dataGridView1.Columns.Add(comboBoxColumn);
 
-            // Umožnit přidávání/smazání
-            //dataGridView1.AllowUserToAddRows = true;
-            dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
+        //    // Umožnit přidávání/smazání
+        //    //dataGridView1.AllowUserToAddRows = true;
+        //    dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
 
-            dataGridView1.AllowUserToDeleteRows = true;
-            dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
-        }
+        //    dataGridView1.AllowUserToDeleteRows = true;
+        //    dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
+        //}
 
         public void SetListBox() {
             //var namesToRemove = new[] { "TagStroj", "Tag", "Predmet", "Popis", "Druh", "Typ", "Pid", "Menic", "Prikon", "PrikonStroj", "Rozvadec", "RozvadecCislo", "RozvadecOznačení", "Nic", "Delka", "Vyvod", "Patro", "Vykres" };
@@ -158,7 +158,7 @@ namespace WinForms
             SetListBox(namesToRemove);
         }
 
-        public void SetListBox(string[] namesToRemove) {
+        public void SetListBox(string[] propertyNames) {
             //dataGridView1.AutoGenerateColumns = true;
             dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
             dataGridView1.Columns.Clear(); // důležité – vyčistí dříve vygenerované sloupce
@@ -168,56 +168,82 @@ namespace WinForms
             var zarizeni  = new Zarizeni();
 
             // Přidáš sloupce ručně:
-            foreach(var name in namesToRemove) {
-                if(name == "Druh") continue; // přeskočíme sloupec "Druh", ten bude přidán později
-                
-                if(!string.IsNullOrEmpty(name) && zarizeni[name].GetType() == typeof(bool)) {
+            foreach(var propertyName  in propertyNames) {
+                //if(name == "Druh") continue; // přeskočíme sloupec "Druh", ten bude přidán později
+
+                var prop = typeof(Zarizeni).GetProperty(propertyName);
+                if (prop == null)
+                {
+                    MessageBox.Show($"Vlastnost '{propertyName}' nebyla nalezena.");
+                    continue;
+                }
+
+                Type propertyType = prop.PropertyType;
+
+                // ENUM -> ComboBox
+                if (propertyType.IsEnum)
+                {
+                    var comboColumn = new DataGridViewComboBoxColumn
+                    {
+                        Name = propertyName,
+                        DataPropertyName = propertyName,
+                        HeaderText = propertyName,
+                        DataSource = Enum.GetValues(propertyType)
+                    };
+
+                    dataGridView1.Columns.Add(comboColumn);
+                    continue;
+                }
+
+                if(propertyType  == typeof(bool)) {
 
                     //zaskrtávání pro bool
                     var checkColumn = new DataGridViewCheckBoxColumn {
-                        DataPropertyName = name,
-                        HeaderText = GetPropertyHeader(name),
-                        Name = name
+                        DataPropertyName = propertyName,
+                        HeaderText = GetPropertyHeader(propertyName),
+                        Name = propertyName
                     };
                     dataGridView1.Columns.Add(checkColumn);
+                    continue;
                 }
-                else { 
-                    //text ostatni
-                    var nameColumn = new DataGridViewTextBoxColumn {
-                        DataPropertyName = name,
-                        HeaderText = GetPropertyHeader(name),
-                        Name = name
-                    };
-                    dataGridView1.Columns.Add(nameColumn);
-                }
+     
+                //text ostatni
+                var nameColumn = new DataGridViewTextBoxColumn {
+                    DataPropertyName = propertyName,
+                    HeaderText = GetPropertyHeader(propertyName),
+                    Name = propertyName
+                };
+                dataGridView1.Columns.Add(nameColumn);
+                
 
             }
 
-            // Vytvoříme seznam pro ComboBox s popisy
-            var Vyber = Enum.GetValues<Zarizeni.Druhy>()
-            .Cast<Zarizeni.Druhy>().Select(s => new {
-                Value = s.ToString(), // Ukládáme jako string
-                Display = GetEnumDescription(s) // Zobrazujeme popis
-            }).ToList();
+            //// Vytvoříme seznam pro ComboBox s popisy
+            //var Vyber = Enum.GetValues<Zarizeni.Druhy>()
+            //.Cast<Zarizeni.Druhy>().Select(s => new {
+            //    Value = s.ToString(), // Ukládáme jako string
+            //    Display = GetEnumDescription(s) // Zobrazujeme popis
+            //}).ToList();
 
-            // Vytvoříme nový ComboBox sloupec
-            var comboBoxColumn = new DataGridViewComboBoxColumn {
-                //HeaderText = "Vyber",
-                //Name = "Vyber",
-                //DataPropertyName = "Druh", 
-                //DataSource = Vyber,
-                HeaderText = GetPropertyHeader("Druh"),          // Nadpis sloupce
-                Name = "Druh",                // Jméno sloupce
-                DataPropertyName = "Druh",   // Vlastnost objektu Zarizeni
-                DataSource = Vyber,
-                ValueMember = "Value",       // Skutečná hodnota (enum)
-                DisplayMember = "Display",   // Co se zobrazí v roletce
-                ValueType = typeof(Zarizeni.Druhy)
-            };
-            //dataGridView1.Columns.Add(comboBoxColumn);
-            // Přidáme ComboBox sloupec na konec, nebo na určitou pozici
-            int position = namesToRemove.Contains("Druh") ? namesToRemove.IndexOf("Druh") : 1; // Najdeme index sloupce "Druh" v seznamu
-            dataGridView1.Columns.Insert(position, comboBoxColumn);
+            //// Vytvoříme nový ComboBox sloupec
+            //var comboBoxColumn = new DataGridViewComboBoxColumn {
+            //    //HeaderText = "Vyber",
+            //    //Name = "Vyber",
+            //    //DataPropertyName = "Druh", 
+            //    //DataSource = Vyber,
+            //    HeaderText = GetPropertyHeader("Druh"),          // Nadpis sloupce
+            //    Name = "Druh",                // Jméno sloupce
+            //    DataPropertyName = "Druh",   // Vlastnost objektu Zarizeni
+            //    DataSource = Vyber,
+            //    ValueMember = "Value",       // Skutečná hodnota (enum)
+            //    DisplayMember = "Display",   // Co se zobrazí v roletce
+            //    ValueType = typeof(Zarizeni.Druhy)
+            //};
+            ////dataGridView1.Columns.Add(comboBoxColumn);
+            //// Přidáme ComboBox sloupec na konec, nebo na určitou pozici
+            //int position = propertyNames.Contains("Druh") ? propertyNames.IndexOf("Druh") : 1; // Najdeme index sloupce "Druh" v seznamu
+            //dataGridView1.Columns.Insert(position, comboBoxColumn);
+
             // Umožnit přidávání/smazání
             //dataGridView1.AllowUserToAddRows = true;
             dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
@@ -296,12 +322,12 @@ namespace WinForms
 
             // Najdeme index sloupce "Stav"
             int stavColumnIndex = -1;
-            foreach(DataGridViewColumn column in dgv.Columns) {
-                if(column.Name == "Druh") {
-                    stavColumnIndex = column.Index;
-                    break;
-                }
-            }
+            //foreach(DataGridViewColumn column in dgv.Columns) {
+            //    if(column.Name == "Druh") {
+            //        stavColumnIndex = column.Index;
+            //        break;
+            //    }
+            //}
 
             if(stavColumnIndex >= 0) {
                 // Nastavíme aktuální buňku na sloupec "Stav" v aktuálním řádku

@@ -1,5 +1,6 @@
 ﻿using Knihovna.Tridy;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -141,12 +142,13 @@ namespace Knihovna.Tridy
         #endregion
 
         #region 4. Napájení a řízení
-        private string druh = string.Empty;
+        private Druhy druh; //= string.Empty;
         [Category("4. Napájení a řízení")]
         [DisplayName("Druh zařízení")]
         [Description("Druh zařízení (Motor, Přívod, Spojka, Rozvaděč atd.).")]
         [Display(Name = "Druh zařízení")]
-        public string Druh { get => druh; set => SetProperty(ref druh, value); }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Druhy Druh { get => druh; set => SetProperty(ref druh, value); }
 
         private string typ = string.Empty;
         [Category("4. Napájení a řízení")]

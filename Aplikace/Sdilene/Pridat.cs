@@ -25,7 +25,7 @@ namespace Aplikace.Sdilene
                 if (double.TryParse(item.Napeti, out double U) && U != 0 && double.TryParse(item.Prikon, out double kW))
                 {
 
-                    if (item.Druh == Zarizeni.Druhy.Rozvadeč.ToString() || item.Druh == Zarizeni.Druhy.Přívod.ToString())
+                    if (item.Druh == Zarizeni.Druhy.Rozvadeč || item.Druh == Zarizeni.Druhy.Přívod)
                     {
                         Cos = 1.00;
                     }
