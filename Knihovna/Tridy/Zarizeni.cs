@@ -1,9 +1,11 @@
-﻿using Knihovna.Tridy;
+using Knihovna.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -216,6 +218,18 @@ namespace Knihovna.Tridy
         #endregion
 
         #region 5. Kabelové připojení
+        private List<Trasa> seznamKabelu = new();
+        [Category("5. Kabelové připojení")]
+        [DisplayName("Seznam kabelů")]
+        [Description("Seznam všech kabelů připojených k tomuto zařízení.")]
+        public List<Trasa> SeznamKabelu { get => seznamKabelu; set => SetProperty(ref seznamKabelu, value); }
+
+        [Category("5. Kabelové připojení")]
+        [DisplayName("Kabely (Přehled)")]
+        [Description("Přehled označení všech připojených kabelů.")]
+        [JsonIgnore]
+        public string KabelyPrehled => string.Join(", ", SeznamKabelu.Select(k => k.Oznaceni));
+
         private Kabel kabel = new();
         [Category("5. Kabelové připojení")]
         [DisplayName("Kabel (Objekt)")]
@@ -422,7 +436,32 @@ namespace Knihovna.Tridy
             foreach (var prop in properties)
             {
                 var value = prop.GetValue(source);
-                prop.SetValue(copy, value);
+                if (value is List<Trasa> list)
+                {
+                    prop.SetValue(copy, list.Select(t => new Trasa
+                    {
+                        Tag = t.Tag,
+                        Rozvadec = t.Rozvadec,
+                        RozvadecCislo = t.RozvadecCislo,
+                        Oznaceni = t.Oznaceni,
+                        Kabel = t.Kabel,
+                        PocetZil = t.PocetZil,
+                        Prurezmm2 = t.Prurezmm2,
+                        PrurezFt = t.PrurezFt,
+                        Druh = t.Druh,
+                        OdkudSvokra = t.OdkudSvokra,
+                        Mezera = t.Mezera,
+                        Patro = t.Patro,
+                        Predmet = t.Predmet,
+                        Svorka = t.Svorka,
+                        Delka = t.Delka,
+                        Popis = t.Popis
+                    }).ToList());
+                }
+                else
+                {
+                    prop.SetValue(copy, value);
+                }
             }
 
             return copy;

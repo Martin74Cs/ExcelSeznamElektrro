@@ -1,4 +1,4 @@
-﻿namespace WinForms
+namespace WinForms
 {
     partial class Table
     {
@@ -43,6 +43,11 @@
             rozvadecSloupceToolStripMenuItem = new ToolStripMenuItem();
             datoveSloupceToolStripMenuItem = new ToolStripMenuItem();
             filtToolStripMenuItem = new ToolStripMenuItem();
+            kabelyToolStripMenuItem1 = new ToolStripMenuItem();
+            spravaKabeluToolStripMenuItem = new ToolStripMenuItem();
+            rozvadeceToolStripMenuItem = new ToolStripMenuItem();
+            prirazeniKRozvadecumToolStripMenuItem = new ToolStripMenuItem();
+            prehledToolStripMenuItem = new ToolStripMenuItem();
             panelFilters = new FlowLayoutPanel();
             lblFiltersHeader = new Label();
             lblPid = new Label();
@@ -82,7 +87,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, upravyToolStripMenuItem, vypoctyToolStripMenuItem, zobrazeniToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, upravyToolStripMenuItem, kabelyToolStripMenuItem1, rozvadeceToolStripMenuItem, vypoctyToolStripMenuItem, zobrazeniToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1300, 28);
@@ -139,6 +144,42 @@
             vypoctyToolStripMenuItem.Name = "vypoctyToolStripMenuItem";
             vypoctyToolStripMenuItem.Size = new Size(76, 24);
             vypoctyToolStripMenuItem.Text = "Výpočty";
+            // 
+            // 
+            // kabelyToolStripMenuItem1
+            // 
+            kabelyToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { spravaKabeluToolStripMenuItem });
+            kabelyToolStripMenuItem1.Name = "kabelyToolStripMenuItem1";
+            kabelyToolStripMenuItem1.Size = new Size(68, 24);
+            kabelyToolStripMenuItem1.Text = "Kabely";
+            // 
+            // spravaKabeluToolStripMenuItem
+            // 
+            spravaKabeluToolStripMenuItem.Name = "spravaKabeluToolStripMenuItem";
+            spravaKabeluToolStripMenuItem.Size = new Size(224, 26);
+            spravaKabeluToolStripMenuItem.Text = "Správa kabelů";
+            spravaKabeluToolStripMenuItem.Click += new EventHandler(SpravaKabeluToolStripMenuItem_Click);
+            // 
+            // rozvadeceToolStripMenuItem
+            // 
+            rozvadeceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { prirazeniKRozvadecumToolStripMenuItem, prehledToolStripMenuItem });
+            rozvadeceToolStripMenuItem.Name = "rozvadeceToolStripMenuItem";
+            rozvadeceToolStripMenuItem.Size = new Size(94, 24);
+            rozvadeceToolStripMenuItem.Text = "Rozvaděče";
+            // 
+            // prirazeniKRozvadecumToolStripMenuItem
+            // 
+            prirazeniKRozvadecumToolStripMenuItem.Name = "prirazeniKRozvadecumToolStripMenuItem";
+            prirazeniKRozvadecumToolStripMenuItem.Size = new Size(244, 26);
+            prirazeniKRozvadecumToolStripMenuItem.Text = "Přiřazení k rozvaděčům";
+            prirazeniKRozvadecumToolStripMenuItem.Click += new EventHandler(PrirazeniKRozvadecumToolStripMenuItem_Click);
+            // 
+            // prehledToolStripMenuItem
+            // 
+            prehledToolStripMenuItem.Name = "prehledToolStripMenuItem";
+            prehledToolStripMenuItem.Size = new Size(244, 26);
+            prehledToolStripMenuItem.Text = "Přehled rozvaděčů";
+            prehledToolStripMenuItem.Click += new EventHandler(PrehledToolStripMenuItem_Click);
             // 
             // proudToolStripMenuItem
             // 
@@ -387,5 +428,10 @@
         public SplitContainer splitContainer1;
         public PropertyGrid propertyGrid1;
         private ToolStripMenuItem filtToolStripMenuItem;
+        private ToolStripMenuItem kabelyToolStripMenuItem1;
+        private ToolStripMenuItem spravaKabeluToolStripMenuItem;
+        private ToolStripMenuItem rozvadeceToolStripMenuItem;
+        private ToolStripMenuItem prirazeniKRozvadecumToolStripMenuItem;
+        private ToolStripMenuItem prehledToolStripMenuItem;
     }
 }

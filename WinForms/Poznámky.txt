@@ -1,0 +1,19 @@
+﻿Do menu přidej novou položku kabely, 
+která bude řešit jaké kabely povedou k zařízení 
+které je uloženo var Data = Soubory.LoadJsonList<Zarizeni>(Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json"));  
+
+ke každému zařízení se budou moci přidat libovolné množství kabelu.
+kabely budou mít označování podle pravidel elektrotechniky podle třídy Kabely.cs 
+
+nové menu rozděleno na částí seznamu 
+a na část kde se budou přidávat kabely 
+a na část kde se bude vypisovat kolik tam je již kabelů 
+kabely budou vázany na zařízení. 
+
+při ukládání uložit vše co je potřeby i u private void Button10_Click(object sender, EventArgs e)  
+
+možná bude muset bý upaveny data v Table.cs aby se kabely objevovaly např roleta nazvů. 
+
+Ještě přidej do menu do položky rozvaděč 
+nové meni které umožní přizařovat zaříní určitým rozvadščům 
+z přidávánám rozvaděčů a svípisy co je přižazeno a co ještě chybí nejak to rozděl.

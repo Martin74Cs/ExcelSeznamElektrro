@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -34,8 +34,9 @@ namespace Knihovna.Tridy
         public string Svorka { get; set; } = string.Empty;
 
         public string Delka { get; set; } = string.Empty;
+        public string Popis { get; set; } = string.Empty;
         /// <summary>Rozvaděč</summary>
-
+        
         //převod enumu na pole stringů 
         public static string[] KabelZnačkaPole => Enum.GetNames<KabelZnačka>();
     }

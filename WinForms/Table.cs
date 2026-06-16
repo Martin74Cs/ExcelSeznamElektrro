@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using Knihovna.Excel;
 using Knihovna.Tridy;
@@ -59,7 +59,7 @@ namespace WinForms
         }
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
-            if(sender is not DataGridView dgv || dgv.Rows[e.RowIndex].DataBoundItem == null)
+            if(e.RowIndex < 0 || sender is not DataGridView dgv || dgv.Rows[e.RowIndex].DataBoundItem == null)
                 return;
 
             Type type = typeof(Zarizeni);
@@ -150,11 +150,11 @@ namespace WinForms
 
         public void SetListBox() {
             //var namesToRemove = new[] { "TagStroj", "Tag", "Predmet", "Popis", "Druh", "Typ", "Pid", "Menic", "Prikon", "PrikonStroj", "Rozvadec", "RozvadecCislo", "RozvadecOznačení", "Nic", "Delka", "Vyvod", "Patro", "Vykres" };
-            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "Menic", "Napeti", "Prikon", "Rozvadec", "RozvadecCislo", "Vyvod", };
+            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "Menic", "Napeti", "Prikon", "Rozvadec", "RozvadecCislo", "Vyvod", "Kabel", "SeznamKabelu" };
             SetListBox(namesToRemove);
         }
         public void SetListBoxData() {
-            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "PrikonStroj", "Prikon", "Napeti", "Menic", "Proud", "RozvadecOznačení", "PrurezMM2" };
+            var namesToRemove = new[] { "Tag", "Predmet", "Popis", "Druh", "Typ", "PrikonStroj", "Prikon", "Napeti", "Menic", "Proud", "RozvadecOznačení", "PrurezMM2", "Kabel", "SeznamKabelu" };
             SetListBox(namesToRemove);
         }
 
@@ -272,6 +272,30 @@ namespace WinForms
 
         private void Button2_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.OK;
+        }
+
+        private void SpravaKabeluToolStripMenuItem_Click(object sender, EventArgs e) {
+            Zarizeni? vybraneZar = null;
+            if (dataGridView1.CurrentRow != null) {
+                vybraneZar = dataGridView1.CurrentRow.DataBoundItem as Zarizeni;
+            }
+
+            using var form = new FormKabely(Pole, vybraneZar);
+            form.ShowDialog(this);
+            dataGridView1.Refresh();
+            propertyGrid1.Refresh();
+        }
+
+        private void PrirazeniKRozvadecumToolStripMenuItem_Click(object sender, EventArgs e) {
+            using var form = new FormRozvadece(Pole);
+            form.ShowDialog(this);
+            dataGridView1.Refresh();
+            propertyGrid1.Refresh();
+        }
+
+        private void PrehledToolStripMenuItem_Click(object sender, EventArgs e) {
+            using var form = new Rozvaděč();
+            form.ShowDialog(this);
         }
 
         private void Table_Load(object sender, EventArgs e) {
@@ -604,7 +628,7 @@ namespace WinForms
         private void FiltToolStripMenuItem_Click(object sender, EventArgs e) {
             //Data ze třídy Zarizeni.
             //Zarizeni
-            var namesToRemove = new[] { "IsExist", "Poznamka", "Etapa", "Tag", "Predmet", "Popis", "Typ", "Napeti", "Prikon", };
+            var namesToRemove = new[] { "IsExist", "Poznamka", "Etapa", "Tag", "Predmet", "Popis", "Typ", "Napeti", "Prikon", "Kabel", "SeznamKabelu" };
             SetListBox(namesToRemove);
         }
     }
