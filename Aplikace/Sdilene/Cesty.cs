@@ -110,9 +110,9 @@ namespace Aplikace.Sdilene
 
         //Projekt
         public static string Projekt => Path.Combine(Informace.Instance.BasePath);
-        public static string VyvodyJson => Path.Combine(Informace.Instance.BasePath, "Vývody.json");
+        public static string VyvodyOstatniJson => Path.Combine(Informace.Instance.BasePath, "Vyvody.Ostatni.json");
 
-        public static string VyvodyStavbaJson => Path.Combine(Informace.Instance.BasePath, "Vývody.Stavba.json");
+        public static string VyvodyStavbaJson => Path.Combine(Informace.Instance.BasePath, "Vyvody.Stavba.json");
         
         public static string ElektroDataCsv => Path.Combine(Informace.Instance.BasePath, "ElektroData.Csv");
         

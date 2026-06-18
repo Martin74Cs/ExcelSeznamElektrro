@@ -60,9 +60,20 @@ namespace WinForms
             comboBox1 = new ComboBox();
             splitContainer1 = new SplitContainer();
             propertyGrid1 = new PropertyGrid();
+            flowLayoutPanelButtons = new FlowLayoutPanel();
+            BtnAdd = new Button();
+            button7 = new Button();
+            button3 = new Button();
+            Button4 = new Button();
+            button5 = new Button();
+            button6 = new Button();
+            button8 = new Button();
+            Button2 = new Button();
+            Button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             panelFilters.SuspendLayout();
+            flowLayoutPanelButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -342,6 +353,115 @@ namespace WinForms
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             comboBox1.MouseClick += ComboBox1_MouseClick;
             // 
+            // flowLayoutPanelButtons
+            // 
+            flowLayoutPanelButtons.Controls.Add(BtnAdd);
+            flowLayoutPanelButtons.Controls.Add(button7);
+            flowLayoutPanelButtons.Controls.Add(button3);
+            flowLayoutPanelButtons.Controls.Add(Button4);
+            flowLayoutPanelButtons.Controls.Add(button5);
+            flowLayoutPanelButtons.Controls.Add(button6);
+            flowLayoutPanelButtons.Controls.Add(button8);
+            flowLayoutPanelButtons.Controls.Add(Button2);
+            flowLayoutPanelButtons.Controls.Add(Button1);
+            flowLayoutPanelButtons.Dock = DockStyle.Bottom;
+            flowLayoutPanelButtons.FlowDirection = FlowDirection.LeftToRight;
+            flowLayoutPanelButtons.Location = new Point(0, 690);
+            flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
+            flowLayoutPanelButtons.Padding = new Padding(10, 5, 10, 5);
+            flowLayoutPanelButtons.Size = new Size(1300, 60);
+            flowLayoutPanelButtons.TabIndex = 3;
+            // 
+            // BtnAdd
+            // 
+            BtnAdd.Location = new Point(13, 8);
+            BtnAdd.Name = "BtnAdd";
+            BtnAdd.Size = new Size(130, 36);
+            BtnAdd.TabIndex = 0;
+            BtnAdd.Text = "Přidat kopii";
+            BtnAdd.UseVisualStyleBackColor = true;
+            BtnAdd.Click += BtnAdd_Click;
+            // 
+            // button7
+            // 
+            button7.Location = new Point(149, 8);
+            button7.Name = "button7";
+            button7.Size = new Size(100, 36);
+            button7.TabIndex = 1;
+            button7.Text = "Smazat";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += Button7_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(255, 8);
+            button3.Name = "button3";
+            button3.Size = new Size(100, 36);
+            button3.TabIndex = 2;
+            button3.Text = "Proud";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += Button3_Click;
+            // 
+            // Button4
+            // 
+            Button4.Location = new Point(361, 8);
+            Button4.Name = "Button4";
+            Button4.Size = new Size(100, 36);
+            Button4.TabIndex = 3;
+            Button4.Text = "Průřez";
+            Button4.UseVisualStyleBackColor = true;
+            Button4.Click += Button4_Click;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(467, 8);
+            button5.Name = "button5";
+            button5.Size = new Size(170, 36);
+            button5.TabIndex = 4;
+            button5.Text = "Sloupce rozvaděče";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += Button5_Click;
+            // 
+            // button6
+            // 
+            button6.Location = new Point(643, 8);
+            button6.Name = "button6";
+            button6.Size = new Size(150, 36);
+            button6.TabIndex = 5;
+            button6.Text = "Všechny sloupce";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += Button6_Click;
+            // 
+            // button8
+            // 
+            button8.Location = new Point(799, 8);
+            button8.Name = "button8";
+            button8.Size = new Size(150, 36);
+            button8.TabIndex = 6;
+            button8.Text = "Datové sloupce";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += Button8_Click;
+            // 
+            // Button2
+            // 
+            Button2.Location = new Point(955, 8);
+            Button2.Name = "Button2";
+            Button2.Size = new Size(100, 36);
+            Button2.TabIndex = 7;
+            Button2.Text = "Uložit";
+            Button2.UseVisualStyleBackColor = true;
+            Button2.Click += Button2_Click;
+            // 
+            // Button1
+            // 
+            Button1.Location = new Point(1061, 8);
+            Button1.Name = "Button1";
+            Button1.Size = new Size(100, 36);
+            Button1.TabIndex = 8;
+            Button1.Text = "Zavřít";
+            Button1.UseVisualStyleBackColor = true;
+            Button1.Click += Button1_Click;
+            // 
             // splitContainer1
             // 
             splitContainer1.BorderStyle = BorderStyle.Fixed3D;
@@ -376,6 +496,7 @@ namespace WinForms
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1300, 750);
             Controls.Add(splitContainer1);
+            Controls.Add(flowLayoutPanelButtons);
             Controls.Add(panelFilters);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
@@ -390,6 +511,8 @@ namespace WinForms
             menuStrip1.PerformLayout();
             panelFilters.ResumeLayout(false);
             panelFilters.PerformLayout();
+            flowLayoutPanelButtons.ResumeLayout(false);
+            flowLayoutPanelButtons.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
@@ -433,5 +556,15 @@ namespace WinForms
         private ToolStripMenuItem rozvadeceToolStripMenuItem;
         private ToolStripMenuItem prirazeniKRozvadecumToolStripMenuItem;
         private ToolStripMenuItem prehledToolStripMenuItem;
+        private Button Button1;
+        private Button Button2;
+        private Button button3;
+        private Button Button4;
+        private Button button5;
+        private Button button6;
+        private Button button7;
+        private Button button8;
+        private Button BtnAdd;
+        private FlowLayoutPanel flowLayoutPanelButtons;
     }
 }

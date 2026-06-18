@@ -19,17 +19,18 @@ namespace Aplikace.Upravy
             Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů ...");
             Console.ResetColor();
             var Cesty = Informace.Instance;
-            Cesty.SouborStrojeXls = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx");
+            Cesty.SouborStrojeXls = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx", Informace.Instance.BasePath);
             if (string.IsNullOrEmpty(Cesty.SouborStrojeXls) || !File.Exists(Cesty.SouborStrojeXls)) {
                 Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
                 return;
             }
-            var Xls = Path.ChangeExtension(Cesty.SouborStrojeXls, ".json");
-            Cesty.SouborStrojeJson = Xls;
+            var Json = Path.ChangeExtension(Cesty.SouborStrojeXls, ".json");
+            Cesty.SouborStrojeJson = Json;
 
+            //AI převod stroju od strojařů do trídy
             var Stara = ExcelLoad.DataExcelInteractive(Cesty.SouborStrojeXls, "Seznam", 5);
 
-            Stara.SaveJsonList(Xls);
+            Stara.SaveJsonList(Json);
 
             //Jen lepší přehled dat.
             Stara.SaveToCsv(Path.ChangeExtension(Cesty.SouborStrojeXls, ".csv"));
@@ -135,7 +136,7 @@ namespace Aplikace.Upravy
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
         public static void JsonToExcel() {
             string cestaData = Informace.Instance.SouborElektroJson;
-            cestaData = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json");
+            //cestaData = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json");
             var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
             //Vývody pro doplnění

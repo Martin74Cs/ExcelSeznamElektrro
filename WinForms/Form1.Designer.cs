@@ -55,6 +55,8 @@ namespace WinForms
             rozvaděčToolStripMenuItem = new ToolStripMenuItem();
             propojeniToolStripMenuItem = new ToolStripMenuItem();
             příkonCelkemToolStripMenuItem = new ToolStripMenuItem();
+            nastaveniToolStripMenuItem = new ToolStripMenuItem();
+            cestyToolStripMenuItem = new ToolStripMenuItem();
             button6 = new Button();
             label5 = new Label();
             button10 = new Button();
@@ -67,8 +69,6 @@ namespace WinForms
             button14 = new Button();
             label4 = new Label();
             button5 = new Button();
-            nastaveniToolStripMenuItem = new ToolStripMenuItem();
-            cestyToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -76,7 +76,7 @@ namespace WinForms
             // 
             button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button1.Font = new Font("Segoe UI", 12F);
-            button1.Location = new Point(1260, 824);
+            button1.Location = new Point(1293, 824);
             button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
             button1.Size = new Size(98, 51);
@@ -90,7 +90,7 @@ namespace WinForms
             label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F);
-            label1.Location = new Point(1132, 53);
+            label1.Location = new Point(1165, 53);
             label1.Name = "label1";
             label1.Size = new Size(204, 28);
             label1.TabIndex = 1;
@@ -103,14 +103,14 @@ namespace WinForms
             textBox1.Location = new Point(17, 836);
             textBox1.Margin = new Padding(3, 4, 3, 4);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(912, 34);
+            textBox1.Size = new Size(945, 34);
             textBox1.TabIndex = 2;
             // 
             // button2
             // 
             button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Font = new Font("Segoe UI", 12F);
-            button2.Location = new Point(935, 42);
+            button2.Location = new Point(968, 42);
             button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
             button2.Size = new Size(191, 51);
@@ -126,7 +126,7 @@ namespace WinForms
             listBox1.Location = new Point(14, 43);
             listBox1.Margin = new Padding(3, 4, 3, 4);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(915, 764);
+            listBox1.Size = new Size(948, 764);
             listBox1.TabIndex = 4;
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged_1;
             // 
@@ -134,7 +134,7 @@ namespace WinForms
             // 
             button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button3.Font = new Font("Segoe UI", 12F);
-            button3.Location = new Point(935, 380);
+            button3.Location = new Point(968, 380);
             button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
             button3.Size = new Size(191, 51);
@@ -148,7 +148,7 @@ namespace WinForms
             label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F);
-            label2.Location = new Point(1132, 391);
+            label2.Location = new Point(1165, 391);
             label2.Name = "label2";
             label2.Size = new Size(205, 28);
             label2.TabIndex = 5;
@@ -158,7 +158,7 @@ namespace WinForms
             // 
             button4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button4.Font = new Font("Segoe UI", 12F);
-            button4.Location = new Point(935, 823);
+            button4.Location = new Point(968, 823);
             button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
             button4.Size = new Size(191, 51);
@@ -172,7 +172,7 @@ namespace WinForms
             label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F);
-            label3.Location = new Point(1132, 834);
+            label3.Location = new Point(1165, 834);
             label3.Name = "label3";
             label3.Size = new Size(107, 28);
             label3.TabIndex = 7;
@@ -182,7 +182,7 @@ namespace WinForms
             // 
             button8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button8.Font = new Font("Segoe UI", 12F);
-            button8.Location = new Point(935, 322);
+            button8.Location = new Point(968, 322);
             button8.Margin = new Padding(3, 4, 3, 4);
             button8.Name = "button8";
             button8.Size = new Size(191, 51);
@@ -195,7 +195,7 @@ namespace WinForms
             // 
             button9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button9.Font = new Font("Segoe UI", 12F);
-            button9.Location = new Point(935, 610);
+            button9.Location = new Point(968, 610);
             button9.Margin = new Padding(3, 4, 3, 4);
             button9.Name = "button9";
             button9.Size = new Size(191, 51);
@@ -209,7 +209,7 @@ namespace WinForms
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 12F);
-            label7.Location = new Point(1132, 562);
+            label7.Location = new Point(1165, 562);
             label7.Name = "label7";
             label7.Size = new Size(244, 28);
             label7.TabIndex = 17;
@@ -223,7 +223,7 @@ namespace WinForms
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 3, 0, 3);
-            menuStrip1.Size = new Size(1372, 38);
+            menuStrip1.Size = new Size(1405, 38);
             menuStrip1.TabIndex = 19;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -265,14 +265,14 @@ namespace WinForms
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(224, 32);
+            místnostiToolStripMenuItem1.Size = new Size(219, 32);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // generovatToolStripMenuItem
             // 
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(224, 32);
+            generovatToolStripMenuItem.Size = new Size(219, 32);
             generovatToolStripMenuItem.Text = "Generovat ";
             generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
@@ -317,11 +317,25 @@ namespace WinForms
             příkonCelkemToolStripMenuItem.Text = "Příkon Celkem";
             příkonCelkemToolStripMenuItem.Click += PříkonCelkemToolStripMenuItem_Click;
             // 
+            // nastaveniToolStripMenuItem
+            // 
+            nastaveniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cestyToolStripMenuItem });
+            nastaveniToolStripMenuItem.Name = "nastaveniToolStripMenuItem";
+            nastaveniToolStripMenuItem.Size = new Size(112, 32);
+            nastaveniToolStripMenuItem.Text = "Nastaveni";
+            // 
+            // cestyToolStripMenuItem
+            // 
+            cestyToolStripMenuItem.Name = "cestyToolStripMenuItem";
+            cestyToolStripMenuItem.Size = new Size(145, 32);
+            cestyToolStripMenuItem.Text = "Cesty";
+            cestyToolStripMenuItem.Click += CestyToolStripMenuItem_Click;
+            // 
             // button6
             // 
             button6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button6.Font = new Font("Segoe UI", 12F);
-            button6.Location = new Point(935, 674);
+            button6.Location = new Point(968, 674);
             button6.Margin = new Padding(3, 4, 3, 4);
             button6.Name = "button6";
             button6.Size = new Size(191, 51);
@@ -335,7 +349,7 @@ namespace WinForms
             label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 12F);
-            label5.Location = new Point(1132, 333);
+            label5.Location = new Point(1165, 333);
             label5.Name = "label5";
             label5.Size = new Size(109, 28);
             label5.TabIndex = 21;
@@ -345,7 +359,7 @@ namespace WinForms
             // 
             button10.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button10.Font = new Font("Segoe UI", 12F);
-            button10.Location = new Point(935, 182);
+            button10.Location = new Point(968, 182);
             button10.Margin = new Padding(3, 4, 3, 4);
             button10.Name = "button10";
             button10.Size = new Size(191, 51);
@@ -359,7 +373,7 @@ namespace WinForms
             label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 12F);
-            label8.Location = new Point(1137, 193);
+            label8.Location = new Point(1170, 193);
             label8.Name = "label8";
             label8.Size = new Size(212, 28);
             label8.TabIndex = 25;
@@ -369,7 +383,7 @@ namespace WinForms
             // 
             button11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button11.Font = new Font("Segoe UI", 12F);
-            button11.Location = new Point(935, 551);
+            button11.Location = new Point(968, 551);
             button11.Margin = new Padding(3, 4, 3, 4);
             button11.Name = "button11";
             button11.Size = new Size(191, 51);
@@ -383,7 +397,7 @@ namespace WinForms
             label9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 12F);
-            label9.Location = new Point(1132, 621);
+            label9.Location = new Point(1165, 621);
             label9.Name = "label9";
             label9.Size = new Size(82, 28);
             label9.TabIndex = 27;
@@ -393,7 +407,7 @@ namespace WinForms
             // 
             button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button12.Font = new Font("Segoe UI", 12F);
-            button12.Location = new Point(935, 764);
+            button12.Location = new Point(968, 764);
             button12.Margin = new Padding(3, 4, 3, 4);
             button12.Name = "button12";
             button12.Size = new Size(191, 51);
@@ -406,7 +420,7 @@ namespace WinForms
             // 
             button13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button13.Font = new Font("Segoe UI", 12F);
-            button13.Location = new Point(935, 242);
+            button13.Location = new Point(968, 242);
             button13.Margin = new Padding(3, 4, 3, 4);
             button13.Name = "button13";
             button13.Size = new Size(191, 51);
@@ -420,7 +434,7 @@ namespace WinForms
             label10.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 12F);
-            label10.Location = new Point(1137, 253);
+            label10.Location = new Point(1170, 253);
             label10.Name = "label10";
             label10.Size = new Size(238, 28);
             label10.TabIndex = 30;
@@ -430,7 +444,7 @@ namespace WinForms
             // 
             button14.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button14.Font = new Font("Segoe UI", 12F);
-            button14.Location = new Point(935, 100);
+            button14.Location = new Point(968, 100);
             button14.Margin = new Padding(3, 4, 3, 4);
             button14.Name = "button14";
             button14.Size = new Size(191, 51);
@@ -444,7 +458,7 @@ namespace WinForms
             label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F);
-            label4.Location = new Point(1137, 685);
+            label4.Location = new Point(1170, 685);
             label4.Name = "label4";
             label4.Size = new Size(208, 28);
             label4.TabIndex = 32;
@@ -454,7 +468,7 @@ namespace WinForms
             // 
             button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button5.Font = new Font("Segoe UI", 12F);
-            button5.Location = new Point(935, 492);
+            button5.Location = new Point(968, 492);
             button5.Margin = new Padding(3, 4, 3, 4);
             button5.Name = "button5";
             button5.Size = new Size(191, 51);
@@ -463,25 +477,11 @@ namespace WinForms
             button5.UseVisualStyleBackColor = true;
             button5.Click += Button5_Click;
             // 
-            // nastaveniToolStripMenuItem
-            // 
-            nastaveniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cestyToolStripMenuItem });
-            nastaveniToolStripMenuItem.Name = "nastaveniToolStripMenuItem";
-            nastaveniToolStripMenuItem.Size = new Size(112, 32);
-            nastaveniToolStripMenuItem.Text = "Nastaveni";
-            // 
-            // cestyToolStripMenuItem
-            // 
-            cestyToolStripMenuItem.Name = "cestyToolStripMenuItem";
-            cestyToolStripMenuItem.Size = new Size(224, 32);
-            cestyToolStripMenuItem.Text = "Cesty";
-            cestyToolStripMenuItem.Click += CestyToolStripMenuItem_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1372, 891);
+            ClientSize = new Size(1405, 891);
             Controls.Add(button5);
             Controls.Add(label4);
             Controls.Add(button14);

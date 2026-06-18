@@ -10,7 +10,7 @@ namespace WinForms {
             InitializeComponent();
             //Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
             //var Vývody = Path.Combine(Cesty.VyvodyJson, "Vývody.json");
-            Data = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyJson);
+            Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataCsv);
             Set(listViewCategories);
             Set(listViewProducts);
         }

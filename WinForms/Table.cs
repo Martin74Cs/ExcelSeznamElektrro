@@ -1,5 +1,6 @@
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Upravy;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna.Excel;
 using Knihovna.Tridy;
 using System.Collections;
@@ -467,6 +468,10 @@ namespace WinForms
                 Pole.Insert(index + 1, kopie); // vložíme pod aktuální řádek
                 _lastAddedOrEditedZarizeni = kopie;
                 _highlightedApid = kopie.Apid;
+            }
+            else { 
+                //neni radek
+                Pole.Add(new Zarizeni()); // vložíme pod aktuální řádek
             }
             dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole); // Obnoví datový zdroj pro zobrazení nového záznamu
 

@@ -163,7 +163,7 @@ namespace WinForms
             //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
             //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
 
-            var Vývody = Path.Combine(Cesty.VyvodyJson);
+            var Vývody = Path.Combine(Cesty.VyvodyOstatniJson);
             if(!File.Exists(Vývody)) { Console.WriteLine("Soubor nebyl nalezen " + Vývody); return; }
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
 
@@ -274,7 +274,7 @@ namespace WinForms
         private void Button14_Click(object sender, EventArgs e) {
             //var cesta1 = Informace.Instance.SouborStrojeJson;
             if(!File.Exists(Informace.Instance.SouborStrojeJson)) {
-                var cesta1 = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json");
+                var cesta1 = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json",Informace.Instance.BasePath);
                 if(string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
                     Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje."); return;
                 }
