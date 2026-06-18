@@ -104,7 +104,6 @@ namespace WinForms
             await Task.Run(() => LigthChem.JsonToExcel());
         }
 
-
         private void Button10_Click(object sender, EventArgs e) {
             Console.WriteLine("Informace.Instance.BasePath " + Informace.Instance.BasePath);
             Console.WriteLine("Informace.Instance.SouborElektroJson " + Informace.Instance.SouborElektroJson);
@@ -143,6 +142,7 @@ namespace WinForms
                 Data.SaveJsonList(Cesta);
 
                 if(MessageBox.Show("Aktualizace CSV, XML, HTML, PDF, DOCX", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
+                    
                     Data.SaveToCsv(Path.ChangeExtension(Cesta, ".csv"));
                     Data.SaveXML(Path.ChangeExtension(Cesta, ".xml"));
                     Data.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"));

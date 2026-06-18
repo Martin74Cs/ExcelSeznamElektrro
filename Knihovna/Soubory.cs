@@ -1,4 +1,5 @@
-﻿using Knihovna.Export;
+﻿using Knihovna;
+using Knihovna.Export;
 using Knihovna.Tridy;
 using Newtonsoft.Json;
 using System.Collections;
@@ -7,15 +8,47 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Knihovna
-{
+namespace Knihovna {
+
+    public enum FilterOperator {
+        Equal,
+        NotEqual,
+        Contains,
+        StartsWith,
+        EndsWith,
+        NotEndsWith,
+        IsNullOrEmpty,
+        IsNotNullOrEmpty,
+    }
+
+    public class FilterRule {
+        public string PropertyName { get; set; } = "";
+        public object? Value { get; set; }
+        public FilterOperator Operator { get; set; }
+        public bool Negate { get; set; }
+        public FilterRule(string propertyName,object? value = null,FilterOperator op = FilterOperator.Equal,bool negate = false) {
+            PropertyName = propertyName;
+            Value = value;
+            Operator = op;
+            Negate = negate;
+        }
+    }
+
+    //public class FilterRule {
+    //    public string PropertyName { get; set; } = "";
+    //    public object? Value { get; set; }
+
+    //    public FilterRule(string propertyName, object value) {
+    //        PropertyName = propertyName;
+    //        Value = value;
+    //    }
+    //}
+
     public static partial class Soubory {
         //readonly static Encoding čeština = Encoding.GetEncoding(1250); //funguje čeština
 
-        public static JsonSerializerSettings Nastaveni()
-        {
-            var settings = new JsonSerializerSettings()
-            {
+        public static JsonSerializerSettings Nastaveni() {
+            var settings = new JsonSerializerSettings() {
                 Culture = System.Globalization.CultureInfo.GetCultureInfo("cs-CZ"),
                 //formátovaný text
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -34,10 +67,8 @@ namespace Knihovna
             return settings;
         }
 
-        public static JsonSerializerSettings NastaveniEn()
-        {
-            var settings = new JsonSerializerSettings()
-            {
+        public static JsonSerializerSettings NastaveniEn() {
+            var settings = new JsonSerializerSettings() {
                 //Culture = System.Globalization.CultureInfo.GetCultureInfo("cs-CZ"),
                 //formátovaný text
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -64,35 +95,28 @@ namespace Knihovna
         /// <summary>
         /// Ověří, zda je možné soubor uložit (vytvoří složku pokud neexistuje, a pokud soubor existuje, zeptá se na přepsání).
         /// </summary>
-        public static bool CanSaveFile(string cesta)
-        {
-            try
-            {
+        public static bool CanSaveFile(string cesta) {
+            try {
                 string? adresar = Path.GetDirectoryName(cesta);
-                if (!string.IsNullOrEmpty(adresar) && !Directory.Exists(adresar))
-                {
+                if(!string.IsNullOrEmpty(adresar) && !Directory.Exists(adresar)) {
                     Directory.CreateDirectory(adresar);
                     Console.WriteLine($"Složka {adresar} byla vytvořena.");
                 }
 
-                if (File.Exists(cesta))
-                {
+                if(File.Exists(cesta)) {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write($"Soubor '{Path.GetFileName(cesta)}' již existuje. Chcete jej přepsat? [A/N, výchozí A]: ");
                     Console.ResetColor();
                     string? odpoved = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(odpoved) && 
-                        (odpoved.Equals("N", StringComparison.OrdinalIgnoreCase) || 
-                         odpoved.Equals("Ne", StringComparison.OrdinalIgnoreCase)))
-                    {
+                    if(!string.IsNullOrEmpty(odpoved) &&
+                        (odpoved.Equals("N", StringComparison.OrdinalIgnoreCase) ||
+                         odpoved.Equals("Ne", StringComparison.OrdinalIgnoreCase))) {
                         Console.WriteLine($"Ukládání souboru '{Path.GetFileName(cesta)}' bylo stornováno uživatelem.");
                         return false;
                     }
                 }
                 return true;
-            }
-            catch (Exception ex)
-            {
+            } catch(Exception ex) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Chyba při kontrole nebo vytváření složky pro '{cesta}': {ex.Message}");
                 Console.ResetColor();
@@ -103,27 +127,21 @@ namespace Knihovna
         /// <summary>
         /// Zobrazí dialog pro výběr existujícího souboru. Běží na samostatném STA vlákně.
         /// </summary>
-        public static string? ShowOpenFileDialog(string filter, string defaultPath = "")
-        {
+        public static string? ShowOpenFileDialog(string filter, string defaultPath = "") {
             string? selectedPath = null;
-            var thread = new System.Threading.Thread(() =>
-            {
+            var thread = new System.Threading.Thread(() => {
                 using var dialog = new System.Windows.Forms.OpenFileDialog();
                 dialog.Filter = filter;
-                if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
-                {
+                if(!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath)) {
                     dialog.InitialDirectory = defaultPath;
                 }
-                else
-                {
+                else {
                     //var info = Informace.Create;
-                    if (!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData))
-                    {
+                    if(!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData)) {
                         dialog.InitialDirectory = Informace.AppData;
                     }
                 }
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
+                if(dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                     selectedPath = dialog.FileName;
                 }
             });
@@ -136,27 +154,21 @@ namespace Knihovna
         /// <summary>
         /// Zobrazí dialog pro výběr složky. Běží na samostatném STA vlákně.
         /// </summary>
-        public static string? ShowFolderBrowserDialog(string description, string defaultPath = "")
-        {
+        public static string? ShowFolderBrowserDialog(string description, string defaultPath = "") {
             string? selectedPath = null;
-            var thread = new System.Threading.Thread(() =>
-            {
+            var thread = new System.Threading.Thread(() => {
                 using var dialog = new System.Windows.Forms.FolderBrowserDialog();
                 dialog.Description = description;
-                if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
-                {
+                if(!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath)) {
                     dialog.SelectedPath = defaultPath;
                 }
-                else
-                {
+                else {
                     var info = Informace.Create;
-                    if (!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData))
-                    {
+                    if(!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData)) {
                         dialog.SelectedPath = Informace.AppData;
                     }
                 }
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
+                if(dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                     selectedPath = dialog.SelectedPath;
                 }
             });
@@ -169,28 +181,22 @@ namespace Knihovna
         /// <summary>
         /// Zobrazí dialog pro uložení souboru. Běží na samostatném STA vlákně.
         /// </summary>
-        public static string? ShowSaveFileDialog(string filter, string defaultName = "", string defaultPath = "")
-        {
+        public static string? ShowSaveFileDialog(string filter, string defaultName = "", string defaultPath = "") {
             string? selectedPath = null;
-            var thread = new System.Threading.Thread(() =>
-            {
+            var thread = new System.Threading.Thread(() => {
                 using var dialog = new System.Windows.Forms.SaveFileDialog();
                 dialog.Filter = filter;
                 dialog.FileName = defaultName;
-                if (!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath))
-                {
+                if(!string.IsNullOrEmpty(defaultPath) && System.IO.Directory.Exists(defaultPath)) {
                     dialog.InitialDirectory = defaultPath;
                 }
-                else
-                {
+                else {
                     //var info = Informace.Create;
-                    if (!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData))
-                    {
+                    if(!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData)) {
                         dialog.InitialDirectory = Informace.AppData;
                     }
                 }
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
+                if(dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                     selectedPath = dialog.FileName;
                 }
             });
@@ -203,9 +209,8 @@ namespace Knihovna
         /// <summary>
         /// uložit soubor, deserializace třídy pozor na vstup generika
         /// </summary>
-        public static void SaveJsonList<T>(this List<T> values, string cesta) where T : class
-        {
-            if (!CanSaveFile(cesta)) return;
+        public static void SaveJsonList<T>(this List<T> values, string cesta) where T : class {
+            if(!CanSaveFile(cesta)) return;
             string Json = JsonConvert.SerializeObject(values, Nastaveni());
             File.WriteAllText(cesta, Json);
             Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
@@ -214,9 +219,8 @@ namespace Knihovna
         /// <summary>
         /// uložit soubor, deserializace třídy pozor na vstup generika
         /// </summary>
-        public static void SaveJson<T>(this T values, string cesta) where T : class
-        {
-            if (!CanSaveFile(cesta)) return;
+        public static void SaveJson<T>(this T values, string cesta) where T : class {
+            if(!CanSaveFile(cesta)) return;
             string Json = JsonConvert.SerializeObject(values, Nastaveni());
             File.WriteAllText(cesta, Json);
             Console.WriteLine($"Json soubor {Path.GetFileName(cesta)} byl vytvořen.");
@@ -224,17 +228,15 @@ namespace Knihovna
         }
 
         /// <summary> Načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika  </summary>
-        public static List<T> LoadJsonList<T>(string cesta) where T : class
-        {
-            if (!System.IO.File.Exists(cesta)) return [];
+        public static List<T> LoadJsonList<T>(string cesta) where T : class {
+            if(!System.IO.File.Exists(cesta)) return [];
             string jsonString = System.IO.File.ReadAllText(cesta);
             List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, Nastaveni()) ?? [];
             return moje;
         }
 
-        public static List<T> LoadJsonListEn<T>(string cesta) where T : class
-        {
-            if (!System.IO.File.Exists(cesta)) return [];
+        public static List<T> LoadJsonListEn<T>(string cesta) where T : class {
+            if(!System.IO.File.Exists(cesta)) return [];
             string jsonString = System.IO.File.ReadAllText(cesta);
             List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
             return moje;
@@ -242,18 +244,16 @@ namespace Knihovna
         }
 
         /// <summary> Načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika. </summary>
-        public static T LoadJson<T>(string cesta) where T : new() 
-        {
-            if (!System.IO.File.Exists(cesta)) return new();
+        public static T LoadJson<T>(string cesta) where T : new() {
+            if(!System.IO.File.Exists(cesta)) return new();
             string jsonString = System.IO.File.ReadAllText(cesta);
             T moje = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, Nastaveni()) ?? new();
             return moje;
         }
 
         /// <summary> načti soubor uvedená třida doplněna do LIST , deserializace třídy pozor na vstup generika </summary>
-        public static List<T> LoadJsonEn<T>(string cesta) where T : new()
-        {
-            if (!System.IO.File.Exists(cesta)) return [];
+        public static List<T> LoadJsonEn<T>(string cesta) where T : new() {
+            if(!System.IO.File.Exists(cesta)) return [];
             string jsonString = System.IO.File.ReadAllText(cesta);
             //List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString);
             List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
@@ -261,23 +261,20 @@ namespace Knihovna
         }
 
 
-        public static void SaveXML<T>(this T Pole, string cesta) where T : new()
-        {
-            if (!CanSaveFile(cesta)) return;
+        public static void SaveXML<T>(this T Pole, string cesta) where T : new() {
+            if(!CanSaveFile(cesta)) return;
             // Serializace do souboru
             XmlSerializer serializer = new(typeof(T));
-            using (FileStream fs = new(cesta, FileMode.Create))
-            {
+            using(FileStream fs = new(cesta, FileMode.Create)) {
                 serializer.Serialize(fs, Pole);
             }
             //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
             Console.WriteLine($"Hotovo! Soubor XML byl uložen do {Path.GetFileName(Informace.Adresar)}");
         }
-        public static void SaveHtml<T>(this List<T> Pole, string cesta) where T : new()
-        {
-            if (!CanSaveFile(cesta)) return;
+        public static void SaveHtml<T>(this List<T> Pole, string cesta) where T : new() {
+            if(!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
-            if(Pole == null || Pole.Count == 0) { 
+            if(Pole == null || Pole.Count == 0) {
                 sb.Append("<p>Seznam je prázdný.</p>");
                 File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
                 return;
@@ -312,11 +309,10 @@ namespace Knihovna
 
             Console.WriteLine("Hotovo! Uloženo do output.html");
         }
-       public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta) where T : new()
-        {
-            if (!CanSaveFile(cesta)) return;
+        public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta) where T : new() {
+            if(!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
-            if(Pole == null || Pole.Count < 1) { 
+            if(Pole == null || Pole.Count < 1) {
                 sb.Append("<p>Seznam je prázdný.</p>");
                 File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
                 return;
@@ -338,18 +334,40 @@ namespace Knihovna
             sb.AppendLine($"<h1>{nadpis}</h1>");
             sb.AppendLine("<table><thead><tr>");
 
-            string[] start = [
-                "Radek",
-                "Tag",
-                "Pocet",
-                "Popis",
-                "Menic",
-                "Prikon",
-                "BalenaJednotka",
-                "Pid",
-                "Pozice",
-                "Poznamka"
+            //string[] start = [
+            //    "Radek",
+            //    "Tag",
+            //    "Pocet",
+            //    "Popis",
+            //    "Menic",
+            //    "Prikon",
+            //    "BalenaJednotka",
+            //    "Pid",
+            //    "Pozice",
+            //    "Poznamka"
+            //];
+
+            string[] start =
+            [
+                //nameof(Zarizeni.Radek),
+                nameof(Zarizeni.Tag),
+                //nameof(Zarizeni.Pocet),
+                nameof(Zarizeni.Popis),
+                nameof(Zarizeni.Prikon),
+                nameof(Zarizeni.Napeti),
+                nameof(Zarizeni.Menic),
+                nameof(Zarizeni.BalenaJednotka),
+                //nameof(Zarizeni.Pid),
+                nameof(Zarizeni.Pozice),
+                //nameof(Zarizeni.Poznamka)/
             ];
+
+            //zachovat poradí
+            var vybraneProps = start
+                .Select(n => props.FirstOrDefault(p => p.Name == n))
+                .Where(p => p != null)
+                .ToList();
+
 
             // Hlavička tabulky
             foreach(var prop in props) {
@@ -359,10 +377,23 @@ namespace Knihovna
 
             sb.AppendLine("</tr></thead><tbody>");
 
+            var vyber = Filter(Pole, nameof(Zarizeni.IsExist), true);
 
-
+            var filtry = new List<FilterRule>
+            {
+                new(nameof(Zarizeni.IsExist), true),
+                //new(nameof(Zarizeni.Prikon), "", FilterOperator.StartsWith),
+                //new(nameof(Zarizeni.Popis), "ventilátor", FilterOperator.Contains)
+                //new(nameof(Zarizeni.Popis), "ventilátor", FilterOperator.Equal),
+                new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
+                //všechny položky, jejichž Prikon nezačíná na "—".
+                new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith,true),
+                new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
+                //new(nameof(Zarizeni.Poznamka), op: FilterOperator.IsNullOrEmpty),
+            };
+            var vysledek = ApplyFilter(Pole, filtry).ToList();
             // Řádky tabulky
-            foreach(var item in Pole) {
+            foreach(var item in vysledek) {
                 sb.AppendLine("<tr>");
                 foreach(var prop in props) {
                     //to co se má vynechat u html.
@@ -382,12 +413,111 @@ namespace Knihovna
             Console.WriteLine($"Hotovo! Soubor HTML byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
         }
 
-        public static void SaveHtmlStyleFlat<T>(this List<T> Pole, string cesta) where T : new()
+        //zadávat podmínky dynamicky pomocí
+        //Příklad
+        //var vyber = Filter(seznam, nameof(Zarizeni.Tag), "M1");
+        public static IEnumerable<T> Filter<T>(IEnumerable<T> data, string propertyName, string value) {
+            var prop = typeof(T).GetProperty(propertyName);
+
+            return data.Where(x => {
+                var v = prop?.GetValue(x)?.ToString();
+                return string.Equals(v, value, StringComparison.OrdinalIgnoreCase);
+            });
+        }
+
+        //Pokud potřebuješ kombinaci více podmínek:
+        //var vyber = seznam.Where(x =>
+        //x.Menic &&
+        //x.Tag.StartsWith("M") &&
+        //!string.IsNullOrWhiteSpace(x.Popis));
+
+        //Pro bool:
+        //Příklad
+        //var vyber = Filter(seznam, nameof(Zarizeni.Menic), true);
+        public static IEnumerable<T> Filter<T>(
+            IEnumerable<T> data,
+            string propertyName,
+            bool value) {
+            var prop = typeof(T).GetProperty(propertyName);
+
+            return data.Where(x => {
+                var v = prop?.GetValue(x);
+                return v is bool b && b == value;
+            });
+        }
+
+       public static IEnumerable<T> ApplyFilter<T>(
+    IEnumerable<T> data,
+    IEnumerable<FilterRule> rules)
+{
+    var props = typeof(T).GetProperties();
+
+    foreach (var rule in rules)
+    {
+        var prop = props.FirstOrDefault(x => x.Name == rule.PropertyName);
+
+        if (prop == null)
+            continue;
+
+        data = data.Where(item =>
         {
-            if (!CanSaveFile(cesta)) return;
-            var sb = new StringBuilder();
-            if (Pole == null || Pole.Count < 1)
+            var value = prop.GetValue(item);
+
+            bool jePrazdne = value == null ||
+                             (value is string s && string.IsNullOrWhiteSpace(s));
+
+            bool result;
+
+            switch (rule.Operator)
             {
+                case FilterOperator.IsNullOrEmpty:
+                    result = jePrazdne;
+                    return rule.Negate ? !result : result;
+
+                case FilterOperator.IsNotNullOrEmpty:
+                    result = !jePrazdne;
+                    return rule.Negate ? !result : result;
+            }
+
+            if (jePrazdne)
+                return false;
+
+            if (value is string str)
+            {
+                string hledana = rule.Value?.ToString() ?? "";
+
+                result = rule.Operator switch
+                {
+                    FilterOperator.Equal => str.Equals(hledana, StringComparison.OrdinalIgnoreCase),
+                    FilterOperator.NotEqual => !str.Equals(hledana, StringComparison.OrdinalIgnoreCase),
+                    FilterOperator.Contains => str.Contains(hledana, StringComparison.OrdinalIgnoreCase),
+                    FilterOperator.StartsWith => str.StartsWith(hledana, StringComparison.OrdinalIgnoreCase),
+                    FilterOperator.EndsWith => str.EndsWith(hledana, StringComparison.OrdinalIgnoreCase),
+                    _ => false
+                };
+            }
+            else
+            {
+                result = rule.Operator switch
+                {
+                    FilterOperator.Equal =>Equals(value, rule.Value),
+                    FilterOperator.NotEqual =>!Equals(value, rule.Value),
+
+                    _ => false
+                };
+            }
+
+            return rule.Negate ? !result : result;
+        });
+    }
+
+    return data;
+}
+
+        public static void SaveHtmlStyleFlat<T>(this List<T> Pole, string cesta) where T : new() {
+            if(!CanSaveFile(cesta)) return;
+            var sb = new StringBuilder();
+            if(Pole == null || Pole.Count < 1) {
                 sb.Append("<p>Seznam je prázdný.</p>");
                 File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
                 return;
@@ -410,16 +540,14 @@ namespace Knihovna
             sb.AppendLine("<table><thead><tr>");
 
             // Hlavička tabulky
-            foreach (var prop in props)
+            foreach(var prop in props)
                 sb.AppendLine($"<th>{prop.Name}</th>");
             sb.AppendLine("</tr></thead><tbody>");
 
             // Řádky tabulky
-            foreach (var item in Pole)
-            {
+            foreach(var item in Pole) {
                 sb.AppendLine("<tr>");
-                foreach (var prop in props)
-                {
+                foreach(var prop in props) {
                     object value = prop.GetValue(item, null) ?? "";
                     sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
                 }
@@ -434,12 +562,10 @@ namespace Knihovna
         }
 
 
-        public static void SaveHtmlStyleJinaK<T>(this List<T> Pole, string cesta) where T : new()
-        {
-            if (!CanSaveFile(cesta)) return;
+        public static void SaveHtmlStyleJinaK<T>(this List<T> Pole, string cesta) where T : new() {
+            if(!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
-            if (Pole == null || Pole.Count < 1)
-            {
+            if(Pole == null || Pole.Count < 1) {
                 sb.Append("<p>Seznam je prázdný.</p>");
                 File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
                 return;
@@ -459,7 +585,7 @@ namespace Knihovna
             string nadpis = "Seznam zařízení";
             sb.AppendLine($"<h1>{nadpis}</h1>");
             sb.AppendLine("<table><thead><tr>");
-                        
+
             GenerateHeaders(typeof(T), sb);
             sb.AppendLine("</tr></thead><tbody>");
             GenerateRows(Pole, sb);
@@ -489,44 +615,36 @@ namespace Knihovna
         }
 
 
-        public static void GenerateHeaders(Type type, StringBuilder sb, string prefix = "")
-        {
+        public static void GenerateHeaders(Type type, StringBuilder sb, string prefix = "") {
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            foreach (var prop in props)
-            {
+            foreach(var prop in props) {
                 Type propType = prop.PropertyType;
 
                 // List<T>
-                if (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(List<>))
-                {
+                if(propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(List<>)) {
                     Type innerType = propType.GetGenericArguments()[0];
 
                     // 🔥 rekurze – rozbalení inner třídy
                     GenerateHeaders(innerType, sb, prefix + prop.Name + "_");
                 }
                 // jednoduchý typ
-                else if (propType.IsPrimitive || propType == typeof(string))
-                {
+                else if(propType.IsPrimitive || propType == typeof(string)) {
                     sb.AppendLine($"<th>{prefix}{prop.Name}</th>");
                 }
                 // vnořený objekt
-                else
-                {
+                else {
                     GenerateHeaders(propType, sb, prefix + prop.Name + "_");
                 }
             }
         }
 
 
-        public static void GenerateRows(object obj, StringBuilder sb)
-        {
-            if (obj == null) return;
+        public static void GenerateRows(object obj, StringBuilder sb) {
+            if(obj == null) return;
 
-            if (obj is IEnumerable list && obj is not string)
-            {
-                foreach (var item in list)
-                {
+            if(obj is IEnumerable list && obj is not string) {
+                foreach(var item in list) {
                     GenerateRows(item, sb);
                 }
                 return;
@@ -534,26 +652,21 @@ namespace Knihovna
             sb.AppendLine("<tr>");
             var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            foreach (var prop in props)
-            {
+            foreach(var prop in props) {
                 var value = prop.GetValue(obj);
 
-                if (value == null)
-                {
+                if(value == null) {
                     sb.AppendLine("<td></td>");
                 }
-                else if (value is IEnumerable List && value is not string)
-                {
+                else if(value is IEnumerable List && value is not string) {
                     // vezmeme první prvek (nebo můžeš expandovat řádky)
                     //var first = List.Cast<object>().FirstOrDefault();
                     GenerateCells(List, sb);
                 }
-                else if (prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string))
-                {
+                else if(prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string)) {
                     sb.AppendLine($"<td>{value}</td>");
                 }
-                else
-                {
+                else {
                     GenerateCells(value, sb);
                 }
             }
@@ -562,19 +675,15 @@ namespace Knihovna
         }
 
 
-        public static void GenerateCells(object obj, StringBuilder sb)
-        {
-            if (obj == null)
-            {
+        public static void GenerateCells(object obj, StringBuilder sb) {
+            if(obj == null) {
                 sb.AppendLine("<td></td>");
                 return;
             }
 
             // kolekce (List<T>)
-            if (obj is IEnumerable list && obj is not string)
-            {
-                foreach (var item in list)
-                {
+            if(obj is IEnumerable list && obj is not string) {
+                foreach(var item in list) {
                     GenerateCells(item, sb); // 🔥 rekurze místo First()
                 }
                 return;
@@ -582,24 +691,19 @@ namespace Knihovna
 
             var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            foreach (var prop in props)
-            {
+            foreach(var prop in props) {
                 var value = prop.GetValue(obj);
 
-                if (value == null)
-                {
+                if(value == null) {
                     sb.AppendLine("<td></td>");
                 }
-                else if (value is IEnumerable subList && value is not string)
-                {
+                else if(value is IEnumerable subList && value is not string) {
                     GenerateCells(subList, sb); // 🔥 další úroveň
                 }
-                else if (prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string))
-                {
+                else if(prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string)) {
                     sb.AppendLine($"<td>{value}</td>");
                 }
-                else
-                {
+                else {
                     GenerateCells(value, sb); // 🔥 vnořený objekt
                 }
             }
@@ -625,25 +729,23 @@ namespace Knihovna
         //}
 
 
-        public static void SaveDocx<T>(this List<T> Pole, string cesta){
+        public static void SaveDocx<T>(this List<T> Pole, string cesta) {
             //ruzné varienty vytvoření dokumentu
             //new Word().SaveDocx(Pole, cesta);
             //new Word().SaveDocxList(Pole, cesta);
             Word.SaveDocxListClass(Pole, cesta);
         }
 
-        public static List<T> LoadFromCsv<T>(string file ) where T : new()
-        {
-            if (!File.Exists(file)) return [];
+        public static List<T> LoadFromCsv<T>(string file) where T : new() {
+            if(!File.Exists(file)) return [];
             var list = new List<T>();
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             //using (var reader = new StreamReader(file, Encoding.UTF8))
-            using (var reader = new StreamReader(file, Encoding.GetEncoding(1250)))
-            {
+            using(var reader = new StreamReader(file, Encoding.GetEncoding(1250))) {
                 //Načti hlavičku
                 var headerLine = reader.ReadLine();
-                if (string.IsNullOrWhiteSpace(headerLine))
+                if(string.IsNullOrWhiteSpace(headerLine))
                     return list; // prázdný soubor
 
                 var headers = headerLine.Split(';');
@@ -651,57 +753,47 @@ namespace Knihovna
 
                 //Načti data
                 string? line;
-                while ((line = reader.ReadLine()) != null)
-                {
+                while((line = reader.ReadLine()) != null) {
                     var values = ParseCsvLine(line, headers.Length);
                     var obj = new T();
-                    for (int i = 0; i < headers.Length && i < values.Count; i++)
-                    {
+                    for(int i = 0; i < headers.Length && i < values.Count; i++) {
                         var header = headers[i];
                         //Najdi v seznamu vlastností první vlastnost, jejíž název(p.Name) odpovídá názvu sloupce(header) z CSV, bez ohledu na velikost písmen(case -insensitive).
-                        var property = properties.FirstOrDefault(p => 
+                        var property = properties.FirstOrDefault(p =>
                             string.Equals(p.Name, header, StringComparison.OrdinalIgnoreCase));
-                        if(header == "Obvod" || header == "Plocha" || header == "Objem") 
+                        if(header == "Obvod" || header == "Plocha" || header == "Objem")
                             values[i] = values[i].Split(' ').FirstOrDefault(); // odstranění uvozovek
-                        if (string.IsNullOrEmpty(values[i])) continue;
+                        if(string.IsNullOrEmpty(values[i])) continue;
 
-                        if (property != null && property.CanWrite)
-                        {
-                            try
-                            {
+                        if(property != null && property.CanWrite) {
+                            try {
                                 object? convertedValue = Convert.ChangeType(values[i], property.PropertyType);
                                 property.SetValue(obj, convertedValue);
-                            }
-                            catch {  }
+                            } catch { }
                         }
                     }
-                     list.Add(obj);
+                    list.Add(obj);
                 }
             }
             return list; // nebo jsonArray.ToString(Formatting.Indented) pro čitelný výstup
         }
 
-        private static List<string> ParseCsvLine(string line, int expectedColumns)
-        {
+        private static List<string> ParseCsvLine(string line, int expectedColumns) {
             var values = new List<string>();
             var sb = new StringBuilder();
             bool inQuotes = false;
 
-            for (int i = 0; i < line.Length; i++)
-            {
+            for(int i = 0; i < line.Length; i++) {
                 char c = line[i];
-                if (c == '"' && (i == 0 || line[i - 1] != '\\'))
-                {
-                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
-                    {
+                if(c == '"' && (i == 0 || line[i - 1] != '\\')) {
+                    if(inQuotes && i + 1 < line.Length && line[i + 1] == '"') {
                         sb.Append('"'); // zdvojené uvozovky = 1 uvozovka
                         i++;
                     }
                     else
                         inQuotes = !inQuotes;
                 }
-                else if (c == ';' && !inQuotes)
-                {
+                else if(c == ';' && !inQuotes) {
                     values.Add(sb.ToString());
                     sb.Clear();
                 }
@@ -712,41 +804,32 @@ namespace Knihovna
             values.Add(sb.ToString());
 
             // Doplnění prázdných sloupců, pokud jich je méně než hlaviček
-            while (values.Count < expectedColumns)
+            while(values.Count < expectedColumns)
                 values.Add("");
 
             return values;
         }
 
-        public static void KillExcel()
-        {
-            foreach (var process in Process.GetProcessesByName("EXCEL"))
-            {
-                try
-                {
+        public static void KillExcel() {
+            foreach(var process in Process.GetProcessesByName("EXCEL")) {
+                try {
                     process.Kill();
                     process.WaitForExit();
                     Console.WriteLine($"Proces {process.Id} ukončen");
-                }
-                catch (Exception ex)
-                {
+                } catch(Exception ex) {
                     Console.WriteLine($"Chyba při ukončování: {ex.Message}");
                 }
             }
         }
-        public static void KillExcel(int processId)
-        {
+        public static void KillExcel(int processId) {
             var process = Process.GetProcessById(processId);
-                try
-                {
-                    process.Kill();
-                    process.WaitForExit();
-                    Console.WriteLine($"Proces {process.Id} ukončen");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Chyba při ukončování: {ex.Message}");
-                }
+            try {
+                process.Kill();
+                process.WaitForExit();
+                Console.WriteLine($"Proces {process.Id} ukončen");
+            } catch(Exception ex) {
+                Console.WriteLine($"Chyba při ukončování: {ex.Message}");
+            }
 
         }
 
@@ -767,15 +850,13 @@ namespace Knihovna
         }
         */
 
-        public static bool IsFileLocked(string path)
-        {
-            if (!File.Exists(path)) return false;
+        public static bool IsFileLocked(string path) {
+            if(!File.Exists(path)) return false;
             try {
                 using FileStream stream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
                 // Pokud se otevře, není zamčený
                 return false;
-            }
-            catch (IOException) {
+            } catch(IOException) {
                 // Pokud dojde k výjimce, soubor je pravděpodobně zamčený jiným procesem
                 return true;
             }
