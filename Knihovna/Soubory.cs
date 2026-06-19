@@ -379,6 +379,7 @@ namespace Knihovna {
 
             var vyber = Filter(Pole, nameof(Zarizeni.IsExist), true);
 
+            //vytvoření filtru, vlastnost, string, co dělat, negace
             var filtry = new List<FilterRule>
             {
                 new(nameof(Zarizeni.IsExist), true),
@@ -392,6 +393,7 @@ namespace Knihovna {
                 //new(nameof(Zarizeni.Poznamka), op: FilterOperator.IsNullOrEmpty),
             };
             var vysledek = ApplyFilter(Pole, filtry).ToList();
+
             // Řádky tabulky
             foreach(var item in vysledek) {
                 sb.AppendLine("<tr>");
@@ -446,9 +448,14 @@ namespace Knihovna {
             });
         }
 
-       public static IEnumerable<T> ApplyFilter<T>(
-    IEnumerable<T> data,
-    IEnumerable<FilterRule> rules)
+        /// <summary>
+        /// vytvoření filtru, vlastnost, string, co dělat, negace
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="rules"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> ApplyFilter<T>(IEnumerable<T> data,IEnumerable<FilterRule> rules)
 {
     var props = typeof(T).GetProperties();
 
