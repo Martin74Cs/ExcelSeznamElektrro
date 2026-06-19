@@ -379,23 +379,8 @@ namespace Knihovna {
 
             var vyber = Filter(Pole, nameof(Zarizeni.IsExist), true);
 
-            //vytvoření filtru, vlastnost, string, co dělat, negace
-            var filtry = new List<FilterRule>
-            {
-                new(nameof(Zarizeni.IsExist), true),
-                //new(nameof(Zarizeni.Prikon), "", FilterOperator.StartsWith),
-                //new(nameof(Zarizeni.Popis), "ventilátor", FilterOperator.Contains)
-                //new(nameof(Zarizeni.Popis), "ventilátor", FilterOperator.Equal),
-                new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
-                //všechny položky, jejichž Prikon nezačíná na "—".
-                new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith,true),
-                new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
-                //new(nameof(Zarizeni.Poznamka), op: FilterOperator.IsNullOrEmpty),
-            };
-            var vysledek = ApplyFilter(Pole, filtry).ToList();
-
             // Řádky tabulky
-            foreach(var item in vysledek) {
+            foreach(var item in Pole) {
                 sb.AppendLine("<tr>");
                 foreach(var prop in props) {
                     //to co se má vynechat u html.
