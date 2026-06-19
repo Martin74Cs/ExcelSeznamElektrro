@@ -109,6 +109,8 @@ namespace WinForms
             Console.WriteLine("Informace.Instance.SouborElektroJson " + Informace.Instance.SouborElektroJson);
             var Data = Soubory.LoadJsonList<Zarizeni>(Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json"));
             if(Data.Count < 1) {
+                Data.First().SeznamKabelu
+
                 Console.WriteLine("Soubor je prázdný " + Informace.Instance.SouborElektroJson);
                 if(MessageBox.Show("Kopie souborů ze souboru Strojni", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
 
@@ -142,14 +144,37 @@ namespace WinForms
                 Data.SaveJsonList(Cesta);
 
                 if(MessageBox.Show("Aktualizace CSV, XML, HTML, PDF, DOCX", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
-                    
-                    Data.SaveToCsv(Path.ChangeExtension(Cesta, ".csv"));
-                    Data.SaveXML(Path.ChangeExtension(Cesta, ".xml"));
-                    Data.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"));
+
+                    //vytvoření filtru, vlastnost, string, co dělat, negace
+                    var filtry = new List<FilterRule>
+                    {
+                        //new(nameof(Zarizeni.IsExist), true),
+                        //new(nameof(Zarizeni.Prikon), "", FilterOperator.StartsWith),
+                        //new(nameof(Zarizeni.Popis), "ventilátor", FilterOperator.Contains)
+                        //new(nameof(Zarizeni.Popis), "ventilátor", FilterOperator.Equal),
+                        new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
+                        //všechny položky, jejichž Prikon nezačíná na "—".
+                        new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith,true),
+                        new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
+                        //new(nameof(Zarizeni.Poznamka), op: FilterOperator.IsNullOrEmpty),
+                    };
+                    var Vysledek = Soubory.ApplyFilter(Data, filtry).ToList();
+
+                    Vysledek.SaveToCsv(Path.ChangeExtension(Cesta, ".csv"));
+                    Vysledek.SaveXML(Path.ChangeExtension(Cesta, ".xml"));
+                    Vysledek.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"));
                     //Data.SaveDocx(Path.ChangeExtension(Cesta, ".docx"));
                     //PdfGenerator
-                    Data.SavePdfGen(Path.ChangeExtension(Cesta, ".pdf"));
-                    Data.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"));
+                    Vysledek.SavePdfGen(Path.ChangeExtension(Cesta, ".pdf"));
+                    Vysledek.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"));
+
+                    //Data.SaveToCsv(Path.ChangeExtension(Cesta, ".csv"));
+                    //Data.SaveXML(Path.ChangeExtension(Cesta, ".xml"));
+                    //Data.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"));
+                    ////Data.SaveDocx(Path.ChangeExtension(Cesta, ".docx"));
+                    ////PdfGenerator
+                    //Data.SavePdfGen(Path.ChangeExtension(Cesta, ".pdf"));
+                    //Data.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"));
                 }
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
@@ -164,7 +189,14 @@ namespace WinForms
             //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
 
             var Vývody = Path.Combine(Cesty.VyvodyOstatniJson);
-            if(!File.Exists(Vývody)) { Console.WriteLine("Soubor nebyl nalezen " + Vývody); return; }
+            if(!File.Exists(Vývody)) { 
+                Console.WriteLine("Soubor nebyl nalezen " + Vývody);
+                Console.WriteLine("Soubor bude vytvořen!");
+                //var prazdny = new List<Zarizeni>();
+                Soubory.SaveJson(new List<Zarizeni>(), Cesty.VyvodyOstatniJson);
+                Console.WriteLine("Znovu klikni na tlačítko. Soubor byl vytvořen!");
+                return; 
+            }
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
 
             //var DataBind = new BindingList<Zarizeni>(Data);
