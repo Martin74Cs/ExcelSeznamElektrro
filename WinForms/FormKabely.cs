@@ -261,7 +261,7 @@ namespace WinForms
         /// Zkontroluje, zda jsou všechna povinná pole korektně vyplněna.
         /// Vrací true pokud je vše v pořádku, jinak zobrazí chybovou hlášku a vrátí false.
         /// </summary>
-        private bool ValidateKabel() {
+        private bool ValidateKabel(Zarizeni vybraneZarizeni) {
             // 1. Označení – nesmí být prázdné
             if(string.IsNullOrWhiteSpace(txtOznaceni.Text)) {
                 MessageBox.Show("Označení kabelu musí být vyplněno.", "Chyba validace",
@@ -273,9 +273,14 @@ namespace WinForms
             string noveOznaceni = txtOznaceni.Text.Trim();
 
             // 2. Označení – kontrola duplicity (při úpravě ignorujeme stávající kabel)
-            bool duplicita = _seznamZarizeni.Any(z => z.SeznamKabelu.Any(k =>
+            //bool duplicita = _seznamZarizeni.Any(z => z.SeznamKabelu.Any(k =>
+            //    !ReferenceEquals(k, _upravovanyKabel) &&
+            //    string.Equals(k.Oznaceni, noveOznaceni, StringComparison.OrdinalIgnoreCase)));
+
+            // 2. Označení – kontrola duplicity pouze v rámci jednoho vybraného zařízení
+            bool duplicita = vybraneZarizeni.SeznamKabelu.Any(k =>
                 !ReferenceEquals(k, _upravovanyKabel) &&
-                string.Equals(k.Oznaceni, noveOznaceni, StringComparison.OrdinalIgnoreCase)));
+                string.Equals(k.Oznaceni, noveOznaceni, StringComparison.OrdinalIgnoreCase));
 
             if(duplicita) {
                 MessageBox.Show($"Kabel s označením '{noveOznaceni}' již v projektu existuje.",
@@ -332,7 +337,7 @@ namespace WinForms
             }
 
             // Spustíme validaci
-            if(!ValidateKabel())
+            if(!ValidateKabel(activeZar))
                 return;
 
             string noveOznaceni = txtOznaceni.Text.Trim();
@@ -492,26 +497,26 @@ namespace WinForms
 
         private void BtnRychlyPTC_Click(object sender, EventArgs e) {
             // PTC kabel má typ CYKY-O 2x1.5, 2 žíly, průřez 1.5, popis "PTC čidlo"
-            string prefix = string.IsNullOrWhiteSpace(txtPrefixPTC.Text) ? "WH" : txtPrefixPTC.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-O 2x1.5", "2", "1.5", "PTC čidlo");
+            string prefix = string.IsNullOrWhiteSpace(txtPrefixPTC.Text) ? "WP" : txtPrefixPTC.Text.Trim();
+            PridejRychlyKabel(prefix, "CYKY-O", "2", "1.5", "PTC čidlo");
         }
 
         private void BtnRychlyOvladani5_Click(object sender, EventArgs e) {
             // Ovládací skříň 5 vodičů - typ CYKY-J 5x1.5, 5 žil, průřez 1.5, popis "Ovládací skříňka"
             string prefix = string.IsNullOrWhiteSpace(txtPrefixOvladani.Text) ? "WS" : txtPrefixOvladani.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-J 5x1.5", "5", "1.5", "Ovládací skříňka");
+            PridejRychlyKabel(prefix, "CYKY-J", "5", "2.5", "Ovládací skříňka");
         }
 
         private void BtnRychlyOvladani7_Click(object sender, EventArgs e) {
             // Ovládací skříň 7 vodičů - typ CYKY-O 7x1.5, 7 žil, průřez 1.5, popis "Ovládací skříňka"
             string prefix = string.IsNullOrWhiteSpace(txtPrefixOvladani.Text) ? "WS" : txtPrefixOvladani.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-O 7x1.5", "7", "1.5", "Ovládací skříňka");
+            PridejRychlyKabel(prefix, "CYKY-O", "7", "2.5", "Ovládací skříňka");
         }
 
         private void BtnRychlyOvladani12_Click(object sender, EventArgs e) {
             // Ovládací skříň 12 vodičů - typ CYKY-O 12x1.5, 12 žil, průřez 1.5, popis "Ovládací skříňka"
             string prefix = string.IsNullOrWhiteSpace(txtPrefixOvladani.Text) ? "WS" : txtPrefixOvladani.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-O 12x1.5", "12", "1.5", "Ovládací skříňka");
+            PridejRychlyKabel(prefix, "CYKY-O", "12", "2.5", "Ovládací skříňka");
         }
 
         private void BtnRychlyUTP_Click(object sender, EventArgs e) {
@@ -523,13 +528,13 @@ namespace WinForms
         private void BtnRychlyBinarni_Click(object sender, EventArgs e) {
             // Binární diskrétní signály - typ CYKY-O 4x1.5, 4 žíly, průřez 1.5, popis "Binární komunikace (diskrétní signály)"
             string prefix = string.IsNullOrWhiteSpace(txtPrefixBinarni.Text) ? "XB" : txtPrefixBinarni.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-O 4x1.5", "4", "1.5", "Binární komunikace (diskrétní signály)");
+            PridejRychlyKabel(prefix, "CYKY-O", "7", "1.5", "Binární komunikace (diskrétní signály)");
         }
 
         private void BtnRychlyBlokovani_Click(object sender, EventArgs e) {
             // Blokování - typ CYKY-O 3x1.5, 3 žíly, průřez 1.5, popis "Blokování"
             string prefix = string.IsNullOrWhiteSpace(txtPrefixBlokovani.Text) ? "WB" : txtPrefixBlokovani.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-O 3x1.5", "3", "1.5", "Blokování");
+            PridejRychlyKabel(prefix, "CYKY-O", "3", "1.5", "Blokování");
         }
 
         private void UlozData() {

@@ -57,6 +57,9 @@ namespace WinForms
             příkonCelkemToolStripMenuItem = new ToolStripMenuItem();
             nastaveniToolStripMenuItem = new ToolStripMenuItem();
             cestyToolStripMenuItem = new ToolStripMenuItem();
+            generovníToolStripMenuItem = new ToolStripMenuItem();
+            seznamToolStripMenuItem = new ToolStripMenuItem();
+            kabelyToolStripMenuItem = new ToolStripMenuItem();
             button6 = new Button();
             label5 = new Label();
             button10 = new Button();
@@ -219,7 +222,7 @@ namespace WinForms
             // 
             menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, místnostiToolStripMenuItem, pomocToolStripMenuItem, atributyToolStripMenuItem, rozvaděčToolStripMenuItem, nastaveniToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, seznamyToolStripMenuItem, místnostiToolStripMenuItem, pomocToolStripMenuItem, atributyToolStripMenuItem, rozvaděčToolStripMenuItem, nastaveniToolStripMenuItem, generovníToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 3, 0, 3);
@@ -306,14 +309,14 @@ namespace WinForms
             // propojeniToolStripMenuItem
             // 
             propojeniToolStripMenuItem.Name = "propojeniToolStripMenuItem";
-            propojeniToolStripMenuItem.Size = new Size(224, 32);
+            propojeniToolStripMenuItem.Size = new Size(223, 32);
             propojeniToolStripMenuItem.Text = "Propojeni";
             propojeniToolStripMenuItem.Click += PropojeniToolStripMenuItem_Click;
             // 
             // příkonCelkemToolStripMenuItem
             // 
             příkonCelkemToolStripMenuItem.Name = "příkonCelkemToolStripMenuItem";
-            příkonCelkemToolStripMenuItem.Size = new Size(224, 32);
+            příkonCelkemToolStripMenuItem.Size = new Size(223, 32);
             příkonCelkemToolStripMenuItem.Text = "Příkon Celkem";
             příkonCelkemToolStripMenuItem.Click += PříkonCelkemToolStripMenuItem_Click;
             // 
@@ -330,6 +333,27 @@ namespace WinForms
             cestyToolStripMenuItem.Size = new Size(145, 32);
             cestyToolStripMenuItem.Text = "Cesty";
             cestyToolStripMenuItem.Click += CestyToolStripMenuItem_Click;
+            // 
+            // generovníToolStripMenuItem
+            // 
+            generovníToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { seznamToolStripMenuItem, kabelyToolStripMenuItem });
+            generovníToolStripMenuItem.Name = "generovníToolStripMenuItem";
+            generovníToolStripMenuItem.Size = new Size(126, 32);
+            generovníToolStripMenuItem.Text = "Generování";
+            // 
+            // seznamToolStripMenuItem
+            // 
+            seznamToolStripMenuItem.Name = "seznamToolStripMenuItem";
+            seznamToolStripMenuItem.Size = new Size(224, 32);
+            seznamToolStripMenuItem.Text = "Seznam";
+            seznamToolStripMenuItem.Click += seznamToolStripMenuItem_Click;
+            // 
+            // kabelyToolStripMenuItem
+            // 
+            kabelyToolStripMenuItem.Name = "kabelyToolStripMenuItem";
+            kabelyToolStripMenuItem.Size = new Size(224, 32);
+            kabelyToolStripMenuItem.Text = "Kabely";
+            kabelyToolStripMenuItem.Click += kabelyToolStripMenuItem_Click;
             // 
             // button6
             // 
@@ -560,5 +584,8 @@ namespace WinForms
         private ToolStripMenuItem nastavSložkuProjektuToolStripMenuItem;
         private ToolStripMenuItem nastaveniToolStripMenuItem;
         private ToolStripMenuItem cestyToolStripMenuItem;
+        private ToolStripMenuItem generovníToolStripMenuItem;
+        private ToolStripMenuItem seznamToolStripMenuItem;
+        private ToolStripMenuItem kabelyToolStripMenuItem;
     }
 }

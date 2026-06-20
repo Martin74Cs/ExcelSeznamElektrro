@@ -16,7 +16,6 @@ namespace Knihovna.Tridy {
     //Jedná se o singleton, který uchovává informace o aktuálním projektu a umožňuje jejich načítání a ukládání do souboru v AppData
     public sealed class Informace  {
 
-
         private static readonly Lazy<Informace> _instance =
             new(Nacti, isThreadSafe: true);
         public static Informace Instance => _instance.Value;
@@ -47,7 +46,7 @@ namespace Knihovna.Tridy {
 
         //Hlavní soubor pro elektro, který obsahuje všechny potřebné informace o vývodech
         [Display(Name = "Elektro")]
-        public string SouborElektroJson { get; set; } = "Elektro.Data.json"; // = Path.Combine(Instance.BasePath, "Elektro.Data.json");
+        public string SouborElektroJson { get; set; } = string.Empty; // = "Elektro.Data.json"; // = Path.Combine(Instance.BasePath, "Elektro.Data.json");
 
         //Soubor kde se nachází databáze výrobců a typů komponentů, které se používají v elektro
         [Display(Name = "Zdroj dat")]

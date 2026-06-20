@@ -1,4 +1,4 @@
-﻿using Aplikace.Tridy;
+using Aplikace.Tridy;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -90,27 +90,25 @@ namespace Knihovna.Export {
             Console.WriteLine($"Soubor {Path.GetFileName(docxPath)} Uložen.");
         }
 
-        public static void SaveDocxGen<T>(this List<T> data,string docxPath,string? title = null)
+        public static void SaveDocxGen<T>(this List<T> data,string docxPath,string? title = null, string[] columns = null)
         {
             if (data == null || data.Count == 0)
                 throw new InvalidOperationException("Seznam je prázdný.");
 
-            //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0).ToArray();
+            var allProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0).ToArray();
 
-            //filtr vlastností - pouze ty, které jsou v seznamu start
-            string[] start = [
-                "Radek",
-                "Tag",
-                "Pocet",
-                "Popis",
-                "Menic",
-                "Prikon",
-                "BalenaJednotka",
-                "Pid",
-                "Pozice",
-                "Poznamka" ];
-            properties = [.. properties.Where(p => start.Contains(p.Name))];
+            PropertyInfo[] properties;
+            if (columns != null && columns.Length > 0)
+            {
+                properties = columns
+                    .Select(colName => allProperties.FirstOrDefault(p => string.Equals(p.Name, colName, StringComparison.OrdinalIgnoreCase)))
+                    .Where(p => p != null)
+                    .ToArray();
+            }
+            else
+            {
+                properties = allProperties;
+            }
 
             var outDir = Path.GetDirectoryName(Path.GetFullPath(docxPath));
 

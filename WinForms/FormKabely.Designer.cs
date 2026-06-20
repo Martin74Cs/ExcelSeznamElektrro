@@ -492,7 +492,7 @@
             // 
             // btnPridat
             // 
-            btnPridat.Location = new Point(141, 275);
+            btnPridat.Location = new Point(133, 275);
             btnPridat.Name = "btnPridat";
             btnPridat.Size = new Size(83, 35);
             btnPridat.TabIndex = 14;
@@ -502,7 +502,7 @@
             // 
             // btnStorno
             // 
-            btnStorno.Location = new Point(230, 275);
+            btnStorno.Location = new Point(222, 275);
             btnStorno.Name = "btnStorno";
             btnStorno.Size = new Size(82, 35);
             btnStorno.TabIndex = 15;
@@ -622,7 +622,7 @@
             txtPrefixBinarni.Name = "txtPrefixBinarni";
             txtPrefixBinarni.Size = new Size(40, 27);
             txtPrefixBinarni.TabIndex = 18;
-            txtPrefixBinarni.Text = "XB";
+            txtPrefixBinarni.Text = "WA";
             // 
             // lblPrefixBlokovani
             // 

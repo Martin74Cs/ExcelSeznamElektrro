@@ -1,4 +1,4 @@
-﻿//pouze pro generování PDF, vyžaduje Windows
+//pouze pro generování PDF, vyžaduje Windows
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using System.Reflection;
@@ -202,7 +202,7 @@ namespace Knihovna.Export
         }
 
 
-        public static void SavePdfGen<T>(this IEnumerable<T> data, string pdfPath, string? title = null)
+        public static void SavePdfGen<T>(this IEnumerable<T> data, string pdfPath, string? title = null, string[] columns = null)
         {
             if (data == null || !data.Any())
                 throw new InvalidOperationException("Seznam je prázdný.");
@@ -248,26 +248,23 @@ namespace Knihovna.Export
             // ======================
             // VLASTNOSTI
             // ======================
-            var properties = typeof(T)
+            var allProperties = typeof(T)
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(p => p.GetIndexParameters().Length == 0)
                 .ToArray();
 
-            string[] start =
-            [
-                "Radek",
-                "Tag",
-                "Pocet",
-                "Popis",
-                "Menic",
-                "Prikon",
-                "BalenaJednotka",
-                "Pid",
-                "Pozice",
-                "Poznamka"
-            ];
-
-            properties = [.. properties.Where(p => start.Contains(p.Name))];
+            PropertyInfo[] properties;
+            if (columns != null && columns.Length > 0)
+            {
+                properties = columns
+                    .Select(colName => allProperties.FirstOrDefault(p => string.Equals(p.Name, colName, StringComparison.OrdinalIgnoreCase)))
+                    .Where(p => p != null)
+                    .ToArray();
+            }
+            else
+            {
+                properties = allProperties;
+            }
 
             // ======================
             // VÝPOČET ŠÍŘEK

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Knihovna.Tridy;
 using System.Data;
@@ -37,12 +37,56 @@ namespace Knihovna.Sdilene {
             return JsonConvert.SerializeObject(json, Soubory.Nastaveni());
             //JsonToCsv(Json, file);
         }
-        public static void SaveToCsv<T>(this List<T> Class, string file)
+        public static void SaveToCsv<T>(this List<T> Class, string file, string[] columns = null)
         {
-            //kontrola počtu záznamů
-            if (Class.Count < 1) return; 
-            string json = JsonToCsv(Class);
-            SaveToCsv(json, file);
+            // Kontrola počtu záznamů
+            if (Class == null || Class.Count < 1) return; 
+            if (!Soubory.CanSaveFile(file)) return;
+            if (Soubory.IsFileLocked(file)) {
+                Console.WriteLine($"Soubor {file} je zamčený."); 
+                return;
+            }
+
+            var allProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                         .Where(p => p.GetIndexParameters().Length == 0)
+                                         .ToList();
+
+            List<PropertyInfo> propList;
+            // Pokud jsou specifikovány sloupce, filtrujeme a seřadíme je
+            if (columns != null && columns.Length > 0)
+            {
+                propList = columns
+                    .Select(colName => allProperties.FirstOrDefault(p => string.Equals(p.Name, colName, StringComparison.OrdinalIgnoreCase)))
+                    .Where(p => p != null)
+                    .ToList();
+            }
+            else
+            {
+                propList = allProperties;
+            }
+
+            if (propList.Count == 0) return;
+
+            using var writer = new StreamWriter(file, false, new System.Text.UTF8Encoding(true));
+            
+            // Zápis hlavičky
+            writer.WriteLine(string.Join(";", propList.Select(p => p.Name)));
+
+            // Zápis řádků dat
+            foreach (var item in Class)
+            {
+                var values = propList.Select(p =>
+                {
+                    var valObj = p.GetValue(item);
+                    var value = (valObj == null ? "" : valObj.ToString() ?? "")
+                        .Replace("\"", "\"\"")
+                        .Replace("\n", " ")
+                        .Replace("\r", " ");
+                    return $"\"{value}\"";
+                });
+                writer.WriteLine(string.Join(";", values));
+            }
+            Console.WriteLine($"Hotovo! Soubor {Path.GetFileName(file)} Uložen");
         }
 
         public static void SaveToCsv(string json, string file)

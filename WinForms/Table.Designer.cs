@@ -1,4 +1,4 @@
-namespace WinForms
+﻿namespace WinForms
 {
     partial class Table
     {
@@ -35,6 +35,11 @@ namespace WinForms
             upravyToolStripMenuItem = new ToolStripMenuItem();
             pridatToolStripMenuItem = new ToolStripMenuItem();
             smazatToolStripMenuItem = new ToolStripMenuItem();
+            kabelyToolStripMenuItem1 = new ToolStripMenuItem();
+            spravaKabeluToolStripMenuItem = new ToolStripMenuItem();
+            rozvadeceToolStripMenuItem = new ToolStripMenuItem();
+            prirazeniKRozvadecumToolStripMenuItem = new ToolStripMenuItem();
+            prehledToolStripMenuItem = new ToolStripMenuItem();
             vypoctyToolStripMenuItem = new ToolStripMenuItem();
             proudToolStripMenuItem = new ToolStripMenuItem();
             prurezToolStripMenuItem = new ToolStripMenuItem();
@@ -43,11 +48,6 @@ namespace WinForms
             rozvadecSloupceToolStripMenuItem = new ToolStripMenuItem();
             datoveSloupceToolStripMenuItem = new ToolStripMenuItem();
             filtToolStripMenuItem = new ToolStripMenuItem();
-            kabelyToolStripMenuItem1 = new ToolStripMenuItem();
-            spravaKabeluToolStripMenuItem = new ToolStripMenuItem();
-            rozvadeceToolStripMenuItem = new ToolStripMenuItem();
-            prirazeniKRozvadecumToolStripMenuItem = new ToolStripMenuItem();
-            prehledToolStripMenuItem = new ToolStripMenuItem();
             panelFilters = new FlowLayoutPanel();
             lblFiltersHeader = new Label();
             lblPid = new Label();
@@ -58,6 +58,12 @@ namespace WinForms
             comboBox3 = new ComboBox();
             lblPatro = new Label();
             comboBox1 = new ComboBox();
+            lblSearch = new Label();
+            textBoxSearch = new TextBox();
+            lblIsExist = new Label();
+            comboBoxIsExist = new ComboBox();
+            lblIsExistElektro = new Label();
+            comboBoxIsExistElektro = new ComboBox();
             splitContainer1 = new SplitContainer();
             propertyGrid1 = new PropertyGrid();
             flowLayoutPanelButtons = new FlowLayoutPanel();
@@ -73,11 +79,11 @@ namespace WinForms
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             panelFilters.SuspendLayout();
-            flowLayoutPanelButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            flowLayoutPanelButtons.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
@@ -87,7 +93,7 @@ namespace WinForms
             dataGridView1.Location = new Point(0, 0);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.Size = new Size(896, 673);
+            dataGridView1.Size = new Size(902, 518);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
             dataGridView1.CellFormatting += DataGridView1_CellFormatting;
@@ -101,7 +107,7 @@ namespace WinForms
             menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, upravyToolStripMenuItem, kabelyToolStripMenuItem1, rozvadeceToolStripMenuItem, vypoctyToolStripMenuItem, zobrazeniToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1300, 28);
+            menuStrip1.Size = new Size(1309, 28);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -149,14 +155,6 @@ namespace WinForms
             smazatToolStripMenuItem.Text = "Smazat vybrané";
             smazatToolStripMenuItem.Click += Button7_Click;
             // 
-            // vypoctyToolStripMenuItem
-            // 
-            vypoctyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { proudToolStripMenuItem, prurezToolStripMenuItem });
-            vypoctyToolStripMenuItem.Name = "vypoctyToolStripMenuItem";
-            vypoctyToolStripMenuItem.Size = new Size(76, 24);
-            vypoctyToolStripMenuItem.Text = "Výpočty";
-            // 
-            // 
             // kabelyToolStripMenuItem1
             // 
             kabelyToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { spravaKabeluToolStripMenuItem });
@@ -167,30 +165,37 @@ namespace WinForms
             // spravaKabeluToolStripMenuItem
             // 
             spravaKabeluToolStripMenuItem.Name = "spravaKabeluToolStripMenuItem";
-            spravaKabeluToolStripMenuItem.Size = new Size(224, 26);
+            spravaKabeluToolStripMenuItem.Size = new Size(185, 26);
             spravaKabeluToolStripMenuItem.Text = "Správa kabelů";
-            spravaKabeluToolStripMenuItem.Click += new EventHandler(SpravaKabeluToolStripMenuItem_Click);
+            spravaKabeluToolStripMenuItem.Click += SpravaKabeluToolStripMenuItem_Click;
             // 
             // rozvadeceToolStripMenuItem
             // 
             rozvadeceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { prirazeniKRozvadecumToolStripMenuItem, prehledToolStripMenuItem });
             rozvadeceToolStripMenuItem.Name = "rozvadeceToolStripMenuItem";
-            rozvadeceToolStripMenuItem.Size = new Size(94, 24);
+            rozvadeceToolStripMenuItem.Size = new Size(95, 24);
             rozvadeceToolStripMenuItem.Text = "Rozvaděče";
             // 
             // prirazeniKRozvadecumToolStripMenuItem
             // 
             prirazeniKRozvadecumToolStripMenuItem.Name = "prirazeniKRozvadecumToolStripMenuItem";
-            prirazeniKRozvadecumToolStripMenuItem.Size = new Size(244, 26);
+            prirazeniKRozvadecumToolStripMenuItem.Size = new Size(245, 26);
             prirazeniKRozvadecumToolStripMenuItem.Text = "Přiřazení k rozvaděčům";
-            prirazeniKRozvadecumToolStripMenuItem.Click += new EventHandler(PrirazeniKRozvadecumToolStripMenuItem_Click);
+            prirazeniKRozvadecumToolStripMenuItem.Click += PrirazeniKRozvadecumToolStripMenuItem_Click;
             // 
             // prehledToolStripMenuItem
             // 
             prehledToolStripMenuItem.Name = "prehledToolStripMenuItem";
-            prehledToolStripMenuItem.Size = new Size(244, 26);
+            prehledToolStripMenuItem.Size = new Size(245, 26);
             prehledToolStripMenuItem.Text = "Přehled rozvaděčů";
-            prehledToolStripMenuItem.Click += new EventHandler(PrehledToolStripMenuItem_Click);
+            prehledToolStripMenuItem.Click += PrehledToolStripMenuItem_Click;
+            // 
+            // vypoctyToolStripMenuItem
+            // 
+            vypoctyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { proudToolStripMenuItem, prurezToolStripMenuItem });
+            vypoctyToolStripMenuItem.Name = "vypoctyToolStripMenuItem";
+            vypoctyToolStripMenuItem.Size = new Size(76, 24);
+            vypoctyToolStripMenuItem.Text = "Výpočty";
             // 
             // proudToolStripMenuItem
             // 
@@ -252,11 +257,17 @@ namespace WinForms
             panelFilters.Controls.Add(comboBox3);
             panelFilters.Controls.Add(lblPatro);
             panelFilters.Controls.Add(comboBox1);
+            panelFilters.Controls.Add(lblIsExist);
+            panelFilters.Controls.Add(comboBoxIsExist);
+            panelFilters.Controls.Add(lblIsExistElektro);
+            panelFilters.Controls.Add(comboBoxIsExistElektro);
+            panelFilters.Controls.Add(lblSearch);
+            panelFilters.Controls.Add(textBoxSearch);
             panelFilters.Dock = DockStyle.Top;
             panelFilters.Location = new Point(0, 28);
             panelFilters.Name = "panelFilters";
             panelFilters.Padding = new Padding(10, 5, 10, 5);
-            panelFilters.Size = new Size(1300, 45);
+            panelFilters.Size = new Size(1309, 92);
             panelFilters.TabIndex = 2;
             // 
             // lblFiltersHeader
@@ -353,6 +364,93 @@ namespace WinForms
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             comboBox1.MouseClick += ComboBox1_MouseClick;
             // 
+            // lblSearch
+            // 
+            lblSearch.AutoSize = true;
+            lblSearch.Location = new Point(125, 52);
+            lblSearch.Margin = new Padding(0, 5, 5, 0);
+            lblSearch.Name = "lblSearch";
+            lblSearch.Size = new Size(93, 28);
+            lblSearch.TabIndex = 7;
+            lblSearch.Text = "Vyhledat:";
+            // 
+            // textBoxSearch
+            // 
+            textBoxSearch.Location = new Point(223, 47);
+            textBoxSearch.Margin = new Padding(0, 0, 15, 0);
+            textBoxSearch.Name = "textBoxSearch";
+            textBoxSearch.Size = new Size(201, 34);
+            textBoxSearch.TabIndex = 8;
+            textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
+            // 
+            // lblIsExist
+            // 
+            lblIsExist.AutoSize = true;
+            lblIsExist.Location = new Point(915, 10);
+            lblIsExist.Margin = new Padding(0, 5, 5, 0);
+            lblIsExist.Name = "lblIsExist";
+            lblIsExist.Size = new Size(107, 28);
+            lblIsExist.TabIndex = 9;
+            lblIsExist.Text = "V projektu:";
+            // 
+            // comboBoxIsExist
+            // 
+            comboBoxIsExist.FormattingEnabled = true;
+            comboBoxIsExist.Location = new Point(1027, 5);
+            comboBoxIsExist.Margin = new Padding(0, 0, 15, 0);
+            comboBoxIsExist.Name = "comboBoxIsExist";
+            comboBoxIsExist.Size = new Size(100, 36);
+            comboBoxIsExist.TabIndex = 10;
+            comboBoxIsExist.SelectedIndexChanged += ComboBoxIsExist_SelectedIndexChanged;
+            // 
+            // lblIsExistElektro
+            // 
+            lblIsExistElektro.AutoSize = true;
+            lblIsExistElektro.Location = new Point(1142, 10);
+            lblIsExistElektro.Margin = new Padding(0, 5, 5, 0);
+            lblIsExistElektro.Name = "lblIsExistElektro";
+            lblIsExistElektro.Size = new Size(94, 28);
+            lblIsExistElektro.TabIndex = 11;
+            lblIsExistElektro.Text = "V Elektro:";
+            // 
+            // comboBoxIsExistElektro
+            // 
+            comboBoxIsExistElektro.FormattingEnabled = true;
+            comboBoxIsExistElektro.Location = new Point(10, 47);
+            comboBoxIsExistElektro.Margin = new Padding(0, 0, 15, 0);
+            comboBoxIsExistElektro.Name = "comboBoxIsExistElektro";
+            comboBoxIsExistElektro.Size = new Size(100, 36);
+            comboBoxIsExistElektro.TabIndex = 12;
+            comboBoxIsExistElektro.SelectedIndexChanged += ComboBoxIsExistElektro_SelectedIndexChanged;
+            // 
+            // splitContainer1
+            // 
+            splitContainer1.BorderStyle = BorderStyle.Fixed3D;
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 120);
+            splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            splitContainer1.Panel1.Controls.Add(dataGridView1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            splitContainer1.Panel2.Controls.Add(propertyGrid1);
+            splitContainer1.Size = new Size(1309, 522);
+            splitContainer1.SplitterDistance = 906;
+            splitContainer1.TabIndex = 0;
+            // 
+            // propertyGrid1
+            // 
+            propertyGrid1.BackColor = SystemColors.Control;
+            propertyGrid1.Dock = DockStyle.Fill;
+            propertyGrid1.Location = new Point(0, 0);
+            propertyGrid1.Name = "propertyGrid1";
+            propertyGrid1.PropertySort = PropertySort.Categorized;
+            propertyGrid1.Size = new Size(395, 518);
+            propertyGrid1.TabIndex = 0;
+            // 
             // flowLayoutPanelButtons
             // 
             flowLayoutPanelButtons.Controls.Add(BtnAdd);
@@ -365,11 +463,10 @@ namespace WinForms
             flowLayoutPanelButtons.Controls.Add(Button2);
             flowLayoutPanelButtons.Controls.Add(Button1);
             flowLayoutPanelButtons.Dock = DockStyle.Bottom;
-            flowLayoutPanelButtons.FlowDirection = FlowDirection.LeftToRight;
-            flowLayoutPanelButtons.Location = new Point(0, 690);
+            flowLayoutPanelButtons.Location = new Point(0, 642);
             flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
             flowLayoutPanelButtons.Padding = new Padding(10, 5, 10, 5);
-            flowLayoutPanelButtons.Size = new Size(1300, 60);
+            flowLayoutPanelButtons.Size = new Size(1309, 60);
             flowLayoutPanelButtons.TabIndex = 3;
             // 
             // BtnAdd
@@ -454,6 +551,7 @@ namespace WinForms
             // 
             // Button1
             // 
+            Button1.Anchor = AnchorStyles.Right;
             Button1.Location = new Point(1061, 8);
             Button1.Name = "Button1";
             Button1.Size = new Size(100, 36);
@@ -462,39 +560,11 @@ namespace WinForms
             Button1.UseVisualStyleBackColor = true;
             Button1.Click += Button1_Click;
             // 
-            // splitContainer1
-            // 
-            splitContainer1.BorderStyle = BorderStyle.Fixed3D;
-            splitContainer1.Dock = DockStyle.Fill;
-            splitContainer1.Location = new Point(0, 73);
-            splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            splitContainer1.Panel1.Controls.Add(dataGridView1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            splitContainer1.Panel2.Controls.Add(propertyGrid1);
-            splitContainer1.Size = new Size(1300, 677);
-            splitContainer1.SplitterDistance = 900;
-            splitContainer1.TabIndex = 0;
-            // 
-            // propertyGrid1
-            // 
-            propertyGrid1.BackColor = SystemColors.Control;
-            propertyGrid1.Dock = DockStyle.Fill;
-            propertyGrid1.Location = new Point(0, 0);
-            propertyGrid1.Name = "propertyGrid1";
-            propertyGrid1.PropertySort = PropertySort.Categorized;
-            propertyGrid1.Size = new Size(392, 673);
-            propertyGrid1.TabIndex = 0;
-            // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1300, 750);
+            ClientSize = new Size(1309, 702);
             Controls.Add(splitContainer1);
             Controls.Add(flowLayoutPanelButtons);
             Controls.Add(panelFilters);
@@ -511,12 +581,11 @@ namespace WinForms
             menuStrip1.PerformLayout();
             panelFilters.ResumeLayout(false);
             panelFilters.PerformLayout();
-            flowLayoutPanelButtons.ResumeLayout(false);
-            flowLayoutPanelButtons.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            flowLayoutPanelButtons.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -566,5 +635,11 @@ namespace WinForms
         private Button button8;
         private Button BtnAdd;
         private FlowLayoutPanel flowLayoutPanelButtons;
+        private Label lblSearch;
+        private TextBox textBoxSearch;
+        private Label lblIsExist;
+        private ComboBox comboBoxIsExist;
+        private Label lblIsExistElektro;
+        private ComboBox comboBoxIsExistElektro;
     }
 }

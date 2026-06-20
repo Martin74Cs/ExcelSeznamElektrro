@@ -1,4 +1,4 @@
-﻿using Knihovna;
+using Knihovna;
 using Knihovna.Export;
 using Knihovna.Tridy;
 using Newtonsoft.Json;
@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace Knihovna {
 
@@ -261,15 +262,45 @@ namespace Knihovna {
         }
 
 
-        public static void SaveXML<T>(this T Pole, string cesta) where T : new() {
+        public static void SaveXML<T>(this List<T> Pole, string cesta, string[] columns = null) where T : new() {
             if(!CanSaveFile(cesta)) return;
-            // Serializace do souboru
-            XmlSerializer serializer = new(typeof(T));
-            using(FileStream fs = new(cesta, FileMode.Create)) {
-                serializer.Serialize(fs, Pole);
+            
+            if (columns == null || columns.Length == 0) {
+                // Výchozí chování - standardní serializace celého listu
+                XmlSerializer serializer = new(typeof(List<T>));
+                using(FileStream fs = new(cesta, FileMode.Create)) {
+                    serializer.Serialize(fs, Pole);
+                }
+            } else {
+                // Výběr sloupců a rekurzivní vytvoření XML
+                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                           .Where(p => p.GetIndexParameters().Length == 0)
+                                           .ToList();
+
+                var propList = columns
+                    .Select(colName => properties.FirstOrDefault(p => string.Equals(p.Name, colName, StringComparison.OrdinalIgnoreCase)))
+                    .Where(p => p != null)
+                    .ToList();
+
+                var rootName = $"ArrayOf{typeof(T).Name}";
+                var itemName = typeof(T).Name;
+
+                var xDoc = new XDocument(
+                    new XDeclaration("1.0", "utf-8", "yes"),
+                    new XElement(rootName,
+                        Pole.Select(item =>
+                            new XElement(itemName,
+                                propList.Select(p => {
+                                    var val = p.GetValue(item);
+                                    return new XElement(p.Name, val ?? "");
+                                })
+                            )
+                        )
+                    )
+                );
+                xDoc.Save(cesta);
             }
-            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
-            Console.WriteLine($"Hotovo! Soubor XML byl uložen do {Path.GetFileName(Informace.Adresar)}");
+            Console.WriteLine($"Hotovo! Soubor XML byl uložen do {Path.GetFileName(cesta)}");
         }
         public static void SaveHtml<T>(this List<T> Pole, string cesta) where T : new() {
             if(!CanSaveFile(cesta)) return;
@@ -309,7 +340,7 @@ namespace Knihovna {
 
             Console.WriteLine("Hotovo! Uloženo do output.html");
         }
-        public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta) where T : new() {
+        public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta, string[] columns = null) where T : new() {
             if(!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
             if(Pole == null || Pole.Count < 1) {
@@ -318,10 +349,22 @@ namespace Knihovna {
                 return;
             }
 
-            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                 .Where(p => p.GetIndexParameters().Length == 0)
+                                 .ToList();
+
+            List<PropertyInfo> vybraneProps;
+            if (columns != null && columns.Length > 0) {
+                vybraneProps = columns
+                    .Select(n => props.FirstOrDefault(p => string.Equals(p.Name, n, StringComparison.OrdinalIgnoreCase)))
+                    .Where(p => p != null)
+                    .ToList();
+            } else {
+                vybraneProps = props.ToList();
+            }
 
             sb.AppendLine("<!DOCTYPE html>");
-            sb.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Seznam zařízení</title>");
+            sb.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Seznam</title>");
             sb.AppendLine("<style>");
             sb.AppendLine("body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9; }");
             sb.AppendLine("h1 { color: #333; }");
@@ -330,63 +373,23 @@ namespace Knihovna {
             sb.AppendLine("th { background-color: #f0f0f0; }");
             sb.AppendLine("tr:nth-child(even) { background-color: #f7f7f7; }");
             sb.AppendLine("</style></head><body>");
-            string nadpis = "Seznam zařízení";
+            
+            string nadpis = $"Seznam {typeof(T).Name}";
             sb.AppendLine($"<h1>{nadpis}</h1>");
             sb.AppendLine("<table><thead><tr>");
 
-            //string[] start = [
-            //    "Radek",
-            //    "Tag",
-            //    "Pocet",
-            //    "Popis",
-            //    "Menic",
-            //    "Prikon",
-            //    "BalenaJednotka",
-            //    "Pid",
-            //    "Pozice",
-            //    "Poznamka"
-            //];
-
-            string[] start =
-            [
-                //nameof(Zarizeni.Radek),
-                nameof(Zarizeni.Tag),
-                //nameof(Zarizeni.Pocet),
-                nameof(Zarizeni.Popis),
-                nameof(Zarizeni.Prikon),
-                nameof(Zarizeni.Napeti),
-                nameof(Zarizeni.Menic),
-                nameof(Zarizeni.BalenaJednotka),
-                //nameof(Zarizeni.Pid),
-                nameof(Zarizeni.Pozice),
-                //nameof(Zarizeni.Poznamka)/
-            ];
-
-            //zachovat poradí
-            var vybraneProps = start
-                .Select(n => props.FirstOrDefault(p => p.Name == n))
-                .Where(p => p != null)
-                .ToList();
-
-
-            // Hlavička tabulky
-            foreach(var prop in props) {
-                if(!start.Contains(prop.Name)) continue;
+            // Hlavička tabulky - s respektováním zadaného pořadí
+            foreach(var prop in vybraneProps) {
                 sb.AppendLine($"<th>{prop.Name}</th>");
             }
 
             sb.AppendLine("</tr></thead><tbody>");
 
-            var vyber = Filter(Pole, nameof(Zarizeni.IsExist), true);
-
             // Řádky tabulky
             foreach(var item in Pole) {
                 sb.AppendLine("<tr>");
-                foreach(var prop in props) {
-                    //to co se má vynechat u html.
-                    if(prop.Name == "Item") continue;
-                    if(!start.Contains(prop.Name)) continue;
-
+                foreach(var prop in vybraneProps) {
+                    if (prop.Name == "Item") continue;
                     object value = prop.GetValue(item, null) ?? "";
                     sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
                 }
@@ -396,8 +399,7 @@ namespace Knihovna {
 
             File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
 
-            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
-            Console.WriteLine($"Hotovo! Soubor HTML byl uložen do {Path.GetFileName(Informace.Instance.SouborElektroJson)}");
+            Console.WriteLine($"Hotovo! Soubor HTML byl uložen do {Path.GetFileName(cesta)}");
         }
 
         //zadávat podmínky dynamicky pomocí

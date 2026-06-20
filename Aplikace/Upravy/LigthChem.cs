@@ -18,22 +18,29 @@ namespace Aplikace.Upravy
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů ...");
             Console.ResetColor();
-            var Cesty = Informace.Instance;
-            Cesty.SouborStrojeXls = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx", Informace.Instance.BasePath);
-            if (string.IsNullOrEmpty(Cesty.SouborStrojeXls) || !File.Exists(Cesty.SouborStrojeXls)) {
-                Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
-                return;
+            var Cesty = Informace.Instance.SouborStrojeXls;
+            if(!File.Exists(Cesty)) { 
+                Cesty = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx", Informace.Instance.BasePath);
+                if(string.IsNullOrEmpty(Cesty) || !File.Exists(Cesty)) {
+                    Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
+                    return;
+                }
+                else { 
+                    Informace.Instance.SouborStrojeXls = Cesty;
+                    Informace.Instance.Ulozit();
+                }
+                    
             }
-            var Json = Path.ChangeExtension(Cesty.SouborStrojeXls, ".json");
-            Cesty.SouborStrojeJson = Json;
+
+            var Json = Path.ChangeExtension(Cesty, ".json");
 
             //AI převod stroju od strojařů do trídy
-            var Stara = ExcelLoad.DataExcelInteractive(Cesty.SouborStrojeXls, "Seznam", 5);
+            var Stara = ExcelLoad.DataExcelInteractive(Cesty, "Seznam", 5);
 
             Stara.SaveJsonList(Json);
 
             //Jen lepší přehled dat.
-            Stara.SaveToCsv(Path.ChangeExtension(Cesty.SouborStrojeXls, ".csv"));
+            Stara.SaveToCsv(Path.ChangeExtension(Cesty, ".csv"));
         }
 
         public static List<Zarizeni> DwgToJson(string cesta1)
