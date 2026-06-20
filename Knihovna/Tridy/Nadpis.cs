@@ -1,4 +1,4 @@
-﻿using Aplikace.Tridy;
+using Aplikace.Tridy;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,12 +9,6 @@ using System.Threading.Tasks;
 
 namespace Knihovna.Tridy
 {
-    public class Entity
-    {
-        public int Id { get; set; }
-        public string Apid { get; set; } = string.Empty;
-    }
-
     public class Nadpis : Entity
     {
         [Display(Name = "Text Nadpisu")]

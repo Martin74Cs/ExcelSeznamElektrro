@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -28,6 +28,10 @@
     <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="6.2.4" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\Knihovna.Shared\Knihovna.Shared.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Tridy\NováSložka\" />

@@ -528,5 +528,3 @@ namespace Knihovna.Tridy
     }
 
 }
-
-

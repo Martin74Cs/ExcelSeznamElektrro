@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Knihovna.Tridy
 {
@@ -186,5 +186,4 @@ namespace Knihovna.Tridy
         public static double UProcenta(this KabelVse kabel, double napeti, double proud, double delka, double uhel) =>
             KabelVse.ProcentaU3f(kabel, napeti, proud, delka, uhel);
     }
-
 }
