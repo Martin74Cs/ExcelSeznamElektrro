@@ -1,16 +1,27 @@
 ﻿using Newtonsoft.Json;
 using System.Reflection;
 
-namespace Knihovna.Tridy {
-    public class Vykres {
-        public string Orientačníčíslo { get {
-                if(string.IsNullOrEmpty(OrientačníčísloF))
+namespace Knihovna.Tridy
+{
+    /// <summary>
+    /// Reprezentuje výkresovou dokumentaci.
+    /// </summary>
+    public class Vykres : Entity
+    {
+        public string Orientačníčíslo
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(OrientačníčísloF))
+                {
                     return $"{OrientačníčísloB}{OrientačníčísloC}{OrientačníčísloD}{OrientačníčísloE}";
+                }
                 return $"{OrientačníčísloB}{OrientačníčísloC}{OrientačníčísloD}{OrientačníčísloE}-{OrientačníčísloF}";
-        } } 
+            }
+        }
 
         [JsonIgnore]
-        public string OrientačníčísloB { get; init; }  = string.Empty;
+        public string OrientačníčísloB { get; init; } = string.Empty;
         [JsonIgnore]
         public string OrientačníčísloC { get; init; } = string.Empty;
         [JsonIgnore]

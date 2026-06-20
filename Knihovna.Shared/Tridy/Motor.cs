@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Knihovna.Tridy
 {
-    public class Motor
+    /// <summary>
+    /// Reprezentuje elektrický motor.
+    /// </summary>
+    public class Motor : Entity
     {
         [Display(Name = "Výrobce motoru")]
         [Required(ErrorMessage = "Hodnota kategorie je vyžadována")]

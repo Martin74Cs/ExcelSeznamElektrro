@@ -218,7 +218,7 @@ namespace Knihovna.Tridy
         #endregion
 
         #region 5. Kabelové připojení
-        private List<Trasa> seznamKabelu = new();
+        private List<Trasa> seznamKabelu = [];
         [Category("5. Kabelové připojení")]
         [DisplayName("Seznam kabelů")]
         [Description("Seznam všech kabelů připojených k tomuto zařízení.")]

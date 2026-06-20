@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
@@ -11,7 +11,8 @@ using System.Reflection;
 
 namespace WinForms
 {
-    public partial class Table: Form {
+    public partial class Table: Form
+    {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<Zarizeni> PoleOut { get; set; }
 
@@ -23,7 +24,8 @@ namespace WinForms
 
         //private SortableBindingList<Zarizeni> DataBind;
         //private BindingSource SourceBind = new BindingSource();
-        public Table(List<Zarizeni> Pole) {
+        public Table(List<Zarizeni> Pole)
+        {
             this.Pole = Pole;
             InitializeComponent();
             var defaultColumns = new[] {

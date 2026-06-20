@@ -17,7 +17,9 @@ namespace Knihovna.Tridy
         [Display(Name = "Jednotky")]
         public string Jednotky { get; set; } = string.Empty;
 
-        public static List<Nadpis> DataEn() { return [
+        public static List<Nadpis> DataEn()
+        {
+            return [
                 new Nadpis {Id=1,  Name = "TAG\nNUMBER",        Jednotky=""  },
                 new Nadpis {Id=2,  Name = "EQUIPMENT NAME",     Jednotky="" },
                 new Nadpis {Id=3,  Name = "POWER\n(ELECTRIC)",    Jednotky="[kW]" },
@@ -48,7 +50,9 @@ namespace Knihovna.Tridy
             ];
         }
 
-        public static List<Nadpis> DataCz() { return [
+        public static List<Nadpis> DataCz()
+        {
+            return [
                 new Nadpis {Id=1, Name = "Označení",    Jednotky=""  },
                 new Nadpis {Id=2, Name = "Popis",       Jednotky="" },
                 new Nadpis {Id=3, Name = "Příkon",      Jednotky="[kW]" },

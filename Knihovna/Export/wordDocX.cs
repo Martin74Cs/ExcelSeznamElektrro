@@ -4,7 +4,8 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Reflection;
 
-namespace Knihovna.Export {
+namespace Knihovna.Export
+{
     public static class DocxGenerator
     {
         public static void SaveDocxGenFlat<T>(this List<T> data, string docxPath, string? title = null)

@@ -2,7 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Knihovna.Tridy
 {
-    public class Trasa
+    /// <summary>
+    /// Reprezentuje kabelovou trasu.
+    /// </summary>
+    public class Trasa : Entity
     {
         private string tag = string.Empty;
 
@@ -38,7 +41,11 @@ namespace Knihovna.Tridy
         public static string[] KabelZnačkaPole => Enum.GetNames<KabelZnačka>();
     }
 
-    public class Kabely {
+    /// <summary>
+    /// Reprezentuje skupinu kabelů pro zařízení.
+    /// </summary>
+    public class Kabely
+    {
         public Trasa Hlavni { get; set; } 
         public Trasa PTC { get; set; }
         public Trasa Ovladani{ get; set; }
