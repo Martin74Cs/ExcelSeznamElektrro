@@ -72,6 +72,8 @@ namespace WinForms
             button14 = new Button();
             label4 = new Label();
             button5 = new Button();
+            button7 = new Button();
+            label6 = new Label();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -212,7 +214,7 @@ namespace WinForms
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 12F);
-            label7.Location = new Point(1165, 562);
+            label7.Location = new Point(1165, 506);
             label7.Name = "label7";
             label7.Size = new Size(244, 28);
             label7.TabIndex = 17;
@@ -344,14 +346,14 @@ namespace WinForms
             // seznamToolStripMenuItem
             // 
             seznamToolStripMenuItem.Name = "seznamToolStripMenuItem";
-            seznamToolStripMenuItem.Size = new Size(224, 32);
+            seznamToolStripMenuItem.Size = new Size(166, 32);
             seznamToolStripMenuItem.Text = "Seznam";
             seznamToolStripMenuItem.Click += seznamToolStripMenuItem_Click;
             // 
             // kabelyToolStripMenuItem
             // 
             kabelyToolStripMenuItem.Name = "kabelyToolStripMenuItem";
-            kabelyToolStripMenuItem.Size = new Size(224, 32);
+            kabelyToolStripMenuItem.Size = new Size(166, 32);
             kabelyToolStripMenuItem.Text = "Kabely";
             kabelyToolStripMenuItem.Click += kabelyToolStripMenuItem_Click;
             // 
@@ -407,10 +409,10 @@ namespace WinForms
             // 
             button11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button11.Font = new Font("Segoe UI", 12F);
-            button11.Location = new Point(968, 551);
+            button11.Location = new Point(968, 502);
             button11.Margin = new Padding(3, 4, 3, 4);
             button11.Name = "button11";
-            button11.Size = new Size(191, 51);
+            button11.Size = new Size(191, 35);
             button11.TabIndex = 26;
             button11.Text = "Otevřít Vývody";
             button11.UseVisualStyleBackColor = true;
@@ -492,20 +494,46 @@ namespace WinForms
             // 
             button5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button5.Font = new Font("Segoe UI", 12F);
-            button5.Location = new Point(968, 492);
+            button5.Location = new Point(968, 459);
             button5.Margin = new Padding(3, 4, 3, 4);
             button5.Name = "button5";
-            button5.Size = new Size(191, 51);
+            button5.Size = new Size(191, 35);
             button5.TabIndex = 33;
             button5.Text = "Vývody stavba";
             button5.UseVisualStyleBackColor = true;
             button5.Click += Button5_Click;
+            // 
+            // button7
+            // 
+            button7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            button7.Font = new Font("Segoe UI", 12F);
+            button7.Location = new Point(968, 545);
+            button7.Margin = new Padding(3, 4, 3, 4);
+            button7.Name = "button7";
+            button7.Size = new Size(191, 35);
+            button7.TabIndex = 34;
+            button7.Text = "Otevřít topeni";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
+            // label6
+            // 
+            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 12F);
+            label6.Location = new Point(1161, 552);
+            label6.Name = "label6";
+            label6.Size = new Size(194, 28);
+            label6.TabIndex = 35;
+            label6.Text = "Vlasní vývody topeni";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1405, 891);
+            Controls.Add(label6);
+            Controls.Add(button7);
             Controls.Add(button5);
             Controls.Add(label4);
             Controls.Add(button14);
@@ -587,5 +615,7 @@ namespace WinForms
         private ToolStripMenuItem generovníToolStripMenuItem;
         private ToolStripMenuItem seznamToolStripMenuItem;
         private ToolStripMenuItem kabelyToolStripMenuItem;
+        private Button button7;
+        private Label label6;
     }
 }

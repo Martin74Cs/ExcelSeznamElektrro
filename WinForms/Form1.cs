@@ -107,7 +107,7 @@ namespace WinForms
         private void Button10_Click(object sender, EventArgs e) {
             Console.WriteLine("Informace.Instance.BasePath " + Informace.Instance.BasePath);
             string? Cesta = ZajistitSouborElektroJson();
-            if (Cesta == null) return;
+            if(Cesta == null) return;
 
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesta);
             if(Data.Count < 1) {
@@ -133,12 +133,12 @@ namespace WinForms
             //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
             //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
 
-            var Vývody = Path.Combine(Cesty.VyvodyOstatniJson);
+            var Vývody = Cesty.VyvodyOstatniJson;
             if(!File.Exists(Vývody)) {
                 Console.WriteLine("Soubor nebyl nalezen " + Vývody);
                 Console.WriteLine("Soubor bude vytvořen!");
                 //var prazdny = new List<Zarizeni>();
-                Soubory.SaveJson(new List<Zarizeni>(), Cesty.VyvodyOstatniJson);
+                Soubory.SaveJson(new List<Zarizeni>(), Vývody);
                 Console.WriteLine("Znovu klikni na tlačítko. Soubor byl vytvořen!");
                 return;
             }
@@ -201,14 +201,14 @@ namespace WinForms
 
         private void Button13_Click(object sender, EventArgs e) {
             string? cestaStroje = ZajistitSouborStrojeJson();
-            if (cestaStroje == null) return;
+            if(cestaStroje == null) return;
 
             string? cestaElektro = ZajistitSouborElektroJson();
-            if (cestaElektro == null) return;
+            if(cestaElektro == null) return;
 
             var Strojni = Soubory.LoadJsonList<Zarizeni>(cestaStroje);
             var Elektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
-            
+
             var table = new Shoda(Strojni, Elektro);
             var result = table.ShowDialog();
             if(result == DialogResult.OK) {
@@ -239,7 +239,7 @@ namespace WinForms
 
         private void Button14_Click(object sender, EventArgs e) {
             string? cestaStroje = ZajistitSouborStrojeJson();
-            if (cestaStroje == null) return;
+            if(cestaStroje == null) return;
 
             var Data = Soubory.LoadJsonList<Zarizeni>(cestaStroje);
             if(Data.Count > 0)
@@ -292,7 +292,7 @@ namespace WinForms
 
         private void PříkonCelkemToolStripMenuItem_Click(object sender, EventArgs e) {
             string? Cesta = ZajistitSouborElektroJson();
-            if (Cesta == null) return;
+            if(Cesta == null) return;
 
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesta);
             Console.WriteLine($"Příkon celkem: {Data.Sum(x => double.TryParse(x.Prikon, out var p) ? p : 0.0)} W");
@@ -343,7 +343,7 @@ namespace WinForms
 
         private void seznamToolStripMenuItem_Click(object sender, EventArgs e) {
             string? Cesta = ZajistitSouborElektroJson();
-            if (Cesta == null) return;
+            if(Cesta == null) return;
 
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesta);
 
@@ -376,7 +376,7 @@ namespace WinForms
 
         private void kabelyToolStripMenuItem_Click(object sender, EventArgs e) {
             string? Cesta = ZajistitSouborElektroJson();
-            if (Cesta == null) return;
+            if(Cesta == null) return;
 
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesta);
 
@@ -390,11 +390,10 @@ namespace WinForms
             var filtrovanaData = Soubory.ApplyFilter(Data, filtry).ToList();
 
             var SeznamKabelu = new List<Trasa>();
-            foreach (var z in filtrovanaData) {
-                if (z.SeznamKabelu == null) continue;
-                foreach (var k in z.SeznamKabelu) {
-                    var kopieKabelu = new Trasa
-                    {
+            foreach(var z in filtrovanaData) {
+                if(z.SeznamKabelu == null) continue;
+                foreach(var k in z.SeznamKabelu) {
+                    var kopieKabelu = new Trasa {
                         Tag = z.Tag,
                         Rozvadec = k.Rozvadec,
                         RozvadecCislo = k.RozvadecCislo,
@@ -421,7 +420,7 @@ namespace WinForms
             string targetBase = Path.Combine(directory, "Elektro.Kabely");
 
             Console.WriteLine($"Generování seznamu kabelů do {targetBase}.*");
-            
+
             string[] sloupceKabelu = [
                 nameof(Trasa.Tag),
                 //nameof(Trasa.Rozvadec),
@@ -451,30 +450,29 @@ namespace WinForms
         /// <returns>Cesta k souboru, nebo null, pokud se soubor nepodařilo zajistit.</returns>
         private string? ZajistitSouborElektroJson() {
             var Cesta = Informace.Instance.SouborElektroJson;
-            if(!File.Exists(Cesta)) { 
+            if(!File.Exists(Cesta)) {
                 Cesta = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json", Informace.Instance.BasePath);
                 if(string.IsNullOrEmpty(Cesta) || !File.Exists(Cesta)) {
                     Console.WriteLine("Výběr souboru Elektro byl stornován nebo soubor neexistuje.");
-                    
+
                     // Nabídneme vytvoření kopie ze souboru Strojni
                     if(MessageBox.Show("Chcete vytvořit kopii souboru ze souboru Strojni?", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK) {
                         string? cestaStroje = ZajistitSouborStrojeJson();
-                        if (cestaStroje == null) {
+                        if(cestaStroje == null) {
                             Console.WriteLine("Nelze vytvořit kopii, protože chybí zdrojový soubor Strojni.");
                             return null;
                         }
-                        
+
                         Informace.Instance.SouborElektroJson = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json");
                         Informace.Instance.Ulozit();
                         Cesta = Informace.Instance.SouborElektroJson;
-                        
+
                         try {
                             File.Copy(cestaStroje, Cesta, overwrite: true);
                             if(File.Exists(Cesta)) {
                                 Console.WriteLine($"Soubor {Cesta} - zkopírován ze {cestaStroje}.");
                             }
-                        }
-                        catch (Exception ex) {
+                        } catch(Exception ex) {
                             Console.WriteLine($"Chyba při kopírování souboru: {ex.Message}");
                             return null;
                         }
@@ -510,6 +508,40 @@ namespace WinForms
                 }
             }
             return Cesta;
+        }
+
+        private void button7_Click(object sender, EventArgs e) {
+            //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
+            //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
+
+            var Vývody = Cesty.VyvodyTopeniJson;
+            if(!File.Exists(Vývody)) {
+                Console.WriteLine("Soubor nebyl nalezen " + Vývody);
+                Console.WriteLine("Soubor bude vytvořen!");
+                //var prazdny = new List<Zarizeni>();
+                Soubory.SaveJson(new List<Zarizeni>(), Vývody);
+                Console.WriteLine("Znovu klikni na tlačítko. Soubor byl vytvořen!");
+                return;
+            }
+            var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
+
+            //var DataBind = new BindingList<Zarizeni>(Data);
+            var table = new Table(Data);
+            SkrytSloupce(table.dataGridView1);
+            // Zobrazíme druhý formulář jako modální dialog
+            var result = table.ShowDialog();
+            if(result == DialogResult.OK) {
+                //přidat prázdný záznam
+                if(Data.Count < 1) Data.Add(new Zarizeni());
+
+                //Data.SaveToCsv(Vývody);
+                Data.SaveJsonList(Vývody);
+
+                //if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                //    Data.SaveToCsv(Cesty.ElektroDataCsv);
+                // Zde můžete provést další akce po zavření dialogu
+                // Například načíst data nebo aktualizovat UI
+            }
         }
     }
 
