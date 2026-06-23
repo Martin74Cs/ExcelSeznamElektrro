@@ -94,7 +94,7 @@
             dataGridView1.Location = new Point(0, 0);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.Size = new Size(902, 522);
+            dataGridView1.Size = new Size(872, 334);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
             dataGridView1.CellFormatting += DataGridView1_CellFormatting;
@@ -108,7 +108,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, upravyToolStripMenuItem, kabelyToolStripMenuItem1, rozvadeceToolStripMenuItem, vypoctyToolStripMenuItem, zobrazeniToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1309, 24);
+            menuStrip1.Size = new Size(1266, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -144,15 +144,14 @@
             // pridatToolStripMenuItem
             // 
             pridatToolStripMenuItem.Name = "pridatToolStripMenuItem";
-            pridatToolStripMenuItem.Size = new Size(181, 22);
+            pridatToolStripMenuItem.Size = new Size(157, 22);
             pridatToolStripMenuItem.Text = "Přidat kopii";
             pridatToolStripMenuItem.Click += BtnAdd_Click;
             // 
             // smazatToolStripMenuItem
             // 
             smazatToolStripMenuItem.Name = "smazatToolStripMenuItem";
-            //smazatToolStripMenuItem.ShortcutKeys = Keys.Delete;
-            smazatToolStripMenuItem.Size = new Size(181, 22);
+            smazatToolStripMenuItem.Size = new Size(157, 22);
             smazatToolStripMenuItem.Text = "Smazat vybrané";
             smazatToolStripMenuItem.Click += Button7_Click;
             // 
@@ -268,7 +267,7 @@
             panelFilters.Location = new Point(0, 24);
             panelFilters.Name = "panelFilters";
             panelFilters.Padding = new Padding(10, 5, 10, 5);
-            panelFilters.Size = new Size(1309, 92);
+            panelFilters.Size = new Size(1266, 92);
             panelFilters.TabIndex = 2;
             // 
             // lblFiltersHeader
@@ -408,7 +407,7 @@
             // lblSearch
             // 
             lblSearch.AutoSize = true;
-            lblSearch.Location = new Point(10, 39);
+            lblSearch.Location = new Point(10, 45);
             lblSearch.Margin = new Padding(0, 5, 5, 0);
             lblSearch.Name = "lblSearch";
             lblSearch.Size = new Size(74, 21);
@@ -417,7 +416,7 @@
             // 
             // textBoxSearch
             // 
-            textBoxSearch.Location = new Point(89, 34);
+            textBoxSearch.Location = new Point(89, 40);
             textBoxSearch.Margin = new Padding(0, 0, 15, 0);
             textBoxSearch.Name = "textBoxSearch";
             textBoxSearch.Size = new Size(201, 29);
@@ -438,8 +437,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(propertyGrid1);
-            splitContainer1.Size = new Size(1309, 526);
-            splitContainer1.SplitterDistance = 906;
+            splitContainer1.Size = new Size(1266, 338);
+            splitContainer1.SplitterDistance = 876;
             splitContainer1.TabIndex = 0;
             // 
             // propertyGrid1
@@ -449,7 +448,7 @@
             propertyGrid1.Location = new Point(0, 0);
             propertyGrid1.Name = "propertyGrid1";
             propertyGrid1.PropertySort = PropertySort.Categorized;
-            propertyGrid1.Size = new Size(395, 522);
+            propertyGrid1.Size = new Size(382, 334);
             propertyGrid1.TabIndex = 0;
             // 
             // flowLayoutPanelButtons
@@ -464,10 +463,10 @@
             flowLayoutPanelButtons.Controls.Add(Button2);
             flowLayoutPanelButtons.Controls.Add(Button1);
             flowLayoutPanelButtons.Dock = DockStyle.Bottom;
-            flowLayoutPanelButtons.Location = new Point(0, 642);
+            flowLayoutPanelButtons.Location = new Point(0, 454);
             flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
             flowLayoutPanelButtons.Padding = new Padding(10, 5, 10, 5);
-            flowLayoutPanelButtons.Size = new Size(1309, 60);
+            flowLayoutPanelButtons.Size = new Size(1266, 60);
             flowLayoutPanelButtons.TabIndex = 3;
             // 
             // BtnAdd
@@ -565,7 +564,7 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1309, 702);
+            ClientSize = new Size(1266, 514);
             Controls.Add(splitContainer1);
             Controls.Add(flowLayoutPanelButtons);
             Controls.Add(panelFilters);
