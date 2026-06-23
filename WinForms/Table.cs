@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace WinForms
 {
-    public partial class Table: Form
+    public partial class Table : Form
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<Zarizeni> PoleOut { get; set; }
@@ -72,23 +72,28 @@ namespace WinForms
             comboBoxIsExistElektro.SelectedIndex = 0;
 
             // Propojíme výběr v DataGridView se zobrazením v PropertyGridu
-            dataGridView1.SelectionChanged += (s, e) => {
-                if(dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z) {
+            dataGridView1.SelectionChanged += (s, e) =>
+            {
+                if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z)
+                {
                     propertyGrid1.SelectedObject = z;
                 }
-                else {
+                else
+                {
                     propertyGrid1.SelectedObject = null;
                 }
             };
 
             // Když v PropertyGridu dojde ke změně hodnoty, překreslíme DataGridView
-            propertyGrid1.PropertyValueChanged += (s, e) => {
+            propertyGrid1.PropertyValueChanged += (s, e) =>
+            {
                 dataGridView1.Refresh();
             };
         }
 
-        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
-            if(e.RowIndex < 0 || sender is not DataGridView dgv || dgv.Rows[e.RowIndex].DataBoundItem == null)
+        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || sender is not DataGridView dgv || dgv.Rows[e.RowIndex].DataBoundItem == null)
                 return;
 
             Type type = typeof(Zarizeni);
@@ -96,7 +101,7 @@ namespace WinForms
 
             var Text = vlastnosti.Select(x => x.Name).ToArray();
 
-            if(Text.Contains(dgv.Columns[e.ColumnIndex].Name) && !type.GetProperty(dgv.Columns[e.ColumnIndex].Name).CanWrite) // název sloupce ve zdroji dat
+            if (Text.Contains(dgv.Columns[e.ColumnIndex].Name) && !type.GetProperty(dgv.Columns[e.ColumnIndex].Name).CanWrite) // název sloupce ve zdroji dat
             {
                 e.CellStyle.BackColor = Color.LightGray;
                 dgv.Columns[dgv.Columns[e.ColumnIndex].Name].ReadOnly = true;
@@ -104,7 +109,8 @@ namespace WinForms
         }
 
         // Pomocná metoda pro získání popisu z enumu
-        private static string GetEnumDescription(Enum value) {
+        private static string GetEnumDescription(Enum value)
+        {
             var field = value.GetType().GetField(value.ToString());
             var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
             return attribute == null ? value.ToString() : attribute.Description;
@@ -179,17 +185,19 @@ namespace WinForms
 
 
 
-        public void SetListBox(string[] propertyNames) {
+        public void SetListBox(string[] propertyNames)
+        {
             //dataGridView1.AutoGenerateColumns = true;
             dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
             dataGridView1.Columns.Clear(); // důležité – vyčistí dříve vygenerované sloupce
 
             //"Druh"
 
-            var zarizeni  = new Zarizeni();
+            var zarizeni = new Zarizeni();
 
             // Přidáš sloupce ručně:
-            foreach(var propertyName  in propertyNames) {
+            foreach (var propertyName in propertyNames)
+            {
                 //if(name == "Druh") continue; // přeskočíme sloupec "Druh", ten bude přidán později
 
                 var prop = typeof(Zarizeni).GetProperty(propertyName);
@@ -216,10 +224,12 @@ namespace WinForms
                     continue;
                 }
 
-                if(propertyType  == typeof(bool)) {
+                if (propertyType == typeof(bool))
+                {
 
                     //zaskrtávání pro bool
-                    var checkColumn = new DataGridViewCheckBoxColumn {
+                    var checkColumn = new DataGridViewCheckBoxColumn
+                    {
                         DataPropertyName = propertyName,
                         HeaderText = GetPropertyHeader(propertyName),
                         Name = propertyName
@@ -227,15 +237,16 @@ namespace WinForms
                     dataGridView1.Columns.Add(checkColumn);
                     continue;
                 }
-     
+
                 //text ostatni
-                var nameColumn = new DataGridViewTextBoxColumn {
+                var nameColumn = new DataGridViewTextBoxColumn
+                {
                     DataPropertyName = propertyName,
                     HeaderText = GetPropertyHeader(propertyName),
                     Name = propertyName
                 };
                 dataGridView1.Columns.Add(nameColumn);
-                
+
 
             }
 
@@ -273,31 +284,37 @@ namespace WinForms
             dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
         }
 
-        private static string GetPropertyHeader(string propertyName) {
+        private static string GetPropertyHeader(string propertyName)
+        {
             var prop = typeof(Zarizeni).GetProperty(propertyName);
-            if(prop == null) return propertyName;
+            if (prop == null) return propertyName;
 
             var displayAttr = prop.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>();
             var jednotkyAttr = prop.GetCustomAttribute<JednotkyAttribute>();
 
             string header = displayAttr?.Name ?? propertyName;
-            if(jednotkyAttr != null && !string.IsNullOrEmpty(jednotkyAttr.Text)) {
+            if (jednotkyAttr != null && !string.IsNullOrEmpty(jednotkyAttr.Text))
+            {
                 header += $" {jednotkyAttr.Text}";
             }
             return header;
         }
 
-        private void Button1_Click(object sender, EventArgs e) {
+        private void Button1_Click(object sender, EventArgs e)
+        {
             this.DialogResult = DialogResult.Cancel;
         }
 
-        private void Button2_Click(object sender, EventArgs e) {
+        private void Button2_Click(object sender, EventArgs e)
+        {
             this.DialogResult = DialogResult.OK;
         }
 
-        private void SpravaKabeluToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void SpravaKabeluToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             Zarizeni? vybraneZar = null;
-            if (dataGridView1.CurrentRow != null) {
+            if (dataGridView1.CurrentRow != null)
+            {
                 vybraneZar = dataGridView1.CurrentRow.DataBoundItem as Zarizeni;
             }
 
@@ -307,39 +324,45 @@ namespace WinForms
             propertyGrid1.Refresh();
         }
 
-        private void PrirazeniKRozvadecumToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void PrirazeniKRozvadecumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             using var form = new FormRozvadece(Pole);
             form.ShowDialog(this);
             dataGridView1.Refresh();
             propertyGrid1.Refresh();
         }
 
-        private void PrehledToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void PrehledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             using var form = new Rozvaděč();
             form.ShowDialog(this);
         }
 
-        private void Table_Load(object sender, EventArgs e) {
+        private void Table_Load(object sender, EventArgs e)
+        {
 
         }
 
-        private void Button3_Click(object sender, EventArgs e) {
+        private void Button3_Click(object sender, EventArgs e)
+        {
             //Proud
-            if(Pole == null) return;
+            if (Pole == null) return;
             Pole.AddProud();
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 
-        private void Button4_Click(object sender, EventArgs e) {
+        private void Button4_Click(object sender, EventArgs e)
+        {
             //průřez
-            if(Pole == null) return;
+            if (Pole == null) return;
             //Strojni.AddProud();
             Pole.AddKabelCyky(1.6);
             //Pole.AddKabelCyky(2);
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 
-        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
             //var dgv = sender as DataGridView;
             //if(dgv == null || e.RowIndex < 0 || e.ColumnIndex < 0)
             //    return;
@@ -357,12 +380,14 @@ namespace WinForms
             //}
         }
 
-        private void DataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e) {
+        private void DataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
 
         }
 
-        private void DataGridView1_CurrentCellChanged(object sender, EventArgs e) {
-            if(sender is not DataGridView dgv || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
+        private void DataGridView1_CurrentCellChanged(object sender, EventArgs e)
+        {
+            if (sender is not DataGridView dgv || dgv.CurrentCell == null || dgv.CurrentCell.RowIndex < 0)
                 return;
 
             // Najdeme index sloupce "Stav"
@@ -374,46 +399,53 @@ namespace WinForms
             //    }
             //}
 
-            if(stavColumnIndex >= 0) {
+            if (stavColumnIndex >= 0)
+            {
                 // Nastavíme aktuální buňku na sloupec "Stav" v aktuálním řádku
                 //dgv.CurrentCell = dgv[stavColumnIndex, dgv.CurrentCell.RowIndex];
                 dgv.BeginEdit(true);
 
-                if(dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox) {
+                if (dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox)
+                {
                     comboBox.DroppedDown = true;
                 }
             }
         }
 
-        private void Button5_Click(object sender, EventArgs e) {
+        private void Button5_Click(object sender, EventArgs e)
+        {
             _customFilters = null; // Vyčistíme pokročilé filtry
             var defaultColumns = new[] {
                 nameof(Zarizeni.Tag),
                 nameof(Zarizeni.Predmet),
                 nameof(Zarizeni.Popis),
                 nameof(Zarizeni.Druh),
-                nameof(Zarizeni.Typ),
+                //nameof(Zarizeni.Typ),
                 nameof(Zarizeni.Menic),
                 nameof(Zarizeni.Napeti),
                 nameof(Zarizeni.Prikon),
+                nameof(Zarizeni.Delka),
                 nameof(Zarizeni.Rozvadec),
                 nameof(Zarizeni.RozvadecCislo),
                 nameof(Zarizeni.Vyvod),
-                nameof(Zarizeni.Kabel),
-                nameof(Zarizeni.SeznamKabelu)
+                nameof(Zarizeni.Poznamka),
+                //nameof(Zarizeni.Kabel),
+                //nameof(Zarizeni.SeznamKabelu)
             };
             SetListBox(defaultColumns); // Obnoví sloupce v datagridu
             ObnovGrid(); // Načte kompletní seznam dat bez pokročilých filtrů
         }
 
-        private void Button6_Click(object sender, EventArgs e) {
+        private void Button6_Click(object sender, EventArgs e)
+        {
             _customFilters = null; // Vyčistíme pokročilé filtry
             dataGridView1.Columns.Clear(); // důležité – vyčistí dříve vygenerované sloupce
             dataGridView1.AutoGenerateColumns = true;
             ObnovGrid(); // Znovu načte kompletní seznam dat
         }
 
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
             //var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
             //if (box.Text == "All")
             //{
@@ -429,8 +461,10 @@ namespace WinForms
             ObnovGrid();
         }
 
-        private void Table_FormClosing(object sender, FormClosingEventArgs e) {
-            if(dataGridView1.IsCurrentRowDirty) {
+        private void Table_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (dataGridView1.IsCurrentRowDirty)
+            {
                 dataGridView1.EndEdit();        // Ukončí editaci buňky
                 dataGridView1.CurrentCell = null; // Vynutí commit řádku
                 BindingContext[dataGridView1.DataSource].EndCurrentEdit(); // Vynutí uložení do seznamu
@@ -438,7 +472,8 @@ namespace WinForms
 
         }
 
-        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e) {
+        private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
             // Ošetření, aby to neprobíhalo při načtení všech řádků znovu
             //if (e.RowIndex >= 0 && e.RowCount == 1)
             //{
@@ -461,35 +496,44 @@ namespace WinForms
         private Zarizeni _lastAddedOrEditedZarizeni = null;
         private string? _highlightedApid = null;
         //Přidat
-        private void BtnAdd_Click(object sender, EventArgs e) {
+        private void BtnAdd_Click(object sender, EventArgs e)
+        {
             // Zapamatujeme si aktuální pozici scrollbaru před přidáním, abychom zabránili skoku
             int scrollIndex = dataGridView1.FirstDisplayedScrollingRowIndex;
 
-            if(dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z) {
+            if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z)
+            {
                 var kopie = Zarizeni.Clone(z); // Zkopíruje aktuální řádek do nového záznamu
                 kopie.Apid = ExcelLoad.Apid(); // Přidá nový prázdný záznam do seznamu
 
                 // Vyhledáme skutečný index vybraného prvku v celkovém seznamu Pole
                 int index = Pole.IndexOf(z);
-                if (index >= 0) {
+                if (index >= 0)
+                {
                     Pole.Insert(index + 1, kopie); // vložíme pod aktuální řádek
-                } else {
+                }
+                else
+                {
                     Pole.Add(kopie);
                 }
                 _lastAddedOrEditedZarizeni = kopie;
                 _highlightedApid = kopie.Apid;
             }
-            else { 
+            else
+            {
                 //neni radek
                 Pole.Add(new Zarizeni()); // vložíme na konec seznamu
             }
-            
+
             ObnovGrid(zachovatPozici: false); // Vyvoláme obnovení bez automatického zachování
 
             // Výběr nově přidaného řádku a focus na první buňku
-            if(!string.IsNullOrEmpty(_highlightedApid)) {
-                foreach(DataGridViewRow row in dataGridView1.Rows) {
-                    if(row.DataBoundItem is Zarizeni rowZarizeni && rowZarizeni.Apid == _highlightedApid) {
+            if (!string.IsNullOrEmpty(_highlightedApid))
+            {
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.DataBoundItem is Zarizeni rowZarizeni && rowZarizeni.Apid == _highlightedApid)
+                    {
                         row.Selected = true; // Vybereme řádek
                         row.DefaultCellStyle.BackColor = Color.LightSkyBlue;
                         dataGridView1.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible); // Aktivní buňka
@@ -499,41 +543,45 @@ namespace WinForms
             }
 
             // Obnovíme scrollbar na původní pozici, nový řádek se objeví přirozeně hned pod ním
-            if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count) {
+            if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count)
+            {
                 dataGridView1.FirstDisplayedScrollingRowIndex = scrollIndex;
             }
         }
 
 
 
-        private void ObnovGrid(bool zachovatPozici = true) {
+        private void ObnovGrid(bool zachovatPozici = true)
+        {
             // Uložíme aktuálně vybraný prvek a pozici scrollbaru pro zachování plynulosti
             string? vybraneApid = null;
             int scrollIndex = -1;
-            
-            if (zachovatPozici && dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z) {
+
+            if (zachovatPozici && dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z)
+            {
                 vybraneApid = z.Apid;
                 scrollIndex = dataGridView1.FirstDisplayedScrollingRowIndex;
             }
 
             IEnumerable<Zarizeni> filtrovanaData = Pole;
 
-            if(comboBox1.Text != "All")
+            if (comboBox1.Text != "All")
                 filtrovanaData = filtrovanaData.Where(z => z.Patro == comboBox1.Text);
 
-            if(comboBox2.Text != "All")
+            if (comboBox2.Text != "All")
                 filtrovanaData = filtrovanaData.Where(z => z.Etapa == comboBox2.Text);
 
-            if(comboBox3.Text != "All")
+            if (comboBox3.Text != "All")
                 filtrovanaData = filtrovanaData.Where(z => z.RozvadecOznačení == comboBox3.Text);
 
-            if(comboBox4Pid.Text != "All")
+            if (comboBox4Pid.Text != "All")
                 filtrovanaData = filtrovanaData.Where(z => z.Pid == comboBox4Pid.Text);
 
             // Fulltextové vyhledávání
-            if (textBoxSearch != null && !string.IsNullOrWhiteSpace(textBoxSearch.Text)) {
+            if (textBoxSearch != null && !string.IsNullOrWhiteSpace(textBoxSearch.Text))
+            {
                 string query = textBoxSearch.Text.Trim();
-                filtrovanaData = filtrovanaData.Where(z => 
+                filtrovanaData = filtrovanaData.Where(z =>
                     (z.Tag != null && z.Tag.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
                     (z.Popis != null && z.Popis.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
                     (z.Predmet != null && z.Predmet.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
@@ -543,91 +591,111 @@ namespace WinForms
             }
 
             // Bool filtr IsExist
-            if (comboBoxIsExist != null && comboBoxIsExist.Text != "All") {
+            if (comboBoxIsExist != null && comboBoxIsExist.Text != "All")
+            {
                 bool val = comboBoxIsExist.Text == "True";
                 filtrovanaData = filtrovanaData.Where(z => z.IsExist == val);
             }
 
             // Bool filtr IsExistElektro
-            if (comboBoxIsExistElektro != null && comboBoxIsExistElektro.Text != "All") {
+            if (comboBoxIsExistElektro != null && comboBoxIsExistElektro.Text != "All")
+            {
                 bool val = comboBoxIsExistElektro.Text == "True";
                 filtrovanaData = filtrovanaData.Where(z => z.IsExistElektro == val);
             }
 
             // Aplikace vlastních filtrů (např. z FiltToolStripMenuItem_Click)
-            if (_customFilters != null && _customFilters.Count > 0) {
+            if (_customFilters != null && _customFilters.Count > 0)
+            {
                 filtrovanaData = Soubory.ApplyFilter(filtrovanaData, _customFilters);
             }
 
             dataGridView1.DataSource = new SortableBindingList<Zarizeni>([.. filtrovanaData]);
 
             // Obnovíme výběr a pozici scrollu
-            if (zachovatPozici && dataGridView1.Rows.Count > 0) {
-                if (!string.IsNullOrEmpty(vybraneApid)) {
-                    foreach (DataGridViewRow row in dataGridView1.Rows) {
-                        if (row.DataBoundItem is Zarizeni rz && rz.Apid == vybraneApid) {
+            if (zachovatPozici && dataGridView1.Rows.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(vybraneApid))
+                {
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (row.DataBoundItem is Zarizeni rz && rz.Apid == vybraneApid)
+                        {
                             dataGridView1.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
                             break;
                         }
                     }
                 }
 
-                if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count) {
+                if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count)
+                {
                     dataGridView1.FirstDisplayedScrollingRowIndex = scrollIndex;
                 }
             }
         }
 
-        private void TextBoxSearch_TextChanged(object sender, EventArgs e) {
+        private void TextBoxSearch_TextChanged(object sender, EventArgs e)
+        {
             ObnovGrid();
         }
 
-        private void ComboBoxIsExist_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBoxIsExist_SelectedIndexChanged(object sender, EventArgs e)
+        {
             ObnovGrid();
         }
 
-        private void ComboBoxIsExistElektro_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBoxIsExistElektro_SelectedIndexChanged(object sender, EventArgs e)
+        {
             ObnovGrid();
         }
 
         //Delete
-        private void Button7_Click(object sender, EventArgs e) {
+        private void Button7_Click(object sender, EventArgs e)
+        {
             var rowToSelect = dataGridView1.SelectedRows.Count > 0 ? dataGridView1.SelectedRows[0] : dataGridView1.CurrentRow;
-            if(rowToSelect != null) {
+            if (rowToSelect != null)
+            {
                 dataGridView1.EndEdit();
 
-                if(rowToSelect.DataBoundItem is Zarizeni zarizeni) {
+                if (rowToSelect.DataBoundItem is Zarizeni zarizeni)
+                {
                     // Zapamatujeme si aktuální index a pozici scrollbaru před smazáním
                     int smazanyIndex = rowToSelect.Index;
                     int scrollIndex = dataGridView1.FirstDisplayedScrollingRowIndex;
 
                     Pole.Remove(zarizeni); // smažeme ze skutečného seznamu
-                    
+
                     ObnovGrid(zachovatPozici: false); // Obnovíme grid bez automatického zachování
 
                     // Po smazání vybereme řádek na stejné pozici, nebo předchozí řádek pokud šlo o poslední prvek
-                    if (dataGridView1.Rows.Count > 0) {
+                    if (dataGridView1.Rows.Count > 0)
+                    {
                         int novyIndex = Math.Min(smazanyIndex, dataGridView1.Rows.Count - 1);
-                        if (novyIndex >= 0) {
+                        if (novyIndex >= 0)
+                        {
                             var row = dataGridView1.Rows[novyIndex];
                             dataGridView1.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
                         }
                     }
 
                     // Obnovíme pozici scrollbaru
-                    if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count) {
+                    if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count)
+                    {
                         dataGridView1.FirstDisplayedScrollingRowIndex = scrollIndex;
                     }
-                    else if (dataGridView1.Rows.Count > 0) {
+                    else if (dataGridView1.Rows.Count > 0)
+                    {
                         dataGridView1.FirstDisplayedScrollingRowIndex = Math.Max(0, dataGridView1.Rows.Count - 1);
                     }
                 }
             }
         }
 
-        private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
-            if(box.Text == "All") {
+            if (box.Text == "All")
+            {
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
@@ -637,9 +705,11 @@ namespace WinForms
             //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
         }
 
-        private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
-            if(box.Text == "All") {
+            if (box.Text == "All")
+            {
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
@@ -649,24 +719,29 @@ namespace WinForms
             //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
         }
 
-        private void ComboBox3_MouseClick(object sender, MouseEventArgs e) {
+        private void ComboBox3_MouseClick(object sender, MouseEventArgs e)
+        {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
             box?.DroppedDown = true;
         }
 
-        private void ComboBox2_MouseClick(object sender, MouseEventArgs e) {
+        private void ComboBox2_MouseClick(object sender, MouseEventArgs e)
+        {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
             box?.DroppedDown = true;
         }
 
-        private void ComboBox1_MouseClick(object sender, MouseEventArgs e) {
+        private void ComboBox1_MouseClick(object sender, MouseEventArgs e)
+        {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
             box?.DroppedDown = true;
         }
 
-        private void ComboBox4Pid_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBox4Pid_SelectedIndexChanged(object sender, EventArgs e)
+        {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
-            if(box.Text == "All") {
+            if (box.Text == "All")
+            {
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
@@ -677,7 +752,8 @@ namespace WinForms
             //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
         }
 
-        private void ComboBox4Pid_MouseClick(object sender, MouseEventArgs e) {
+        private void ComboBox4Pid_MouseClick(object sender, MouseEventArgs e)
+        {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
             box?.DroppedDown = true;
         }
@@ -718,12 +794,14 @@ namespace WinForms
         //}
 
         // Metoda pro explicitní odstranění zvýraznění (např. po uložení)
-        public void ResetHighlight() {
+        public void ResetHighlight()
+        {
             _highlightedApid = null; // Vymaže APID, které se má zvýraznit
             dataGridView1.Invalidate(); // Vynutí překreslení DataGridView (resetuje barvy)
         }
 
-        private void Button8_Click(object sender, EventArgs e) {
+        private void Button8_Click(object sender, EventArgs e)
+        {
             _customFilters = null; // Vyčistíme pokročilé filtry
             var dataColumns = new[] {
                 nameof(Zarizeni.Tag),
@@ -745,7 +823,8 @@ namespace WinForms
             ObnovGrid(); // Načte kompletní seznam dat bez pokročilých filtrů
         }
 
-        private void FiltToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void FiltToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             // Sloupce k zobrazení podle exportu ve Form1
             var namesToRemove = new[] {
                 nameof(Zarizeni.Tag),
@@ -770,6 +849,31 @@ namespace WinForms
             };
 
             ObnovGrid(); // Aplikuje filtry na data
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var Cesta = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json", Informace.Instance.BasePath);
+            if (File.Exists(Cesta))
+            {
+                Informace.Instance.SouborElektroJson = Cesta;
+                Informace.Instance.Ulozit();
+            }
+            else
+                Console.WriteLine("Soubor Nexistuje");
+        }
+
+        private void bezKWToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var item in Pole)
+            {
+                //pokud neni čislo tak to smazat
+                if (!double.TryParse(item.Prikon, out double prikon))
+                {
+                    Pole.Remove(item); // smažeme ze skutečného seznamu
+                }
+            }
+            ObnovGrid(zachovatPozici: false); // Obnovíme grid bez automatického zachování
         }
     }
 
