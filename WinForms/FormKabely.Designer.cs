@@ -17,6 +17,7 @@
 
         private void InitializeComponent() {
             groupBoxFiltry = new GroupBox();
+            FiltrText = new TextBox();
             CheckBoxIsExist = new CheckBox();
             lblFilterExistElektro = new Label();
             comboBoxFilterExistElektro = new ComboBox();
@@ -60,6 +61,9 @@
             btnPridat = new Button();
             btnStorno = new Button();
             groupBoxRychlePridat = new GroupBox();
+            label7 = new Label();
+            txtPrefixPower = new TextBox();
+            button1 = new Button();
             lblSekcePrefixy = new Label();
             lblPrefixPTC = new Label();
             txtPrefixPTC = new TextBox();
@@ -90,6 +94,7 @@
             // 
             // groupBoxFiltry
             // 
+            groupBoxFiltry.Controls.Add(FiltrText);
             groupBoxFiltry.Controls.Add(CheckBoxIsExist);
             groupBoxFiltry.Controls.Add(lblFilterExistElektro);
             groupBoxFiltry.Controls.Add(comboBoxFilterExistElektro);
@@ -103,6 +108,14 @@
             groupBoxFiltry.TabIndex = 0;
             groupBoxFiltry.TabStop = false;
             groupBoxFiltry.Text = "Filtry a výběr zařízení";
+            // 
+            // FiltrText
+            // 
+            FiltrText.Location = new Point(948, 47);
+            FiltrText.Name = "FiltrText";
+            FiltrText.Size = new Size(164, 34);
+            FiltrText.TabIndex = 9;
+            FiltrText.TextChanged += textBox1_TextChanged;
             // 
             // CheckBoxIsExist
             // 
@@ -168,7 +181,7 @@
             comboBoxZarizeni.FormattingEnabled = true;
             comboBoxZarizeni.Location = new Point(471, 47);
             comboBoxZarizeni.Name = "comboBoxZarizeni";
-            comboBoxZarizeni.Size = new Size(650, 36);
+            comboBoxZarizeni.Size = new Size(461, 36);
             comboBoxZarizeni.TabIndex = 7;
             comboBoxZarizeni.SelectedIndexChanged += ComboBoxZarizeni_SelectedIndexChanged;
             // 
@@ -346,6 +359,7 @@
             dataGridViewKabely.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewKabely.Size = new Size(796, 520);
             dataGridViewKabely.TabIndex = 2;
+            dataGridViewKabely.CellContentClick += dataGridViewKabely_CellContentClick;
             dataGridViewKabely.CellDoubleClick += DataGridViewKabely_CellDoubleClick;
             // 
             // groupBoxPridat
@@ -513,6 +527,9 @@
             // 
             // groupBoxRychlePridat
             // 
+            groupBoxRychlePridat.Controls.Add(label7);
+            groupBoxRychlePridat.Controls.Add(txtPrefixPower);
+            groupBoxRychlePridat.Controls.Add(button1);
             groupBoxRychlePridat.Controls.Add(lblSekcePrefixy);
             groupBoxRychlePridat.Controls.Add(lblPrefixPTC);
             groupBoxRychlePridat.Controls.Add(txtPrefixPTC);
@@ -537,6 +554,36 @@
             groupBoxRychlePridat.TabIndex = 4;
             groupBoxRychlePridat.TabStop = false;
             groupBoxRychlePridat.Text = "Rychlé přidání";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 9F);
+            label7.Location = new Point(191, 75);
+            label7.Name = "label7";
+            label7.Size = new Size(33, 20);
+            label7.TabIndex = 23;
+            label7.Text = "kW:";
+            // 
+            // txtPrefixPower
+            // 
+            txtPrefixPower.Font = new Font("Segoe UI", 9F);
+            txtPrefixPower.Location = new Point(230, 77);
+            txtPrefixPower.Name = "txtPrefixPower";
+            txtPrefixPower.Size = new Size(40, 27);
+            txtPrefixPower.TabIndex = 22;
+            txtPrefixPower.Text = "WL";
+            // 
+            // button1
+            // 
+            button1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            button1.Location = new Point(170, 215);
+            button1.Name = "button1";
+            button1.Size = new Size(148, 30);
+            button1.TabIndex = 21;
+            button1.Text = "JZ-600-Y-CY(FM)";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // lblSekcePrefixy
             // 
@@ -565,7 +612,7 @@
             txtPrefixPTC.Name = "txtPrefixPTC";
             txtPrefixPTC.Size = new Size(40, 27);
             txtPrefixPTC.TabIndex = 12;
-            txtPrefixPTC.Text = "WH";
+            txtPrefixPTC.Text = "WS";
             // 
             // lblPrefixOvladani
             // 
@@ -590,7 +637,7 @@
             // 
             lblPrefixUTP.AutoSize = true;
             lblPrefixUTP.Font = new Font("Segoe UI", 9F);
-            lblPrefixUTP.Location = new Point(195, 45);
+            lblPrefixUTP.Location = new Point(194, 45);
             lblPrefixUTP.Name = "lblPrefixUTP";
             lblPrefixUTP.Size = new Size(38, 20);
             lblPrefixUTP.TabIndex = 15;
@@ -859,5 +906,9 @@
         private System.Windows.Forms.Button btnRychlyBlokovani;
         private System.Windows.Forms.Button btnStorno;
         private CheckBox CheckBoxIsExist;
+        private TextBox FiltrText;
+        private Button button1;
+        private TextBox txtPrefixPower;
+        private Label label7;
     }
 }

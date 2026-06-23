@@ -123,6 +123,12 @@ namespace WinForms
                 query = query.Where(z => z.Etapa == vybranaEtapa);
             }
 
+            // 4. Text
+            if(!string.IsNullOrEmpty(FiltrText.Text) && FiltrText.Text.ToString() != "Vše") {
+                query = query.Where(z => z.Tag.Contains(FiltrText.Text));
+            }
+
+
             var filtrovanySeznam = query.ToList();
 
             // Dočasně odpojíme event, abychom zamezili zbytečným aktualizacím
@@ -230,16 +236,16 @@ namespace WinForms
 
         private string GenerujUnikantiOznaceni(string znacka) {
             int maxNum = 0;
-            foreach(var z in _seznamZarizeni) {
-                foreach(var k in z.SeznamKabelu) {
-                    if(k.Oznaceni.StartsWith(znacka)) {
-                        string numPart = k.Oznaceni.Substring(znacka.Length).Trim();
-                        if(int.TryParse(numPart, out int num)) {
-                            if(num > maxNum) maxNum = num;
-                        }
+            //foreach(var z in _seznamZarizeni) {
+            foreach(var k in _predvoleneZarizeni.SeznamKabelu) {
+                if(k.Oznaceni.StartsWith(znacka)) {
+                    string numPart = k.Oznaceni.Substring(znacka.Length).Trim();
+                    if(int.TryParse(numPart, out int num)) {
+                        if(num > maxNum) maxNum = num;
                     }
                 }
             }
+            //}
 
             int nextNum = maxNum + 1;
             return $"{znacka} {nextNum:D2}";
@@ -449,7 +455,7 @@ namespace WinForms
                 txtPrurez.Text = activeZar.PrurezMM2;
                 txtDelka.Text = activeZar.Delka.ToString("0.##");
                 txtPopis.Text = string.Empty;
-                txtTyp.Text = "CYKY-J";
+                txtTyp.Text = "JZ-500";
                 AutoSuggestOznaceni();
             }
             else {
@@ -497,8 +503,8 @@ namespace WinForms
 
         private void BtnRychlyPTC_Click(object sender, EventArgs e) {
             // PTC kabel má typ CYKY-O 2x1.5, 2 žíly, průřez 1.5, popis "PTC čidlo"
-            string prefix = string.IsNullOrWhiteSpace(txtPrefixPTC.Text) ? "WP" : txtPrefixPTC.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-O", "2", "1.5", "PTC čidlo");
+            string prefix = string.IsNullOrWhiteSpace(txtPrefixPTC.Text) ? "WS" : txtPrefixPTC.Text.Trim();
+            PridejRychlyKabel(prefix, "F-CY-OZ", "2", "1.5", "PTC");
         }
 
         private void BtnRychlyOvladani5_Click(object sender, EventArgs e) {
@@ -510,7 +516,8 @@ namespace WinForms
         private void BtnRychlyOvladani7_Click(object sender, EventArgs e) {
             // Ovládací skříň 7 vodičů - typ CYKY-O 7x1.5, 7 žil, průřez 1.5, popis "Ovládací skříňka"
             string prefix = string.IsNullOrWhiteSpace(txtPrefixOvladani.Text) ? "WS" : txtPrefixOvladani.Text.Trim();
-            PridejRychlyKabel(prefix, "CYKY-O", "7", "2.5", "Ovládací skříňka");
+            //PridejRychlyKabel(prefix, "CYKY-O", "7", "2.5", "Ovládací skříňka");
+            PridejRychlyKabel(prefix, "JZ-600-Y-CY", "7G", "1.5", "MS");
         }
 
         private void BtnRychlyOvladani12_Click(object sender, EventArgs e) {
@@ -557,6 +564,21 @@ namespace WinForms
         private void CheckBoxIsExiste_CheckedChanged(object sender, EventArgs e) {
             if(_nacitani) return;
             AplikujFiltryZarizeni();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e) {
+            if(_nacitani) return;
+            AplikujFiltryZarizeni();
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
+            // FM
+            string prefix = string.IsNullOrWhiteSpace(txtPrefixPower.Text) ? "WL" : txtPrefixOvladani.Text.Trim();
+            PridejRychlyKabel(prefix, "JZ-600-Y-CY", "4", "2.5", "VSD");
+        }
+
+        private void dataGridViewKabely_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+
         }
     }
 }

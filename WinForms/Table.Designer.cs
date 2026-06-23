@@ -26,8 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             dataGridView1 = new DataGridView();
             menuStrip1 = new MenuStrip();
             souborToolStripMenuItem = new ToolStripMenuItem();
@@ -50,6 +49,8 @@
             rozvadecSloupceToolStripMenuItem = new ToolStripMenuItem();
             datoveSloupceToolStripMenuItem = new ToolStripMenuItem();
             filtToolStripMenuItem = new ToolStripMenuItem();
+            smazatToolStripMenuItem1 = new ToolStripMenuItem();
+            bezKWToolStripMenuItem = new ToolStripMenuItem();
             panelFilters = new FlowLayoutPanel();
             lblFiltersHeader = new Label();
             lblPid = new Label();
@@ -78,8 +79,6 @@
             button8 = new Button();
             Button2 = new Button();
             Button1 = new Button();
-            smazatToolStripMenuItem1 = new ToolStripMenuItem();
-            bezKWToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             panelFilters.SuspendLayout();
@@ -97,7 +96,7 @@
             dataGridView1.Location = new Point(0, 0);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.Size = new Size(794, 355);
+            dataGridView1.Size = new Size(794, 351);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += DataGridView1_CellContentClick;
             dataGridView1.CellFormatting += DataGridView1_CellFormatting;
@@ -111,7 +110,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { souborToolStripMenuItem, upravyToolStripMenuItem, kabelyToolStripMenuItem1, rozvadeceToolStripMenuItem, vypoctyToolStripMenuItem, zobrazeniToolStripMenuItem, smazatToolStripMenuItem1 });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1154, 24);
+            menuStrip1.Size = new Size(1154, 28);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -119,28 +118,28 @@
             // 
             souborToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { uložitToolStripMenuItem, zavřítToolStripMenuItem, openToolStripMenuItem });
             souborToolStripMenuItem.Name = "souborToolStripMenuItem";
-            souborToolStripMenuItem.Size = new Size(57, 20);
+            souborToolStripMenuItem.Size = new Size(71, 24);
             souborToolStripMenuItem.Text = "Soubor";
             // 
             // uložitToolStripMenuItem
             // 
             uložitToolStripMenuItem.Name = "uložitToolStripMenuItem";
             uložitToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            uložitToolStripMenuItem.Size = new Size(180, 22);
+            uložitToolStripMenuItem.Size = new Size(226, 26);
             uložitToolStripMenuItem.Text = "Uložit (Save)";
             uložitToolStripMenuItem.Click += Button2_Click;
             // 
             // zavřítToolStripMenuItem
             // 
             zavřítToolStripMenuItem.Name = "zavřítToolStripMenuItem";
-            zavřítToolStripMenuItem.Size = new Size(180, 22);
+            zavřítToolStripMenuItem.Size = new Size(226, 26);
             zavřítToolStripMenuItem.Text = "Zavřít (Konec)";
             zavřítToolStripMenuItem.Click += Button1_Click;
             // 
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 22);
+            openToolStripMenuItem.Size = new Size(226, 26);
             openToolStripMenuItem.Text = "Open";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
@@ -148,20 +147,20 @@
             // 
             upravyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pridatToolStripMenuItem, smazatToolStripMenuItem });
             upravyToolStripMenuItem.Name = "upravyToolStripMenuItem";
-            upravyToolStripMenuItem.Size = new Size(56, 20);
+            upravyToolStripMenuItem.Size = new Size(69, 24);
             upravyToolStripMenuItem.Text = "Úpravy";
             // 
             // pridatToolStripMenuItem
             // 
             pridatToolStripMenuItem.Name = "pridatToolStripMenuItem";
-            pridatToolStripMenuItem.Size = new Size(157, 22);
+            pridatToolStripMenuItem.Size = new Size(197, 26);
             pridatToolStripMenuItem.Text = "Přidat kopii";
             pridatToolStripMenuItem.Click += BtnAdd_Click;
             // 
             // smazatToolStripMenuItem
             // 
             smazatToolStripMenuItem.Name = "smazatToolStripMenuItem";
-            smazatToolStripMenuItem.Size = new Size(157, 22);
+            smazatToolStripMenuItem.Size = new Size(197, 26);
             smazatToolStripMenuItem.Text = "Smazat vybrané";
             smazatToolStripMenuItem.Click += Button7_Click;
             // 
@@ -169,13 +168,13 @@
             // 
             kabelyToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { spravaKabeluToolStripMenuItem });
             kabelyToolStripMenuItem1.Name = "kabelyToolStripMenuItem1";
-            kabelyToolStripMenuItem1.Size = new Size(54, 20);
+            kabelyToolStripMenuItem1.Size = new Size(68, 24);
             kabelyToolStripMenuItem1.Text = "Kabely";
             // 
             // spravaKabeluToolStripMenuItem
             // 
             spravaKabeluToolStripMenuItem.Name = "spravaKabeluToolStripMenuItem";
-            spravaKabeluToolStripMenuItem.Size = new Size(147, 22);
+            spravaKabeluToolStripMenuItem.Size = new Size(185, 26);
             spravaKabeluToolStripMenuItem.Text = "Správa kabelů";
             spravaKabeluToolStripMenuItem.Click += SpravaKabeluToolStripMenuItem_Click;
             // 
@@ -183,20 +182,20 @@
             // 
             rozvadeceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { prirazeniKRozvadecumToolStripMenuItem, prehledToolStripMenuItem });
             rozvadeceToolStripMenuItem.Name = "rozvadeceToolStripMenuItem";
-            rozvadeceToolStripMenuItem.Size = new Size(75, 20);
+            rozvadeceToolStripMenuItem.Size = new Size(95, 24);
             rozvadeceToolStripMenuItem.Text = "Rozvaděče";
             // 
             // prirazeniKRozvadecumToolStripMenuItem
             // 
             prirazeniKRozvadecumToolStripMenuItem.Name = "prirazeniKRozvadecumToolStripMenuItem";
-            prirazeniKRozvadecumToolStripMenuItem.Size = new Size(196, 22);
+            prirazeniKRozvadecumToolStripMenuItem.Size = new Size(245, 26);
             prirazeniKRozvadecumToolStripMenuItem.Text = "Přiřazení k rozvaděčům";
             prirazeniKRozvadecumToolStripMenuItem.Click += PrirazeniKRozvadecumToolStripMenuItem_Click;
             // 
             // prehledToolStripMenuItem
             // 
             prehledToolStripMenuItem.Name = "prehledToolStripMenuItem";
-            prehledToolStripMenuItem.Size = new Size(196, 22);
+            prehledToolStripMenuItem.Size = new Size(245, 26);
             prehledToolStripMenuItem.Text = "Přehled rozvaděčů";
             prehledToolStripMenuItem.Click += PrehledToolStripMenuItem_Click;
             // 
@@ -204,20 +203,20 @@
             // 
             vypoctyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { proudToolStripMenuItem, prurezToolStripMenuItem });
             vypoctyToolStripMenuItem.Name = "vypoctyToolStripMenuItem";
-            vypoctyToolStripMenuItem.Size = new Size(62, 20);
+            vypoctyToolStripMenuItem.Size = new Size(76, 24);
             vypoctyToolStripMenuItem.Text = "Výpočty";
             // 
             // proudToolStripMenuItem
             // 
             proudToolStripMenuItem.Name = "proudToolStripMenuItem";
-            proudToolStripMenuItem.Size = new Size(180, 22);
+            proudToolStripMenuItem.Size = new Size(133, 26);
             proudToolStripMenuItem.Text = "Proud";
             proudToolStripMenuItem.Click += Button3_Click;
             // 
             // prurezToolStripMenuItem
             // 
             prurezToolStripMenuItem.Name = "prurezToolStripMenuItem";
-            prurezToolStripMenuItem.Size = new Size(180, 22);
+            prurezToolStripMenuItem.Size = new Size(133, 26);
             prurezToolStripMenuItem.Text = "Průřez";
             prurezToolStripMenuItem.Click += Button4_Click;
             // 
@@ -225,36 +224,50 @@
             // 
             zobrazeniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { vsechnySloupceToolStripMenuItem, rozvadecSloupceToolStripMenuItem, datoveSloupceToolStripMenuItem, filtToolStripMenuItem });
             zobrazeniToolStripMenuItem.Name = "zobrazeniToolStripMenuItem";
-            zobrazeniToolStripMenuItem.Size = new Size(71, 20);
+            zobrazeniToolStripMenuItem.Size = new Size(90, 24);
             zobrazeniToolStripMenuItem.Text = "Zobrazení";
             // 
             // vsechnySloupceToolStripMenuItem
             // 
             vsechnySloupceToolStripMenuItem.Name = "vsechnySloupceToolStripMenuItem";
-            vsechnySloupceToolStripMenuItem.Size = new Size(172, 22);
+            vsechnySloupceToolStripMenuItem.Size = new Size(217, 26);
             vsechnySloupceToolStripMenuItem.Text = "Všechny sloupce";
             vsechnySloupceToolStripMenuItem.Click += Button6_Click;
             // 
             // rozvadecSloupceToolStripMenuItem
             // 
             rozvadecSloupceToolStripMenuItem.Name = "rozvadecSloupceToolStripMenuItem";
-            rozvadecSloupceToolStripMenuItem.Size = new Size(172, 22);
+            rozvadecSloupceToolStripMenuItem.Size = new Size(217, 26);
             rozvadecSloupceToolStripMenuItem.Text = "Sloupce rozvaděče";
             rozvadecSloupceToolStripMenuItem.Click += Button5_Click;
             // 
             // datoveSloupceToolStripMenuItem
             // 
             datoveSloupceToolStripMenuItem.Name = "datoveSloupceToolStripMenuItem";
-            datoveSloupceToolStripMenuItem.Size = new Size(172, 22);
+            datoveSloupceToolStripMenuItem.Size = new Size(217, 26);
             datoveSloupceToolStripMenuItem.Text = "Datové sloupce";
             datoveSloupceToolStripMenuItem.Click += Button8_Click;
             // 
             // filtToolStripMenuItem
             // 
             filtToolStripMenuItem.Name = "filtToolStripMenuItem";
-            filtToolStripMenuItem.Size = new Size(172, 22);
+            filtToolStripMenuItem.Size = new Size(217, 26);
             filtToolStripMenuItem.Text = "Filtr";
             filtToolStripMenuItem.Click += FiltToolStripMenuItem_Click;
+            // 
+            // smazatToolStripMenuItem1
+            // 
+            smazatToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { bezKWToolStripMenuItem });
+            smazatToolStripMenuItem1.Name = "smazatToolStripMenuItem1";
+            smazatToolStripMenuItem1.Size = new Size(72, 24);
+            smazatToolStripMenuItem1.Text = "Smazat";
+            // 
+            // bezKWToolStripMenuItem
+            // 
+            bezKWToolStripMenuItem.Name = "bezKWToolStripMenuItem";
+            bezKWToolStripMenuItem.Size = new Size(141, 26);
+            bezKWToolStripMenuItem.Text = "Bez kW";
+            bezKWToolStripMenuItem.Click += bezKWToolStripMenuItem_Click;
             // 
             // panelFilters
             // 
@@ -274,7 +287,7 @@
             panelFilters.Controls.Add(lblSearch);
             panelFilters.Controls.Add(textBoxSearch);
             panelFilters.Dock = DockStyle.Top;
-            panelFilters.Location = new Point(0, 24);
+            panelFilters.Location = new Point(0, 28);
             panelFilters.Name = "panelFilters";
             panelFilters.Padding = new Padding(10, 5, 10, 5);
             panelFilters.Size = new Size(1154, 92);
@@ -287,27 +300,27 @@
             lblFiltersHeader.Location = new Point(10, 10);
             lblFiltersHeader.Margin = new Padding(0, 5, 15, 0);
             lblFiltersHeader.Name = "lblFiltersHeader";
-            lblFiltersHeader.Size = new Size(54, 21);
+            lblFiltersHeader.Size = new Size(67, 28);
             lblFiltersHeader.TabIndex = 0;
             lblFiltersHeader.Text = "Filtry:";
             // 
             // lblPid
             // 
             lblPid.AutoSize = true;
-            lblPid.Location = new Point(79, 10);
+            lblPid.Location = new Point(92, 10);
             lblPid.Margin = new Padding(0, 5, 5, 0);
             lblPid.Name = "lblPid";
-            lblPid.Size = new Size(37, 21);
+            lblPid.Size = new Size(46, 28);
             lblPid.TabIndex = 1;
             lblPid.Text = "PID:";
             // 
             // comboBox4Pid
             // 
             comboBox4Pid.FormattingEnabled = true;
-            comboBox4Pid.Location = new Point(121, 5);
+            comboBox4Pid.Location = new Point(143, 5);
             comboBox4Pid.Margin = new Padding(0, 0, 15, 0);
             comboBox4Pid.Name = "comboBox4Pid";
-            comboBox4Pid.Size = new Size(120, 29);
+            comboBox4Pid.Size = new Size(120, 36);
             comboBox4Pid.TabIndex = 3;
             comboBox4Pid.SelectedIndexChanged += ComboBox4Pid_SelectedIndexChanged;
             comboBox4Pid.MouseClick += ComboBox4Pid_MouseClick;
@@ -315,20 +328,20 @@
             // lblEtapa
             // 
             lblEtapa.AutoSize = true;
-            lblEtapa.Location = new Point(256, 10);
+            lblEtapa.Location = new Point(278, 10);
             lblEtapa.Margin = new Padding(0, 5, 5, 0);
             lblEtapa.Name = "lblEtapa";
-            lblEtapa.Size = new Size(51, 21);
+            lblEtapa.Size = new Size(65, 28);
             lblEtapa.TabIndex = 4;
             lblEtapa.Text = "Etapa:";
             // 
             // comboBox2
             // 
             comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(312, 5);
+            comboBox2.Location = new Point(348, 5);
             comboBox2.Margin = new Padding(0, 0, 15, 0);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(120, 29);
+            comboBox2.Size = new Size(120, 36);
             comboBox2.TabIndex = 4;
             comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged;
             comboBox2.MouseClick += ComboBox2_MouseClick;
@@ -336,20 +349,20 @@
             // lblRozvadec
             // 
             lblRozvadec.AutoSize = true;
-            lblRozvadec.Location = new Point(447, 10);
+            lblRozvadec.Location = new Point(483, 10);
             lblRozvadec.Margin = new Padding(0, 5, 5, 0);
             lblRozvadec.Name = "lblRozvadec";
-            lblRozvadec.Size = new Size(79, 21);
+            lblRozvadec.Size = new Size(99, 28);
             lblRozvadec.TabIndex = 5;
             lblRozvadec.Text = "Rozvaděč:";
             // 
             // comboBox3
             // 
             comboBox3.FormattingEnabled = true;
-            comboBox3.Location = new Point(531, 5);
+            comboBox3.Location = new Point(587, 5);
             comboBox3.Margin = new Padding(0, 0, 15, 0);
             comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(120, 29);
+            comboBox3.Size = new Size(120, 36);
             comboBox3.TabIndex = 5;
             comboBox3.SelectedIndexChanged += ComboBox3_SelectedIndexChanged;
             comboBox3.MouseClick += ComboBox3_MouseClick;
@@ -357,19 +370,19 @@
             // lblPatro
             // 
             lblPatro.AutoSize = true;
-            lblPatro.Location = new Point(666, 10);
+            lblPatro.Location = new Point(722, 10);
             lblPatro.Margin = new Padding(0, 5, 5, 0);
             lblPatro.Name = "lblPatro";
-            lblPatro.Size = new Size(49, 21);
+            lblPatro.Size = new Size(62, 28);
             lblPatro.TabIndex = 6;
             lblPatro.Text = "Patro:";
             // 
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(723, 8);
+            comboBox1.Location = new Point(792, 8);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(120, 29);
+            comboBox1.Size = new Size(120, 36);
             comboBox1.TabIndex = 6;
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             comboBox1.MouseClick += ComboBox1_MouseClick;
@@ -377,59 +390,59 @@
             // lblIsExist
             // 
             lblIsExist.AutoSize = true;
-            lblIsExist.Location = new Point(846, 10);
+            lblIsExist.Location = new Point(915, 10);
             lblIsExist.Margin = new Padding(0, 5, 5, 0);
             lblIsExist.Name = "lblIsExist";
-            lblIsExist.Size = new Size(85, 21);
+            lblIsExist.Size = new Size(107, 28);
             lblIsExist.TabIndex = 9;
             lblIsExist.Text = "V projektu:";
             // 
             // comboBoxIsExist
             // 
             comboBoxIsExist.FormattingEnabled = true;
-            comboBoxIsExist.Location = new Point(936, 5);
+            comboBoxIsExist.Location = new Point(1027, 5);
             comboBoxIsExist.Margin = new Padding(0, 0, 15, 0);
             comboBoxIsExist.Name = "comboBoxIsExist";
-            comboBoxIsExist.Size = new Size(100, 29);
+            comboBoxIsExist.Size = new Size(100, 36);
             comboBoxIsExist.TabIndex = 10;
             comboBoxIsExist.SelectedIndexChanged += ComboBoxIsExist_SelectedIndexChanged;
             // 
             // lblIsExistElektro
             // 
             lblIsExistElektro.AutoSize = true;
-            lblIsExistElektro.Location = new Point(1051, 10);
+            lblIsExistElektro.Location = new Point(10, 44);
             lblIsExistElektro.Margin = new Padding(0, 5, 5, 0);
             lblIsExistElektro.Name = "lblIsExistElektro";
-            lblIsExistElektro.Size = new Size(75, 21);
+            lblIsExistElektro.Size = new Size(94, 28);
             lblIsExistElektro.TabIndex = 11;
             lblIsExistElektro.Text = "V Elektro:";
             // 
             // comboBoxIsExistElektro
             // 
             comboBoxIsExistElektro.FormattingEnabled = true;
-            comboBoxIsExistElektro.Location = new Point(10, 40);
+            comboBoxIsExistElektro.Location = new Point(109, 39);
             comboBoxIsExistElektro.Margin = new Padding(0, 0, 15, 0);
             comboBoxIsExistElektro.Name = "comboBoxIsExistElektro";
-            comboBoxIsExistElektro.Size = new Size(100, 29);
+            comboBoxIsExistElektro.Size = new Size(100, 36);
             comboBoxIsExistElektro.TabIndex = 12;
             comboBoxIsExistElektro.SelectedIndexChanged += ComboBoxIsExistElektro_SelectedIndexChanged;
             // 
             // lblSearch
             // 
             lblSearch.AutoSize = true;
-            lblSearch.Location = new Point(125, 45);
+            lblSearch.Location = new Point(224, 44);
             lblSearch.Margin = new Padding(0, 5, 5, 0);
             lblSearch.Name = "lblSearch";
-            lblSearch.Size = new Size(74, 21);
+            lblSearch.Size = new Size(93, 28);
             lblSearch.TabIndex = 7;
             lblSearch.Text = "Vyhledat:";
             // 
             // textBoxSearch
             // 
-            textBoxSearch.Location = new Point(204, 40);
+            textBoxSearch.Location = new Point(322, 39);
             textBoxSearch.Margin = new Padding(0, 0, 15, 0);
             textBoxSearch.Name = "textBoxSearch";
-            textBoxSearch.Size = new Size(201, 29);
+            textBoxSearch.Size = new Size(201, 34);
             textBoxSearch.TabIndex = 8;
             textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
             // 
@@ -437,7 +450,7 @@
             // 
             splitContainer1.BorderStyle = BorderStyle.Fixed3D;
             splitContainer1.Dock = DockStyle.Fill;
-            splitContainer1.Location = new Point(0, 116);
+            splitContainer1.Location = new Point(0, 120);
             splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -447,7 +460,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(propertyGrid1);
-            splitContainer1.Size = new Size(1154, 359);
+            splitContainer1.Size = new Size(1154, 355);
             splitContainer1.SplitterDistance = 798;
             splitContainer1.TabIndex = 0;
             // 
@@ -458,7 +471,7 @@
             propertyGrid1.Location = new Point(0, 0);
             propertyGrid1.Name = "propertyGrid1";
             propertyGrid1.PropertySort = PropertySort.Categorized;
-            propertyGrid1.Size = new Size(348, 355);
+            propertyGrid1.Size = new Size(348, 351);
             propertyGrid1.TabIndex = 0;
             // 
             // flowLayoutPanelButtons
@@ -570,23 +583,9 @@
             Button1.UseVisualStyleBackColor = true;
             Button1.Click += Button1_Click;
             // 
-            // smazatToolStripMenuItem1
-            // 
-            smazatToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { bezKWToolStripMenuItem });
-            smazatToolStripMenuItem1.Name = "smazatToolStripMenuItem1";
-            smazatToolStripMenuItem1.Size = new Size(57, 20);
-            smazatToolStripMenuItem1.Text = "Smazat";
-            // 
-            // bezKWToolStripMenuItem
-            // 
-            bezKWToolStripMenuItem.Name = "bezKWToolStripMenuItem";
-            bezKWToolStripMenuItem.Size = new Size(180, 22);
-            bezKWToolStripMenuItem.Text = "Bez kW";
-            bezKWToolStripMenuItem.Click += bezKWToolStripMenuItem_Click;
-            // 
             // Table
             // 
-            AutoScaleDimensions = new SizeF(9F, 21F);
+            AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1154, 535);
             Controls.Add(splitContainer1);

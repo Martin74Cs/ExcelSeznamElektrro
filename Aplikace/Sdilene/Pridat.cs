@@ -10,12 +10,13 @@ namespace Aplikace.Sdilene
         public static IEnumerable<Zarizeni> AddProud(this IEnumerable<Zarizeni> pole)
         {
             string Cesta = Path.Combine(Cesty.Motory);
+            if(!File.Exists(Cesta)) { 
+                Console.WriteLine("Soubor nebyl nalezen." + Cesta); return pole; }
+
             var Motory = Soubory.LoadJsonList<Motor>(Cesta).Where(x => x.Otacky50 > 2800).OrderBy(x => x.Vykon50).ToList();
-            if (Motory.Count < 1) 
-            {
-                Console.WriteLine($"Nebyly nanačteny motory z {Cesty.Motory}");
-                return pole;
-            }
+            if (Motory.Count < 1)  {
+                Console.WriteLine($"Nebyly nanačteny motory z {Cesty.Motory}"); return pole; }
+
             // Přidání vlastnosti "Proud" do každého zařízení
             //var nove = new List<Zarizeni>();
             double Cos = 0.95;

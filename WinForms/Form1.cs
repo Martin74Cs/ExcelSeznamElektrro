@@ -123,6 +123,7 @@ namespace WinForms
 
         private void Button10_Click(object sender, EventArgs e)
         {
+            this.Hide();
             Console.WriteLine("Informace.Instance.BasePath " + Informace.Instance.BasePath);
             string? Cesta = ZajistitSouborElektroJson();
             if (Cesta == null) return;
@@ -144,6 +145,7 @@ namespace WinForms
                 Console.WriteLine($"Hotovo! Soubor JSON byl uložen do {Path.GetFileName(Cesta)}");
                 Data.SaveJsonList(Cesta);
             }
+            this.Show();
         }
 
         /// <summary>
@@ -467,17 +469,19 @@ namespace WinForms
             Console.WriteLine($"Generování seznamu kabelů do {targetBase}.*");
 
             string[] sloupceKabelu = [
-                nameof(Trasa.Tag),
+                nameof(Trasa.Oznaceni),
+                nameof(Trasa.KabelAll),
+                nameof(Trasa.Delka),
+                nameof(Trasa.RozvadecAll),
+                nameof(Trasa.Svorka),
+
+                //nameof(Trasa.Tag),
                 //nameof(Trasa.Rozvadec),
                 //nameof(Trasa.RozvadecCislo),
-                nameof(Trasa.RozvadecAll),
-                nameof(Trasa.Oznaceni),
                 //nameof(Trasa.Kabel),
                 //nameof(Trasa.PocetZil),
                 //nameof(Trasa.Prurezmm2),
-                nameof(Trasa.KabelAll),
                 //nameof(Trasa.Druh),
-                nameof(Trasa.Delka),
                 nameof(Trasa.Popis)
             ];
 

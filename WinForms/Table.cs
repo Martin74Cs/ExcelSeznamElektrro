@@ -1,4 +1,4 @@
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
@@ -318,7 +318,7 @@ namespace WinForms
                 vybraneZar = dataGridView1.CurrentRow.DataBoundItem as Zarizeni;
             }
 
-            using var form = new FormKabely(Pole, vybraneZar);
+            using var form = new FormKabely(Pole.OrderBy(x => x.Tag).ToList(), vybraneZar);
             form.ShowDialog(this);
             dataGridView1.Refresh();
             propertyGrid1.Refresh();
@@ -665,28 +665,29 @@ namespace WinForms
 
                     Pole.Remove(zarizeni); // smažeme ze skutečného seznamu
 
-                    ObnovGrid(zachovatPozici: false); // Obnovíme grid bez automatického zachování
+                    //ObnovGrid(zachovatPozici: false); // Obnovíme grid bez automatického zachování
+                    ObnovGrid(); // Obnovíme grid bez automatického zachování
 
-                    // Po smazání vybereme řádek na stejné pozici, nebo předchozí řádek pokud šlo o poslední prvek
-                    if (dataGridView1.Rows.Count > 0)
-                    {
-                        int novyIndex = Math.Min(smazanyIndex, dataGridView1.Rows.Count - 1);
-                        if (novyIndex >= 0)
-                        {
-                            var row = dataGridView1.Rows[novyIndex];
-                            dataGridView1.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
-                        }
-                    }
+                    //// Po smazání vybereme řádek na stejné pozici, nebo předchozí řádek pokud šlo o poslední prvek
+                    //if (dataGridView1.Rows.Count > 0)
+                    //{
+                    //    int novyIndex = Math.Min(smazanyIndex, dataGridView1.Rows.Count - 1);
+                    //    if (novyIndex >= 0)
+                    //    {
+                    //        var row = dataGridView1.Rows[novyIndex];
+                    //        dataGridView1.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
+                    //    }
+                    //}
 
-                    // Obnovíme pozici scrollbaru
-                    if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count)
-                    {
-                        dataGridView1.FirstDisplayedScrollingRowIndex = scrollIndex;
-                    }
-                    else if (dataGridView1.Rows.Count > 0)
-                    {
-                        dataGridView1.FirstDisplayedScrollingRowIndex = Math.Max(0, dataGridView1.Rows.Count - 1);
-                    }
+                    //// Obnovíme pozici scrollbaru
+                    //if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count)
+                    //{
+                    //    dataGridView1.FirstDisplayedScrollingRowIndex = scrollIndex;
+                    //}
+                    //else if (dataGridView1.Rows.Count > 0)
+                    //{
+                    //    dataGridView1.FirstDisplayedScrollingRowIndex = Math.Max(0, dataGridView1.Rows.Count - 1);
+                    //}
                 }
             }
         }
