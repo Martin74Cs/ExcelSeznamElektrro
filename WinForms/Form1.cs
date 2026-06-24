@@ -671,6 +671,9 @@ namespace WinForms
         /// <summary>
         /// Obsluha položky menu pro sloučený export všech tří seznamů do všech 6 formátů.
         /// </summary>
+        /// <summary>
+        /// Obsluha položky menu pro sloučený export všech tří seznamů do všech 6 formátů.
+        /// </summary>
         private void SloucenySeznamToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string? cestaElektro = ZajistitSouborElektroJson();
@@ -719,8 +722,32 @@ namespace WinForms
             SloucenyExporter.SavePdfSections(targetBase + ".pdf", sections, "Sloučený seznam zařízení", sloupceZarizeni);
             SloucenyExporter.SaveDocxSections(targetBase + ".docx", sections, "Sloučený seznam zařízení", sloupceZarizeni);
 
-            // --- EXPORT SLOUČENÉHO SEZNAMU KABELŮ ---
+            Console.WriteLine("Sloučený export zařízení dokončen ve všech 6 formátech!");
+        }
+
+        /// <summary>
+        /// Obsluha položky menu pro sloučený export všech kabelů ze všech tří seznamů do všech 6 formátů.
+        /// </summary>
+        private void SloucenySeznamKabeluToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string? cestaElektro = ZajistitSouborElektroJson();
+            if (cestaElektro == null) return;
+
+            // Načtení tří seznamů zařízení
+            List<Zarizeni> hlavniElektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
+            List<Zarizeni> ostatniVyvody = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyOstatniJson);
+            List<Zarizeni> topeni = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyTopeniJson);
+
+            // Příprava cílového adresáře
+            string? adresar = Path.GetDirectoryName(cestaElektro);
+            if (adresar == null) return;
+
             string targetKabelyBase = Path.Combine(adresar, "Výstup", "Elektro.SloucenySeznamKabelu");
+            string targetDir = Path.GetDirectoryName(targetKabelyBase)!;
+            if (!Directory.Exists(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
 
             // 1. Získání tras pro jednotlivé sekce
             var trasyHlavni = ZiskejTrasyProZarizeni(hlavniElektro);
@@ -766,7 +793,7 @@ namespace WinForms
             Pridat.Soucet(excelAppKabely, poleKabely, "Součet Kabely Vše");
             excelAppKabely.ExcelQuit(targetKabelyBase + ".xlsx");
 
-            Console.WriteLine("Sloučený export a export kabelů dokončen ve všech 6 formátech!");
+            Console.WriteLine("Sloučený export kabelů dokončen ve všech 6 formátech!");
         }
 
         private List<Trasa> ZiskejTrasyProZarizeni(List<Zarizeni> data)
