@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace WinForms
 {
@@ -58,6 +58,7 @@ namespace WinForms
             příkonCelkemToolStripMenuItem = new ToolStripMenuItem();
             nastaveniToolStripMenuItem = new ToolStripMenuItem();
             cestyToolStripMenuItem = new ToolStripMenuItem();
+            kontrolaCestToolStripMenuItem = new ToolStripMenuItem();
             generovníToolStripMenuItem = new ToolStripMenuItem();
             seznamToolStripMenuItem = new ToolStripMenuItem();
             kabelyToolStripMenuItem = new ToolStripMenuItem();
@@ -318,7 +319,7 @@ namespace WinForms
             // 
             // nastaveniToolStripMenuItem
             // 
-            nastaveniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cestyToolStripMenuItem });
+            nastaveniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cestyToolStripMenuItem, kontrolaCestToolStripMenuItem });
             nastaveniToolStripMenuItem.Name = "nastaveniToolStripMenuItem";
             nastaveniToolStripMenuItem.Size = new Size(91, 25);
             nastaveniToolStripMenuItem.Text = "Nastaveni";
@@ -326,9 +327,16 @@ namespace WinForms
             // cestyToolStripMenuItem
             // 
             cestyToolStripMenuItem.Name = "cestyToolStripMenuItem";
-            cestyToolStripMenuItem.Size = new Size(118, 26);
+            cestyToolStripMenuItem.Size = new Size(260, 26);
             cestyToolStripMenuItem.Text = "Cesty";
             cestyToolStripMenuItem.Click += CestyToolStripMenuItem_Click;
+            // 
+            // kontrolaCestToolStripMenuItem
+            // 
+            kontrolaCestToolStripMenuItem.Name = "kontrolaCestToolStripMenuItem";
+            kontrolaCestToolStripMenuItem.Size = new Size(260, 26);
+            kontrolaCestToolStripMenuItem.Text = "Kontrola a nastavení cest...";
+            kontrolaCestToolStripMenuItem.Click += KontrolaCestToolStripMenuItem_Click;
             // 
             // generovníToolStripMenuItem
             // 
@@ -604,6 +612,7 @@ namespace WinForms
         private ToolStripMenuItem nastavSložkuProjektuToolStripMenuItem;
         private ToolStripMenuItem nastaveniToolStripMenuItem;
         private ToolStripMenuItem cestyToolStripMenuItem;
+        private ToolStripMenuItem kontrolaCestToolStripMenuItem;
         private ToolStripMenuItem generovníToolStripMenuItem;
         private ToolStripMenuItem seznamToolStripMenuItem;
         private ToolStripMenuItem kabelyToolStripMenuItem;

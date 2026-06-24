@@ -1,4 +1,4 @@
-﻿
+
 using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using Knihovna;
@@ -381,6 +381,11 @@ namespace WinForms
         private void CestyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using var f = new WinForms.Nastaveni(); f.ShowDialog(this);
+        }
+
+        private void KontrolaCestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using var f = new WinForms.FormCesty(); f.ShowDialog(this);
         }
 
         private void seznamToolStripMenuItem_Click(object sender, EventArgs e)
