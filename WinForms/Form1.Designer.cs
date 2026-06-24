@@ -350,14 +350,14 @@ namespace WinForms
             seznamToolStripMenuItem.Name = "seznamToolStripMenuItem";
             seznamToolStripMenuItem.Size = new Size(180, 26);
             seznamToolStripMenuItem.Text = "Seznam";
-            seznamToolStripMenuItem.Click += seznamToolStripMenuItem_Click;
+            seznamToolStripMenuItem.Click += SeznamToolStripMenuItem_Click;
             // 
             // kabelyToolStripMenuItem
             // 
             kabelyToolStripMenuItem.Name = "kabelyToolStripMenuItem";
             kabelyToolStripMenuItem.Size = new Size(180, 26);
             kabelyToolStripMenuItem.Text = "Kabely";
-            kabelyToolStripMenuItem.Click += kabelyToolStripMenuItem_Click;
+            kabelyToolStripMenuItem.Click += KabelyToolStripMenuItem_Click;
             // 
             // button6
             // 
@@ -508,7 +508,7 @@ namespace WinForms
             button7.TabIndex = 34;
             button7.Text = "Otevřít topeni";
             button7.UseVisualStyleBackColor = true;
-            button7.Click += button7_Click;
+            button7.Click += Button7_Click;
             // 
             // label6
             // 

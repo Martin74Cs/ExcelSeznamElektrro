@@ -1,4 +1,5 @@
-﻿using Knihovna.Tridy;
+﻿using Knihovna.Shared.Tridy;
+using Knihovna.Tridy;
 
 namespace Aplikace.Seznam
 {

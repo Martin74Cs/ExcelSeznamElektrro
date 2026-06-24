@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Knihovna.Tridy;
+using System.ComponentModel.DataAnnotations;
 
-namespace Knihovna.Tridy
+namespace Knihovna.Shared.Tridy
 {
     /// <summary>
     /// Reprezentuje kabelovou trasu.

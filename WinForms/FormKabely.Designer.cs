@@ -115,7 +115,7 @@
             FiltrText.Name = "FiltrText";
             FiltrText.Size = new Size(164, 34);
             FiltrText.TabIndex = 9;
-            FiltrText.TextChanged += textBox1_TextChanged;
+            FiltrText.TextChanged += TextBox1_TextChanged;
             // 
             // CheckBoxIsExist
             // 
@@ -359,7 +359,7 @@
             dataGridViewKabely.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewKabely.Size = new Size(796, 520);
             dataGridViewKabely.TabIndex = 2;
-            dataGridViewKabely.CellContentClick += dataGridViewKabely_CellContentClick;
+            dataGridViewKabely.CellContentClick += DataGridViewKabely_CellContentClick;
             dataGridViewKabely.CellDoubleClick += DataGridViewKabely_CellDoubleClick;
             // 
             // groupBoxPridat
@@ -386,7 +386,7 @@
             groupBoxPridat.TabIndex = 3;
             groupBoxPridat.TabStop = false;
             groupBoxPridat.Text = "Nový kabel";
-            groupBoxPridat.Enter += groupBoxPridat_Enter;
+            groupBoxPridat.Enter += GroupBoxPridat_Enter;
             // 
             // lblPopis
             // 
@@ -467,7 +467,7 @@
             txtTyp.Name = "txtTyp";
             txtTyp.Size = new Size(164, 34);
             txtTyp.TabIndex = 5;
-            txtTyp.Text = "CYKY-J";
+            txtTyp.Text = "JZ-500";
             // 
             // label2
             // 
@@ -583,7 +583,7 @@
             button1.TabIndex = 21;
             button1.Text = "JZ-600-Y-CY(FM)";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            button1.Click += Button1_Click;
             // 
             // lblSekcePrefixy
             // 

@@ -1,4 +1,5 @@
 ﻿using Knihovna;
+using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,11 @@ namespace WinForms
             _nacitani = true;
 
             // Naplnění seznamu značek
-            comboBoxZnacka.DataSource = Enum.GetValues(typeof(KabelZnačka));
+            comboBoxZnacka.DataSource = Enum.GetValues<KabelZnačka>();
             comboBoxZnacka.SelectedItem = KabelZnačka.WL;
 
             comboBoxFilterExistElektro.Items.Clear();
-            comboBoxFilterExistElektro.Items.AddRange(new object[] { "Vše", "Ano", "Ne" });
+            comboBoxFilterExistElektro.Items.AddRange(["Vše", "Ano", "Ne"]);
             comboBoxFilterExistElektro.SelectedIndex = 0;
 
             // Načtení etap
@@ -181,7 +182,7 @@ namespace WinForms
             if(dataGridViewKabely.Columns.Count == 0) return;
 
             // Zobrazíme a popíšeme sloupce
-            string[] zobrazit = { "Oznaceni", "Kabel", "PocetZil", "Prurezmm2", "Delka", "Popis" };
+            string[] zobrazit = [ "Oznaceni", "Kabel", "PocetZil", "Prurezmm2", "Delka", "Popis" ];
             foreach(DataGridViewColumn col in dataGridViewKabely.Columns) {
                 col.Visible = zobrazit.Contains(col.Name);
 
@@ -234,10 +235,11 @@ namespace WinForms
             }
         }
 
-        private string GenerujUnikantiOznaceni(string znacka) {
+        private static string GenerujUnikantiOznaceni(string znacka, Zarizeni activeZar) {
             int maxNum = 0;
             //foreach(var z in _seznamZarizeni) {
-            foreach(var k in _predvoleneZarizeni.SeznamKabelu) {
+            foreach (var k in activeZar.SeznamKabelu)  {
+             //   foreach (var k in _predvoleneZarizeni.SeznamKabelu) {
                 if(k.Oznaceni.StartsWith(znacka)) {
                     string numPart = k.Oznaceni.Substring(znacka.Length).Trim();
                     if(int.TryParse(numPart, out int num)) {
@@ -256,7 +258,7 @@ namespace WinForms
                 return;
 
             string znacka = comboBoxZnacka.SelectedItem.ToString() ?? "WL";
-            txtOznaceni.Text = GenerujUnikantiOznaceni(znacka);
+            txtOznaceni.Text = GenerujUnikantiOznaceni(znacka, activeZar);
         }
 
         // ===================================================================
@@ -478,7 +480,7 @@ namespace WinForms
                 return;
             }
 
-            string noveOznaceni = GenerujUnikantiOznaceni(znacka);
+            string noveOznaceni = GenerujUnikantiOznaceni(znacka, activeZar);
 
             var trasa = new Trasa {
                 Tag = activeZar.Tag,
@@ -557,7 +559,7 @@ namespace WinForms
             this.Close();
         }
 
-        private void groupBoxPridat_Enter(object sender, EventArgs e) {
+        private void GroupBoxPridat_Enter(object sender, EventArgs e) {
 
         }
 
@@ -566,19 +568,23 @@ namespace WinForms
             AplikujFiltryZarizeni();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e) {
+        private void TextBox1_TextChanged(object sender, EventArgs e) {
             if(_nacitani) return;
             AplikujFiltryZarizeni();
         }
 
-        private void button1_Click(object sender, EventArgs e) {
+        private void Button1_Click(object sender, EventArgs e) {
             // FM
-            string prefix = string.IsNullOrWhiteSpace(txtPrefixPower.Text) ? "WL" : txtPrefixOvladani.Text.Trim();
-            PridejRychlyKabel(prefix, "JZ-600-Y-CY", "4", "2.5", "VSD");
+            string prefix = string.IsNullOrWhiteSpace(txtPrefixPower.Text) ? "WL" : txtPrefixPower.Text.Trim();
+            PridejRychlyKabel(prefix, "JZ-600-Y-CY", "4G", "2.5", "M");
         }
 
-        private void dataGridViewKabely_CellContentClick(object sender, DataGridViewCellEventArgs e) {
-
+        private void DataGridViewKabely_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+            if (e.RowIndex < 0) {
+                Console.WriteLine("Špatný index");
+                DialogResult = DialogResult.Cancel;
+            }
+                return;
         }
     }
 }

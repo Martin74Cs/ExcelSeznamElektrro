@@ -6,6 +6,7 @@ using Knihovna.Export;
 using Knihovna.Tridy;
 using Knihovna.Sdilene;
 using System.Text;
+using Knihovna.Shared.Tridy;
 
 namespace WinForms
 {
@@ -388,7 +389,7 @@ namespace WinForms
             using var f = new WinForms.FormCesty(); f.ShowDialog(this);
         }
 
-        private void seznamToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SeznamToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string? Cesta = ZajistitSouborElektroJson();
             if (Cesta == null) return;
@@ -403,7 +404,7 @@ namespace WinForms
                 new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
             };
             var Vysledek = Soubory.ApplyFilter(Data, filtry).ToList();
-            if (Vysledek.Count < 1) { Console.WriteLine("Nepsahuje data."); return; }
+            if (Vysledek.Count < 1) { Console.WriteLine("Data nebyla nalezena."); return; }
 
             string[] sloupceZarizeni = [
                 nameof(Zarizeni.Tag),
@@ -415,6 +416,11 @@ namespace WinForms
                 nameof(Zarizeni.Pozice)
             ];
 
+            var Adresar = Path.GetDirectoryName(Cesta);
+            string targetBase = Path.Combine(Adresar, "Výstup");
+            if (!Directory.Exists(targetBase)) { Directory.CreateDirectory(targetBase); }
+            Cesta = Path.Combine(targetBase, Path.GetFileName(Cesta));
+
             Vysledek.SaveToCsv(Path.ChangeExtension(Cesta, ".csv"), sloupceZarizeni);
             Vysledek.SaveXML(Path.ChangeExtension(Cesta, ".xml"), sloupceZarizeni);
             Vysledek.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"), sloupceZarizeni);
@@ -422,7 +428,7 @@ namespace WinForms
             Vysledek.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"), null, sloupceZarizeni);
         }
 
-        private void kabelyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void KabelyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string? Cesta = ZajistitSouborElektroJson();
             if (Cesta == null) return;
@@ -469,7 +475,9 @@ namespace WinForms
             }
 
             string directory = Path.GetDirectoryName(Cesta)!;
-            string targetBase = Path.Combine(directory, "Elektro.Kabely");
+            string targetBase = Path.Combine(directory, "Výstup");
+            if (!Directory.Exists(targetBase)) { Directory.CreateDirectory(targetBase); }
+            targetBase = Path.Combine(targetBase, "Elektro.Kabely");
 
             Console.WriteLine($"Generování seznamu kabelů do {targetBase}.*");
 
@@ -503,7 +511,7 @@ namespace WinForms
         /// Pokud neexistuje, nabídne uživateli dialog pro jeho výběr nebo možnost zkopírovat jej ze souboru Strojni.
         /// </summary>
         /// <returns>Cesta k souboru, nebo null, pokud se soubor nepodařilo zajistit.</returns>
-        private string? ZajistitSouborElektroJson()
+        private static string? ZajistitSouborElektroJson()
         {
             var Cesta = Informace.Instance.SouborElektroJson;
             Console.WriteLine("Cesta : " + Cesta);
@@ -561,7 +569,7 @@ namespace WinForms
         /// Pokud neexistuje, nabídne uživateli dialog pro jeho výběr.
         /// </summary>
         /// <returns>Cesta k souboru, nebo null, pokud se soubor nepodařilo zajistit.</returns>
-        private string? ZajistitSouborStrojeJson()
+        private static string? ZajistitSouborStrojeJson()
         {
             var Cesta = Informace.Instance.SouborStrojeJson;
             if (!File.Exists(Cesta))
@@ -581,7 +589,7 @@ namespace WinForms
             return Cesta;
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
             //var Data = Soubory.LoadFromCsv<Zarizeni>(Vývody);
@@ -636,7 +644,7 @@ namespace WinForms
                     continue;
                 
                 //pokud je číslo
-                if (double.TryParse(item.Prikon, out double prikon))
+                if (double.TryParse(item.Prikon, out _))
                 {
                     //Data.Remove(item); // smažeme ze skutečného seznamu
                     Pole.Add(item);

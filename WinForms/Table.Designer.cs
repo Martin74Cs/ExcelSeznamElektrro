@@ -142,7 +142,7 @@
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.Size = new Size(179, 22);
             openToolStripMenuItem.Text = "Open";
-            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
+            openToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
             // 
             // upravyToolStripMenuItem
             // 
@@ -268,7 +268,7 @@
             bezKWToolStripMenuItem.Name = "bezKWToolStripMenuItem";
             bezKWToolStripMenuItem.Size = new Size(112, 22);
             bezKWToolStripMenuItem.Text = "Bez kW";
-            bezKWToolStripMenuItem.Click += bezKWToolStripMenuItem_Click;
+            bezKWToolStripMenuItem.Click += BezKWToolStripMenuItem_Click;
             // 
             // panelFilters
             // 

@@ -1,4 +1,4 @@
-using Knihovna.Tridy;
+using Knihovna.Shared.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;

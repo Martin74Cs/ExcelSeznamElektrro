@@ -3,6 +3,7 @@ using Aplikace.Seznam;
 using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Sdilene;
+using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System.Globalization;
 using System.Reflection;

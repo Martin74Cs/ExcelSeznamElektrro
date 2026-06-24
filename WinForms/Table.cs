@@ -193,7 +193,7 @@ namespace WinForms
 
             //"Druh"
 
-            var zarizeni = new Zarizeni();
+            //var zarizeni = new Zarizeni();
 
             // Přidáš sloupce ručně:
             foreach (var propertyName in propertyNames)
@@ -319,7 +319,7 @@ namespace WinForms
             }
 
             using var form = new FormKabely(Pole.OrderBy(x => x.Tag).ToList(), vybraneZar);
-            form.ShowDialog(this);
+            form.ShowDialog();
             dataGridView1.Refresh();
             propertyGrid1.Refresh();
         }
@@ -668,16 +668,16 @@ namespace WinForms
                     //ObnovGrid(zachovatPozici: false); // Obnovíme grid bez automatického zachování
                     ObnovGrid(); // Obnovíme grid bez automatického zachování
 
-                    //// Po smazání vybereme řádek na stejné pozici, nebo předchozí řádek pokud šlo o poslední prvek
-                    //if (dataGridView1.Rows.Count > 0)
-                    //{
-                    //    int novyIndex = Math.Min(smazanyIndex, dataGridView1.Rows.Count - 1);
-                    //    if (novyIndex >= 0)
-                    //    {
-                    //        var row = dataGridView1.Rows[novyIndex];
-                    //        dataGridView1.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
-                    //    }
-                    //}
+                    // Po smazání vybereme řádek na stejné pozici, nebo předchozí řádek pokud šlo o poslední prvek
+                    if (dataGridView1.Rows.Count > 0)
+                    {
+                        int novyIndex = Math.Min(smazanyIndex, dataGridView1.Rows.Count - 1);
+                        if (novyIndex >= 0)
+                        {
+                            var row = dataGridView1.Rows[novyIndex];
+                            dataGridView1.CurrentCell = row.Cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.Visible);
+                        }
+                    }
 
                     //// Obnovíme pozici scrollbaru
                     //if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count)
@@ -841,18 +841,18 @@ namespace WinForms
             SetListBox(namesToRemove);
 
             // Vytvoření filtrů jako u Form1
-            _customFilters = new List<FilterRule>
-            {
+            _customFilters = [
+            
                 new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
                 // Všechny položky, jejichž Příkon nezačíná na "—" ani "-"
                 new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith, negate: true),
                 new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith, negate: true),
-            };
+            ];
 
             ObnovGrid(); // Aplikuje filtry na data
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var Cesta = Soubory.ShowOpenFileDialog("Json soubor (*.json)|*.json", Informace.Instance.BasePath);
             if (File.Exists(Cesta))
@@ -864,12 +864,12 @@ namespace WinForms
                 Console.WriteLine("Soubor Nexistuje");
         }
 
-        private void bezKWToolStripMenuItem_Click(object sender, EventArgs e)
+        private void BezKWToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (var item in Pole)
             {
                 //pokud neni čislo tak to smazat
-                if (!double.TryParse(item.Prikon, out double prikon))
+                if (!double.TryParse(item.Prikon, out double _))
                 {
                     Pole.Remove(item); // smažeme ze skutečného seznamu
                 }
