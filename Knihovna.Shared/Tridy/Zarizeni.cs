@@ -1,4 +1,4 @@
-using Knihovna.Shared.Tridy;
+﻿using Knihovna.Shared.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -449,7 +449,7 @@ namespace Knihovna.Tridy
                         Prurezmm2 = t.Prurezmm2,
                         PrurezFt = t.PrurezFt,
                         Druh = t.Druh,
-                        OdkudSvokra = t.OdkudSvokra,
+                        OdkudSvorka = t.OdkudSvorka,
                         Mezera = t.Mezera,
                         Patro = t.Patro,
                         Predmet = t.Predmet,

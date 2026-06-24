@@ -1,6 +1,7 @@
-//pouze pro generování PDF, vyžaduje Windows
+﻿//pouze pro generování PDF, vyžaduje Windows
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace Knihovna.Export
@@ -332,7 +333,12 @@ namespace Knihovna.Export
 
             for (int i = 0; i < properties.Length; i++)
             {
-                header.Cells[i].AddParagraph(properties[i].Name);
+                var displayAttr = properties[i].GetCustomAttribute<DisplayAttribute>();
+                var name = displayAttr?.Name ?? properties[i].Name;
+                var unit = displayAttr?.Prompt; // použijeme jako jednotku
+                var nadpis = string.IsNullOrEmpty(unit) ? name
+                    : $"{name} [{unit}]";
+                header.Cells[i].AddParagraph(nadpis);
                 header.Cells[i].Format.Font.Size = 9;
             }
 

@@ -1,13 +1,14 @@
-using Knihovna;
+﻿using Knihovna;
 using Knihovna.Export;
 using Knihovna.Tridy;
 using Newtonsoft.Json;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using System.Xml.Serialization;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Knihovna {
 
@@ -340,7 +341,7 @@ namespace Knihovna {
 
             Console.WriteLine("Hotovo! Uloženo do output.html");
         }
-        public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta, string[] columns = null) where T : new() {
+        public static void SaveHtmlStyle<T>(this List<T> Pole, string cesta, string nadpis, string[] columns = null) where T : new() {
             if(!CanSaveFile(cesta)) return;
             var sb = new StringBuilder();
             if(Pole == null || Pole.Count < 1) {
@@ -373,14 +374,20 @@ namespace Knihovna {
             sb.AppendLine("th { background-color: #f0f0f0; }");
             sb.AppendLine("tr:nth-child(even) { background-color: #f7f7f7; }");
             sb.AppendLine("</style></head><body>");
-            
-            string nadpis = $"Seznam {typeof(T).Name}";
+
+            if(string.IsNullOrEmpty(nadpis))
+                nadpis = $"Seznam {typeof(T).Name}";
             sb.AppendLine($"<h1>{nadpis}</h1>");
             sb.AppendLine("<table><thead><tr>");
 
             // Hlavička tabulky - s respektováním zadaného pořadí
             foreach(var prop in vybraneProps) {
-                sb.AppendLine($"<th>{prop.Name}</th>");
+            var displayAttr = prop.GetCustomAttribute<DisplayAttribute>();
+            var name = displayAttr?.Name ?? prop.Name;
+            var unit = displayAttr?.Prompt; // použijeme jako jednotku
+            var header = string.IsNullOrEmpty(unit) ? name
+                : $"{name} [{unit}]";
+             sb.AppendLine($"<th>{header}</th>");
             }
 
             sb.AppendLine("</tr></thead><tbody>");

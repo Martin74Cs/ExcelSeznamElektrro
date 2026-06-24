@@ -18,11 +18,15 @@ namespace Knihovna.Shared.Tridy
         public string RozvadecAll => Rozvadec + " " + RozvadecCislo;
 
         public string Oznaceni { get; set; } = string.Empty;    //"WL 01"
+
+        [Display(Name = "Kabel typ")]
         public string Kabel { get; set; } = string.Empty;   //ozvaděčení kabelu
         public string PocetZil { get; set; } = string.Empty; //Zarizeni.vodice
         public string Prurezmm2 { get; set; } = string.Empty;   //Zarizeni.PrurezMM2
         public string KabelAll => Kabel + " " + PocetZil + "x" + Prurezmm2;
 
+        [Display(Name = "Průřez/Size")]
+        public string KabelVelikost { get; set; } = string.Empty; // => PocetZil + "x" + Prurezmm2;
 
         public string PrurezFt { get; set; } = string.Empty; //nepoužito
         public string Druh { get; set; } = string.Empty;
@@ -30,7 +34,7 @@ namespace Knihovna.Shared.Tridy
         //Opakovani Tag
 
         [Display(Name = "Ukončení")]
-        public string OdkudSvokra { get; set; } = string.Empty;
+        public string OdkudSvorka { get; set; } = string.Empty;
         public string Mezera { get; set; } = string.Empty;
         public string Patro { get; set; } = string.Empty;
         public string Predmet { get; set; } = string.Empty;

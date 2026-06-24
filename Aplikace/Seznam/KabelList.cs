@@ -175,8 +175,8 @@ namespace Aplikace.Seznam
                 //dtto trasa - trasa.RozvadecCislo; 
                 Data.Add(radek.RozvadecCislo);  //12. Odkud číslo
                 //13. Svorka rozvaděče
-                trasa.OdkudSvokra = "X 01";
-                Data.Add(trasa.OdkudSvokra);
+                trasa.OdkudSvorka = "X 01";
+                Data.Add(trasa.OdkudSvorka);
 
                 //14. Mezera
                 trasa.Mezera = "";
@@ -376,7 +376,7 @@ namespace Aplikace.Seznam
                 {10,"Tag"},
                 {11,"Rozvadec"},
                 {12,"RozvadecCislo"},
-                {13,"OdkudSvokra"},
+                {13,"OdkudSvorka"},
                 //mezera
                 {14,"Nic"},
                 //Kabel Kam
@@ -493,7 +493,7 @@ namespace Aplikace.Seznam
                 //trasa.Tag = trasa.Tag;             //10. odkud tag
                 //trasa.Rozvadec = trasa.Rozvadec;   //11. odkud Mcc
                 //trasa.RozvadecCislo = trasa.RozvadecCislo; //12. Odkud číslo
-                trasa.OdkudSvokra = "X 01";         //13. Svorka rozvaděče
+                trasa.OdkudSvorka = "X 01";         //13. Svorka rozvaděče
 
                 trasa.Mezera = "";                //14. Mezera
 
@@ -548,7 +548,7 @@ namespace Aplikace.Seznam
                 //Tag                   10
                 //Rozvadec              11
                 //RozvadecCislo         12
-                OdkudSvokra = "X 02", //13. Svorka rozvaděče
+                OdkudSvorka = "X 02", //13. Svorka rozvaděče
 
                 Mezera = "",                //14. Mezera
 
@@ -582,7 +582,7 @@ namespace Aplikace.Seznam
                 //Tag                   10
                 //Rozvadec              11
                 //RozvadecCislo         12
-                OdkudSvokra = "X 03", //13. Svorka rozvaděče
+                OdkudSvorka = "X 03", //13. Svorka rozvaděče
 
                 Mezera = "",                //14. Mezera
 

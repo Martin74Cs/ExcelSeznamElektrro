@@ -1,4 +1,4 @@
-
+﻿
 using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using Knihovna;
@@ -394,17 +394,18 @@ namespace WinForms
             string? Cesta = ZajistitSouborElektroJson();
             if (Cesta == null) return;
 
-            var Data = Soubory.LoadJsonList<Zarizeni>(Cesta);
+            var Vysledek = Soubory.LoadJsonList<Zarizeni>(Cesta);
 
+            //Už neplatí
             //vytvoření filtru, vlastnost, string, co dělat, negace
-            var filtry = new List<FilterRule>
-            {
-                new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
-                new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
-                new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
-            };
-            var Vysledek = Soubory.ApplyFilter(Data, filtry).ToList();
-            if (Vysledek.Count < 1) { Console.WriteLine("Data nebyla nalezena."); return; }
+            //var filtry = new List<FilterRule>
+            //{
+            //    new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
+            //    new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
+            //    new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith,true),
+            //};
+            //var Vysledek = Soubory.ApplyFilter(Data, filtry).ToList();
+            //if (Vysledek.Count < 1) { Console.WriteLine("Data nebyla nalezena."); return; }
 
             string[] sloupceZarizeni = [
                 nameof(Zarizeni.Tag),
@@ -423,9 +424,9 @@ namespace WinForms
 
             Vysledek.SaveToCsv(Path.ChangeExtension(Cesta, ".csv"), sloupceZarizeni);
             Vysledek.SaveXML(Path.ChangeExtension(Cesta, ".xml"), sloupceZarizeni);
-            Vysledek.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"), sloupceZarizeni);
-            Vysledek.SavePdfGen(Path.ChangeExtension(Cesta, ".pdf"), null, sloupceZarizeni);
-            Vysledek.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"), null, sloupceZarizeni);
+            Vysledek.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"),"Seznam zařízení", sloupceZarizeni);
+            Vysledek.SavePdfGen(Path.ChangeExtension(Cesta, ".pdf"), "Seznam zařízení", sloupceZarizeni);
+            Vysledek.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"), "Seznam zařízení", sloupceZarizeni);
         }
 
         private void KabelyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -435,17 +436,19 @@ namespace WinForms
 
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesta);
 
+            //Už neplatí
             // Filtrování zařízení stejně jako u seznamu zařízení
-            var filtry = new List<FilterRule>
-            {
-                new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
-                new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith, true),
-                new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith, true),
-            };
-            var filtrovanaData = Soubory.ApplyFilter(Data, filtry).ToList();
+            //var filtry = new List<FilterRule>
+            //{
+            //    new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
+            //    new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith, true),
+            //    new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith, true),
+            //};
+            //var filtrovanaData = Soubory.ApplyFilter(Data, filtry).ToList();
 
+            //Vyvoření seznamu
             var SeznamKabelu = new List<Trasa>();
-            foreach (var z in filtrovanaData)
+            foreach (var z in Data)
             {
                 if (z.SeznamKabelu == null) continue;
                 foreach (var k in z.SeznamKabelu)
@@ -456,22 +459,27 @@ namespace WinForms
                         Rozvadec = k.Rozvadec,
                         RozvadecCislo = k.RozvadecCislo,
                         // Použijeme předznamenání tag ze zařízení, abychom zabránili shodným označením (WL1 -> P132WL1)
-                        Oznaceni = (z.Tag ?? "").Replace(" ", "") + (k.Oznaceni ?? "").Replace(" ", ""),
+                        Oznaceni = (z.Tag ?? "").Replace(" ", "") + "-"+ (k.Oznaceni ?? "").Replace(" ", ""),
                         Kabel = k.Kabel,
-                        PocetZil = k.PocetZil,
-                        Prurezmm2 = k.Prurezmm2,
+                        KabelVelikost = k.PocetZil + "x" + k.Prurezmm2,
+                        //PocetZil = k.PocetZil,
+                        //Prurezmm2 = k.Prurezmm2,
                         PrurezFt = k.PrurezFt,
-                        Druh = k.Tag + "-" + k.Druh,
-                        OdkudSvokra = k.OdkudSvokra,
+                        Druh = k.Tag + "-" + k.Popis,
+                        OdkudSvorka = string.IsNullOrEmpty(k.OdkudSvorka) ? "SZ" : k.OdkudSvorka, 
                         Mezera = k.Mezera,
                         Patro = k.Patro,
                         Predmet = k.Predmet,
-                        Svorka = k.Svorka,
+                        //Svorka = string.IsNullOrEmpty(k.Svorka) ? "SZ" : k.Svorka, 
+                        Svorka = k.Popis.StartsWith("PU") ? "SZ" : k.Popis, 
                         Delka = k.Delka,
                         Popis = k.Popis
                     };
                     SeznamKabelu.Add(kopieKabelu);
                 }
+                //prázdný radek je pokud existují kabely
+                if (z.SeznamKabelu.Count > 0)
+                    SeznamKabelu.Add(new());
             }
 
             string directory = Path.GetDirectoryName(Cesta)!;
@@ -483,10 +491,12 @@ namespace WinForms
 
             string[] sloupceKabelu = [
                 nameof(Trasa.Oznaceni),
-                nameof(Trasa.KabelAll),
+                //nameof(Trasa.KabelAll),
+                nameof(Trasa.Kabel),
+                nameof(Trasa.KabelVelikost),
                 nameof(Trasa.Delka),
                 nameof(Trasa.RozvadecAll),
-                nameof(Trasa.OdkudSvokra),
+                nameof(Trasa.OdkudSvorka),
                 nameof(Trasa.Druh),
                 nameof(Trasa.Svorka),
                 //nameof(Trasa.Tag),
@@ -497,13 +507,14 @@ namespace WinForms
                 //nameof(Trasa.Prurezmm2),
                 //nameof(Trasa.Druh),
                 nameof(Trasa.Popis)
+                
             ];
 
             SeznamKabelu.SaveToCsv(targetBase + ".csv", sloupceKabelu);
             SeznamKabelu.SaveXML(targetBase + ".xml", sloupceKabelu);
-            SeznamKabelu.SaveHtmlStyle(targetBase + ".html", sloupceKabelu);
-            SeznamKabelu.SavePdfGen(targetBase + ".pdf", null, sloupceKabelu);
-            SeznamKabelu.SaveDocxGen(targetBase + ".docx", null, sloupceKabelu);
+            SeznamKabelu.SaveHtmlStyle(targetBase + ".html", "Seznam vnějších spojů", sloupceKabelu);
+            SeznamKabelu.SavePdfGen(targetBase + ".pdf", "Seznam vnějších spojů", sloupceKabelu);
+            SeznamKabelu.SaveDocxGen(targetBase + ".docx", "Seznam vnějších spojů", sloupceKabelu);
         }
 
         /// <summary>
