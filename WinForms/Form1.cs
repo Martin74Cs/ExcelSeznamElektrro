@@ -1,4 +1,4 @@
-
+﻿
 using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using Aplikace.Seznam;
@@ -757,7 +757,7 @@ namespace WinForms
             var sectionsKabely = new List<ExportSection<Trasa>> {
                 new ExportSection<Trasa> { Title = "Kabely pro stroje a zařízení", Data = trasyHlavni },
                 new ExportSection<Trasa> { Title = "Kabely pro vlastní vývody mimo stroje", Data = trasyOstatni },
-                new ExportSection<Trasa> { Title = "Kabely pro topení", Data = trasyTopeni }
+                new ExportSection<Trasa> { Title = "Kabely pro otopy potrůbí", Data = trasyTopeni }
             };
 
             string[] sloupceKabelu = [
@@ -783,15 +783,15 @@ namespace WinForms
             SloucenyExporter.SaveDocxSections(targetKabelyBase + ".docx", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
 
             // 3. Doplnění speciálních záložek se vzorci a součty do Excelu
-            var vsechnaZarizeniProKabely = new List<Zarizeni>();
-            vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(hlavniElektro));
-            vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(ostatniVyvody));
-            vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(topeni));
+            //var vsechnaZarizeniProKabely = new List<Zarizeni>();
+            //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(hlavniElektro));
+            //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(ostatniVyvody));
+            //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(topeni));
 
-            var excelAppKabely = new ExcelApp(targetKabelyBase + ".xlsx");
-            List<List<string>> poleKabely = LigthChem.SeznamKabelů(vsechnaZarizeniProKabely, excelAppKabely, "Kabely Vše");
-            Pridat.Soucet(excelAppKabely, poleKabely, "Součet Kabely Vše");
-            excelAppKabely.ExcelQuit(targetKabelyBase + ".xlsx");
+            //var excelAppKabely = new ExcelApp(targetKabelyBase + ".xlsx");
+            //List<List<string>> poleKabely = LigthChem.SeznamKabelů(vsechnaZarizeniProKabely, excelAppKabely, "Kabely Vše");
+            //Pridat.Soucet(excelAppKabely, poleKabely, "Součet Kabely Vše");
+            //excelAppKabely.ExcelQuit(targetKabelyBase + ".xlsx");
 
             Console.WriteLine("Sloučený export kabelů dokončen ve všech 6 formátech!");
         }
