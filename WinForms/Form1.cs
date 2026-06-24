@@ -1,7 +1,9 @@
-﻿
+
 using Aplikace.Sdilene;
 using Aplikace.Upravy;
+using Aplikace.Seznam;
 using Knihovna;
+using Knihovna.Excel;
 using Knihovna.Export;
 using Knihovna.Tridy;
 using Knihovna.Sdilene;
@@ -427,6 +429,7 @@ namespace WinForms
             Vysledek.SaveHtmlStyle(Path.ChangeExtension(Cesta, ".html"),"Seznam zařízení", sloupceZarizeni);
             Vysledek.SavePdfGen(Path.ChangeExtension(Cesta, ".pdf"), "Seznam zařízení", sloupceZarizeni);
             Vysledek.SaveDocxGen(Path.ChangeExtension(Cesta, ".docx"), "Seznam zařízení", sloupceZarizeni);
+            Vysledek.SaveXlsxGen(Path.ChangeExtension(Cesta, ".xlsx"), "Seznam zařízení", sloupceZarizeni);
         }
 
         private void KabelyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -515,6 +518,7 @@ namespace WinForms
             SeznamKabelu.SaveHtmlStyle(targetBase + ".html", "Seznam vnějších spojů", sloupceKabelu);
             SeznamKabelu.SavePdfGen(targetBase + ".pdf", "Seznam vnějších spojů", sloupceKabelu);
             SeznamKabelu.SaveDocxGen(targetBase + ".docx", "Seznam vnějších spojů", sloupceKabelu);
+            SeznamKabelu.SaveXlsxGen(targetBase + ".xlsx", "Seznam vnějších spojů", sloupceKabelu);
         }
 
         /// <summary>
@@ -662,6 +666,143 @@ namespace WinForms
                 }
             }
             Pole.SaveJson(Cesta);
+        }
+
+        /// <summary>
+        /// Obsluha položky menu pro sloučený export všech tří seznamů do všech 6 formátů.
+        /// </summary>
+        private void SloucenySeznamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string? cestaElektro = ZajistitSouborElektroJson();
+            if (cestaElektro == null) return;
+
+            // Načtení tří seznamů zařízení
+            List<Zarizeni> hlavniElektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
+            List<Zarizeni> ostatniVyvody = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyOstatniJson);
+            List<Zarizeni> topeni = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyTopeniJson);
+
+            // Zabalení do sekcí pro export
+            List<ExportSection<Zarizeni>> sections = [
+                new ExportSection<Zarizeni> { Title = "Stroje a zařízení", Data = hlavniElektro },
+                new ExportSection<Zarizeni> { Title = "Vlastní vývody mimo stroje", Data = ostatniVyvody },
+                new ExportSection<Zarizeni> { Title = "Topení", Data = topeni }
+            ];
+
+            // Příprava cílového adresáře a názvu souboru
+            string? adresar = Path.GetDirectoryName(cestaElektro);
+            if (adresar == null) return;
+
+            string targetBase = Path.Combine(adresar, "Výstup", "Elektro.SloucenySeznam");
+            string targetDir = Path.GetDirectoryName(targetBase)!;
+            if (!Directory.Exists(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
+
+            string[] sloupceZarizeni = [
+                nameof(Zarizeni.Tag),
+                nameof(Zarizeni.Popis),
+                nameof(Zarizeni.Prikon),
+                nameof(Zarizeni.Napeti),
+                nameof(Zarizeni.Menic),
+                nameof(Zarizeni.BalenaJednotka),
+                nameof(Zarizeni.Pozice)
+            ];
+
+            Console.WriteLine($"Generování sloučeného exportu do {targetBase}.*");
+
+            // Spuštění exportů pro všech 6 formátů
+            SloucenyExporter.SaveXlsxSections(targetBase + ".xlsx", sections, "Sloučený seznam zařízení", sloupceZarizeni);
+            SloucenyExporter.SaveCsvSections(targetBase + ".csv", sections, sloupceZarizeni);
+            SloucenyExporter.SaveXmlSections(targetBase + ".xml", sections, sloupceZarizeni);
+            SloucenyExporter.SaveHtmlSections(targetBase + ".html", sections, "Sloučený seznam zařízení", sloupceZarizeni);
+            SloucenyExporter.SavePdfSections(targetBase + ".pdf", sections, "Sloučený seznam zařízení", sloupceZarizeni);
+            SloucenyExporter.SaveDocxSections(targetBase + ".docx", sections, "Sloučený seznam zařízení", sloupceZarizeni);
+
+            // --- EXPORT SLOUČENÉHO SEZNAMU KABELŮ ---
+            string targetKabelyBase = Path.Combine(adresar, "Výstup", "Elektro.SloucenySeznamKabelu");
+
+            // 1. Získání tras pro jednotlivé sekce
+            var trasyHlavni = ZiskejTrasyProZarizeni(hlavniElektro);
+            var trasyOstatni = ZiskejTrasyProZarizeni(ostatniVyvody);
+            var trasyTopeni = ZiskejTrasyProZarizeni(topeni);
+
+            var sectionsKabely = new List<ExportSection<Trasa>> {
+                new ExportSection<Trasa> { Title = "Kabely pro stroje a zařízení", Data = trasyHlavni },
+                new ExportSection<Trasa> { Title = "Kabely pro vlastní vývody mimo stroje", Data = trasyOstatni },
+                new ExportSection<Trasa> { Title = "Kabely pro topení", Data = trasyTopeni }
+            };
+
+            string[] sloupceKabelu = [
+                nameof(Trasa.Oznaceni),
+                nameof(Trasa.Kabel),
+                nameof(Trasa.KabelVelikost),
+                nameof(Trasa.Delka),
+                nameof(Trasa.RozvadecAll),
+                nameof(Trasa.OdkudSvorka),
+                nameof(Trasa.Druh),
+                nameof(Trasa.Svorka),
+                nameof(Trasa.Popis)
+            ];
+
+            Console.WriteLine($"Generování sloučeného exportu kabelů do {targetKabelyBase}.*");
+
+            // 2. Sloučený export kabelů rozdělených do sekcí (6 formátů)
+            SloucenyExporter.SaveXlsxSections(targetKabelyBase + ".xlsx", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
+            SloucenyExporter.SaveCsvSections(targetKabelyBase + ".csv", sectionsKabely, sloupceKabelu);
+            SloucenyExporter.SaveXmlSections(targetKabelyBase + ".xml", sectionsKabely, sloupceKabelu);
+            SloucenyExporter.SaveHtmlSections(targetKabelyBase + ".html", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
+            SloucenyExporter.SavePdfSections(targetKabelyBase + ".pdf", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
+            SloucenyExporter.SaveDocxSections(targetKabelyBase + ".docx", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
+
+            // 3. Doplnění speciálních záložek se vzorci a součty do Excelu
+            var vsechnaZarizeniProKabely = new List<Zarizeni>();
+            vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(hlavniElektro));
+            vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(ostatniVyvody));
+            vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(topeni));
+
+            var excelAppKabely = new ExcelApp(targetKabelyBase + ".xlsx");
+            List<List<string>> poleKabely = LigthChem.SeznamKabelů(vsechnaZarizeniProKabely, excelAppKabely, "Kabely Vše");
+            Pridat.Soucet(excelAppKabely, poleKabely, "Součet Kabely Vše");
+            excelAppKabely.ExcelQuit(targetKabelyBase + ".xlsx");
+
+            Console.WriteLine("Sloučený export a export kabelů dokončen ve všech 6 formátech!");
+        }
+
+        private List<Trasa> ZiskejTrasyProZarizeni(List<Zarizeni> data)
+        {
+            if (data == null || data.Count == 0) return [];
+
+            // Klonování a příprava kabelů
+            var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
+            var prazdne = kopie.Where(x => x.Kabel == null).ToList();
+            prazdne.AddKabelCyky(1.8);
+            var spolecne = kopie.Where(x => x.Kabel != null).Concat(prazdne).ToList();
+
+            var kabelyTrida = KabelList.KabelyTrida(spolecne);
+            kabelyTrida = [.. kabelyTrida.OrderBy(x => x.Hlavni.Rozvadec + x.Hlavni.RozvadecCislo)];
+
+            var change = new List<Trasa>();
+            foreach (var kabel in kabelyTrida)
+            {
+                if (kabel.Hlavni != null)
+                    change.Add(kabel.Hlavni);
+                if (kabel.PTC != null)
+                    change.Add(kabel.PTC);
+                if (kabel.Ovladani != null)
+                    change.Add(kabel.Ovladani);
+            }
+            return change;
+        }
+
+        private List<Zarizeni> PripravZarizeniProKabely(List<Zarizeni> data)
+        {
+            if (data == null || data.Count == 0) return [];
+
+            var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
+            var prazdne = kopie.Where(x => x.Kabel == null).ToList();
+            prazdne.AddKabelCyky(1.8);
+            return [.. kopie.Where(x => x.Kabel != null), .. prazdne];
         }
     }
 

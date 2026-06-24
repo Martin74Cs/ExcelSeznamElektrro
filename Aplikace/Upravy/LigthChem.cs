@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Knihovna;
 using Knihovna.Excel;
@@ -297,7 +297,7 @@ namespace Aplikace.Upravy
                 .ForEach(x => x.Typ = "Mixer");
         }
 
-        private static List<List<string>> SeznamKabelů(List<Zarizeni> Stara, ExcelApp ExcelApp, string SheatName)
+        public static List<List<string>> SeznamKabelů(List<Zarizeni> Stara, ExcelApp ExcelApp, string SheatName)
         {
             Console.WriteLine("Probíhá načítaní kabelů");
 
