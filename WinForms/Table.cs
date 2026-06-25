@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
@@ -319,7 +319,27 @@ namespace WinForms
             }
 
             using var form = new FormKabely(Pole.OrderBy(x => x.Tag).ToList(), vybraneZar);
-            form.ShowDialog();
+            try {
+                form.ShowDialog();
+            } catch(Exception) {
+                Console.WriteLine("Divná chyba");
+                throw;
+            }
+            dataGridView1.Refresh();
+            propertyGrid1.Refresh();
+        }
+
+        private void HromadnaSpravaKabeluToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using var form = new FormVsechnyKabely(Pole);
+            try
+            {
+                form.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Chyba při otevírání hromadné správy kabelů: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             dataGridView1.Refresh();
             propertyGrid1.Refresh();
         }

@@ -359,7 +359,7 @@ namespace WinForms
                 _upravovanyKabel.Delka = txtDelka.Text.Trim();
                 _upravovanyKabel.Popis = txtPopis.Text.Trim();
 
-                UlozData();
+                //UlozData();
                 ResetFormNaNovaKabel();
                 ObnovSeznamKabelu();
             }
@@ -382,7 +382,7 @@ namespace WinForms
 
                 activeZar.SeznamKabelu.Add(trasa);
 
-                UlozData();
+                //UlozData();
                 ObnovSeznamKabelu();
             }
         }
@@ -394,7 +394,7 @@ namespace WinForms
             if(dataGridViewKabely.CurrentRow.DataBoundItem is Trasa vybranyKabel) {
                 if(MessageBox.Show($"Opravdu chcete smazat kabel '{vybranyKabel.Oznaceni}'?", "Potvrzení", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     activeZar.SeznamKabelu.Remove(vybranyKabel);
-                    UlozData();
+                    //UlozData();
                     ResetFormNaNovaKabel();
                     ObnovSeznamKabelu();
                 }
@@ -499,7 +499,7 @@ namespace WinForms
 
             activeZar.SeznamKabelu.Add(trasa);
 
-            UlozData();
+            //UlozData();
             ObnovSeznamKabelu();
         }
 
@@ -546,14 +546,14 @@ namespace WinForms
             PridejRychlyKabel(prefix, "CYKY-O", "3", "1.5", "Blokování");
         }
 
-        private void UlozData() {
-            try {
-                string Cesta = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.Json");
-                _seznamZarizeni.SaveJsonList(Cesta);
-            } catch(Exception ex) {
-                MessageBox.Show($"Nepodařilo se uložit data do souboru: {ex.Message}", "Chyba ukládání", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        //private void UlozData() {
+        //    try {
+        //        //string Cesta = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.Json");
+        //        //_seznamZarizeni.SaveJsonList(Cesta);
+        //    } catch(Exception ex) {
+        //        MessageBox.Show($"Nepodařilo se uložit data do souboru: {ex.Message}", "Chyba ukládání", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
 
         private void BtnZavrit_Click(object sender, EventArgs e) {
             this.Close();

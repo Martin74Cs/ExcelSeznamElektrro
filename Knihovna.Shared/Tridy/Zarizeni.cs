@@ -1,4 +1,4 @@
-﻿using Knihovna.Shared.Tridy;
+using Knihovna.Shared.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -401,6 +401,15 @@ namespace Knihovna.Tridy
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             return true;
+        }
+
+        /// <summary>
+        /// Vyvolá událost PropertyChanged pro zadanou vlastnost.
+        /// </summary>
+        /// <param name="propertyName">Název změněné vlastnosti.</param>
+        public void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public enum DruhZarizeni

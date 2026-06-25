@@ -461,7 +461,7 @@ namespace WinForms
                         Tag = z.Tag,
                         Rozvadec = k.Rozvadec,
                         RozvadecCislo = k.RozvadecCislo,
-                        // Použijeme předznamenání tag ze zařízení, abychom zabránili shodným označením (WL1 -> P132WL1)
+                        // Použijeme předznamenání tag ze zařízení, abychom zabránili shodným označením (WL1 -> P132-WL1)
                         Oznaceni = (z.Tag ?? "").Replace(" ", "") + "-"+ (k.Oznaceni ?? "").Replace(" ", ""),
                         Kabel = k.Kabel,
                         KabelVelikost = k.PocetZil + "x" + k.Prurezmm2,
@@ -623,7 +623,7 @@ namespace WinForms
 
             //var DataBind = new BindingList<Zarizeni>(Data);
             var table = new Table(Data);
-            SkrytSloupce(table.dataGridView1);
+            //SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
             if (result == DialogResult.OK)

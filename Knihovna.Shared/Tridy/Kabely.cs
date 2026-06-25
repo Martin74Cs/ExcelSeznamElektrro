@@ -15,6 +15,7 @@ namespace Knihovna.Shared.Tridy
         public string RozvadecCislo { get; set; } = string.Empty; //Zarizeni.RozvadecCislo
 
         [Display(Name = "Rozváděč")]
+        [Newtonsoft.Json.JsonIgnore]
         public string RozvadecAll => Rozvadec + " " + RozvadecCislo;
 
         public string Oznaceni { get; set; } = string.Empty;    //"WL 01"
@@ -23,9 +24,12 @@ namespace Knihovna.Shared.Tridy
         public string Kabel { get; set; } = string.Empty;   //ozvaděčení kabelu
         public string PocetZil { get; set; } = string.Empty; //Zarizeni.vodice
         public string Prurezmm2 { get; set; } = string.Empty;   //Zarizeni.PrurezMM2
+
+        [Newtonsoft.Json.JsonIgnore]
         public string KabelAll => Kabel + " " + PocetZil + "x" + Prurezmm2;
 
         [Display(Name = "Průřez/Size")]
+        [Newtonsoft.Json.JsonIgnore]
         public string KabelVelikost { get; set; } = string.Empty; // => PocetZil + "x" + Prurezmm2;
 
         public string PrurezFt { get; set; } = string.Empty; //nepoužito
