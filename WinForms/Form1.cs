@@ -715,12 +715,12 @@ namespace WinForms
             Console.WriteLine($"Generování sloučeného exportu do {targetBase}.*");
 
             // Spuštění exportů pro všech 6 formátů
-            SloucenyExporter.SaveXlsxSections(targetBase + ".xlsx", sections, "Sloučený seznam zařízení", sloupceZarizeni);
+            SloucenyExporter.SaveXlsxSections(targetBase + ".xlsx", sections, "Seznam zařízení", sloupceZarizeni);
             SloucenyExporter.SaveCsvSections(targetBase + ".csv", sections, sloupceZarizeni);
             SloucenyExporter.SaveXmlSections(targetBase + ".xml", sections, sloupceZarizeni);
-            SloucenyExporter.SaveHtmlSections(targetBase + ".html", sections, "Sloučený seznam zařízení", sloupceZarizeni);
-            SloucenyExporter.SavePdfSections(targetBase + ".pdf", sections, "Sloučený seznam zařízení", sloupceZarizeni);
-            SloucenyExporter.SaveDocxSections(targetBase + ".docx", sections, "Sloučený seznam zařízení", sloupceZarizeni);
+            SloucenyExporter.SaveHtmlSections(targetBase + ".html", sections, "Seznam zařízení", sloupceZarizeni);
+            SloucenyExporter.SavePdfSections(targetBase + ".pdf", sections, "Seznam zařízení", sloupceZarizeni);
+            SloucenyExporter.SaveDocxSections(targetBase + ".docx", sections, "Seznam zařízení", sloupceZarizeni);
 
             Console.WriteLine("Sloučený export zařízení dokončen ve všech 6 formátech!");
         }
@@ -756,7 +756,7 @@ namespace WinForms
 
             var sectionsKabely = new List<ExportSection<Trasa>> {
                 new ExportSection<Trasa> { Title = "Kabely pro stroje a zařízení", Data = trasyHlavni },
-                new ExportSection<Trasa> { Title = "Kabely pro vlastní vývody mimo stroje", Data = trasyOstatni },
+                new ExportSection<Trasa> { Title = "Kabely pro vzduchotechniku", Data = trasyOstatni },
                 new ExportSection<Trasa> { Title = "Kabely pro otopy potrůbí", Data = trasyTopeni }
             };
 
