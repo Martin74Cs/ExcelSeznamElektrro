@@ -16,7 +16,7 @@ namespace WinForms
     {
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent(); //.WaitAsync(cancellation);
         }
 
         //Převod stroju na JSON a CSV z xls.
@@ -756,9 +756,9 @@ namespace WinForms
             var trasyTopeni = ZiskejTrasyProZarizeni(topeni);
 
             var sectionsKabely = new List<ExportSection<Trasa>> {
-                new ExportSection<Trasa> { Title = "Kabely pro stroje a zařízení", Data = trasyHlavni },
-                new ExportSection<Trasa> { Title = "Kabely pro vzduchotechniku", Data = trasyOstatni },
-                new ExportSection<Trasa> { Title = "Kabely pro otopy potrůbí", Data = trasyTopeni }
+                new() { Title = "Kabely pro stroje a zařízení", Data = trasyHlavni },
+                new() { Title = "Kabely pro vzduchotechniku", Data = trasyOstatni },
+                new() { Title = "Kabely pro otopy potrůbí", Data = trasyTopeni }
             };
 
             string[] sloupceKabelu = [
@@ -797,7 +797,7 @@ namespace WinForms
             Console.WriteLine("Sloučený export kabelů dokončen ve všech 6 formátech!");
         }
 
-        private List<Trasa> ZiskejTrasyProZarizeni(List<Zarizeni> data)
+        private static List<Trasa> ZiskejTrasyProZarizeni(List<Zarizeni> data)
         {
             if (data == null || data.Count == 0) return [];
 
@@ -823,7 +823,7 @@ namespace WinForms
             return change;
         }
 
-        private List<Zarizeni> PripravZarizeniProKabely(List<Zarizeni> data)
+        private static List<Zarizeni> PripravZarizeniProKabely(List<Zarizeni> data)
         {
             if (data == null || data.Count == 0) return [];
 
