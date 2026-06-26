@@ -170,6 +170,7 @@ namespace WinForms
                 return;
             }
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
+            Console.WriteLine($"Soubor {Vývody} - načten.");
 
             //var DataBind = new BindingList<Zarizeni>(Data);
             var table = new Table(Data);
@@ -620,6 +621,7 @@ namespace WinForms
                 return;
             }
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
+            Console.WriteLine($"Soubor {Vývody} - načten.");
 
             //var DataBind = new BindingList<Zarizeni>(Data);
             var table = new Table(Data);
@@ -721,7 +723,6 @@ namespace WinForms
             SloucenyExporter.SaveHtmlSections(targetBase + ".html", sections, "Seznam zařízení", sloupceZarizeni);
             SloucenyExporter.SavePdfSections(targetBase + ".pdf", sections, "Seznam zařízení", sloupceZarizeni);
             SloucenyExporter.SaveDocxSections(targetBase + ".docx", sections, "Seznam zařízení", sloupceZarizeni);
-
             Console.WriteLine("Sloučený export zařízení dokončen ve všech 6 formátech!");
         }
 
