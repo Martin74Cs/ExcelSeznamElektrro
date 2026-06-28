@@ -1,14 +1,15 @@
 ﻿
 using Aplikace.Sdilene;
-using Aplikace.Upravy;
 using Aplikace.Seznam;
+using Aplikace.Upravy;
+using ExcelGenerateSeznam;
 using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Export;
-using Knihovna.Tridy;
 using Knihovna.Sdilene;
-using System.Text;
 using Knihovna.Shared.Tridy;
+using Knihovna.Tridy;
+using System.Text;
 
 namespace WinForms
 {
@@ -782,6 +783,7 @@ namespace WinForms
             SloucenyExporter.SavePdfSections(targetKabelyBase + ".pdf", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
             SloucenyExporter.SaveDocxSections(targetKabelyBase + ".docx", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
 
+            KabelExcel(targetKabelyBase, cestaElektro, trasyHlavni);
             // 3. Doplnění speciálních záložek se vzorci a součty do Excelu
             //var vsechnaZarizeniProKabely = new List<Zarizeni>();
             //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(hlavniElektro));
@@ -795,6 +797,70 @@ namespace WinForms
 
             Console.WriteLine("Sloučený export kabelů dokončen ve všech 6 formátech!");
         }
+
+        public void KabelExcel(string targetKabelyBase, string cestaElektro, List<Trasa> trasa) { 
+        CoverData cover = new CoverData
+            {
+                Zakaznik = "LUČEBNÍ ZÁVODY DRASLOVKA A.S. KOLÍN",
+                Projekt = "W.005685.0200",
+                Nazev = "SEMIPROVOZ IVCHS / DOKUMENTACE PRO POVOLENÍ STAVBY",
+                DokumentNazev = "SOUPIS SPOTŘEBIČŮ ELEKTRO",
+                Technologie = "TECHNOLOGICKÁ ELEKTROINSTALACE",
+                CistyDokumentTyp = "TP-N-",
+                CistyDokumentCislo = "9446",
+                Revize = "A", 
+                RevizeSeznam = [
+                    new RevizeInfo
+                    {
+                        Rev = "0",
+                        Date = "30.06.2026",
+                        Description = "K připomínkám",
+                        Stat = "PRL",
+                        Prepared = "Tucauer",
+                        Checked = "Kašpar",
+                        Approved = "Csato"
+                    },
+                    //new RevizeInfo
+                    //{
+                    //    Rev = "A",
+                    //    Date = "28.06.2026",
+                    //    Description = "Zapracování připomínek, finální verze",
+                    //    Stat = "FIN",
+                    //    Prepared = "Tucauer",
+                    //    Checked = "Kašpar",
+                    //    Approved = "Csato"
+                    //}
+                ]
+            };
+            List<Spotrebic> spotrebice = [];
+            foreach(var item in trasa) {
+                Spotrebic spotrebic = new() { 
+                    Polozka = "2",
+                    Rev = "A",
+                    Pu = "PU1",
+                    Umisteni = "SUŠÁRNA",
+                    TechnolOznaceni = "S401.1",
+                    Zarizeni = "HC SKID HEATING AND COOLING",
+                    TypVelikost = "Dle dodavatele",
+                    Ks = "1",
+                    Pid = "PID02",
+                    Rozvadec = "RM1N",
+                    Napeti = "400",
+                    InstalovanyPi = 2.5,
+                    VypoctovyPi = 2.25, // Zadáno explicitně
+                    Ivchs = "VCHS",
+                    StartMotoru = "In = 4,3A",
+                    Poznamka = "Společný rozváděč"
+                    };
+                spotrebice.Add(spotrebic);
+            }
+
+            List<Zarizeni> hlavniElektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
+
+            string sablonaCesta = "Soupis_spotrebicu_24_06.xlsx";
+            new ExcelGenerator().Generuj(sablonaCesta, targetKabelyBase + "123" + ".xlsx", cover, spotrebice);
+        }
+
 
         private List<Trasa> ZiskejTrasyProZarizeni(List<Zarizeni> data)
         {
