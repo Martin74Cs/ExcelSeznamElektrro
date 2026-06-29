@@ -4,8 +4,8 @@ using Aplikace.Seznam;
 using Aplikace.Upravy;
 using ExcelGenerateSeznam;
 using Knihovna;
-using Knihovna.Excel;
 using Knihovna.Export;
+using Knihovna.KabelyXls;
 using Knihovna.Sdilene;
 using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
@@ -784,7 +784,7 @@ namespace WinForms
             SloucenyExporter.SavePdfSections(targetKabelyBase + ".pdf", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
             SloucenyExporter.SaveDocxSections(targetKabelyBase + ".docx", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
 
-            KabelExcel(targetKabelyBase, cestaElektro, trasyHlavni);
+            //KabelExcel(targetKabelyBase, cestaElektro, trasyHlavni);
             // 3. Doplnění speciálních záložek se vzorci a součty do Excelu
             //var vsechnaZarizeniProKabely = new List<Zarizeni>();
             //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(hlavniElektro));
@@ -817,9 +817,9 @@ namespace WinForms
                         Date = "30.06.2026",
                         Description = "K připomínkám",
                         Stat = "PRL",
-                        Prepared = "Tucauer",
-                        Checked = "Kašpar",
-                        Approved = "Csato"
+                        Zpacoval = "Tucauer",
+                        Kontroloval = "Kašpar",
+                        Schvalil = "Csato"
                     },
                     //new RevizeInfo
                     //{
@@ -827,16 +827,18 @@ namespace WinForms
                     //    Date = "28.06.2026",
                     //    Description = "Zapracování připomínek, finální verze",
                     //    Stat = "FIN",
-                    //    Prepared = "Tucauer",
-                    //    Checked = "Kašpar",
-                    //    Approved = "Csato"
+                    //    Zpacoval = "Tucauer",
+                    //    Kontroloval = "Kašpar",
+                    //    Schvalil = "Csato"
                     //}
                 ]
             };
             List<Spotrebic> spotrebice = [];
+            int poradi = 1;
             foreach(var item in trasa) {
+                
                 Spotrebic spotrebic = new() { 
-                    Polozka = "2",
+                    Polozka = poradi++.ToString(),
                     Rev = "A",
                     Pu = "PU1",
                     Umisteni = "SUŠÁRNA",
@@ -858,7 +860,7 @@ namespace WinForms
 
             List<Zarizeni> hlavniElektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
 
-            string sablonaCesta = "Soupis_spotrebicu_24_06.xlsx";
+            string sablonaCesta = "g:\\Můj disk\\Projekty\\SemiProvoz\\Podklady\\SeznamMichal\\Sablona.xlsx";
             new ExcelGenerator().Generuj(sablonaCesta, targetKabelyBase + "123" + ".xlsx", cover, spotrebice);
         }
 
@@ -896,6 +898,158 @@ namespace WinForms
             var prazdne = kopie.Where(x => x.Kabel == null).ToList();
             prazdne.AddKabelCyky(1.8);
             return [.. kopie.Where(x => x.Kabel != null), .. prazdne];
+        }
+
+        private void ExcelSeznamZarizeniToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string? cestaElektro = ZajistitSouborElektroJson();
+            if (cestaElektro == null) return;
+
+            try
+            {
+                var zarizeniList = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
+                if (zarizeniList.Count == 0)
+                {
+                    Console.WriteLine("Žádná data k exportu.");
+                    return;
+                }
+
+                CoverData cover = PripravCoverData("SOUPIS SPOTŘEBIČŮ ELEKTRO");
+                List<Spotrebic> spotrebice = [];
+                int poradi = 1;
+                foreach (var z in zarizeniList)
+                {
+                    Spotrebic s = new()
+                    {
+                        Polozka = poradi++.ToString(),
+                        Rev = "0",
+                        Pu = z.Etapa,
+                        Umisteni = z.Patro,
+                        TechnolOznaceni = z.Tag,
+                        Zarizeni = z.Popis,
+                        TypVelikost = z.Typ,
+                        Ks = z.Pocet.ToString(),
+                        Pid = z.Pid,
+                        Rozvadec = z.RozvadecOznačení,
+                        Napeti = z.Napeti,
+                        InstalovanyPi = double.TryParse(z.Prikon, out double p) ? p : null,
+                        VypoctovyPi = null,
+                        Ivchs = z.BalenaJednotka,
+                        StartMotoru = z.Proud,
+                        Poznamka = z.Poznamka
+                    };
+                    spotrebice.Add(s);
+                }
+
+                string sablonaCesta = Path.Combine(Cesty.AdresarSpusteni, "Sablony", "Sablona.xlsx");
+                string targetDir = Path.Combine(Path.GetDirectoryName(cestaElektro)!, "Výstup");
+                if (!Directory.Exists(targetDir))
+                {
+                    Directory.CreateDirectory(targetDir);
+                }
+                string vystupCesta = Path.Combine(targetDir, "Elektro.SeznamZarizeni.xlsx");
+
+                Console.WriteLine($"Generování seznamu zařízení do Excelu: {vystupCesta}");
+                new ExcelGenerator().Generuj(sablonaCesta, vystupCesta, cover, spotrebice);
+                Console.WriteLine("Generování seznamu zařízení dokončeno!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Chyba při generování Excelu zařízení: {ex.Message}");
+            }
+        }
+
+        private void ExcelSeznamKabeluToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string? cestaElektro = ZajistitSouborElektroJson();
+            if (cestaElektro == null) return;
+
+            try
+            {
+                var zarizeniList = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
+                var trasy = ZiskejTrasyProZarizeni(zarizeniList);
+                if (trasy.Count == 0)
+                {
+                    Console.WriteLine("Žádná kabelová data k exportu.");
+                    return;
+                }
+
+                CoverData cover = PripravCoverData("SEZNAM KABELŮ");
+                List<KabelPolozka> kabely = [];
+                int skupinaCislo = 1;
+                bool novyVztah = true;
+
+                foreach (var t in trasy)
+                {
+                    if (string.IsNullOrEmpty(t.Oznaceni) && string.IsNullOrEmpty(t.Kabel))
+                    {
+                        kabely.Add(new KabelPolozka());
+                        novyVztah = true;
+                        continue;
+                    }
+
+                    KabelPolozka kp = new()
+                    {
+                        Polozka = novyVztah ? skupinaCislo++.ToString() : "",
+                        OznaceniKabeluPuvodni = "",
+                        CisloKabelu = t.Oznaceni,
+                        KabelTyp = t.Kabel,
+                        Prurez = t.KabelVelikost,
+                        Delka = double.TryParse(t.Delka, out double d) ? d : null,
+                        ZeZarizeni = t.RozvadecAll,
+                        UkonceniZe = t.OdkudSvorka,
+                        DoZarizeni = t.Tag,
+                        UkonceniDo = t.Svorka,
+                        Poznamka = t.Popis
+                    };
+
+                    kabely.Add(kp);
+                    novyVztah = false;
+                }
+
+                string sablonaCesta = Path.Combine(Cesty.AdresarSpusteni, "Sablony", "Sablona1.xlsx");
+                string targetDir = Path.Combine(Path.GetDirectoryName(cestaElektro)!, "Výstup");
+                if (!Directory.Exists(targetDir))
+                {
+                    Directory.CreateDirectory(targetDir);
+                }
+                string vystupCesta = Path.Combine(targetDir, "Elektro.SeznamKabelu.xlsx");
+
+                Console.WriteLine($"Generování seznamu kabelů do Excelu: {vystupCesta}");
+                new ExcelGenerator().GenerujKabel(sablonaCesta, vystupCesta, cover, kabely);
+                Console.WriteLine("Generování seznamu kabelů dokončeno!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Chyba při generování Excelu kabelů: {ex.Message}");
+            }
+        }
+
+        private CoverData PripravCoverData(string dokumentNazev)
+        {
+            return new CoverData
+            {
+                Zakaznik = "LUČEBNÍ ZÁVODY DRASLOVKA A.S. KOLÍN",
+                Projekt = string.IsNullOrEmpty(Informace.Instance.Projekt) ? "W.005685.0200" : Informace.Instance.Projekt,
+                Nazev = string.IsNullOrEmpty(Informace.Instance.Název) ? "SEMIPROVOZ IVCHS / DOKUMENTACE PRO POVOLENÍ STAVBY" : Informace.Instance.Název,
+                DokumentNazev = dokumentNazev,
+                Technologie = "TECHNOLOGICKÁ ELEKTROINSTALACE",
+                CistyDokumentTyp = "TP-N-",
+                CistyDokumentCislo = "9446",
+                Revize = "A",
+                RevizeSeznam = [
+                    new RevizeInfo
+                    {
+                        Rev = "0",
+                        Date = "30.06.2026",
+                        Description = "K připomínkám",
+                        Stat = "PRL",
+                        Zpacoval = "Tucauer",
+                        Kontroloval = "Kašpar",
+                        Schvalil = "Csato"
+                    }
+                ]
+            };
         }
     }
 

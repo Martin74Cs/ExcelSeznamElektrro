@@ -1,4 +1,4 @@
-#nullable disable
+﻿#nullable disable
 
 using System.Collections.Generic;
 
@@ -83,16 +83,16 @@ namespace ExcelGenerateSeznam
         /// <summary>
         /// Jméno osoby, která revizi vypracovala.
         /// </summary>
-        public string Prepared { get; set; } = string.Empty;
+        public string Zpacoval { get; set; } = string.Empty;
 
         /// <summary>
         /// Jméno osoby, která revizi zkontrolovala.
         /// </summary>
-        public string Checked { get; set; } = string.Empty;
+        public string Kontroloval { get; set; } = string.Empty;
 
         /// <summary>
         /// Jméno osoby, která revizi schválila.
         /// </summary>
-        public string Approved { get; set; } = string.Empty;
+        public string Schvalil { get; set; } = string.Empty;
     }
 }

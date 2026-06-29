@@ -79,6 +79,8 @@ namespace WinForms
             label6 = new Label();
             deleteNaKWToolStripMenuItem = new ToolStripMenuItem();
             sloucenySeznamKabeluToolStripMenuItem = new ToolStripMenuItem();
+            excelSeznamZarizeniToolStripMenuItem = new ToolStripMenuItem();
+            excelSeznamKabeluToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -342,7 +344,7 @@ namespace WinForms
             // 
             // generovníToolStripMenuItem
             // 
-            generovníToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { seznamToolStripMenuItem, kabelyToolStripMenuItem, sloucenySeznamToolStripMenuItem, sloucenySeznamKabeluToolStripMenuItem });
+            generovníToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { seznamToolStripMenuItem, kabelyToolStripMenuItem, sloucenySeznamToolStripMenuItem, sloucenySeznamKabeluToolStripMenuItem, excelSeznamZarizeniToolStripMenuItem, excelSeznamKabeluToolStripMenuItem });
             generovníToolStripMenuItem.Name = "generovníToolStripMenuItem";
             generovníToolStripMenuItem.Size = new Size(102, 25);
             generovníToolStripMenuItem.Text = "Generování";
@@ -374,6 +376,20 @@ namespace WinForms
             sloucenySeznamKabeluToolStripMenuItem.Size = new Size(180, 26);
             sloucenySeznamKabeluToolStripMenuItem.Text = "Sloučený seznam kabelů";
             sloucenySeznamKabeluToolStripMenuItem.Click += SloucenySeznamKabeluToolStripMenuItem_Click;
+            // 
+            // excelSeznamZarizeniToolStripMenuItem
+            // 
+            excelSeznamZarizeniToolStripMenuItem.Name = "excelSeznamZarizeniToolStripMenuItem";
+            excelSeznamZarizeniToolStripMenuItem.Size = new Size(240, 26);
+            excelSeznamZarizeniToolStripMenuItem.Text = "Excel - Seznam zařízení";
+            excelSeznamZarizeniToolStripMenuItem.Click += ExcelSeznamZarizeniToolStripMenuItem_Click;
+            // 
+            // excelSeznamKabeluToolStripMenuItem
+            // 
+            excelSeznamKabeluToolStripMenuItem.Name = "excelSeznamKabeluToolStripMenuItem";
+            excelSeznamKabeluToolStripMenuItem.Size = new Size(240, 26);
+            excelSeznamKabeluToolStripMenuItem.Text = "Excel - Seznam kabelů";
+            excelSeznamKabeluToolStripMenuItem.Click += ExcelSeznamKabeluToolStripMenuItem_Click;
             // 
             // button6
             // 
@@ -637,5 +653,7 @@ namespace WinForms
         private Label label6;
         private ToolStripMenuItem deleteNaKWToolStripMenuItem;
         private ToolStripMenuItem sloucenySeznamKabeluToolStripMenuItem;
+        private ToolStripMenuItem excelSeznamZarizeniToolStripMenuItem;
+        private ToolStripMenuItem excelSeznamKabeluToolStripMenuItem;
     }
 }

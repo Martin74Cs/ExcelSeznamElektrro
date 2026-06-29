@@ -1,4 +1,4 @@
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;

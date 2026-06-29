@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -12,6 +12,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Aplikace\Aplikace.csproj" />
     <ProjectReference Include="..\Knihovna\Knihovna.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Sablony\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

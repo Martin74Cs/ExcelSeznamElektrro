@@ -1,5 +1,6 @@
-﻿#nullable disable
+#nullable disable
 
+using ExcelGenerateSeznam;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,8 +10,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace ExcelGenerateSeznam
-{
+namespace Knihovna.KabelyXls {
     /// <summary>
     /// Generátor Excelu, který provádí úpravy v šabloně pomocí přímé manipulace s OpenXML balíčkem.
     /// Nepoužívá žádné externí knihovny pro práci s Excelem.
@@ -42,23 +42,21 @@ namespace ExcelGenerateSeznam
             File.Copy(sablonaCesta, vystupCesta, true);
 
             // Otevřeme kopii pro aktualizaci XML souborů uvnitř ZIP archivu
-            using (ZipArchive archiv = ZipFile.Open(vystupCesta, ZipArchiveMode.Update))
-            {
-                // 1. Správce sdílených řetězců (Shared Strings)
-                SharedStringsManager sharedStrings = NacistSharedStrings(archiv);
+            using ZipArchive archiv = ZipFile.Open(vystupCesta, ZipArchiveMode.Update);
+            // 1. Správce sdílených řetězců (Shared Strings)
+            SharedStringsManager sharedStrings = NacistSharedStrings(archiv);
 
-                // 2. Správce sešitu (Workbook) pro vyhledání pojmenovaných oblastí
-                WorkbookManager workbook = NacistWorkbook(archiv);
+            // 2. Správce sešitu (Workbook) pro vyhledání pojmenovaných oblastí
+            WorkbookManager workbook = NacistWorkbook(archiv);
 
-                // 3. Úprava listu Cover
-                UpravCover(archiv, workbook, sharedStrings, coverData);
+            // 3. Úprava listu Cover
+            UpravCover(archiv, workbook, sharedStrings, coverData);
 
-                // 4. Úprava listu se spotřebiči
-                UpravSpotrebice(archiv, sharedStrings, spotrebice);
+            // 4. Úprava listu se spotřebiči
+            UpravSpotrebice(archiv, sharedStrings, spotrebice);
 
-                // 5. Uložení sdílených řetězců zpět
-                UlozitSharedStrings(archiv, sharedStrings);
-            }
+            // 5. Uložení sdílených řetězců zpět
+            UlozitSharedStrings(archiv, sharedStrings);
         }
 
         private SharedStringsManager NacistSharedStrings(ZipArchive archiv)
@@ -121,7 +119,7 @@ namespace ExcelGenerateSeznam
                 string statusCellRef = null;
                 if (!string.IsNullOrEmpty(revCellRef))
                 {
-                    string rowStr = new string(revCellRef.Where(char.IsDigit).ToArray());
+                    string rowStr = new(revCellRef.Where(char.IsDigit).ToArray());
                     statusCellRef = $"D{rowStr}";
                 }
 
@@ -131,9 +129,9 @@ namespace ExcelGenerateSeznam
                     NastavHodnotu(sheetData, workbook, sharedStrings, revName, rev.Rev);
                     NastavHodnotu(sheetData, workbook, sharedStrings, datName, rev.Date);
                     NastavHodnotu(sheetData, workbook, sharedStrings, popName, rev.Description);
-                    NastavHodnotu(sheetData, workbook, sharedStrings, $"ZPRAC{revIdx}", rev.Prepared);
-                    NastavHodnotu(sheetData, workbook, sharedStrings, kontrolName, rev.Checked);
-                    NastavHodnotu(sheetData, workbook, sharedStrings, schvalilName, rev.Approved);
+                    NastavHodnotu(sheetData, workbook, sharedStrings, $"ZPRAC{revIdx}", rev.Zpacoval);
+                    NastavHodnotu(sheetData, workbook, sharedStrings, kontrolName, rev.Kontroloval);
+                    NastavHodnotu(sheetData, workbook, sharedStrings, schvalilName, rev.Schvalil);
 
                     // Zapíšeme status revize do sloupce D
                     if (!string.IsNullOrEmpty(statusCellRef))
@@ -163,20 +161,14 @@ namespace ExcelGenerateSeznam
             using (Stream stream = entry.Open())
             {
                 stream.SetLength(0);
-                using (XmlWriter writer = XmlWriter.Create(stream, new XmlWriterSettings { Encoding = System.Text.Encoding.UTF8 }))
-                {
-                    doc.Save(writer);
-                }
+                using XmlWriter writer = XmlWriter.Create(stream, new XmlWriterSettings { Encoding = System.Text.Encoding.UTF8 });
+                doc.Save(writer);
             }
         }
 
         private void UpravSpotrebice(ZipArchive archiv, SharedStringsManager sharedStrings, List<Spotrebic> spotrebice)
         {
-            ZipArchiveEntry entry = archiv.GetEntry("xl/worksheets/sheet2.xml"); // List se spotřebiči
-            if (entry == null)
-            {
-                throw new InvalidOperationException("V šabloně chybí soubor sheet2.xml (SEMIPROVOZ IVCHS).");
-            }
+            ZipArchiveEntry entry = archiv.GetEntry("xl/worksheets/sheet2.xml") ?? throw new InvalidOperationException("V šabloně chybí soubor sheet2.xml (SEMIPROVOZ IVCHS)."); // List se spotřebiči
 
             XDocument doc;
             using (Stream stream = entry.Open())
@@ -184,11 +176,7 @@ namespace ExcelGenerateSeznam
                 doc = XDocument.Load(stream);
             }
 
-            XElement sheetData = doc.Root.Element(Ns + "sheetData");
-            if (sheetData == null)
-            {
-                throw new InvalidOperationException("V sheet2.xml chybí element sheetData.");
-            }
+            XElement sheetData = doc.Root.Element(Ns + "sheetData") ?? throw new InvalidOperationException("V sheet2.xml chybí element sheetData.");
 
             // 1. Zjistíme vzorové styly z řádku 3 (v šabloně obsahuje formátování pro prázdný řádek)
             Dictionary<string, string> vzoroveStyly = [];
@@ -223,7 +211,7 @@ namespace ExcelGenerateSeznam
             int aktualniRadek = 4;
             foreach (Spotrebic spotrebic in spotrebice)
             {
-                XElement row = new XElement(Ns + "row",
+                var row = new XElement(Ns + "row",
                     new XAttribute("r", aktualniRadek),
                     new XAttribute("spans", "1:19")
                 );
@@ -439,6 +427,213 @@ namespace ExcelGenerateSeznam
             string aRow = new(a.SkipWhile(char.IsLetter).ToArray());
             string bRow = new(b.SkipWhile(char.IsLetter).ToArray());
             return int.Parse(aRow).CompareTo(int.Parse(bRow));
+        }
+
+        /// <summary>
+        /// Vygeneruje nový Excel soubor ze šablony kabelů na základě předaných dat.
+        /// </summary>
+        /// <param name="sablonaCesta">Cesta k existující vzorové šabloně XLSX.</param>
+        /// <param name="vystupCesta">Cesta pro uložení nově generovaného souboru.</param>
+        /// <param name="coverData">Data pro vyplnění úvodního listu Cover.</param>
+        /// <param name="kabely">Seznam kabelů pro uložení do listu Seznam.</param>
+        public void GenerujKabel(string sablonaCesta, string vystupCesta, CoverData coverData, List<KabelPolozka> kabely)
+        {
+            if (!File.Exists(sablonaCesta))
+            {
+                throw new FileNotFoundException("Vzorová šablona nebyla nalezena.", sablonaCesta);
+            }
+
+            // Vytvoříme kopii šablony do výstupního umístění
+            string adresar = Path.GetDirectoryName(vystupCesta);
+            if (!string.IsNullOrEmpty(adresar) && !Directory.Exists(adresar))
+            {
+                Directory.CreateDirectory(adresar);
+            }
+            File.Copy(sablonaCesta, vystupCesta, true);
+
+            // Otevřeme kopii pro aktualizaci XML souborů uvnitř ZIP archivu
+            using ZipArchive archiv = ZipFile.Open(vystupCesta, ZipArchiveMode.Update);
+            // 1. Správce sdílených řetězců (Shared Strings)
+            SharedStringsManager sharedStrings = NacistSharedStrings(archiv);
+
+            // 2. Správce sešitu (Workbook) pro vyhledání pojmenovaných oblastí
+            WorkbookManager workbook = NacistWorkbook(archiv);
+
+            // 3. Úprava listu Cover
+            UpravCover(archiv, workbook, sharedStrings, coverData);
+
+            // 4. Úprava listu s kabely
+            UpravKabely(archiv, sharedStrings, kabely);
+
+            // 5. Uložení sdílených řetězců zpět
+            UlozitSharedStrings(archiv, sharedStrings);
+        }
+
+        private void UpravKabely(ZipArchive archiv, SharedStringsManager sharedStrings, List<KabelPolozka> kabely)
+        {
+            ZipArchiveEntry entry = archiv.GetEntry("xl/worksheets/sheet2.xml") ?? throw new InvalidOperationException("V šabloně chybí soubor sheet2.xml (Seznam).");
+
+            XDocument doc;
+            using (Stream stream = entry.Open())
+            {
+                doc = XDocument.Load(stream);
+            }
+
+            XElement sheetData = doc.Root.Element(Ns + "sheetData") ?? throw new InvalidOperationException("V sheet2.xml chybí element sheetData.");
+
+            // Načteme vzorové styly z řádku 5 (který je v šabloně první datový řádek)
+            Dictionary<string, string> vzoroveStyly = [];
+            XElement vzorovyRow = sheetData.Descendants(Ns + "row").FirstOrDefault(r => r.Attribute("r")?.Value == "5");
+            if (vzorovyRow != null)
+            {
+                foreach (XElement cell in vzorovyRow.Elements(Ns + "c"))
+                {
+                    string rRef = cell.Attribute("r")?.Value ?? "";
+                    string colLetter = new(rRef.TakeWhile(char.IsLetter).ToArray());
+                    string style = cell.Attribute("s")?.Value;
+                    if (!string.IsNullOrEmpty(colLetter) && !string.IsNullOrEmpty(style))
+                    {
+                        vzoroveStyly[colLetter] = style;
+                    }
+                }
+            }
+
+            // Upravíme řádky 5 až 140
+            for (int rIdx = 5; rIdx <= 140; rIdx++)
+            {
+                int kabelIndex = rIdx - 5;
+                XElement row = sheetData.Descendants(Ns + "row").FirstOrDefault(r => r.Attribute("r")?.Value == rIdx.ToString());
+                if (row == null)
+                {
+                    row = new XElement(Ns + "row",
+                        new XAttribute("r", rIdx),
+                        new XAttribute("spans", "1:16")
+                    );
+                    XElement prevRow = sheetData.Descendants(Ns + "row")
+                        .FirstOrDefault(r => int.Parse(r.Attribute("r")?.Value ?? "0") == rIdx - 1);
+                    if (prevRow != null)
+                        prevRow.AddAfterSelf(row);
+                    else
+                        sheetData.Add(row);
+                }
+
+                if (kabelIndex < kabely.Count)
+                {
+                    KabelPolozka kabel = kabely[kabelIndex];
+                    // Zápis hodnot do buněk A až K
+                    NastavBunku(row, "A", rIdx, kabel.Polozka, vzoroveStyly, sharedStrings, detekovatCislo: true);
+                    NastavBunku(row, "B", rIdx, kabel.OznaceniKabeluPuvodni, vzoroveStyly, sharedStrings);
+                    NastavBunku(row, "C", rIdx, kabel.CisloKabelu, vzoroveStyly, sharedStrings);
+                    NastavBunku(row, "D", rIdx, kabel.KabelTyp, vzoroveStyly, sharedStrings);
+                    NastavBunku(row, "E", rIdx, kabel.Prurez, vzoroveStyly, sharedStrings);
+
+                    string delkaVal = kabel.Delka.HasValue ? kabel.Delka.Value.ToString(CultureInfo.InvariantCulture) : "";
+                    NastavBunkuCislo(row, "F", rIdx, delkaVal, vzoroveStyly);
+
+                    NastavBunku(row, "G", rIdx, kabel.ZeZarizeni, vzoroveStyly, sharedStrings);
+                    NastavBunku(row, "H", rIdx, kabel.UkonceniZe, vzoroveStyly, sharedStrings);
+                    NastavBunku(row, "I", rIdx, kabel.DoZarizeni, vzoroveStyly, sharedStrings);
+                    NastavBunku(row, "J", rIdx, kabel.UkonceniDo, vzoroveStyly, sharedStrings);
+                    NastavBunku(row, "K", rIdx, kabel.Poznamka, vzoroveStyly, sharedStrings);
+                }
+                else
+                {
+                    // Vyčistíme buňky A až K (ale zachováme styly a strukturu řádku)
+                    VyčistitBunky(row, rIdx, ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"]);
+                }
+            }
+
+            // Uložíme zpět do listu
+            using (Stream stream = entry.Open())
+            {
+                stream.SetLength(0);
+                using (XmlWriter writer = XmlWriter.Create(stream, new XmlWriterSettings { Encoding = System.Text.Encoding.UTF8 }))
+                {
+                    doc.Save(writer);
+                }
+            }
+        }
+
+        private void NastavBunku(XElement row, string colLetter, int rowIdx, string hodnota, Dictionary<string, string> vzoroveStyly, SharedStringsManager sharedStrings, bool detekovatCislo = false)
+        {
+            string cellRef = $"{colLetter}{rowIdx}";
+            XElement cell = row.Elements(Ns + "c").FirstOrDefault(c => c.Attribute("r")?.Value == cellRef);
+            if (cell == null)
+            {
+                cell = new XElement(Ns + "c", new XAttribute("r", cellRef));
+                vzoroveStyly.TryGetValue(colLetter, out string styl);
+                if (!string.IsNullOrEmpty(styl))
+                {
+                    cell.SetAttributeValue("s", styl);
+                }
+                row.Add(cell);
+            }
+
+            cell.Element(Ns + "f")?.Remove();
+            cell.Element(Ns + "v")?.Remove();
+
+            if (!string.IsNullOrEmpty(hodnota))
+            {
+                if (detekovatCislo && double.TryParse(hodnota, NumberStyles.Any, CultureInfo.InvariantCulture, out double _))
+                {
+                    cell.Attribute("t")?.Remove();
+                    cell.Add(new XElement(Ns + "v", hodnota));
+                }
+                else
+                {
+                    int idx = sharedStrings.GetOrAdd(hodnota);
+                    cell.SetAttributeValue("t", "s");
+                    cell.Add(new XElement(Ns + "v", idx));
+                }
+            }
+            else
+            {
+                cell.Attribute("t")?.Remove();
+            }
+        }
+
+        private void NastavBunkuCislo(XElement row, string colLetter, int rowIdx, string hodnota, Dictionary<string, string> vzoroveStyly)
+        {
+            string cellRef = $"{colLetter}{rowIdx}";
+            XElement cell = row.Elements(Ns + "c").FirstOrDefault(c => c.Attribute("r")?.Value == cellRef);
+            if (cell == null)
+            {
+                cell = new XElement(Ns + "c", new XAttribute("r", cellRef));
+                vzoroveStyly.TryGetValue(colLetter, out string styl);
+                if (!string.IsNullOrEmpty(styl))
+                {
+                    cell.SetAttributeValue("s", styl);
+                }
+                row.Add(cell);
+            }
+
+            cell.Element(Ns + "f")?.Remove();
+            cell.Element(Ns + "v")?.Remove();
+
+            if (!string.IsNullOrEmpty(hodnota))
+            {
+                cell.Attribute("t")?.Remove();
+                cell.Add(new XElement(Ns + "v", hodnota));
+            }
+            else
+            {
+                cell.Attribute("t")?.Remove();
+            }
+        }
+
+        private void VyčistitBunky(XElement row, int rowIdx, string[] colLetters)
+        {
+            foreach (string colLetter in colLetters)
+            {
+                string cellRef = $"{colLetter}{rowIdx}";
+                XElement cell = row.Elements(Ns + "c").FirstOrDefault(c => c.Attribute("r")?.Value == cellRef);
+                if (cell != null)
+                {
+                    cell.Element(Ns + "f")?.Remove();
+                    cell.Element(Ns + "v")?.Remove();
+                    cell.Attribute("t")?.Remove();
+                }
+            }
         }
     }
 
