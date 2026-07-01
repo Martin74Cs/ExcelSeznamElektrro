@@ -8,7 +8,7 @@ namespace WinForms {
         private List<Zarizeni> Data = [];
         public Rozvaděč() {
             InitializeComponent();
-            //Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataJson);
+            //Data = Soubory.LoadJsonList<Popis>(Cesty.ElektroDataJson);
             //var Vývody = Path.Combine(Cesty.VyvodyJson, "Vývody.json");
             Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataCsv);
             Set(listViewCategories);

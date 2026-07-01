@@ -1,4 +1,4 @@
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Knihovna;
 using Knihovna.Excel;
@@ -149,7 +149,7 @@ namespace Aplikace.Upravy
 
             //Vývody pro doplnění
             //var cestaVývody = Path.Combine(Cesty.Elektro, "Vývody.json");
-            //var Vývody = Soubory.LoadJsonList<Zarizeni>(cestaVývody);
+            //var Vývody = Soubory.LoadJsonList<Popis>(cestaVývody);
 
             //Spojení ZAŘÍZENÍ A ROZVADĚČE
             //Stara = [.. Stara, .. Vývody];
@@ -342,7 +342,7 @@ namespace Aplikace.Upravy
         //    if (!File.Exists(json))
         //        return;
 
-        //    //var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
+        //    //var Source = Soubory.LoadFromCsv<Popis>(cesta);
         //    //Prevod.UpdateCsvToJson(Source, Target);
         //}
 
@@ -360,22 +360,22 @@ namespace Aplikace.Upravy
         {
             ////Aktualní seznam vývodů
             //string cesta = Cesty.ElektroDataJson;
-            //var Target = Soubory.LoadJsonList<Zarizeni>(cesta);
+            //var Target = Soubory.LoadJsonList<Popis>(cesta);
 
             ////Seznam vývodů pro doplnění
-            //var Add = new List<Zarizeni>();
+            //var Add = new List<Popis>();
             //string cesta1 = Path.Combine(Cesty.Elektro, @"Vývody.csv");
             //if (!File.Exists(cesta1))
             //{
             //    //Pokud neexistuje tak vytvoř
-            //    Add.Add(new Zarizeni());
+            //    Add.Add(new Popis());
             //    Add.SaveJsonList(Path.ChangeExtension(cesta1, ".json"));
             //    Add.SaveToCsv(cesta1);
             //    return;
             //}
 
             ////Načtení vývodů pro doplnnění 
-            //Add = Soubory.LoadFromCsv<Zarizeni>(cesta1);
+            //Add = Soubory.LoadFromCsv<Popis>(cesta1);
             //bool zmena = false;
             //for (int i = 0; i < Add.Count; i++)
             //{
@@ -425,7 +425,7 @@ namespace Aplikace.Upravy
         //{
         //    //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
         //    string cesta1 = Path.Combine(Informace.Instance.ElektroDataJson);
-        //    var Target = Soubory.LoadJsonList<Zarizeni>(cesta1);
+        //    var Target = Soubory.LoadJsonList<Popis>(cesta1);
 
         //    Target.AddKabelCyky(1.6);
 

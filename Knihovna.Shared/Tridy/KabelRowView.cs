@@ -1,4 +1,4 @@
-using Knihovna.Shared.Tridy;
+﻿using Knihovna.Shared.Tridy;
 using System.ComponentModel;
 
 namespace Knihovna.Tridy
@@ -105,6 +105,16 @@ namespace Knihovna.Tridy
         {
             get => Trasa.Delka;
             set => Trasa.Delka = value;
+        }
+
+        /// <summary>
+        /// Popis nebo poznámka ke kabelu.
+        /// </summary>
+        [DisplayName("Svorka")]
+        public string Svorka
+        {
+            get => Trasa.Svorka;
+            set => Trasa.Svorka = value;
         }
 
         /// <summary>

@@ -1,9 +1,7 @@
-#nullable disable
-
 using System;
 using System.Linq;
 
-namespace ExcelGenerateSeznam
+namespace Knihovna.KabelyXls
 {
     /// <summary>
     /// Společná bázová třída pro entity s automatickým generováním Apid.
@@ -35,7 +33,7 @@ namespace ExcelGenerateSeznam
         private static string GenerujApid()
         {
             const string znaky = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            Random random = new Random();
+            Random random = new();
             return new string(Enumerable.Repeat(znaky, 8)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }

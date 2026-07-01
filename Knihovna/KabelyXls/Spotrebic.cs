@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-namespace ExcelGenerateSeznam
+﻿namespace Knihovna.KabelyXls
 {
     /// <summary>
     /// Reprezentuje spotřebič elektro v soupisu spotřebičů.
@@ -36,22 +34,22 @@ namespace ExcelGenerateSeznam
         /// <summary>
         /// Název nebo popis zařízení.
         /// </summary>
-        public string Zarizeni { get; set; } = string.Empty;
+        public string Popis { get; set; } = string.Empty;
 
         /// <summary>
         /// Typ a velikost zařízení.
         /// </summary>
         public string TypVelikost { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Počet kusů (Ks).
-        /// </summary>
-        public string Ks { get; set; } = string.Empty;
+        ///// <summary>
+        ///// Počet kusů (Ks).
+        ///// </summary>
+        //public string Ks { get; set; } = string.Empty;
 
-        /// <summary>
-        /// PID označení.
-        /// </summary>
-        public string Pid { get; set; } = string.Empty;
+        ///// <summary>
+        ///// PID označení.
+        ///// </summary>
+        //public string Pid { get; set; } = string.Empty;
 
         /// <summary>
         /// Napájecí rozváděč.
@@ -66,17 +64,17 @@ namespace ExcelGenerateSeznam
         /// <summary>
         /// Instalovaný činný výkon Pi [kW].
         /// </summary>
-        public double? InstalovanyPi { get; set; }
+        public string InstalovanyPi { get; set; } = string.Empty;
 
         /// <summary>
         /// Výpočtový činný výkon Pp [kW].
         /// </summary>
-        public double? VypoctovyPi { get; set; }
+        public string VypoctovyPi { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Parametr IVCHS.
-        /// </summary>
-        public string Ivchs { get; set; } = string.Empty;
+        ///// <summary>
+        ///// Parametr IVCHS.
+        ///// </summary>
+        //public string Ivchs { get; set; } = string.Empty;
 
         /// <summary>
         /// Způsob startu motoru.

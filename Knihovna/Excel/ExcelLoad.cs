@@ -38,7 +38,7 @@ namespace Knihovna.Excel {
             //začíná sloupcem číslo 1
 
             //var Pole = new List<List<string>>();
-            //var Pole = new List<Zarizeni>();
+            //var Pole = new List<Popis>();
             //string Soubor = Path.GetFileName(cesta);
             //string Adresar = Path.GetDirectoryName(cesta);
 
@@ -599,7 +599,7 @@ namespace Knihovna.Excel {
             return Pole;
         }
 
-        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List Zarizeni z a vytvořejí JSON</summary>
+        /// <summary> Načtení dokumentu Ecxel nebo Json do pole List Popis z a vytvořejí JSON</summary>
         public static List<Zarizeni> DwgDataExcel(string cesta, string Tabulka, int Radek)
         {
             Console.WriteLine("Probíná hačítání dat ... ");
@@ -646,7 +646,7 @@ namespace Knihovna.Excel {
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
 
-            //var Pole = new List<Zarizeni>();
+            //var Pole = new List<Popis>();
             string Soubor = Path.GetFileName(cesta);
             string Adresar = Path.GetDirectoryName(cesta) ?? Environment.SpecialFolder.MyDocuments.ToString();
             string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));

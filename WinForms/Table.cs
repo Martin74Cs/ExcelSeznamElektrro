@@ -22,7 +22,7 @@ namespace WinForms
         private List<FilterRule>? _customFilters = null;
 
 
-        //private SortableBindingList<Zarizeni> DataBind;
+        //private SortableBindingList<Popis> DataBind;
         //private BindingSource SourceBind = new BindingSource();
         public Table(List<Zarizeni> Pole)
         {
@@ -137,8 +137,8 @@ namespace WinForms
         //            //dataGridView1.Columns.Remove(stavColumn);
 
         //            // Vytvoříme seznam pro ComboBox s popisy
-        //            var Vyber = Enum.GetValues<Zarizeni.Druhy>()
-        //            .Cast<Zarizeni.Druhy>().Select(s => new {
+        //            var Vyber = Enum.GetValues<Popis.Druhy>()
+        //            .Cast<Popis.Druhy>().Select(s => new {
         //                //Value = s.ToString(), // Ukládáme jako string
         //                //Value = s, // Ukládáme jako string
         //                Value = s.ToString(), // Ukládáme jako string
@@ -149,14 +149,14 @@ namespace WinForms
         //            var comboBoxColumn = new DataGridViewComboBoxColumn {
         //                HeaderText = "Vyber",
         //                Name = "Vyber",
-        //                DataPropertyName = "Druh", // Propojení s vlastností Druh v Zarizeni
-        //                //DataSource = Enum.GetValues(typeof(Zarizeni.Druhy)), // Naplní ComboBox hodnotami z enumu
+        //                DataPropertyName = "Druh", // Propojení s vlastností Druh v Popis
+        //                //DataSource = Enum.GetValues(typeof(Popis.Druhy)), // Naplní ComboBox hodnotami z enumu
         //                DataSource = Vyber,
 
         //                ValueMember = "Value", // String hodnota pro vlastnost Druh
         //                DisplayMember = "Display", // Zobrazení popisu
         //                ValueType = typeof(string)
-        //                //ValueType = typeof(Zarizeni.Druhy), // Zajistí správný typ hodnot
+        //                //ValueType = typeof(Popis.Druhy), // Zajistí správný typ hodnot
         //            };
 
         //            // Vložíme ComboBox sloupec na původní pozici
@@ -169,9 +169,9 @@ namespace WinForms
         //    //{
         //    //    HeaderText = "Druh",
         //    //    Name = "Druh",
-        //    //    DataPropertyName = "Druh", // Propojení s vlastností Stav v Zarizeni
-        //    //    DataSource = Enum.GetValues(typeof(Zarizeni.Druhy)), // Naplní ComboBox hodnotami z enumu
-        //    //    ValueType = typeof(Zarizeni.Druhy) // Zajistí správný typ hodnot
+        //    //    DataPropertyName = "Druh", // Propojení s vlastností Stav v Popis
+        //    //    DataSource = Enum.GetValues(typeof(Popis.Druhy)), // Naplní ComboBox hodnotami z enumu
+        //    //    ValueType = typeof(Popis.Druhy) // Zajistí správný typ hodnot
         //    //};
         //    //dataGridView1.Columns.Add(comboBoxColumn);
 
@@ -193,7 +193,7 @@ namespace WinForms
 
             //"Druh"
 
-            //var zarizeni = new Zarizeni();
+            //var zarizeni = new Popis();
 
             // Přidáš sloupce ručně:
             foreach (var propertyName in propertyNames)
@@ -251,8 +251,8 @@ namespace WinForms
             }
 
             //// Vytvoříme seznam pro ComboBox s popisy
-            //var Vyber = Enum.GetValues<Zarizeni.Druhy>()
-            //.Cast<Zarizeni.Druhy>().Select(s => new {
+            //var Vyber = Enum.GetValues<Popis.Druhy>()
+            //.Cast<Popis.Druhy>().Select(s => new {
             //    Value = s.ToString(), // Ukládáme jako string
             //    Display = GetEnumDescription(s) // Zobrazujeme popis
             //}).ToList();
@@ -265,11 +265,11 @@ namespace WinForms
             //    //DataSource = Vyber,
             //    HeaderText = GetPropertyHeader("Druh"),          // Nadpis sloupce
             //    Name = "Druh",                // Jméno sloupce
-            //    DataPropertyName = "Druh",   // Vlastnost objektu Zarizeni
+            //    DataPropertyName = "Druh",   // Vlastnost objektu Popis
             //    DataSource = Vyber,
             //    ValueMember = "Value",       // Skutečná hodnota (enum)
             //    DisplayMember = "Display",   // Co se zobrazí v roletce
-            //    ValueType = typeof(Zarizeni.Druhy)
+            //    ValueType = typeof(Popis.Druhy)
             //};
             ////dataGridView1.Columns.Add(comboBoxColumn);
             //// Přidáme ComboBox sloupec na konec, nebo na určitou pozici
@@ -440,7 +440,7 @@ namespace WinForms
                 nameof(Zarizeni.Predmet),
                 nameof(Zarizeni.Popis),
                 nameof(Zarizeni.Druh),
-                //nameof(Zarizeni.Typ),
+                //nameof(Popis.Typ),
                 nameof(Zarizeni.Menic),
                 nameof(Zarizeni.Napeti),
                 nameof(Zarizeni.Prikon),
@@ -449,8 +449,8 @@ namespace WinForms
                 nameof(Zarizeni.RozvadecCislo),
                 nameof(Zarizeni.Vyvod),
                 nameof(Zarizeni.Poznamka),
-                //nameof(Zarizeni.Kabel),
-                //nameof(Zarizeni.SeznamKabelu)
+                //nameof(Popis.Kabel),
+                //nameof(Popis.SeznamKabelu)
             };
             SetListBox(defaultColumns); // Obnoví sloupce v datagridu
             ObnovGrid(); // Načte kompletní seznam dat bez pokročilých filtrů
@@ -469,14 +469,14 @@ namespace WinForms
             //var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
             //if (box.Text == "All")
             //{
-            //    dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
+            //    dataGridView1.DataSource = new SortableBindingList<Popis>(Pole);
             //    return;
             //}
             //string vybranePatro = box.SelectedItem.ToString();
             //var filtrovanaData = Pole.Where(z => z.Patro == vybranePatro).ToList();
 
             ////dataGridView1.DataSource = new SortableBindingList<ZarizeniView>(filtrovanaData);
-            //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
 
             ObnovGrid();
         }
@@ -508,9 +508,9 @@ namespace WinForms
             //    Console.WriteLine("Přidán nový řádek.");
 
             //    //pridat radek do pole
-            //    Pole.Add(new Zarizeni());
+            //    Pole.Add(new Popis());
 
-            //    dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
+            //    dataGridView1.DataSource = new SortableBindingList<Popis>(Pole);
             //}
         }
         private Zarizeni _lastAddedOrEditedZarizeni = null;
@@ -723,7 +723,7 @@ namespace WinForms
             ObnovGrid(); // zachová aktuální filtry
             //string vybranePatro = box.SelectedItem.ToString();
             //var filtrovanaData = Pole.Where(z => z.Etapa == vybranePatro).ToList();
-            //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
         }
 
         private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e)
@@ -737,7 +737,7 @@ namespace WinForms
             ObnovGrid(); // zachová aktuální filtry
             //string vybranePatro = box.SelectedItem.ToString();
             //var filtrovanaData = Pole.Where(z => z.RozvadecOznačení == vybranePatro).ToList();
-            //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
         }
 
         private void ComboBox3_MouseClick(object sender, MouseEventArgs e)
@@ -770,7 +770,7 @@ namespace WinForms
             ObnovGrid(); // zachová aktuální filtry
             //string vybranePatro = box.SelectedItem.ToString();
             //var filtrovanaData = Pole.Where(z => z.PID == vybranePatro).ToList();
-            //dataGridView1.DataSource = new SortableBindingList<Zarizeni>(filtrovanaData);
+            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
         }
 
         private void ComboBox4Pid_MouseClick(object sender, MouseEventArgs e)
@@ -786,7 +786,7 @@ namespace WinForms
         //    if (!string.IsNullOrEmpty(_highlightedApid) && e.RowIndex >= 0)
         //    {
         //        //// Získáme objekt, ke kterému je aktuální řádek vázán
-        //        if (dataGridView1.Rows[e.RowIndex].DataBoundItem is Zarizeni rowZarizeni)
+        //        if (dataGridView1.Rows[e.RowIndex].DataBoundItem is Popis rowZarizeni)
         //        {
         //        //    // Porovnáme APID řádku s APID, které chceme zvýraznit
         //            if (rowZarizeni.Apid == _highlightedApid)

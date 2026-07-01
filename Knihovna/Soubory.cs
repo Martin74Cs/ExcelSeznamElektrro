@@ -411,7 +411,7 @@ namespace Knihovna {
 
         //zadávat podmínky dynamicky pomocí
         //Příklad
-        //var vyber = Filter(seznam, nameof(Zarizeni.Tag), "M1");
+        //var vyber = Filter(seznam, nameof(Popis.Tag), "M1");
         public static IEnumerable<T> Filter<T>(IEnumerable<T> data, string propertyName, string value) {
             var prop = typeof(T).GetProperty(propertyName);
 
@@ -429,7 +429,7 @@ namespace Knihovna {
 
         //Pro bool:
         //Příklad
-        //var vyber = Filter(seznam, nameof(Zarizeni.Menic), true);
+        //var vyber = Filter(seznam, nameof(Popis.Menic), true);
         public static IEnumerable<T> Filter<T>(
             IEnumerable<T> data,
             string propertyName,

@@ -18,7 +18,7 @@ namespace Aplikace.Sdilene
                 Console.WriteLine($"Nebyly nanačteny motory z {Cesty.Motory}"); return pole; }
 
             // Přidání vlastnosti "Proud" do každého zařízení
-            //var nove = new List<Zarizeni>();
+            //var nove = new List<Popis>();
             double Cos = 0.95;
             double Pomoc;
             foreach (var item in pole.ToHashSet())
@@ -70,7 +70,7 @@ namespace Aplikace.Sdilene
         public static void AddKabelDelka(this List<Zarizeni> pole, double delka = 100)
         {
             // Přidání vlastnosti "Proud" do každého zařízení
-            //var nove = new List<Zarizeni>();
+            //var nove = new List<Popis>();
             for (int i = 0; i < pole.Count; i++)
             {
                 pole[i].Delka = delka;

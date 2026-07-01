@@ -44,6 +44,8 @@
             txtInfoDruh = new TextBox();
             dataGridViewKabely = new DataGridView();
             groupBoxPridat = new GroupBox();
+            label8 = new Label();
+            txtSvorka = new TextBox();
             lblPopis = new Label();
             txtPopis = new TextBox();
             label6 = new Label();
@@ -364,6 +366,8 @@
             // 
             // groupBoxPridat
             // 
+            groupBoxPridat.Controls.Add(label8);
+            groupBoxPridat.Controls.Add(txtSvorka);
             groupBoxPridat.Controls.Add(lblPopis);
             groupBoxPridat.Controls.Add(txtPopis);
             groupBoxPridat.Controls.Add(label6);
@@ -382,16 +386,33 @@
             groupBoxPridat.Controls.Add(btnStorno);
             groupBoxPridat.Location = new Point(820, 215);
             groupBoxPridat.Name = "groupBoxPridat";
-            groupBoxPridat.Size = new Size(328, 325);
+            groupBoxPridat.Size = new Size(328, 372);
             groupBoxPridat.TabIndex = 3;
             groupBoxPridat.TabStop = false;
             groupBoxPridat.Text = "Nový kabel";
             groupBoxPridat.Enter += GroupBoxPridat_Enter;
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(7, 238);
+            label8.Name = "label8";
+            label8.RightToLeft = RightToLeft.Yes;
+            label8.Size = new Size(76, 28);
+            label8.TabIndex = 16;
+            label8.Text = "Svorka:";
+            // 
+            // txtSvorka
+            // 
+            txtSvorka.Location = new Point(143, 235);
+            txtSvorka.Name = "txtSvorka";
+            txtSvorka.Size = new Size(164, 34);
+            txtSvorka.TabIndex = 17;
+            // 
             // lblPopis
             // 
             lblPopis.AutoSize = true;
-            lblPopis.Location = new Point(7, 238);
+            lblPopis.Location = new Point(7, 274);
             lblPopis.Name = "lblPopis";
             lblPopis.Size = new Size(119, 28);
             lblPopis.TabIndex = 12;
@@ -399,7 +420,7 @@
             // 
             // txtPopis
             // 
-            txtPopis.Location = new Point(143, 235);
+            txtPopis.Location = new Point(143, 271);
             txtPopis.Name = "txtPopis";
             txtPopis.Size = new Size(164, 34);
             txtPopis.TabIndex = 13;
@@ -506,7 +527,7 @@
             // 
             // btnPridat
             // 
-            btnPridat.Location = new Point(133, 275);
+            btnPridat.Location = new Point(133, 324);
             btnPridat.Name = "btnPridat";
             btnPridat.Size = new Size(83, 35);
             btnPridat.TabIndex = 14;
@@ -516,7 +537,7 @@
             // 
             // btnStorno
             // 
-            btnStorno.Location = new Point(222, 275);
+            btnStorno.Location = new Point(222, 324);
             btnStorno.Name = "btnStorno";
             btnStorno.Size = new Size(82, 35);
             btnStorno.TabIndex = 15;
@@ -548,7 +569,7 @@
             groupBoxRychlePridat.Controls.Add(btnRychlyUTP);
             groupBoxRychlePridat.Controls.Add(btnRychlyBinarni);
             groupBoxRychlePridat.Controls.Add(btnRychlyBlokovani);
-            groupBoxRychlePridat.Location = new Point(820, 545);
+            groupBoxRychlePridat.Location = new Point(820, 593);
             groupBoxRychlePridat.Name = "groupBoxRychlePridat";
             groupBoxRychlePridat.Size = new Size(328, 250);
             groupBoxRychlePridat.TabIndex = 4;
@@ -789,7 +810,7 @@
             // 
             // btnZavrit
             // 
-            btnZavrit.Location = new Point(998, 805);
+            btnZavrit.Location = new Point(658, 808);
             btnZavrit.Name = "btnZavrit";
             btnZavrit.Size = new Size(150, 35);
             btnZavrit.TabIndex = 7;
@@ -910,5 +931,7 @@
         private Button button1;
         private TextBox txtPrefixPower;
         private Label label7;
+        private Label label8;
+        private TextBox txtSvorka;
     }
 }

@@ -405,7 +405,7 @@ namespace Aplikace.Seznam
 
 
         /// <summary> Vytvoření pole kabelů pro zápis do Excelu </summary>
-        // public static List<Trasa> KabelyTrida(List<Zarizeni> PoleData)
+        // public static List<Trasa> KabelyTrida(List<Popis> PoleData)
         public static List<Kabely> KabelyTrida(List<Zarizeni> PoleData)
         {
             var Kabely = new List<Kabely>();
@@ -481,7 +481,7 @@ namespace Aplikace.Seznam
                 //9. zařízení
                 //if (string.IsNullOrEmpty(radek.Druh))
                 //{
-                //    if (radek.Druh == Zarizeni.Druhy.Rozvadeč.ToString())
+                //    if (radek.Druh == Popis.Druhy.Rozvadeč.ToString())
                 //    //if (radek.BalenaJednotka.StartsWith('P') || radek.BalenaJednotka.StartsWith('B') || radek.BalenaJednotka.StartsWith('x'))
                 //        trasa.Druh = "Odhad" + "Motor"; //9. zařízení
                 //    else

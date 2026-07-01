@@ -157,11 +157,11 @@ namespace WinForms
                 }
 
                 // Najdeme instanci ve zdroji dat (předpoklad: BindingList nebo jiný upravitelný seznam)
-                //if(dataGridView2.DataSource is BindingList<Zarizeni> elektro) {
+                //if(dataGridView2.DataSource is BindingList<Popis> elektro) {
                 //    int index = dataGridView2.CurrentRow.Index;
 
                 //    // Nahraďme celý objekt nebo jen jeho vlastnosti (záleží, jak s tím pracuješ dál)
-                //    elektro[index] = new Zarizeni {
+                //    elektro[index] = new Popis {
                 //        Radek = selectedElektro.Radek,
                 //        Prikon = selectedElektro.Prikon,
                 //        Menic = selectedElektro.Menic,

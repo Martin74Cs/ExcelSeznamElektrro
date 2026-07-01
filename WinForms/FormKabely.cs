@@ -357,6 +357,7 @@ namespace WinForms
                 _upravovanyKabel.PocetZil = txtPocetZil.Text.Trim();
                 _upravovanyKabel.Prurezmm2 = txtPrurez.Text.Trim();
                 _upravovanyKabel.Delka = txtDelka.Text.Trim();
+                _upravovanyKabel.Svorka = txtSvorka.Text.Trim();
                 _upravovanyKabel.Popis = txtPopis.Text.Trim();
 
                 //UlozData();

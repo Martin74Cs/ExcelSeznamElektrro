@@ -1,6 +1,4 @@
-#nullable disable
-
-namespace ExcelGenerateSeznam
+﻿namespace Knihovna.KabelyXls
 {
     /// <summary>
     /// Reprezentuje položku kabelu v seznamu kabelů pro export do Excelu.
@@ -14,9 +12,9 @@ namespace ExcelGenerateSeznam
         public string Polozka { get; set; } = string.Empty;
 
         /// <summary>
-        /// Původní označení kabelu.
+        /// Revize kabelu.
         /// </summary>
-        public string OznaceniKabeluPuvodni { get; set; } = string.Empty;
+        public string Revize { get; set; } = string.Empty;
 
         /// <summary>
         /// Označení kabelu (Cable No.).
@@ -36,7 +34,7 @@ namespace ExcelGenerateSeznam
         /// <summary>
         /// Délka kabelu (m).
         /// </summary>
-        public double? Delka { get; set; }
+        public string Delka { get; set; } = string.Empty;
 
         /// <summary>
         /// Zdrojové zařízení (From).
