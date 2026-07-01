@@ -1,4 +1,4 @@
-#nullable disable
+﻿#nullable disable
 
 namespace ExcelGenerateSeznam
 {
@@ -21,7 +21,7 @@ namespace ExcelGenerateSeznam
         /// <summary>
         /// Prostorové uspořádání (PU).
         /// </summary>
-        public string Pu { get; set; } = string.Empty;
+        public string BalenaJednotka { get; set; } = string.Empty;
 
         /// <summary>
         /// Umístění spotřebiče (např. místnost, patro).
@@ -31,7 +31,7 @@ namespace ExcelGenerateSeznam
         /// <summary>
         /// Technologické označení (tag).
         /// </summary>
-        public string TechnolOznaceni { get; set; } = string.Empty;
+        public string Tag { get; set; } = string.Empty;
 
         /// <summary>
         /// Název nebo popis zařízení.

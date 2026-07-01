@@ -1,4 +1,4 @@
-#nullable disable
+﻿#nullable disable
 
 using ExcelGenerateSeznam;
 using System;
@@ -52,7 +52,7 @@ namespace Knihovna.KabelyXls {
             // 3. Úprava listu Cover
             UpravCover(archiv, workbook, sharedStrings, coverData);
 
-            // 4. Úprava listu se spotřebiči
+            // 4. Úprava listu seznam spotřebiči
             UpravSpotrebice(archiv, sharedStrings, spotrebice);
 
             // 5. Uložení sdílených řetězců zpět
@@ -126,9 +126,9 @@ namespace Knihovna.KabelyXls {
                 if (i < coverData.RevizeSeznam.Count)
                 {
                     RevizeInfo rev = coverData.RevizeSeznam[i];
-                    NastavHodnotu(sheetData, workbook, sharedStrings, revName, rev.Rev);
-                    NastavHodnotu(sheetData, workbook, sharedStrings, datName, rev.Date);
-                    NastavHodnotu(sheetData, workbook, sharedStrings, popName, rev.Description);
+                    NastavHodnotu(sheetData, workbook, sharedStrings, revName, rev.Revize);
+                    NastavHodnotu(sheetData, workbook, sharedStrings, datName, rev.Datum);
+                    NastavHodnotu(sheetData, workbook, sharedStrings, popName, rev.PopisRevize);
                     NastavHodnotu(sheetData, workbook, sharedStrings, $"ZPRAC{revIdx}", rev.Zpacoval);
                     NastavHodnotu(sheetData, workbook, sharedStrings, kontrolName, rev.Kontroloval);
                     NastavHodnotu(sheetData, workbook, sharedStrings, schvalilName, rev.Schvalil);
@@ -219,10 +219,10 @@ namespace Knihovna.KabelyXls {
                 // Naplníme buňky A až Q pro daný řádek
                 PridatBunku(row, "A", aktualniRadek, spotrebic.Polozka, vzoroveStyly, sharedStrings, true); // Číslo jako string nebo číslo
                 PridatBunku(row, "B", aktualniRadek, spotrebic.Rev, vzoroveStyly, sharedStrings);
-                PridatBunku(row, "C", aktualniRadek, spotrebic.Pu, vzoroveStyly, sharedStrings);
+                PridatBunku(row, "C", aktualniRadek, spotrebic.BalenaJednotka, vzoroveStyly, sharedStrings);
                 PridatBunku(row, "D", aktualniRadek, "", vzoroveStyly, sharedStrings); // Prázdná buňka pro zachování šablony
                 PridatBunku(row, "E", aktualniRadek, spotrebic.Umisteni, vzoroveStyly, sharedStrings);
-                PridatBunku(row, "F", aktualniRadek, spotrebic.TechnolOznaceni, vzoroveStyly, sharedStrings);
+                PridatBunku(row, "F", aktualniRadek, spotrebic.Tag, vzoroveStyly, sharedStrings);
                 PridatBunku(row, "G", aktualniRadek, spotrebic.Zarizeni, vzoroveStyly, sharedStrings);
                 PridatBunku(row, "H", aktualniRadek, spotrebic.TypVelikost, vzoroveStyly, sharedStrings);
                 PridatBunku(row, "I", aktualniRadek, spotrebic.Ks, vzoroveStyly, sharedStrings);

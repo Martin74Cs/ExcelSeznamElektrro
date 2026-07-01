@@ -63,17 +63,17 @@ namespace ExcelGenerateSeznam
         /// <summary>
         /// Označení revize (např. A, B, 0).
         /// </summary>
-        public string Rev { get; set; } = string.Empty;
+        public string Revize { get; set; } = string.Empty;
 
         /// <summary>
         /// Datum revize (např. 24.06.2026).
         /// </summary>
-        public string Date { get; set; } = string.Empty;
+        public string Datum { get; set; } = string.Empty;
 
         /// <summary>
         /// Popis změn v revizi.
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public string PopisRevize { get; set; } = string.Empty;
 
         /// <summary>
         /// Status revize (např. DFT, PRL, FIN, atd.).

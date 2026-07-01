@@ -799,9 +799,8 @@ namespace WinForms
             Console.WriteLine("Sloučený export kabelů dokončen ve všech 6 formátech!");
         }
 
-        public void KabelExcel(string targetKabelyBase, string cestaElektro, List<Trasa> trasa) { 
-        CoverData cover = new CoverData
-            {
+        public static void KabelExcel(string targetKabelyBase, string cestaElektro, List<Trasa> trasa) { 
+        CoverData cover = new() {
                 Zakaznik = "LUČEBNÍ ZÁVODY DRASLOVKA A.S. KOLÍN",
                 Projekt = "W.005685.0200",
                 Nazev = "SEMIPROVOZ IVCHS / DOKUMENTACE PRO POVOLENÍ STAVBY",
@@ -813,9 +812,9 @@ namespace WinForms
                 RevizeSeznam = [
                     new RevizeInfo
                     {
-                        Rev = "0",
-                        Date = "30.06.2026",
-                        Description = "K připomínkám",
+                        Revize = "0",
+                        Datum = "30.06.2026",
+                        PopisRevize = "K připomínkám",
                         Stat = "PRL",
                         Zpacoval = "Tucauer",
                         Kontroloval = "Kašpar",
@@ -823,9 +822,9 @@ namespace WinForms
                     },
                     //new RevizeInfo
                     //{
-                    //    Rev = "A",
-                    //    Date = "28.06.2026",
-                    //    Description = "Zapracování připomínek, finální verze",
+                    //    Revize = "A",
+                    //    Datum = "28.06.2026",
+                    //    PopisRevize = "Zapracování připomínek, finální verze",
                     //    Stat = "FIN",
                     //    Zpacoval = "Tucauer",
                     //    Kontroloval = "Kašpar",
@@ -840,9 +839,9 @@ namespace WinForms
                 Spotrebic spotrebic = new() { 
                     Polozka = poradi++.ToString(),
                     Rev = "A",
-                    Pu = "PU1",
+                    BalenaJednotka = "PU1",
                     Umisteni = "SUŠÁRNA",
-                    TechnolOznaceni = "S401.1",
+                    Tag = item.Tag,
                     Zarizeni = "HC SKID HEATING AND COOLING",
                     TypVelikost = "Dle dodavatele",
                     Ks = "1",
@@ -900,6 +899,9 @@ namespace WinForms
             return [.. kopie.Where(x => x.Kabel != null), .. prazdne];
         }
 
+        /// <summary>
+        /// Seznam zařízení do Excelu, generuje soubor s využitím šablony a dat z JSON.
+        /// </summary>
         private void ExcelSeznamZarizeniToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string? cestaElektro = ZajistitSouborElektroJson();
@@ -923,9 +925,9 @@ namespace WinForms
                     {
                         Polozka = poradi++.ToString(),
                         Rev = "0",
-                        Pu = z.Etapa,
+                        BalenaJednotka = z.Etapa,
                         Umisteni = z.Patro,
-                        TechnolOznaceni = z.Tag,
+                        Tag = z.Tag,
                         Zarizeni = z.Popis,
                         TypVelikost = z.Typ,
                         Ks = z.Pocet.ToString(),
@@ -1040,9 +1042,9 @@ namespace WinForms
                 RevizeSeznam = [
                     new RevizeInfo
                     {
-                        Rev = "0",
-                        Date = "30.06.2026",
-                        Description = "K připomínkám",
+                        Revize = "0",
+                        Datum = "30.06.2026",
+                        PopisRevize = "K připomínkám",
                         Stat = "PRL",
                         Zpacoval = "Tucauer",
                         Kontroloval = "Kašpar",
