@@ -1,11 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Knihovna.Tridy {
-    public class Jistic {
+    /// <summary>
+    /// Reprezentuje jistič.
+    /// </summary>
+    public class Jistic : Entity
+    {
         public string Druh { get; set; } = string.Empty;
         public string Velikost { get; set; } = string.Empty;
         public double Icu { get; set; }

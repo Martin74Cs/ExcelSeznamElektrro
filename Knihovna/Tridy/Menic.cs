@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,7 +9,10 @@ namespace Knihovna.Tridy
 {
     //Data jsou ze stránky ABB
     //https://search.abb.com/library/Download.aspx?DocumentID=CZZPA200516021233-J&LanguageCode=cs&DocumentPartId=1&Action=Launch
-    public class Menic
+    /// <summary>
+    /// Reprezentuje frekvenční měnič.
+    /// </summary>
+    public class Menic : Entity
     {
         public double Prikon { get; set; }                     // Příkon ve kW
         public double PrikonHP { get; set; }                   // Příkon v HP

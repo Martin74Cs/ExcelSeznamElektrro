@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Knihovna.Tridy
 {
-    public  class Stykac
+    /// <summary>
+    /// Reprezentuje stykač.
+    /// </summary>
+    public class Stykac : Entity
     {
         // Příkon ve W nebo kW (není úplně jasné, jaká jednotka – přizpůsob dle potřeby)
         public double Prikon { get; set; }
