@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 namespace Knihovna.Tridy
 {
     public class Pump
@@ -18,10 +18,8 @@ namespace Knihovna.Tridy
         public string Pump__maximumOperatingTemperature { get; set; } = string.Empty;
         //public float _Pump__maximumOperatingTemperature { get; set; } 
         public string Pump__minimumOperatingTemperature { get; set; } = string.Empty;
-        //public float _Pump__densityAtOperatingTemperature { get; set; } = string.Empty;
         public float Pump__densityAtOperatingTemperature { get; set; }
         public string Pump__viscosityAtOperatingTemperature { get; set; } = string.Empty;
-        //public float _Pump__relativeVaporDensity { get; set; } = string.Empty;
         public double Pump__relativeVaporDensity { get; set; }
         public string Pump__designVolumeFlowrate { get; set; } = string.Empty;
         public string Pump__normalVolumeFlowrate { get; set; } = string.Empty;
@@ -53,8 +51,6 @@ namespace Knihovna.Tridy
 
         public static List<Pump> Load(string cestaPump)
         {
-            //System.Data.DataTable pokus = SouboryJson.LoadJson(cesta);
-            //var pokus = SouboryJson.LoadJson<Pump>(cesta);
             var pokus = Soubory.LoadJsonEn<Pump>(cestaPump);
             Console.Write($"Celkem={pokus.Count}");
             foreach (var item in pokus)
@@ -65,3 +61,4 @@ namespace Knihovna.Tridy
         }
     }
 }
+

@@ -1,4 +1,4 @@
-
+﻿
 using Aplikace.Sdilene;
 using Knihovna.Tridy;
 using Knihovna.Sdilene;
@@ -16,26 +16,8 @@ namespace WinForms
 
         private void Vytvořit_Load(object sender, EventArgs e)
         {
-            //Console.SetOut(new ListBoxWriter(listBox1));
         }
 
-        //public class ListBoxWriter(ListBox listBox) : TextWriter
-        //{
-        //    private readonly ListBox _listBox = listBox;
-        //    private readonly SynchronizationContext _context = SynchronizationContext.Current;
-
-        //    public override Encoding Encoding => Encoding.UTF8;
-
-        //    public override void WriteLine(string value)
-        //    {
-        //        //_context.Post(_ => _listBox.Items.Add(value), null);
-        //        _context.Post(_ =>
-        //        {
-        //            _listBox.Items.Add(value);
-        //            _listBox.TopIndex = _listBox.Items.Count - 1; // ← automatické scrollování dolů
-        //        }, null);
-        //    }
-        //}
 
         public void SetListBox()
         {
@@ -49,7 +31,6 @@ namespace WinForms
         private void Button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-            //Close();
         }
 
         private void Button7_Click(object sender, EventArgs e)
@@ -167,3 +148,4 @@ namespace WinForms
         }
     }
 }
+

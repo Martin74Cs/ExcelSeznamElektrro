@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+﻿﻿using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
 using Knihovna;
@@ -30,7 +30,6 @@ namespace WinForms
         {
             //Převod->json,csv
             await Task.Run(() => LigthChem.StrojniToJsonCsv());
-            //Console.SetOut(new ListBoxWriter(listBox1));
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -59,20 +58,14 @@ namespace WinForms
             await Task.Run(() => Soubory.KillExcel());
         }
 
-        //private async void Button5_Click(object sender, EventArgs e)
-        //{
-        //    await Task.Run(() => LigthChem.AddKabely());
-        //}
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            //string cestaData = Path.Combine(Cesty.Elektro, @"ElektroData.csv");
             System.Diagnostics.Process.Start("explorer.exe", Informace.Instance.BasePath);
         }
 
         private async void Button9_Click(object sender, EventArgs e)
         {
-            //await Task.Run(() => LigthChem.AddVyvody());
             await Task.Run(() => LigthChem.Rozvadec());
         }
 
@@ -125,7 +118,6 @@ namespace WinForms
 
         private async void Button6_Click(object sender, EventArgs e)
         {
-            //await Task.Run(() => LigthChem.JsonToExcel());
         }
 
         private void Button10_Click(object sender, EventArgs e)
@@ -160,15 +152,12 @@ namespace WinForms
         /// </summary>
         private void Button11_Click(object sender, EventArgs e)
         {
-            //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
-            //var Data = Soubory.LoadFromCsv<Popis>(Vývody);
 
             var Vývody = Cesty.VyvodyOstatniJson;
             if (!File.Exists(Vývody))
             {
                 Console.WriteLine("Soubor nebyl nalezen " + Vývody);
                 Console.WriteLine("Soubor bude vytvořen!");
-                //var prazdny = new List<Popis>();
                 Soubory.SaveJson(new List<Zarizeni>(), Vývody);
                 Console.WriteLine("Znovu klikni na tlačítko. Soubor byl vytvořen!");
                 return;
@@ -176,7 +165,6 @@ namespace WinForms
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
             Console.WriteLine($"Soubor {Vývody} - načten.");
 
-            //var DataBind = new BindingList<Popis>(Data);
             var table = new Table(Data);
             SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
@@ -186,11 +174,8 @@ namespace WinForms
                 //přidat prázdný záznam
                 if (Data.Count < 1) Data.Add(new Zarizeni());
 
-                //Data.SaveToCsv(Vývody);
                 Data.SaveJsonList(Vývody);
 
-                //if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                //    Data.SaveToCsv(Cesty.ElektroDataCsv);
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }
@@ -216,16 +201,7 @@ namespace WinForms
             data.Columns["AWG"]?.Visible = false;
             data.Columns["Delkaft"]?.Visible = false;
 
-            //data.Columns["PrurezMM2"].Visible = false;
-            //data.Columns["Rozvadec"].Visible = false;
-            //data.Columns["RozvadecCislo"].Visible = false;
-            //data.Columns["RozvadecOznačení"].Visible = false;
-            //data.Columns["Kabel"].Visible = false;
-            //data.Columns["Motor"].Visible = false;
 
-            //data.Columns["Vykres"].Visible = false;
-            //data.Columns["Vodice"].Visible = false;
-            //data.Columns["Motor"].Visible = false;
         }
 
         /// <summary> Průzkumník tedy složka projektu </summary>
@@ -253,25 +229,11 @@ namespace WinForms
                 Console.WriteLine($"Soubor {cestaElektro} -  aktualizován.");
             }
 
-            //foreach (var itemEl in Elektro.ToHashSet())
             //{
             //funguje potom zapnout
-            //var ShodaTag = Data.Where(x => x.Tag == item.Tag).ToList();
-            //if (ShodaTag.Count() == 1)
             //{
-            //    var Jeden = ShodaTag.First();
-            //    Console.WriteLine($"Shoda je jedna - Doplněny pouze prázdné bunky ");
-            //    //var index = Data.IndexOf(Data.FirstOrDefault(x => x.Tag == item.Tag));
             //    //if (index >= 0)
             //    //{
-            //    item.Prikon = string.IsNullOrEmpty(item.Prikon) ? Jeden.Prikon : item.Prikon;
-            //    item.Menic = string.IsNullOrEmpty(item.Menic) ? Jeden.Menic : item.Menic;
-            //    item.BalenaJednotka = string.IsNullOrEmpty(item.BalenaJednotka) ? Jeden.BalenaJednotka : item.BalenaJednotka;
-            //    item.Pocet = item.Pocet == 0 ? Jeden.Pocet : item.Pocet;
-            //    item.Popis = string.IsNullOrEmpty(item.Popis) ? Jeden.Popis : item.Popis;
-            //    item.Radek = item.Radek == 0 ? Jeden.Radek : item.Radek;
-            //    item.Tag = string.IsNullOrEmpty(item.Tag) ? Jeden.Tag : item.Tag;
-            //    item.Napeti = string.IsNullOrEmpty(item.Napeti) ? Jeden.Napeti : item.Napeti;
         }
 
         private void Button14_Click(object sender, EventArgs e)
@@ -313,7 +275,6 @@ namespace WinForms
         private void PropojeniToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var table = new Rozvaděč();
-            //var result = table.ShowDialog();
             table.ShowDialog();
         }
 
@@ -355,11 +316,9 @@ namespace WinForms
         private void NastavSložkuProjektuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            //string file = Path.Combine(appData, "ElektroData", "data.txt");
             string file = Path.Combine(appData, "Elektro", "data.txt");
             Directory.CreateDirectory(Path.GetDirectoryName(file)!);
 
-            //File.WriteAllText(file, @"C:\ElektroData");
             //OpenFileDialog openFileDialog = new OpenFileDialog
             //{
             //    InitialDirectory = @"C:\ElektroData",
@@ -367,8 +326,6 @@ namespace WinForms
             //    CheckFileExists = false,
             //    CheckPathExists = true,
             //    //FileName = "Vyberte složku projektu"
-            //};
-            //var dialog = openFileDialog.ShowDialog();
 
             FolderBrowserDialog Folder = new()
             {
@@ -377,9 +334,7 @@ namespace WinForms
             };
             if (Folder.ShowDialog() == DialogResult.OK)
             {
-                //var info = 
                 Informace.Instance.BasePath = Folder.SelectedPath;
-                //info.BasePath = Folder.SelectedPath;
                 Console.WriteLine($"Složka nastavena na {Informace.Instance.BasePath}.");
                 Informace.Instance.Ulozit();
             }
@@ -405,14 +360,10 @@ namespace WinForms
 
             //Už neplatí
             //vytvoření filtru, vlastnost, string, co dělat, negace
-            //var filtry = new List<FilterRule>
             //{
             //    new(nameof(Popis.Prikon), op: FilterOperator.IsNotNullOrEmpty),
             //    new(nameof(Popis.Prikon), "-", op: FilterOperator.StartsWith,true),
             //    new(nameof(Popis.Prikon), "-", op: FilterOperator.StartsWith,true),
-            //};
-            //var Vysledek = Soubory.ApplyFilter(Data, filtry).ToList();
-            //if (Vysledek.Count < 1) { Console.WriteLine("Data nebyla nalezena."); return; }
 
             string[] sloupceZarizeni = [
                 nameof(Zarizeni.Tag),
@@ -448,13 +399,10 @@ namespace WinForms
 
             //Už neplatí
             // Filtrování zařízení stejně jako u seznamu zařízení
-            //var filtry = new List<FilterRule>
             //{
             //    new(nameof(Popis.Prikon), op: FilterOperator.IsNotNullOrEmpty),
             //    new(nameof(Popis.Prikon), "—", op: FilterOperator.StartsWith, true),
             //    new(nameof(Popis.Prikon), "-", op: FilterOperator.StartsWith, true),
-            //};
-            //var filtrovanaData = Soubory.ApplyFilter(Data, filtry).ToList();
 
             //Vyvoření seznamu
             var SeznamKabelu = new List<Trasa>();
@@ -613,15 +561,12 @@ namespace WinForms
 
         private void Button7_Click(object sender, EventArgs e)
         {
-            //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.csv");
-            //var Data = Soubory.LoadFromCsv<Popis>(Vývody);
 
             var Vývody = Cesty.VyvodyTopeniJson;
             if (!File.Exists(Vývody))
             {
                 Console.WriteLine("Soubor nebyl nalezen " + Vývody);
                 Console.WriteLine("Soubor bude vytvořen!");
-                //var prazdny = new List<Popis>();
                 Soubory.SaveJson(new List<Zarizeni>(), Vývody);
                 Console.WriteLine("Znovu klikni na tlačítko. Soubor byl vytvořen!");
                 return;
@@ -629,9 +574,7 @@ namespace WinForms
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
             Console.WriteLine($"Soubor {Vývody} - načten.");
 
-            //var DataBind = new BindingList<Popis>(Data);
             var table = new Table(Data);
-            //SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
             if (result == DialogResult.OK)
@@ -639,11 +582,8 @@ namespace WinForms
                 //přidat prázdný záznam
                 if (Data.Count < 1) Data.Add(new Zarizeni());
 
-                //Data.SaveToCsv(Vývody);
                 Data.SaveJsonList(Vývody);
 
-                //if (MessageBox.Show("Aktualiyace CSV", "Info", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                //    Data.SaveToCsv(Cesty.ElektroDataCsv);
                 // Zde můžete provést další akce po zavření dialogu
                 // Například načíst data nebo aktualizovat UI
             }
@@ -791,17 +731,8 @@ namespace WinForms
             SloucenyExporter.SavePdfSections(targetKabelyBase + ".pdf", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
             SloucenyExporter.SaveDocxSections(targetKabelyBase + ".docx", sectionsKabely, "Sloučený seznam kabelů", sloupceKabelu);
 
-            //KabelExcel(targetKabelyBase, cestaElektro, trasyHlavni);
             // 3. Doplnění speciálních záložek se vzorci a součty do Excelu
-            //var vsechnaZarizeniProKabely = new List<Popis>();
-            //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(hlavniElektro));
-            //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(ostatniVyvody));
-            //vsechnaZarizeniProKabely.AddRange(PripravZarizeniProKabely(topeni));
 
-            //var excelAppKabely = new ExcelApp(targetKabelyBase + ".xlsx");
-            //List<List<string>> poleKabely = LigthChem.SeznamKabelů(vsechnaZarizeniProKabely, excelAppKabely, "Kabely Vše");
-            //Pridat.Soucet(excelAppKabely, poleKabely, "Součet Kabely Vše");
-            //excelAppKabely.ExcelQuit(targetKabelyBase + ".xlsx");
 
             Console.WriteLine("Sloučený export kabelů dokončen ve všech 6 formátech!");
         }
@@ -875,25 +806,10 @@ namespace WinForms
             if (data == null || data.Count == 0) return [];
 
             // Klonování a příprava kabelů
-            //var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
-            //var prazdne = kopie.Where(x => x.Kabel == null).ToList();
-            //prazdne.AddKabelCyky(1.8);
-            //var spolecne = kopie.Where(x => x.Kabel != null).Concat(prazdne).ToList();
 
-            //var kabelyTrida = KabelList.KabelyTrida(spolecne);
-            //kabelyTrida = [.. kabelyTrida.OrderBy(x => x.Hlavni.Rozvadec + x.Hlavni.RozvadecCislo)];
 
-            //var change = new List<Trasa>();
-            //foreach (var kabel in kabelyTrida)
             //{
-            //    if (kabel.Hlavni != null)
-            //        change.Add(kabel.Hlavni);
-            //    if (kabel.PTC != null)
-            //        change.Add(kabel.PTC);
-            //    if (kabel.Ovladani != null)
-            //        change.Add(kabel.Ovladani);
             //}
-            //return change;
             return [];
         }
 
@@ -901,10 +817,6 @@ namespace WinForms
         {
             if (data == null || data.Count == 0) return [];
 
-            //var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
-            //var prazdne = kopie.Where(x => x.Kabel == null).ToList();
-            //prazdne.AddKabelCyky(1.8);
-            //return [.. kopie.Where(x => x.Kabel != null), .. prazdne];
             return [];
         }
 
@@ -948,16 +860,6 @@ namespace WinForms
                 int poradi = 1;
                 foreach (var z in zarizeniList)
                 {
-                    //NastavBunku(row.Cell("A"), spotrebic.Polozka, true);
-                    //NastavBunku(row.Cell("B"), spotrebic.Rev);
-                    //NastavBunku(row.Cell("C"), spotrebic.BalenaJednotka);
-                    //NastavBunku(row.Cell("D"), spotrebic.Umisteni);
-                    //NastavBunku(row.Cell("E"), spotrebic.Tag);
-                    //NastavBunku(row.Cell("F"), spotrebic.Popis);
-                    //NastavBunku(row.Cell("G"), spotrebic.TypVelikost);
-                    //NastavBunku(row.Cell("H"), spotrebic.Rozvadec);
-                    //NastavBunku(row.Cell("I"), spotrebic.Napeti, true);
-                    //NastavBunku(row.Cell("J"), spotrebic.InstalovanyPi, true);
 
                     Spotrebic s = new()
                     {
@@ -1050,17 +952,6 @@ namespace WinForms
                             prurezKabelu = string.IsNullOrEmpty(kab.PocetZil) ? kab.Prurezmm2 : kab.PocetZil + "x" + kab.Prurezmm2;
                         }
 
-                    //NastavBunku(row.Cell("A"), kabel.Polozka, true);
-                    //NastavBunku(row.Cell("B"), kabel.Revize);
-                    //NastavBunku(row.Cell("C"), kabel.CisloKabelu);
-                    //NastavBunku(row.Cell("D"), kabel.KabelTyp);
-                    //NastavBunku(row.Cell("E"), kabel.Prurez);
-                    //NastavBunku(row.Cell("F"), kabel.Delka, true);
-                    //NastavBunku(row.Cell("G"), kabel.ZeZarizeni);
-                    //NastavBunku(row.Cell("H"), kabel.UkonceniZe);
-                    //NastavBunku(row.Cell("I"), kabel.DoZarizeni);
-                    //NastavBunku(row.Cell("J"), kabel.UkonceniDo);
-                    //NastavBunku(row.Cell("K"), kabel.Poznamka);
 
                         var DelkaPom = double.TryParse(kab.Delka?.Replace(',', '.'),System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,out double d) ? d.ToString(System.Globalization.CultureInfo.InvariantCulture) : "";
                         KabelPolozka kp = new()
@@ -1172,9 +1063,6 @@ namespace WinForms
             }, null);
         }
 
-        //public override void Write(char value)
-        //{
-        //    // Nepřepisujeme po znacích, pouze řádky (volitelné)
-        //}
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Knihovna.Tridy;
 
@@ -13,7 +13,6 @@ public sealed class Nastaveni : Form
     private readonly TextBox _tbSouborStrojeXls = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbSouborStrojeJson = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbSouborElektroJson = new() { Dock = DockStyle.Fill };
-    //private readonly TextBox _tbSouborData = new() { Dock = DockStyle.Fill };
 
     private readonly TextBox _tbMistnost = new() { Dock = DockStyle.Fill };
     private readonly TextBox _tbProjekt = new() { Dock = DockStyle.Fill };
@@ -220,4 +219,5 @@ public sealed class Nastaveni : Form
         Close();
     }
 }
+
 

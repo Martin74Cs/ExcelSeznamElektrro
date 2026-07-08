@@ -1,4 +1,4 @@
-using Knihovna;
+﻿using Knihovna;
 using Knihovna.Export;
 using Knihovna.Tridy;
 using Newtonsoft.Json;
@@ -37,13 +37,8 @@ namespace Knihovna {
     }
 
     //public class FilterRule {
-    //    public string PropertyName { get; set; } = "";
     //    public object? Value { get; set; }
 
-    //    public FilterRule(string propertyName, object value) {
-    //        PropertyName = propertyName;
-    //        Value = value;
-    //    }
     //}
 
     public static partial class Soubory {
@@ -165,7 +160,6 @@ namespace Knihovna {
                     dialog.InitialDirectory = defaultPath;
                 }
                 else {
-                    //var info = Informace.Create;
                     if(!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData)) {
                         dialog.InitialDirectory = Informace.AppData;
                     }
@@ -220,7 +214,6 @@ namespace Knihovna {
                     dialog.InitialDirectory = defaultPath;
                 }
                 else {
-                    //var info = Informace.Create;
                     if(!string.IsNullOrEmpty(Informace.AppData) && System.IO.Directory.Exists(Informace.AppData)) {
                         dialog.InitialDirectory = Informace.AppData;
                     }
@@ -284,7 +277,6 @@ namespace Knihovna {
         public static List<T> LoadJsonEn<T>(string cesta) where T : new() {
             if(!System.IO.File.Exists(cesta)) return [];
             string jsonString = System.IO.File.ReadAllText(cesta);
-            //List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString);
             List<T> moje = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(jsonString, NastaveniEn()) ?? [];
             return moje;
         }
@@ -438,7 +430,6 @@ namespace Knihovna {
 
         //zadávat podmínky dynamicky pomocí
         //Příklad
-        //var vyber = Filter(seznam, nameof(Popis.Tag), "M1");
         public static IEnumerable<T> Filter<T>(IEnumerable<T> data, string propertyName, string value) {
             var prop = typeof(T).GetProperty(propertyName);
 
@@ -449,14 +440,11 @@ namespace Knihovna {
         }
 
         //Pokud potřebuješ kombinaci více podmínek:
-        //var vyber = seznam.Where(x =>
         //x.Menic &&
         //x.Tag.StartsWith("M") &&
-        //!string.IsNullOrWhiteSpace(x.Popis));
 
         //Pro bool:
         //Příklad
-        //var vyber = Filter(seznam, nameof(Popis.Menic), true);
         public static IEnumerable<T> Filter<T>(
             IEnumerable<T> data,
             string propertyName,
@@ -585,7 +573,6 @@ namespace Knihovna {
 
             File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
 
-            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
             Console.WriteLine($"Hotovo! Soubor {Path.GetFileName(cesta)} Uložen.");
         }
 
@@ -619,26 +606,17 @@ namespace Knihovna {
             GenerateRows(Pole, sb);
 
             // Řádky tabulky
-            //foreach (var item in Pole)
             //{
-            //    sb.AppendLine("<tr>");
-            //    foreach (var prop in props)
             //    {
             //        //to co se má vynechat u html.
-            //        if (prop.Name == "Item") continue;
-            //        //if (!start.Contains(prop.Name)) continue;
 
-            //        object value = prop.GetValue(item, null) ?? "";
-            //        sb.AppendLine($"<td>{System.Net.WebUtility.HtmlEncode(value.ToString())}</td>");
 
             //    }
-            //    sb.AppendLine("</tr>");
             //}
             sb.AppendLine("</tbody></table></body></html>");
 
             File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);
 
-            //Console.WriteLine($"Hotovo! Uloženo do {cesta}");
             Console.WriteLine($"Hotovo! Soubor {Path.GetFileName(cesta)} Uložen.");
         }
 
@@ -688,7 +666,6 @@ namespace Knihovna {
                 }
                 else if(value is IEnumerable List && value is not string) {
                     // vezmeme první prvek (nebo můžeš expandovat řádky)
-                    //var first = List.Cast<object>().FirstOrDefault();
                     GenerateCells(List, sb);
                 }
                 else if(prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string)) {
@@ -739,28 +716,10 @@ namespace Knihovna {
 
 
 
-        //public static void GenerateCells(object obj, StringBuilder sb)
-        //{
-        //    if (obj == null)
-        //    {
-        //        sb.AppendLine("<td></td>");
-        //        return;
-        //    }
-
-        //    var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        //    foreach (var prop in props)
-        //    {
-        //        var value = prop.GetValue(obj);
-        //        sb.AppendLine($"<td>{value}</td>");
-        //    }
-        //}
 
 
         public static void SaveDocx<T>(this List<T> Pole, string cesta) {
             //ruzné varienty vytvoření dokumentu
-            //new Word().SaveDocx(Pole, cesta);
-            //new Word().SaveDocxList(Pole, cesta);
             Word.SaveDocxListClass(Pole, cesta);
         }
 
@@ -863,15 +822,12 @@ namespace Knihovna {
 
         //[LibraryImport("user32.dll", SetLastError = true)]
         ////[LibraryImport("user32.dll", SetLastError = true)]
-        //private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         //[LibraryImport("user32.dll", SetLastError = true)]
-        //public static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         /*
         public static int GetExcelProcess(Application myApp)
         {
-            //IntPtr myHwnd = (IntPtr)myApp.Hwnd;
             IntPtr myHwnd = (IntPtr)myApp.Hwnd;
             GetWindowThreadProcessId(myHwnd, out uint myProcessId);
             return (int)myProcessId;
@@ -891,3 +847,4 @@ namespace Knihovna {
         }
     }
 }
+

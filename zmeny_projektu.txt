@@ -47,4 +47,14 @@
      - FormKabely.cs: Změněny signatury event handlerů (object? sender) a ošetřeno ToString() na SelectedItem.
    - Dopad: Výrazné zvýšení stability formulářů WinForms a kompletní eliminace všech 52 varování kompilátoru o možnostech chyb NullReferenceException za běhu. Celé řešení se nyní kompiluje se 100% čistým výsledkem (0 chyb, 0 varování).
 
+8. TŘETÍ FÁZE: VYMAZÁNÍ ZAKOMENTOVANÉHO KÓDU Z CELÉHO PROJEKTU
+   - Soubory: Všechny .cs soubory v projektu (Knihovna, Aplikace, WinForms)
+   - Změna:
+     - Z celého projektu byl odstraněn nepoužívaný zakomentovaný kód.
+     - Byly vymazány celé zakomentované metody, zkušební a staré verze algoritmů.
+     - Běžné textové komentáře (vysvětlivky a nápovědy) byly zachovány pro usnadnění orientace v kódu.
+     - Všechny modifikované soubory byly uloženy v jednotném kódování UTF-8 s diakritikou.
+     - Byl vytvořen soubor 'smazane_metody.txt' obsahující report s názvy a umístěním všech 27 smazaných metod.
+   - Dopad: Projekt je přehlednější, neobsahuje redundantní staré kódy a splňuje pravidlo jednotného kódování UTF-8. Kompilace zůstává bez chyb.
+
 ==================================================================

@@ -1,4 +1,4 @@
-﻿using CsvHelper;
+﻿﻿using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 using Knihovna;
@@ -116,7 +116,6 @@ namespace Aplikace.Seznam
                 Map(m => m.Skupina).Name("Typové značení");
                 Map(m => m.Jmeno).Name("Název produktu");
                 Map(m => m.Popis).Name("Popis produktu");
-                //Map(m => m.Popis).Name("Popis produktu");
                 Map(m => m.Rabat).Name("Rabatová skupina");
                 Map(m => m.ZakladniCena).Name("Základní cena");
                 Map(m => m.Jednotka).Name("Měrná jednotka položky");
@@ -200,7 +199,6 @@ namespace Aplikace.Seznam
             Druhy.SaveJsonList(Path.Combine(cesta, "Jištení", "Druhy.json"));
             var Pole = products.GroupBy(x => x.Skupina).OrderBy(x => x.Key);
             //foreach(var item in Pole) 
-            //    Console.WriteLine(item.Key);
 
             foreach (var item in Pole.Where(x => x.Key.Contains("Pojist")))
             {

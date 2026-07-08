@@ -1,4 +1,4 @@
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Knihovna.Tridy;
 using System;
@@ -56,42 +56,21 @@ namespace WinForms
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 //// Získání hodnoty buňky
-                //var cellValue = data.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
                 //// Zde můžete provést akci s hodnotou buňky, například ji zobrazit v MessageBoxu
-                //MessageBox.Show($"Hodnota buňky: {cellValue}");
 
-                //foreach (var itemEl in Elektro.ToHashSet())
                 //{
-                //    var ShodaStrojni = Strojni.Where(x => x.Tag.Contains(itemEl.Tag[..^1])).ToList();
-                //    if (ShodaStrojni.Count() > 1)
                 //    {
-                //        Console.WriteLine($"Shody Tagu - {ShodaStrojni.Count} kusy ");
 
                 //        // Zobrazíme druhý formulář jako modální dialog
                 //    }
 
                     //funguje potom zapnout
-                    //var ShodaTag = Data.Where(x => x.Tag == item.Tag).ToList();
-                    //if (ShodaTag.Count() == 1)
                     //{
-                    //    var Jeden = ShodaTag.First();
-                    //    Console.WriteLine($"Shoda je jedna - Doplněny pouze prázdné bunky ");
-                    //    //var index = Data.IndexOf(Data.FirstOrDefault(x => x.Tag == item.Tag));
                     //    //if (index >= 0)
                     //    //{
-                    //    item.Prikon = string.IsNullOrEmpty(item.Prikon) ? Jeden.Prikon : item.Prikon;
-                    //    item.Menic = string.IsNullOrEmpty(item.Menic) ? Jeden.Menic : item.Menic;
-                    //    item.BalenaJednotka = string.IsNullOrEmpty(item.BalenaJednotka) ? Jeden.BalenaJednotka : item.BalenaJednotka;
-                    //    item.Pocet = item.Pocet == 0 ? Jeden.Pocet : item.Pocet;
-                    //    item.Popis = string.IsNullOrEmpty(item.Popis) ? Jeden.Popis : item.Popis;
-                    //    item.Radek = item.Radek == 0 ? Jeden.Radek : item.Radek;
-                    //    item.Tag = string.IsNullOrEmpty(item.Tag) ? Jeden.Tag : item.Tag;
-                    //    item.Napeti = string.IsNullOrEmpty(item.Napeti) ? Jeden.Napeti : item.Napeti;
                     //}
                     //else
                     //{ 
-                    //    Console.WriteLine($"Kontrola - počet shod {ShodaTag.Count}");
-                    //    item.Popis = $"KONTROLA - počet shod {ShodaTag.Count} ";
                     //}
                 //}
 
@@ -147,28 +126,13 @@ namespace WinForms
                     targetRow.DefaultCellStyle.ForeColor = Color.Black;
                 }
 
-                // Najdeme instanci ve zdroji dat (předpoklad: BindingList nebo jiný upravitelný seznam)
-                //if(dataGridView2.DataSource is BindingList<Popis> elektro) {
-                //    int index = dataGridView2.CurrentRow.Index;
-
-                //    // Nahraďme celý objekt nebo jen jeho vlastnosti (záleží, jak s tím pracuješ dál)
-                //    elektro[index] = new Popis {
-                //        Radek = selectedElektro.Radek,
-                //        Prikon = selectedElektro.Prikon,
-                //        Menic = selectedElektro.Menic,
-                //        BalenaJednotka = selectedElektro.BalenaJednotka,
-                //        Popis = selectedElektro.Popis,
-                //        Tag = selectedElektro.Tag
-                //        // přidej další vlastnosti podle potřeby
-                //    };
-                //}
                 // Aby DataGridView vykreslil změny
-                //dataGridView2.Refresh();
             }
         }
     }
     
 }
  
+
 
 

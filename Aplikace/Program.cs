@@ -1,4 +1,4 @@
-// See https://aka.ms/new-console-template for more information
+﻿// See https://aka.ms/new-console-template for more information
 using Aplikace;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
@@ -51,7 +51,6 @@ while(!konec) {
     Console.Write("Vyberte možnost [0-100]: ");
 
     //Nastavení cesty 
-    //CestaSoubor.Instance.Cesta = currentPath;
 
     string? volba = Console.ReadLine();
     Console.WriteLine();
@@ -110,7 +109,6 @@ while(!konec) {
                 if(!string.IsNullOrEmpty(novaCesta)) {
                     var info = Informace.Instance;
                     info.BasePath = novaCesta;
-                    //info.Ulozit();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Projektová složka byla úspěšně změněna na: {novaCesta}");
                     Console.ResetColor();
@@ -127,13 +125,11 @@ while(!konec) {
             case "7":
                 Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
                 string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath);
-                //var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
                 var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
                 Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
                 foreach(var item in Json) {
                     Console.WriteLine($"Jmeno zařízení : {item.Text}, {item.KksCount},{item.SumoHandle} ");
                 }
-                //Json.SaveHtmlStyleJinaK(Path.ChangeExtension(CestaSoubor, ".html"));
 
                 var FlatJson = FlatRow.Flatten(Json);
                 FlatJson.SaveHtmlStyleFlat(Path.ChangeExtension(CestaSoubor, ".html"));
@@ -141,14 +137,10 @@ while(!konec) {
 
                 //DocxGenerator
                 FlatJson.SaveDocxGenFlat(Path.ChangeExtension(CestaSoubor, ".docx"));
-                //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
-                //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
 
                 FlatJson.SavePdfGenFlat(Path.ChangeExtension(CestaSoubor, ".pdf"));
 
                 FlatJson.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
-                //Prevod.SaveToCsv(FlatJson, Path.ChangeExtension(CestaSoubor, ".csv"));
-                //CestaSoubor.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
 
                 Console.WriteLine("\nHotovo. Stiskněte libovolnou klávesu...");
                 Console.ReadKey();
@@ -160,7 +152,6 @@ while(!konec) {
 
             case "0":
                 konec = true;
-                //Informace.Create.Ulozit();
                 Console.WriteLine("Ukončuji aplikaci. Na shledanou!");
                 break;
 
@@ -183,11 +174,9 @@ while(!konec) {
 static void SumoKKs() {
     Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
     string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath);
-    //var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
     var Json = Soubory.LoadJsonEn<SumoDivisionLog>(CestaSoubor);
     Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
 
-    //Json.SaveHtmlStyleJinaK(Path.ChangeExtension(CestaSoubor, ".html"));
 
     var FlatJson = Json.ToFlatRows();
     FlatJson.SaveHtmlStyleFlat(Path.ChangeExtension(CestaSoubor, ".html"));
@@ -195,14 +184,10 @@ static void SumoKKs() {
 
     //DocxGenerator
     FlatJson.SaveDocxGenFlat(Path.ChangeExtension(CestaSoubor, ".docx"));
-    //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
-    //Json.SaveDocx(Path.ChangeExtension(CestaSoubor, ".docx"));
 
     FlatJson.SavePdfGenFlat(Path.ChangeExtension(CestaSoubor, ".pdf"));
 
     FlatJson.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
-    //Prevod.SaveToCsv(FlatJson, Path.ChangeExtension(CestaSoubor, ".csv"));
-    //CestaSoubor.SaveToCsv(Path.ChangeExtension(CestaSoubor, ".csv"));
 
     Console.WriteLine("\nHotovo. Stiskněte libovolnou klávesu...");
     Console.ReadKey();
@@ -278,4 +263,5 @@ namespace Aplikace {
     }
 
 }
+
 

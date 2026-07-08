@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+﻿﻿using ClosedXML.Excel;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using Knihovna.Tridy;
@@ -170,40 +170,21 @@ namespace Knihovna.Excel {
                 else if (_range is not null)
                     _range.Value = xlValue;
             }
-            //get => _cell?.Value ?? "";
             //set
             //{
-            //    if (value == null)
             //    {
-            //        _cell?.Clear();
-            //        return;
             //    }
 
-            //    if (value is string s)
             //    {
-            //        if (_cell != null) _cell.Value = s;
-            //        else _range?.Value = s;
             //    }
-            //    else if (value is double d)
             //    {
-            //        if (_cell != null) _cell.Value = d;
-            //        else _range?.Value = d;
             //    }
-            //    else if (value is int val)
             //    {
-            //        if (_cell != null) _cell.Value = val;
-            //        else _range?.Value = val;
             //    }
-            //    else if (value is bool b)
             //    {
-            //        if (_cell != null) _cell.Value = b;
-            //        else _range?.Value = b;
             //    }
             //    else
             //    {
-            //        string str = value.ToString() ?? "";
-            //        if (_cell != null) _cell.Value = str;
-            //        else _range?.Value = str;
             //    }
             //}
         }
@@ -362,11 +343,7 @@ namespace Knihovna.Excel {
                 bool Prerusit = true;
 
                 //OMEZENÍ NAČÁTÁNÍ RADKU
-                //string tagstr = ws.Cell(i, 5).GetString();
-                //if (!new[] { "M", "MOB", "MOP" }.Contains(tagstr))
                 //{
-                //    Prerusit = false;
-                //    continue;
                 //}
 
                 foreach (var j in dir.Keys.ToArray())
@@ -587,7 +564,6 @@ namespace Knihovna.Excel {
             string cesta1 = @"C:\VisualStudio\Parametr\AplikacePomoc\Motory\Motory500V.xlsx";
             var PouzitProTabulku = new int[] { 1, 2, 3 };
             var Motory500 = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku, "Motory500V", 2);
-            //Motory500.Vypis();
 
             if (!File.Exists(cesta)) return;
 
@@ -1277,3 +1253,4 @@ namespace Knihovna.Excel {
         }
     }
 }
+

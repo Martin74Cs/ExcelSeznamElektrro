@@ -1,4 +1,4 @@
-using Aplikace.Tridy;
+﻿using Aplikace.Tridy;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -15,7 +15,6 @@ namespace Knihovna.Export
 
             if (!Soubory.CanSaveFile(docxPath)) return;
 
-            //var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0).ToArray();
 
             using var wordDoc = WordprocessingDocument.Create(docxPath, WordprocessingDocumentType.Document);
@@ -129,7 +128,6 @@ namespace Knihovna.Export
             //        bold: false,
             //        fontSizeHalfPoints: 20,
             //        spacingAfter: 200)
-            //);
             body.Append(
                 new SectionProperties(new PageSize()
                     {

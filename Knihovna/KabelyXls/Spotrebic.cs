@@ -1,4 +1,4 @@
-﻿namespace Knihovna.KabelyXls
+﻿﻿namespace Knihovna.KabelyXls
 {
     /// <summary>
     /// Reprezentuje spotřebič elektro v soupisu spotřebičů.
@@ -44,12 +44,10 @@
         ///// <summary>
         ///// Počet kusů (Ks).
         ///// </summary>
-        //public string Ks { get; set; } = string.Empty;
 
         ///// <summary>
         ///// PID označení.
         ///// </summary>
-        //public string Pid { get; set; } = string.Empty;
 
         /// <summary>
         /// Napájecí rozváděč.
@@ -74,7 +72,6 @@
         ///// <summary>
         ///// Parametr IVCHS.
         ///// </summary>
-        //public string Ivchs { get; set; } = string.Empty;
 
         /// <summary>
         /// Způsob startu motoru.
@@ -87,3 +84,4 @@
         public string Poznamka { get; set; } = string.Empty;
     }
 }
+

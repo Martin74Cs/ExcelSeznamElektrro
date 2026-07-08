@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+﻿﻿using Aplikace.Sdilene;
 using Knihovna;
 using Knihovna.Tridy;
 using System.Data;
@@ -8,8 +8,6 @@ namespace WinForms {
         private List<Zarizeni> Data = [];
         public Rozvaděč() {
             InitializeComponent();
-            //Data = Soubory.LoadJsonList<Popis>(Cesty.ElektroDataJson);
-            //var Vývody = Path.Combine(Cesty.VyvodyJson, "Vývody.json");
             Data = Soubory.LoadJsonList<Zarizeni>(Cesty.ElektroDataCsv);
             Set(listViewCategories);
             Set(listViewProducts);
@@ -28,9 +26,6 @@ namespace WinForms {
 
             foreach(var dat in Data.DistinctBy(x => x.RozvadecOznačení)) {
                 var item = new ListViewItem(dat.RozvadecOznačení) {
-                    //item.SubItems.Add(dat.RozvadecOznačení);
-                    //item.SubItems.Add(dat.Popis);
-                    //item.SubItems.Add(dat.Tag);
                     Tag = dat // Ulož celou instanci pro pozdější použití
                 };
                 listViewCategories.Items.Add(item);
@@ -44,12 +39,10 @@ namespace WinForms {
                 if (item.Tag is Zarizeni zzz)
                 {
                     var vvv = Data.Where(x => x.RozvadecOznačení == zzz.RozvadecOznačení).ToList();
-                    //MessageBox.Show($"Test: {zzz.Tag}");
                     
                     listViewProducts.Items.Clear();
                     foreach(var dat in vvv) {
                         var lll = new ListViewItem(dat.RozvadecOznačení);
-                        //lll.SubItems.Add(dat.RozvadecOznačení);
                         lll.SubItems.Add(dat.Popis);
                         lll.SubItems.Add(dat.Tag);
                         lll.Tag = dat; // Ulož celou instanci pro pozdější použití
@@ -60,3 +53,4 @@ namespace WinForms {
         }
     }
 }
+

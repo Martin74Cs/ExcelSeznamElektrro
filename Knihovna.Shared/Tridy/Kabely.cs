@@ -1,4 +1,4 @@
-using Knihovna.Tridy;
+﻿using Knihovna.Tridy;
 using System.ComponentModel.DataAnnotations;
 
 namespace Knihovna.Shared.Tridy
@@ -56,7 +56,6 @@ namespace Knihovna.Shared.Tridy
         public Kabel? KabelData { get; set; } = new Kabel();
 
         //převod enumu na pole stringů 
-        //public static string[] KabelZnačkaPole => Enum.GetNames<KabelZnačka>();
     }
 
     /*
@@ -85,10 +84,8 @@ namespace Knihovna.Shared.Tridy
 
     public class Kabel : Entity
     {
-        //public string Deleni { get; set; } = string.Empty;
         public string Označení { get; set; } = string.Empty;
         
-        //public string Proud { get; set; } = string.Empty;
 
         public string Name { get; set; } = string.Empty;
         public string Proud { get; set; } = string.Empty;
@@ -216,3 +213,4 @@ namespace Knihovna.Shared.Tridy
             KabelVse.ProcentaU3f(kabel, napeti, proud, delka, uhel);
     }
 }
+

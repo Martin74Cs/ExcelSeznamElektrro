@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+﻿﻿using Aplikace.Sdilene;
 using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Tridy;
@@ -9,7 +9,6 @@ namespace Aplikace.Upravy
     {
         public static List<Mistnost> Vytvorit(string cesta, string objekt = "SO000")
         {
-            //var cesta = Path.Combine(Cesty.BasePath, "revit", SO, "Místnosti.csv");
             //c:\a\LightChem\Elektro\revit\SO117\
             var Mistnost = Soubory.LoadFromCsv<Mistnost>(cesta);
 
@@ -19,16 +18,11 @@ namespace Aplikace.Upravy
                 Mistnost[i].Apid = ExcelLoad.Apid();
             }
             Mistnost.SaveJsonList(Path.ChangeExtension(cesta, ".json"));
-            //Prevod.SaveToCsv(Mistnost ,Path.ChangeExtension(cesta, ".txt"));
             return Mistnost;
         }
 
         public static void VytvoritSeznamy()
         {
-            //var Místnosti = Path.Combine(Cesty.BasePath, "Místnosti");
-            //if (!Directory.Exists(Místnosti)) Directory.CreateDirectory(Místnosti);          
-            //var Revit = Path.Combine(Místnosti, "revit");
-            //if (!Directory.Exists(Revit)) Directory.CreateDirectory(Revit);
 
             var Slabo = new List<Slaboproudy>();
 
@@ -51,21 +45,18 @@ namespace Aplikace.Upravy
             Slabo.AddRange(parents3);
 
             //Hlavní soubor
-            //string cestaXLs = Path.Combine(Místnost, "Místnosti.celek.xlsx");
             Console.WriteLine(Cesty.MistnostiXLs);
 
             //Soubory pro upravení
             Slabo.SaveJsonList(Path.ChangeExtension(Cesty.MistnostiXLs, ".json"));
             
             Knihovna.Sdilene.Prevod.SaveToCsv(Slabo, Path.ChangeExtension(Cesty.MistnostiXLs, ".csv"));
-            //Slabo.SaveToCsv(Path.ChangeExtension(Cesty.MistnostiXLs, ".csv"));
 
             //Vyvořit nebo otevřít excel
             var ExcelApp = new ExcelApp(Cesty.MistnostiXLs);
             ExcelApp.GetSheet("Místnosti");
             
             //Vytvoření nadpisů
-            //ExcelApp.Nadpisy<Mistnost>(Mistnost.Sloupce);
             ExcelApp.Nadpisy(Slaboproudy.SloupceSpojit);
 
             //Vytvoření dat
@@ -75,3 +66,4 @@ namespace Aplikace.Upravy
         }
     }
 }
+

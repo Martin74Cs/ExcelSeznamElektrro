@@ -1,16 +1,10 @@
-﻿
+﻿﻿
 using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace Knihovna.Tridy {
     //public class Pole {
-    //    public string BasePath { get; set; } = string.Empty;
-    //    public string Místnost { get; set; } = string.Empty;
-    //    public string Projekt { get; set; } = string.Empty;
-    //    public string Název { get; set; } = string.Empty;
-    //    public string Poznámka { get; set; } = string.Empty;
-    //    public DateTime Datum { get; set; } = DateTime.Now;
     //}
 
     //Jedná se o singleton, který uchovává informace o aktuálním projektu a umožňuje jejich načítání a ukládání do souboru v AppData
@@ -26,7 +20,6 @@ namespace Knihovna.Tridy {
         // ------------------------------
         private Informace() { }
 
-        //private static Informace? Info = null ;
         private static List<KeyValuePair<string, string>> Data { get; set; } = [];
  
         // ------------------------------
@@ -119,12 +112,8 @@ namespace Knihovna.Tridy {
 
             File.WriteAllText(Soubor, json);
             //if(!Directory.Exists(Adresar)) {
-            //    Directory.CreateDirectory(Adresar);
             //}
-            //string json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Soubory.Nastaveni());
-            //File.WriteAllText(Soubor, json);
             ////Create = this;
-            //Console.WriteLine("Cesty k souborům aktualizovány");
         }
 
         private static Informace Nacti()
@@ -154,3 +143,4 @@ namespace Knihovna.Tridy {
 
 
 }
+

@@ -1,4 +1,4 @@
-using Knihovna;
+﻿using Knihovna;
 using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System;
@@ -239,7 +239,6 @@ namespace WinForms
             int maxNum = 0;
             //foreach(var z in _seznamZarizeni) {
             foreach (var k in activeZar.SeznamKabelu)  {
-             //   foreach (var k in _predvoleneZarizeni.SeznamKabelu) {
                 if(k.Oznaceni.StartsWith(znacka)) {
                     string numPart = k.Oznaceni.Substring(znacka.Length).Trim();
                     if(int.TryParse(numPart, out int num)) {
@@ -283,7 +282,6 @@ namespace WinForms
             // 2. Označení – kontrola duplicity (při úpravě ignorujeme stávající kabel)
             //bool duplicita = _seznamZarizeni.Any(z => z.SeznamKabelu.Any(k =>
             //    !ReferenceEquals(k, _upravovanyKabel) &&
-            //    string.Equals(k.Oznaceni, noveOznaceni, StringComparison.OrdinalIgnoreCase)));
 
             // 2. Označení – kontrola duplicity pouze v rámci jednoho vybraného zařízení
             bool duplicita = vybraneZarizeni.SeznamKabelu.Any(k =>
@@ -360,7 +358,6 @@ namespace WinForms
                 _upravovanyKabel.Svorka = txtSvorka.Text.Trim();
                 _upravovanyKabel.Popis = txtPopis.Text.Trim();
 
-                //UlozData();
                 ResetFormNaNovaKabel();
                 ObnovSeznamKabelu();
             }
@@ -383,7 +380,6 @@ namespace WinForms
 
                 activeZar.SeznamKabelu.Add(trasa);
 
-                //UlozData();
                 ObnovSeznamKabelu();
             }
         }
@@ -395,7 +391,6 @@ namespace WinForms
             if(dataGridViewKabely.CurrentRow.DataBoundItem is Trasa vybranyKabel) {
                 if(MessageBox.Show($"Opravdu chcete smazat kabel '{vybranyKabel.Oznaceni}'?", "Potvrzení", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     activeZar.SeznamKabelu.Remove(vybranyKabel);
-                    //UlozData();
                     ResetFormNaNovaKabel();
                     ObnovSeznamKabelu();
                 }
@@ -500,7 +495,6 @@ namespace WinForms
 
             activeZar.SeznamKabelu.Add(trasa);
 
-            //UlozData();
             ObnovSeznamKabelu();
         }
 
@@ -519,7 +513,6 @@ namespace WinForms
         private void BtnRychlyOvladani7_Click(object sender, EventArgs e) {
             // Ovládací skříň 7 vodičů - typ CYKY-O 7x1.5, 7 žil, průřez 1.5, popis "Ovládací skříňka"
             string prefix = string.IsNullOrWhiteSpace(txtPrefixOvladani.Text) ? "WS" : txtPrefixOvladani.Text.Trim();
-            //PridejRychlyKabel(prefix, "CYKY-O", "7", "2.5", "Ovládací skříňka");
             PridejRychlyKabel(prefix, "JZ-600-Y-CY", "7G", "1.5", "MS");
         }
 
@@ -547,14 +540,6 @@ namespace WinForms
             PridejRychlyKabel(prefix, "CYKY-O", "3", "1.5", "Blokování");
         }
 
-        //private void UlozData() {
-        //    try {
-        //        //string Cesta = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.Json");
-        //        //_seznamZarizeni.SaveJsonList(Cesta);
-        //    } catch(Exception ex) {
-        //        MessageBox.Show($"Nepodařilo se uložit data do souboru: {ex.Message}", "Chyba ukládání", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
 
         private void BtnZavrit_Click(object sender, EventArgs e) {
             this.Close();
@@ -589,4 +574,5 @@ namespace WinForms
         }
     }
 }
+
 

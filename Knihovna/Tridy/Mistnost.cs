@@ -1,7 +1,4 @@
-﻿//using Aplikace.Rozšíření;
-//using Aplikace.Upravy;
-//using Newtonsoft.Json;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -77,7 +74,6 @@ namespace Knihovna.Tridy
         //        //{9, "PovrchováÚpravaStropu" },
         //        //{10, "PovrchováÚpravaStěny" },
         //        //{12, "Sloupce" },
-        //    };
         public static IDictionary<int, string> Sloupce => Nadpis
             .Select((name, index) => new { Index = index + 1, Name = name })
             .ToDictionary(x => x.Index, x => x.Name);
@@ -107,7 +103,6 @@ namespace Knihovna.Tridy
         }
 
         //[Display(Name = "Pokus")]
-        //public string Pokus { get; set; } = string.Empty;
     
         [Display(Name = "Hlásič")]
         public int EpsHlasic { get; set; } 
@@ -164,6 +159,6 @@ namespace Knihovna.Tridy
                 .Select((name, index) => new { Index = index + 1, Name = name })
                 .ToDictionary(x => x.Index, x => x.Name);
 
-        //=> Sloupce.AddRange(Mistnost.Sloupce);
     }
 }
+

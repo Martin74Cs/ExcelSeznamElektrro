@@ -1,4 +1,4 @@
-using Knihovna.Tridy;
+﻿using Knihovna.Tridy;
 
 namespace Knihovna.Excel {
     public class ExcelLoad
@@ -10,21 +10,13 @@ namespace Knihovna.Excel {
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
 
-            //var Pole = new List<List<string>>();
-            //string Soubor = Path.GetFileName(cesta);
-            //string Adresar = Path.GetDirectoryName(cesta);
-            //string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
             string json = Path.ChangeExtension(cesta, ".json");
-            //if (File.Exists(json))
             //{
-            //    return Soubory.LoadJsonList<List<string>>(json);
-            //    //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             //}
             //else
             //{
                 var ExcelApp = new ExcelApp();
                 var Pole = ExcelApp.ExelLoadTable(cesta, Tabulka, Radek, Sloupce);
-                //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 if(Pole.Count>1) Pole.SaveJsonList(json);
                 Console.WriteLine($"načeno {Pole.Count} záznamů.");
                 return Pole;
@@ -37,15 +29,10 @@ namespace Knihovna.Excel {
             Console.WriteLine("Probíná hačítání dat ... ");
             //začíná sloupcem číslo 1
 
-            //var Pole = new List<List<string>>();
-            //var Pole = new List<Popis>();
-            //string Soubor = Path.GetFileName(cesta);
-            //string Adresar = Path.GetDirectoryName(cesta);
 
             if (!File.Exists(cesta)) return [];
 
             var ExcelApp = new ExcelApp(cesta);
-            //ExcelApp.DokumetExcel(cesta);
             ExcelApp.GetSheet(Tabulka);
             if (ExcelApp.Xls == null) return [];
             
@@ -66,8 +53,6 @@ namespace Knihovna.Excel {
             var Pole = ExcelApp.ExelTable(Radek,Tabulka, dir);
 
             ExcelApp.ExcelQuit(cesta);
-            //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-            //if (Pole.Count > 1) Pole.SaveJsonList(Cesty.ElektroRozvaděčJson);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");
             return Pole;
         }
@@ -111,9 +96,7 @@ namespace Knihovna.Excel {
                 }
                 string file = Path.Combine(dir, "column_mappings.json");
                 
-                //var allConfigs = LoadAllMappings();
                 
-                //allConfigs.RemoveAll(x => x.FilePath.Equals(filePath, StringComparison.OrdinalIgnoreCase));
                 
                 var propToCol = new Dictionary<string, int>();
                 foreach (var kvp in mapping)
@@ -210,7 +193,6 @@ namespace Knihovna.Excel {
             if (!File.Exists(cesta)) return [];
 
             var ExcelApp = new ExcelApp(cesta);
-            //var workbook = new ClosedXML.Excel.XLWorkbook(cesta);
             var sheetNames = ExcelApp.Doc.Worksheets.Select(x => x.Name).ToList();
 
             if (sheetNames.Count == 0)
@@ -546,7 +528,6 @@ namespace Knihovna.Excel {
             }
 
             // Načtení dat pomocí vybraného listu a mapování
-            //ExcelApp.GetSheet(finalSheetName);
             var Pole = ExcelApp.ExelTable(finalStartRow, finalSheetName, dir);
             ExcelApp.ExcelQuit(cesta);
             Console.WriteLine($"načteno {Pole.Count} záznamů.");
@@ -587,8 +568,6 @@ namespace Knihovna.Excel {
             var Pole = ExcelApp.ExelTableVykresy(Radek,Tabulka, dir);
 
             ExcelApp.ExcelQuit(cesta);
-            //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
-            //if (Pole.Count > 1) Pole.SaveJsonList(Cesty.ElektroRozvaděčJson);
             Console.WriteLine($"načeno {Pole.Count} záznamů.");
             return Pole;
         }
@@ -640,20 +619,17 @@ namespace Knihovna.Excel {
             Console.Write("\nProbíná hačítání dat ... ");
             //začíná sloupcem číslo 1
 
-            //var Pole = new List<Popis>();
             string Soubor = Path.GetFileName(cesta);
             string Adresar = Path.GetDirectoryName(cesta) ?? Environment.SpecialFolder.MyDocuments.ToString();
             string json = Path.Combine(Adresar, Path.ChangeExtension(Soubor, ".json"));
             if (File.Exists(json))
             {
                 return Soubory.LoadJsonList<Zarizeni>(json);
-                //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
             }
             else
             {
                 var ExcelApp = new ExcelApp();
                 var Pole = ExcelApp.ExelLoadTableTrida(cesta, Tabulka, Radek, Sloupce, TextPole);
-                //Pole = Pole.OrderBy(x => Convert.ToDouble(x[0])).ToList();
                 Pole.SaveJsonList(json);
                 return Pole;
             }
@@ -663,8 +639,6 @@ namespace Knihovna.Excel {
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var random = new Random();
-            //return new string(Enumerable.Repeat(chars, length)
-            //    .Select(s => s[random.Next(s.Length)]).ToArray());
             return new string([.. Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)])]);
         }
     }
@@ -693,3 +667,4 @@ namespace Knihovna.Excel {
         }
     }
 }
+

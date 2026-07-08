@@ -1,7 +1,6 @@
-﻿using DocumentFormat.OpenXml;
+﻿﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Office.CustomUI;
 
-//using DocumentFormat.OpenXml.Office.CustomUI;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System;
@@ -175,21 +174,12 @@ namespace Knihovna.Export {
             //asi celá stránka 210mm je asi 11900twips
             var paragraphProperties = new ParagraphProperties(
                 new DocumentFormat.OpenXml.Wordprocessing.Tabs(
-                    //new TabStop() { Val = TabStopValues.Left, Position = 1440 }, // 1. tab – 1 palec = 1440 twips
-                    //new TabStop() { Val = TabStopValues.Left, Position = 2880 }, // 2. tab
                     new TabStop() { Val = TabStopValues.Left, Position = 4320 },  // 3. tab
                     new TabStop() { Val = TabStopValues.Left, Position = 5760 }  // 4. tab
                 )
             );
 
-            //var run = new Run();
-            //run.Append(runProps);
             //run.Append(new Text(text),
-            //    new Tab(), new Text(":"),
-            //    new Tab(), new Tab(), new Tab(),
-            //    new Text(value)
-            //);
-            //run.Append(new Tab());
             // Každý úsek textu a tabulátor jako samostatný Run
             var runList = new List<OpenXmlElement>
             {
@@ -197,14 +187,12 @@ namespace Knihovna.Export {
                 new Run(new TabChar()),
                 new Run(new Text(":") { Space = SpaceProcessingModeValues.Preserve }),
                 new Run(new TabChar()),
-                //new Run(new TabChar()),
                 new Run(new Text(value) { Space = SpaceProcessingModeValues.Preserve })
             };
 
             var paragraph = new Paragraph(paragraphProperties);
             paragraph.Append(runList);
             return paragraph;
-            //return new Paragraph(runProps,run);
         }
 
 
@@ -226,7 +214,6 @@ namespace Knihovna.Export {
                 settingsPart.Settings.AppendChild(new Languages() { Val = "cs-CZ" });
                 settingsPart.Settings.Save();
 
-                //var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
                 int counter = 1;
 
@@ -257,16 +244,13 @@ namespace Knihovna.Export {
                 string displayName = displayAttr?.Name ?? prop.Name;
 
                 var value = prop.GetValue(obj);
-                //var value = prop.GetValue(obj, null)?.ToString() ?? "";
                 if (value == null)
                 {
-                    //body.Append(CreateParagraph($"{Indent(indent)}{displayName}"," ---"));
                     body.Append(CreateParagraph("displayName", " ---"));
                 }
                 else if (IsSimpleType(prop.PropertyType))
                 {
                     var valueText = prop.GetValue(obj, null)?.ToString() ?? "";
-                    //body.Append(CreateParagraph($"{Indent(indent)}{displayName}", valueText));
                     body.Append(CreateParagraph(displayName, valueText));
                 }
                 else
@@ -303,3 +287,4 @@ namespace Knihovna.Export {
 
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using Knihovna;
+﻿﻿using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Tridy;
 
@@ -18,7 +18,6 @@ namespace Aplikace.Sdilene
                 Console.WriteLine($"Nebyly nanačteny motory z {Cesty.Motory}"); return pole; }
 
             // Přidání vlastnosti "Proud" do každého zařízení
-            //var nove = new List<Popis>();
             double Cos = 0.95;
             double Pomoc;
             foreach (var item in pole.ToHashSet())
@@ -61,7 +60,6 @@ namespace Aplikace.Sdilene
                 { 
                     Console.WriteLine($"Na {item.Radek} Chybí napětí nabo příkon - Apid={item.Apid}");
                 }
-                //nove.Add(item);
             }
             return pole;
         }
@@ -70,13 +68,11 @@ namespace Aplikace.Sdilene
         public static void AddKabelDelka(this List<Zarizeni> pole, double delka = 100)
         {
             // Přidání vlastnosti "Proud" do každého zařízení
-            //var nove = new List<Popis>();
             for (int i = 0; i < pole.Count; i++)
             {
                 pole[i].Delka = delka;
                 pole[i].Delkaft = delka * 3.28;
             }
-            //return pole;
         }
 
         public static void Soucet(ExcelApp ExcelApp, List<List<string>> PoleData, string SheetName)
@@ -101,7 +97,6 @@ namespace Aplikace.Sdilene
 
                 Console.Write($"\nzaznamu: {item[4]},{item[5]},{item[6]}, Soucet = {soucet}");
                 //přepočet metry na stopa a formátování na dvě desetinná místa
-                //string[] xx = [item[4], item[5], item[6], soucet.ToString("F2"), (soucet * 3.29).ToString("F2")];
                 // Označen, počet vodičů, průřez, délka v metrech a délka ve stopách
                 string[] xx = [item[4], item[5], item[6], soucet.ToString("F2")];
                 Soucet.Add([.. xx]);
@@ -114,15 +109,12 @@ namespace Aplikace.Sdilene
             Soucet.Add([.. xx1]);
 
             //nová záložka
-            //var ExcelApp = new ExcelApp();
             ExcelApp.GetSheet(SheetName);
             ExcelApp.Nadpis("A1:C1", "Označeni", Soucet.Count);
             
             ExcelApp.Nadpis("D1:D1", "Délka", Soucet.Count);
             ExcelApp.Nadpis("D2", "[m]");
 
-            //ExcelApp.Nadpis("E1:E1", "Délka", Soucet.Count);
-            //ExcelApp.Nadpis("E2", "[ft]");
 
             ExcelApp.KabelyToExcel(Soucet, 3);
 
@@ -132,3 +124,4 @@ namespace Aplikace.Sdilene
 
     }
 }
+

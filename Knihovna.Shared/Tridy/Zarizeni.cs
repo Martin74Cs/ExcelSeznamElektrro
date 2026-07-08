@@ -1,4 +1,4 @@
-﻿using Knihovna.Shared.Tridy;
+﻿﻿using Knihovna.Shared.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -230,7 +230,6 @@ namespace Knihovna.Tridy
         [JsonIgnore]
         public string KabelyPrehled => string.Join(", ", SeznamKabelu.Select(k => k.Oznaceni));
 
-        //private Kabel kabel = new();
         //[Category("5. Kabelové připojení")]
         //[DisplayName("Kabel (Objekt)")]
         //[Description("Interní data kabelu.")]
@@ -324,11 +323,7 @@ namespace Knihovna.Tridy
             {
                 if (Parametr == "Item") continue;
                 //// Pomocí reflexe získáme hodnotu vlastnosti
-                //PropertyInfo vlastnost = GetType().GetProperty(Parametr, BindingFlags.Public | BindingFlags.Instance);
-                //if (vlastnost != null)
                 //{
-                //    var hodnota = vlastnost.GetValue(this);
-                //    Console.WriteLine($"{Parametr}: {hodnota}");
                 //}
                 Console.WriteLine($"{Parametr}: {this[Parametr]}");
             }
@@ -336,26 +331,6 @@ namespace Knihovna.Tridy
             
         }
 
-        //public static void NastavVlastnost(string nazevVlastnosti, object hodnota)
-        //public static void NastavVlastnost(object obj, string nazevVlastnosti, object hodnota)
-        //{
-        //    // Získáme typ objektu
-        //    //var typ = obj.GetType();
-        //    //object obj = new Zarizeni();
-        //    //var typ = obj.GetType();
-        //    // Získáme vlastnost podle názvu
-        //    var vlastnost = obj.GetType().GetProperty(nazevVlastnosti);
-
-        //    if (vlastnost != null && vlastnost.CanWrite)
-        //    {
-        //        // Nastavíme hodnotu vlastnosti
-        //        vlastnost.SetValue(obj, Convert.ChangeType(hodnota, vlastnost.PropertyType));
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentException($"Vlastnost {nazevVlastnosti} neexistuje nebo není zapisovatelná.");
-        //    }
-        //}
 
         /// <summary>Volání parametru jako string např. Nadpis[Name]  </summary>
         [JsonIgnore]
@@ -385,7 +360,6 @@ namespace Knihovna.Tridy
                 foreach (var Property in zaznam.GetType().GetProperties())
                 {
                     // Pomocí reflexe získáme hodnotu vlastnosti
-                    //PropertyInfo vlastnost = zaznam.GetType().GetProperty(Property);
                     if (Property != null)
                     {
                         var hodnota = Property.GetValue(zaznam);
@@ -537,3 +511,4 @@ namespace Knihovna.Tridy
     }
 
 }
+

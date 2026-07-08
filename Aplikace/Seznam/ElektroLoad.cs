@@ -1,4 +1,4 @@
-﻿using Knihovna;
+﻿﻿using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Sdilene;
 using Knihovna.Tridy;
@@ -35,8 +35,6 @@ namespace Aplikace.Seznam
                 return;
             }
 
-            //var TextPole = new string[] { "Tag", "Příkon", "Měnič", "Balená Jednotka", "Popis", "PID"
-            //string[] TextPole = ["Tag", "Popis", "Prikon", "Menic", "BalenaJednotka", "PID"];
             PouzitProTabulku = [3, 18, 21, 1, 7, 2];
             var Nova = ExcelLoad.LoadDataExcel(cestaNova, PouzitProTabulku, "M_equipment_list", 7);
 
@@ -50,7 +48,6 @@ namespace Aplikace.Seznam
                 return;
             }
 
-            //TextPole = [ "Tag", "HP", "Měnič", "Proud", "Delka", "AWG", "BalenaJednotka", "Popis", "Rozvadec", "RozvadecCislo", "PrurezMM2" ];
             PouzitProTabulku = [5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45];
             var Stara = ExcelLoad.LoadDataExcel(cestaStara, PouzitProTabulku, "M_equipment_list", 7);
 
@@ -68,7 +65,6 @@ namespace Aplikace.Seznam
             PouzitProTabulku = [3, 18];
 
             //zapis do buněk.
-            //var PouzitProZapis = new int[] { 56, 57 };
             var PouzitProZapis = new int[] { 59, 65, 66, 61, 63, 64 };
             new ExcelApp().ExcelSaveSloupec(cestaNova, PouzitProZapis, zalozka: "M_equipment_list", PouzitProTabulku, Stara);
             Console.Write("\nFunguje --- ExelSaveSlopec ");
@@ -82,7 +78,6 @@ namespace Aplikace.Seznam
             var compareKeys = new HashSet<string>(compareList.Select(x => x[0]));
 
             // Najdeme položky v sourceList, které nejsou v compareKeys
-            //return sourceList.Where(x => !compareKeys.Contains(x[0])).ToList();
             return [.. sourceList.Where(x => !compareKeys.Contains(x[0]))];
         }
 
@@ -90,7 +85,6 @@ namespace Aplikace.Seznam
         {
             //Volba kdy jsem doma a kdy v práci - volba dle nazvu PC
             bool Doma = true;
-            //string basePath = @"G:\z\W.002115_NATRON\Prac_Prof\e_EL\vykresy\Martin_PRS\2024.09.03";
             string basePath = @"c:\a\Natron\2024.09.03";
         
             if (Environment.MachineName == "MARTIN")
@@ -103,9 +97,6 @@ namespace Aplikace.Seznam
             var ExcelApp = new ExcelApp();
             var Load = new ExcelLoad();
 
-            //Exc.Worksheet Xls;
-            //Exc.Workbook Doc;
-            //Exc.Application App;
 
             //Načtení json z Milanového seznamu čerpadel
             var Pumps = new List<Pump>();
@@ -122,21 +113,15 @@ namespace Aplikace.Seznam
             {
                 //načtení základní infomací pro seznam Elektro dle čísel jednotlivých sloupců
                 string cesta1 = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_a_spotrebicu_rev7_ELE_MC.xlsx");
-                //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
-                //var PouzitProTabulku = new int[] { 5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45 };
 
                 var TextPole = new string[] { "Tag", "PID", "Popis", "Prikon", "BalenaJednotka", "Menic", "Proud500", "HP", "Proud480", "mm2", "AWG", "Delkam", "Delkaft", "MCC", "cisloMCC" };
                 var PouzitProTabulku1 = new int[] { 3, 2, 7, 18, 1, 21, 59, 56, 60, 63, 64, 61, 62, 65, 66 };
                 //převod                           3, 2, 7, 18, 1, 21, A, HP,  A, mm2, AWG, m,  ft  mcc cislo
-                //var Kotrola                    { 1,  2,     3,       4,           5,              6,      7,          8,      9,        10,   11,     12,         13,         14,     15 };
                 var Stara = ExcelLoad.LoadDataExcel(cesta1, PouzitProTabulku1, "M_equipment_list", 7);
-                //var Zakalad = Load.LoadDataExcelTrida(cesta, PouzitProTabulku, "M_equipment_list", 7, TextPole);
 
                 //vytvoření nebo otevření dokumentu elekro
                 var cesta = Path.Combine(basePath, "Seznam.xlsx");
-                //ExcelApp.ExcelElektro(cesta);
                 ExcelApp = new ExcelApp(cesta);
-                //doc = xls.Parent;
 
                 //Vytvoření nadpisů
                 var Souradnice = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
@@ -145,7 +130,6 @@ namespace Aplikace.Seznam
                 ExcelApp.NadpisSet(Souradnice);
 
                 //uložení základní seznam zařízení dle seznamu Stara
-                //var TabulkuProPeevod = new int[] { 1, 2, 3, 4,  5, 6,  7, 8,   9,  10,  11, 12, 13,  14,  15 };
                 ExcelApp.ExcelSaveList(Stara);
 
                 if (Doma)
@@ -162,40 +146,30 @@ namespace Aplikace.Seznam
                 ExcelApp.ExcelSaveVzorce(Stara.Count);
 
                 cesta = Path.Combine(basePath, @"BLUECHEM_seznam_stroju_ a_spotrebicu_rev6_ELE.xlsx");
-                //TextPole = new string[] { "Tag", "HP", "Měnič", Proud, Delka,    AWG  "Balená Jednotka", "Popis",  Rozvaděč,   RozvaděčCislo , mm2 };
                 PouzitProTabulku1 = [5, 38, 23, 41, 43, 46, 3, 9, 47, 48, 45];
-                //var Delka = Load.LoadDataExcel(cesta, PouzitProTabulku1, "M_equipment_list", 7, []);
 
                 //doplnění kabelů z //delka  //awg  //mm2
                 //---- v budoucnu kontrola pokud by něco chybělo
-                //ExcelApp.ExcelSaveKabel(xls, Delka);
 
                 //doplnění rozvaděčů mcc cislo
                 //---- v budoucnu kontrola pokud by něco chybělo
-                //new ExcelApp().ExcelSaveRozvadec(xls, Delka);
 
                 //Testovací kod
-                //new ExcelApp().PridatTextyTestovani(xls);
             }
             else
             { 
                 //vytvoření nebo otevření dokumentu elekro
-                //(App, Doc, Xls) = ExcelApp.ExcelElektro(cesta);
-                //ExcelApp.ExcelElektro(cesta);
-                //doc = xls.Parent;
                 ExcelApp = new ExcelApp(cestaXls);
             }
 
             Console.WriteLine("Probíhá načítaní kabelů");
             //Načti seznam zařízení z vytvořeného seznamu zařízení elektro 
-            //TextPole = new string[] { "Tag", "PId" "Jmeno", "kW", "BalenaJednotka", "Menic" "Proud500",  "HP"  "Proud480", "mm2" , "AWG" , "Delkam",  Delkaft,     MCC ,  cisloMCC  };
             var PouzitProTabulku = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
             //V poli jsou čísla posunuty o jedničku
             var PoleData = ExcelApp.ExcelLoadWorksheet(PouzitProTabulku);
 
             //Úprava načteného listu seznamu zařízení elektro 
-            //PoleData = KabelList.Kabely(PoleData);
 
             //Nová záložka
             ExcelApp.GetSheet("Kabely");
@@ -248,3 +222,4 @@ namespace Aplikace.Seznam
         }
     }
 }
+

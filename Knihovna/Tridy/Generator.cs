@@ -1,15 +1,11 @@
-﻿using System.Reflection;
+﻿﻿using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Aplikace.Tridy
 {
     //Příklad použití key/value úložiště:
-    //Generator.Instance.Set("Projekt", "Rozvaděč A");
-    //string? projekt = Generator.Instance.Get<string>("Projekt");
-    //Console.WriteLine(projekt);
 
     //Použití runtime class:
-    //Generator.Hlavni();
 
     public class Generator
     {

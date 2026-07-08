@@ -1,4 +1,4 @@
-﻿using Knihovna;
+﻿﻿using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Sdilene;
 using System.Data;
@@ -35,7 +35,6 @@ namespace Aplikace.Upravy
 
             string CestaCsv = Path.Combine(BaseAdres, @"zarizeni.csv");
             //přeovd a save do Csv
-            //Prevod.JsonToCsv(jsonString, CestaCsv);
             var data = new DataSet();
             //načtení z ulolženého souboru
             if (File.Exists(CestaCsv)) File.Delete(CestaCsv);
@@ -48,18 +47,14 @@ namespace Aplikace.Upravy
             Console.Write($"\n");
             Vypis(pokus);
 
-            //Ex.ExcelSave(sheet, pokus.ToArray(), "Seznam zařízení");
 
             string cestacelek = Path.Combine(BaseAdres, @"zarizeni_vse.xlsx");
             //ExcelApp
             var ExcelApp = new ExcelApp(cestacelek);
-            //ExcelApp.NovyExcelSablona(cestacelek);
-            //Worksheet Xls = Doc.Worksheets[1];
             ExcelApp.GetSheet("Seznam zažízení");
             ExcelApp.ExcelSave([.. pokus]);
             ExcelApp.Doc.Save();
             //uzavření dokumentu bez uložení  
-            //xlsc.Close();
             ExcelApp.ExcelQuit(cestacelek);
         }
         static void Vypis(List<Knihovna.Tridy.Item> item)
@@ -73,3 +68,4 @@ namespace Aplikace.Upravy
         }
     }
 }
+

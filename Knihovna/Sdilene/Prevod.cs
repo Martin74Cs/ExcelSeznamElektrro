@@ -1,4 +1,4 @@
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Knihovna.Tridy;
 using System.Data;
@@ -10,7 +10,6 @@ namespace Knihovna.Sdilene {
     {
         public static void DataTabletoToCsv(DataTable Table, string Soubor)
         {
-            //DataTable Table = new() { TableName = "cestina", } ; 
             Table.TableName = "Cestina";
             using FileStream fs = new(Soubor, FileMode.Create);
             using StreamWriter sw = new(fs);
@@ -33,9 +32,7 @@ namespace Knihovna.Sdilene {
         }
         public static string JsonToCsv<T>(this List<T> json)
         {
-            //string Json = JsonConvert.SerializeObject(json, Soubory.NastaveniEn());
             return JsonConvert.SerializeObject(json, Soubory.Nastaveni());
-            //JsonToCsv(Json, file);
         }
         public static void SaveToCsv<T>(this List<T> Class, string file, string[] columns = null)
         {
@@ -117,7 +114,6 @@ namespace Knihovna.Sdilene {
                 // Write data rows
                 foreach (JObject obj in jsonArray.Cast<JObject>())
                 {
-                    //var values = obj.Properties().Select(p => p.Value.ToString()).ToArray();
 
                     //zachová entery \n
                     var values = obj.Properties()
@@ -133,8 +129,6 @@ namespace Knihovna.Sdilene {
                     writer.WriteLine(string.Join(";", values));
                 }
             }
-            //Console.WriteLine($"CSV soubor {Path.GetFileName(file)} byl vytvořen.");
-            //Console.WriteLine($"Hotovo! Soubor CSV. Uloženo do {Path.GetFileName(file)}");
             Console.WriteLine($"Hotovo! Soubor {Path.GetFileName(file)} Uložen");
         }
 
@@ -147,7 +141,6 @@ namespace Knihovna.Sdilene {
 
             // Použijeme přetíženou metodu, která specifikuje název kořenového elementu
             // Například "Root", můžete zvolit libovolný vhodný název
-            //XDocument doc = JsonConvert.DeserializeXNode(json, "Polozka");
 
             // Parsuje JSON řetězec na objekt JObject
             JObject jObject = JsonConvert.DeserializeObject<JObject>(json);
@@ -266,3 +259,4 @@ namespace Knihovna.Sdilene {
         }
     }
 }
+

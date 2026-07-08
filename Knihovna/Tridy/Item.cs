@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 namespace Knihovna.Tridy
 {
     public class Item
@@ -7,8 +7,6 @@ namespace Knihovna.Tridy
         public Jednotky Cunit { get; set; } = new();
         public Jednotky Munit { get; set; } = new();    
         
-        //public string revNo { get; set; } = string.Empty;
-        //public string tag { get; set; } = string.Empty;
         
         public string Tag { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
@@ -55,3 +53,4 @@ namespace Knihovna.Tridy
 
     }
 }
+

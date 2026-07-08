@@ -1,4 +1,4 @@
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
@@ -21,8 +21,6 @@ namespace WinForms
         /// <summary>Uchovává aktivní vlastní filtry pro zobrazení řádků.</summary>
         private List<FilterRule>? _customFilters = null;
 
-        //private SortableBindingList<Popis> DataBind;
-        //private BindingSource SourceBind = new BindingSource();
         public Table(List<Zarizeni> Pole)
         {
             this.Pole = Pole;
@@ -125,82 +123,14 @@ namespace WinForms
             return attribute == null ? value.ToString() : attribute.Description;
         }
 
-        //public void SetListBoxOld() {
-        //    dataGridView1.AutoGenerateColumns = true;
-        //    //dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
-
-        //    // Po připojení datového zdroje nahradíme sloupec Stav za ComboBox
-        //    dataGridView1.DataSourceChanged += (s, e) => {
-        //        var DruhColumn = dataGridView1.Columns["Druh"];
-        //        DruhColumn.Visible = false;
-        //        dataGridView1.Columns["DruhEnum"]?.Visible = false;
-        //        //int index = stavColumn?.Index ?? 0;
-
-        //        // Najdeme existující sloupec Stav
-        //        //var stavColumn = dataGridView1.Columns["DruhEnum"];
-        //        if(DruhColumn != null) {
-        //            // Získáme index sloupce
-        //            int columnIndex = DruhColumn.Index;
-
-        //            // Odstraníme původní sloupec
-        //            //dataGridView1.Columns.Remove(stavColumn);
-
-        //            // Vytvoříme seznam pro ComboBox s popisy
-        //            var Vyber = Enum.GetValues<Popis.Druhy>()
-        //            .Cast<Popis.Druhy>().Select(s => new {
-        //                //Value = s.ToString(), // Ukládáme jako string
-        //                //Value = s, // Ukládáme jako string
-        //                Value = s.ToString(), // Ukládáme jako string
-        //                Display = GetEnumDescription(s) // Zobrazujeme popis
-        //            }).ToList();
-
-        //            // Vytvoříme nový ComboBox sloupec
-        //            var comboBoxColumn = new DataGridViewComboBoxColumn {
-        //                HeaderText = "Vyber",
-        //                Name = "Vyber",
-        //                DataPropertyName = "Druh", // Propojení s vlastností Druh v Popis
-        //                //DataSource = Enum.GetValues(typeof(Popis.Druhy)), // Naplní ComboBox hodnotami z enumu
-        //                DataSource = Vyber,
-
-        //                ValueMember = "Value", // String hodnota pro vlastnost Druh
-        //                DisplayMember = "Display", // Zobrazení popisu
-        //                ValueType = typeof(string)
-        //                //ValueType = typeof(Popis.Druhy), // Zajistí správný typ hodnot
-        //            };
-
-        //            // Vložíme ComboBox sloupec na původní pozici
-        //            dataGridView1.Columns.Insert(columnIndex, comboBoxColumn);
-        //        }
-        //    };
-
-        //    // Přidání sloupce s ComboBoxem pro enum Stav   
-        //    //DataGridViewComboBoxColumn comboBoxColumn = new DataGridViewComboBoxColumn
-        //    //{
-        //    //    HeaderText = "Druh",
-        //    //    Name = "Druh",
-        //    //    DataPropertyName = "Druh", // Propojení s vlastností Stav v Popis
-        //    //    DataSource = Enum.GetValues(typeof(Popis.Druhy)), // Naplní ComboBox hodnotami z enumu
-        //    //    ValueType = typeof(Popis.Druhy) // Zajistí správný typ hodnot
-        //    //};
-        //    //dataGridView1.Columns.Add(comboBoxColumn);
-
-        //    // Umožnit přidávání/smazání
-        //    //dataGridView1.AllowUserToAddRows = true;
-        //    dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
-
-        //    dataGridView1.AllowUserToDeleteRows = true;
-        //    dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
-        //}
 
         public void SetListBox(string[] propertyNames)
         {
-            //dataGridView1.AutoGenerateColumns = true;
             dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
             dataGridView1.Columns.Clear(); // důležité – vyčistí dříve vygenerované sloupce
 
             //"Druh"
 
-            //var zarizeni = new Popis();
 
             // Přidáš sloupce ručně:
             foreach (var propertyName in propertyNames)
@@ -257,14 +187,11 @@ namespace WinForms
             }
 
             //// Vytvoříme seznam pro ComboBox s popisy
-            //var Vyber = Enum.GetValues<Popis.Druhy>()
             //.Cast<Popis.Druhy>().Select(s => new {
             //    Value = s.ToString(), // Ukládáme jako string
             //    Display = GetEnumDescription(s) // Zobrazujeme popis
-            //}).ToList();
 
             //// Vytvoříme nový ComboBox sloupec
-            //var comboBoxColumn = new DataGridViewComboBoxColumn {
             //    //HeaderText = "Vyber",
             //    //Name = "Vyber",
             //    //DataPropertyName = "Druh", 
@@ -276,14 +203,11 @@ namespace WinForms
             //    ValueMember = "Value",       // Skutečná hodnota (enum)
             //    DisplayMember = "Display",   // Co se zobrazí v roletce
             //    ValueType = typeof(Popis.Druhy)
-            //};
             ////dataGridView1.Columns.Add(comboBoxColumn);
             //// Přidáme ComboBox sloupec na konec, nebo na určitou pozici
             //int position = propertyNames.Contains("Druh") ? propertyNames.IndexOf("Druh") : 1; // Najdeme index sloupce "Druh" v seznamu
-            //dataGridView1.Columns.Insert(position, comboBoxColumn);
 
             // Umožnit přidávání/smazání
-            //dataGridView1.AllowUserToAddRows = true;
             dataGridView1.AllowUserToAddRows = false; // Zakázat přidávání prázdných řádků
 
             dataGridView1.AllowUserToDeleteRows = true;
@@ -381,27 +305,19 @@ namespace WinForms
         {
             //průřez
             if (Pole == null) return;
-            //Strojni.AddProud();
-            //Pole.AddKabelCyky(1.6);
-            //Pole.AddKabelCyky(2);
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
 
         private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            //var dgv = sender as DataGridView;
             //if(dgv == null || e.RowIndex < 0 || e.ColumnIndex < 0)
-            //    return;
 
             //// Zkontrolujeme, zda kliknutý sloupec je "Stav"
             //if(dgv.Columns[e.ColumnIndex].Name == "Stav") {
             //    // Aktivujeme editovací režim pro buňku
-            //    dgv.CurrentCell = dgv[e.ColumnIndex, e.RowIndex];
-            //    dgv.BeginEdit(true);
 
             //    // Otevřeme dropdown ComboBoxu
             //    if(dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox) {
-            //        comboBox.DroppedDown = true;
             //    }
             //}
         }
@@ -420,15 +336,12 @@ namespace WinForms
             int stavColumnIndex = -1;
             //foreach(DataGridViewColumn column in dgv.Columns) {
             //    if(column.Name == "Druh") {
-            //        stavColumnIndex = column.Index;
-            //        break;
             //    }
             //}
 
             if (stavColumnIndex >= 0)
             {
                 // Nastavíme aktuální buňku na sloupec "Stav" v aktuálním řádku
-                //dgv.CurrentCell = dgv[stavColumnIndex, dgv.CurrentCell.RowIndex];
                 dgv.BeginEdit(true);
 
                 if (dgv.EditingControl is DataGridViewComboBoxEditingControl comboBox)
@@ -472,17 +385,10 @@ namespace WinForms
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
-            //if (box.Text == "All")
             //{
-            //    dataGridView1.DataSource = new SortableBindingList<Popis>(Pole);
-            //    return;
             //}
-            //string vybranePatro = box.SelectedItem.ToString();
-            //var filtrovanaData = Pole.Where(z => z.Patro == vybranePatro).ToList();
 
             ////dataGridView1.DataSource = new SortableBindingList<ZarizeniView>(filtrovanaData);
-            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
 
             ObnovGrid();
         }
@@ -504,22 +410,16 @@ namespace WinForms
         private void DataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             // Ošetření, aby to neprobíhalo při načtení všech řádků znovu
-            //if (e.RowIndex >= 0 && e.RowCount == 1)
             //{
             //    // Pokud přidání pochází od uživatele (ne automaticky), můžeme zachytit poslední řádek
-            //    var posledni = dataGridView1.Rows[e.RowIndex];
 
             //    // Zde můžeš ověřit nebo vynutit uložení změn
-            //    dataGridView1.EndEdit();
 
             //    // Můžeš například projít všechny řádky, nebo přistoupit k PoleDataBind a zkontrolovat, že nový řádek přibyl
             //    // nebo jen ohlásit změnu
-            //    Console.WriteLine("Přidán nový řádek.");
 
             //    //pridat radek do pole
-            //    Pole.Add(new Popis());
 
-            //    dataGridView1.DataSource = new SortableBindingList<Popis>(Pole);
             //}
         }
         private Zarizeni? _lastAddedOrEditedZarizeni = null;
@@ -710,13 +610,9 @@ namespace WinForms
                     }
 
                     //// Obnovíme pozici scrollbaru
-                    //if (scrollIndex >= 0 && scrollIndex < dataGridView1.Rows.Count)
                     //{
-                    //    dataGridView1.FirstDisplayedScrollingRowIndex = scrollIndex;
                     //}
-                    //else if (dataGridView1.Rows.Count > 0)
                     //{
-                    //    dataGridView1.FirstDisplayedScrollingRowIndex = Math.Max(0, dataGridView1.Rows.Count - 1);
                     //}
                 }
             }
@@ -781,39 +677,6 @@ namespace WinForms
         }
 
         // --- Událost pro obarvení řádku ---
-        //private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        //{
-        //    // Zkontrolujeme, zda máme nějaké APID k zvýraznění a zda je index řádku platný
-        //    if (!string.IsNullOrEmpty(_highlightedApid) && e.RowIndex >= 0)
-        //    {
-        //        //// Získáme objekt, ke kterému je aktuální řádek vázán
-        //        if (dataGridView1.Rows[e.RowIndex].DataBoundItem is Popis rowZarizeni)
-        //        {
-        //        //    // Porovnáme APID řádku s APID, které chceme zvýraznit
-        //            if (rowZarizeni.Apid == _highlightedApid)
-        //            {
-        //                e.CellStyle.BackColor = Color.LightGreen; // Barva pro zvýrazněný řádek
-        //                e.FormattingApplied = true; // Řekne DataGridView, že jsme barvu aplikovali
-        //            }
-        //        //    else
-        //        //    {
-        //        //        // Pokud řádek NENÍ ten, který má být obarven, resetujeme jeho barvu na výchozí
-        //        //        e.CellStyle.BackColor = Color.Empty; // Reset na výchozí barvu (transparentní)
-        //        //        e.FormattingApplied = true;
-        //        //    }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // Pokud _highlightedApid je null (nebo neplatný RowIndex),
-        //        // ujistěte se, že žádný řádek není obarven a je nastaven na výchozí barvu.
-        //        //if (e.RowIndex >= 0)
-        //        //{
-        //        //    e.CellStyle.BackColor = Color.Empty;
-        //        //    e.FormattingApplied = true;
-        //        //}
-        //    }
-        //}
 
         // Metoda pro explicitní odstranění zvýraznění (např. po uložení)
         public void ResetHighlight()
@@ -939,3 +802,4 @@ namespace WinForms
         protected override ListSortDirection SortDirectionCore => sortDirection;
     }
 }
+

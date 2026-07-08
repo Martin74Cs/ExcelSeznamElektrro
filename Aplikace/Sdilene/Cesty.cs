@@ -1,4 +1,4 @@
-using Aplikace.Tridy;
+﻿using Aplikace.Tridy;
 using Knihovna.Tridy;
 using System;
 using System.Collections.Generic;
@@ -28,45 +28,25 @@ namespace Aplikace.Sdilene
         public static string AlJsonAcad => SichrAcad + @"Al.Json";
 
         /// <summary>...LightChem\Elektro\Lightchem </summary>
-        //public static string Lightchem => Path.Combine(BasePath, "Lightchem");
 
         /// <summary>...Můj disk\Elektro\Lightchem\Ëlektro </summary>
         //public static string Elektro { get {
         //        //if (!Directory.Exists(Cesty.Elektro))
-        //        //    Directory.CreateDirectory(Cesty.Elektro);
-        //        return Path.Combine(Lightchem, "Elektro");
         //    }
         //}
 
-        //public static string ElektroDataCsv => Path.Combine(Elektro, "ElektroData.Csv");
-        //public static string ElektroDataJson => Path.Combine(Elektro, "ElektroData.Json");
-        //public static string ElektroRozvaděčJson => Path.Combine(Elektro, "ElektroRozvaděč.Json");
         
         //public static string BasePath {
         //    get {
         //        //if (Environment.UserDomainName == "D10")
-        //        //    //return @":\a\";
-        //        //    return @"E:\Můj disk\Projekty\";
         //        //else
-        //        //    return @"G:\Můj disk\Projekty\";
 
-        //        using var Inforamce = Informace.Create;
-        //        if (!Directory.Exists(Inforamce.AdresarZdrojDat)) {
         //            OpenFileDialog dialog = new() {
         //                Title = "Vyberte soubor s daty pro elektro"
-        //                //Filter = "Json files (*.json)|*.json|All files (*.*)|*.*";
-        //            };
-        //            if (dialog.ShowDialog() == DialogResult.OK) {
-        //                Inforamce.AdresarZdrojDat = Path.GetDirectoryName(dialog.FileName) ?? string.Empty;
-        //                //MessageBox.Show($"Vybrali jste soubor: {dialog.FileName}");
         //            }
-        //            else {
-        //                MessageBox.Show("Nebyl vybrán žádný soubor. Aplikace bude ukončena.");
-        //                Environment.Exit(0);
         //            }
         //        }
 
-        //        return Inforamce.AdresarZdrojDat;
         //    }
         //}
 
@@ -84,7 +64,6 @@ namespace Aplikace.Sdilene
                 return Revit;
             }
         }
-        //public static string Data => Path.Combine(BasePath, "Data");
         public static string MistnostiXLs => Path.Combine(Místnost, "Místnosti.celek.xlsx");
         public static string Mistnosti => Path.ChangeExtension(MistnostiXLs, ".json");
 
@@ -141,3 +120,4 @@ namespace Aplikace.Sdilene
         
     }
 }
+
