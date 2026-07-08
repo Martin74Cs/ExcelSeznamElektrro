@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Knihovna;
 using Knihovna.Excel;
@@ -340,16 +340,7 @@ namespace Aplikace.Upravy
         //    return PoleData;
         //}
 
-        //public static void Hlavni()
-        //{
-        //    string cesta = Path.Combine(Cesty.Elektro, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-        //    string json = Path.ChangeExtension(cesta, ".json");
-        //    if (!File.Exists(json))
-        //        return;
 
-        //    //var Source = Soubory.LoadFromCsv<Popis>(cesta);
-        //    //Prevod.UpdateCsvToJson(Source, Target);
-        //}
 
         public static void AddProud()
         {
@@ -426,17 +417,7 @@ namespace Aplikace.Upravy
             ////Target.SaveJsonList(Path.ChangeExtension(cesta, ".txt"));
         }
 
-        //public static void AddKabely()
-        //{
-        //    //string cesta1 = Path.Combine(basePath, @"N92120_Seznam_stroju_zarizeni_250311_250407.xlsx");
-        //    string cesta1 = Path.Combine(Informace.Instance.ElektroDataJson);
-        //    var Target = Soubory.LoadJsonList<Popis>(cesta1);
 
-        //    Target.AddKabelCyky(1.6);
-
-        //    Target.SaveJsonList(cesta1);
-        //    //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
-        //}
 
         //public static IEnumerable<Zarizeni> AddKabelCyky(this IEnumerable<Zarizeni> target, double rezerva = 1.5)
         //{

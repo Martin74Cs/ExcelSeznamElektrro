@@ -1,0 +1,21 @@
+[
+  {
+    "Id": 1,
+    "Apid": "stykac01",
+    "Prikon": 4.0,
+    "ProudAC1": 20.0,
+    "Prikon480Hp": 5.0,
+    "ProudAC": 9,
+    "Napeti": 400,
+    "NapetiOvladaniAC": "230V",
+    "NapetiOvladaniDC": "24V",
+    "NO": 3,
+    "NC": 0,
+    "Typ": "AF09-30-10-13",
+    "ObjednaciKod": "1SBL137001R1310",
+    "Hmotnost": 0.27,
+    "Teplota": 60,
+    "Výrobce": "ABB",
+    "Data": "https://www.abb.com"
+  }
+]

@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 using Aplikace;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
@@ -178,7 +178,6 @@ while(!konec) {
         Console.WriteLine("\nStiskněte libovolnou klávesu...");
         Console.ReadKey();
     }
-    return;
 }
 
 static void SumoKKs() {
@@ -219,26 +218,26 @@ static void ZobrazitNapovedu() {
     Console.WriteLine("Tato aplikace slouží k automatizaci zpracování elektroseznamů,");
     Console.WriteLine("kabelových specifikací, seznamů místností a fluidních zařízení.");
     Console.WriteLine();
-    Console.WriteLine("PŮVODNÍ NÁPOVĚDA A METODY APLIKACE:");
-    Console.WriteLine("- Soubory.KillExcel(): Ukončí všechny běžící procesy excel.exe");
-    Console.WriteLine("  (nyní již není nutné, protože aplikace používá ClosedXML,");
-    Console.WriteLine("  který nepotřebuje běžící Excel na pozadí).");
-    Console.WriteLine("- ElektroLoad.NovyExcel(): Založí nový čistý Excel dokument.");
-    Console.WriteLine("- LigthChem.Hlavni() & LigthChem.Rozvadec():");
-    Console.WriteLine("  Slouží pro specifické zpracování rozvaděčů a seznamů.");
-    Console.WriteLine("- LigthChem.NačtiSeznamVýkresůXls(cesta):");
-    Console.WriteLine("  Načte seznam výkresů z XLS a převede do struktury projektu.");
+    Console.WriteLine("ZÁKLADNÍ POUŽITÍ A STRUKTURA:");
+    Console.WriteLine("1. Nastavení složky projektu (Volba 6): Nastaví základní adresář");
+    Console.WriteLine("   projektu (uloží se do %APPDATA%/Elektro/data.txt).");
+    Console.WriteLine("   Podle tohoto adresáře se odvozují všechny cesty k souborům");
+    Console.WriteLine("   a výstupům (které se ukládají do podsložky 'Výstup').");
+    Console.WriteLine("2. Načtení seznamu výkresů (Volba 1): Načte seznam výkresů z XLS.");
+    Console.WriteLine("3. Spustit kompletní proces (Volba 2): Spustí revizní a elektro proces.");
+    Console.WriteLine("4. Zpracovat místnosti (Volba 3): Vytvoří seznamy místností.");
+    Console.WriteLine("5. Zdroje dat: Aplikace načítá specifikace motorů, kabelů, stykačů");
+    Console.WriteLine("   a jističů z JSON souborů. Pokud není nastavena externí složka,");
+    Console.WriteLine("   použije se lokální složka 'ZdrojeDat' v adresáři aplikace.");
     Console.WriteLine();
-    Console.WriteLine("STRUKTURA PROJEKTU A SLOŽKY:");
-    Console.WriteLine("- Aplikace/Excel: Obsahuje 'ExcelApp.cs', což je spravovaný");
-    Console.WriteLine("  wrapper nad ClosedXML nahrazující starý COM interop.");
-    Console.WriteLine("- Aplikace/Sdilene: Pomocné metody pro výpočty proudů motorů");
-    Console.WriteLine("  (Pridat.cs), pracování s cestami a konfigurací.");
-    Console.WriteLine("- Aplikace/Seznam: Načítání a porovnávání revizí elektro prvků.");
+    Console.WriteLine("OŠETŘENÍ PŘEPISOVÁNÍ SOUBORŮ:");
+    Console.WriteLine("- Při jakémkoliv exportu nebo zápisu souboru na disk program ověřuje,");
+    Console.WriteLine("  zda již soubor existuje. Pokud ano, v konzolové verzi se dotáže");
+    Console.WriteLine("  uživatele přes textové rozhraní, ve WinForms verzi zobrazí dialog.");
     Console.WriteLine();
-    Console.WriteLine("LOGOVÁNÍ A KÓDOVÁNÍ:");
-    Console.WriteLine("- Výstupy z konzole se automaticky ukládají do souboru 'console.log'");
-    Console.WriteLine("  v kódování Windows-1250 (vhodné pro Windows).");
+    Console.WriteLine("PŮVODNÍ METODY:");
+    Console.WriteLine("- Soubory.KillExcel(): Ukončí běžící procesy excel.exe.");
+    Console.WriteLine("- ElektroLoad.NovyExcel(): Založí čistý Excel dokument.");
     Console.WriteLine("==================================================================");
     Console.ForegroundColor = ConsoleColor.Cyan;
     Console.WriteLine("Stiskněte libovolnou klávesu pro návrat do hlavní nabídky...");

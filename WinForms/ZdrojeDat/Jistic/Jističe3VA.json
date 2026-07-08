@@ -1,0 +1,26 @@
+[
+  {
+    "Id": 1,
+    "Apid": "jistic01",
+    "Druh": "3VA1",
+    "Velikost": "160",
+    "Icu": 36.0,
+    "In": 100.0,
+    "ObjednaciKod": "3VA1110-4EE32-0AA0",
+    "Ir": "100",
+    "Irmin": 70.0,
+    "Irmax": 100.0,
+    "Ii": "1000",
+    "Iimin": 1000.0,
+    "Iimax": 1000.0,
+    "Isd": "0",
+    "Isdmin": 0.0,
+    "Isdmax": 0.0,
+    "Spoust": "TM240",
+    "Hmotnost": 1.05,
+    "Rozmery": "76.2x130x70",
+    "Sirka": 76.2,
+    "Vyska": 130.0,
+    "Hloubka": 70.0
+  }
+]

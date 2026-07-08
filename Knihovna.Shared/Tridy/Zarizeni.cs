@@ -1,4 +1,4 @@
-using Knihovna.Shared.Tridy;
+﻿using Knihovna.Shared.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -105,7 +105,7 @@ namespace Knihovna.Tridy
         #region 3. Elektrické parametry
         private string prikon = string.Empty;
         [Category("3. Elektro parametry")]
-        [DisplayName("Příkon elektro")]
+        [DisplayName("Příkon")]
         [Description("Elektrický příkon zařízení [kW].")]
         [Display(Name = "Příkon elektro")]
         [Jednotky("[kW]")]

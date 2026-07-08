@@ -16,7 +16,12 @@ namespace WinForms
     {
         public Form1()
         {
-            InitializeComponent(); //.WaitAsync(cancellation);
+            _ = InitializeComponent(); //.WaitAsync(cancellation);
+            
+            // Programové přidání položky nápovědy do menu Pomoc
+            var napovedaItem = new ToolStripMenuItem("Nápověda k aplikaci...");
+            napovedaItem.Click += NapovedaItem_Click;
+            pomocToolStripMenuItem.DropDownItems.Add(napovedaItem);
         }
 
         //Převod stroju na JSON a CSV z xls.
@@ -414,12 +419,14 @@ namespace WinForms
                 nameof(Zarizeni.Popis),
                 nameof(Zarizeni.Prikon),
                 nameof(Zarizeni.Napeti),
+                nameof(Zarizeni.Druh),
                 nameof(Zarizeni.Menic),
                 nameof(Zarizeni.BalenaJednotka),
-                nameof(Zarizeni.Pozice)
+                nameof(Zarizeni.Pozice),
+                nameof(Trasa.Popis)
             ];
 
-            var Adresar = Path.GetDirectoryName(Cesta);
+            var Adresar = Path.GetDirectoryName(Cesta) ?? string.Empty;
             string targetBase = Path.Combine(Adresar, "Výstup");
             if (!Directory.Exists(targetBase)) { Directory.CreateDirectory(targetBase); }
             Cesta = Path.Combine(targetBase, Path.GetFileName(Cesta));
@@ -458,25 +465,25 @@ namespace WinForms
                 {
                     var kopieKabelu = new Trasa
                     {
-                        Tag = z.Tag,
-                        Rozvadec = k.Rozvadec,
-                        RozvadecCislo = k.RozvadecCislo,
+                        Tag = z.Tag ?? string.Empty,
+                        Rozvadec = k.Rozvadec ?? string.Empty,
+                        RozvadecCislo = k.RozvadecCislo ?? string.Empty,
                         // Použijeme předznamenání tag ze zařízení, abychom zabránili shodným označením (WL1 -> P132-WL1)
                         Oznaceni = (z.Tag ?? "").Replace(" ", "") + "-"+ (k.Oznaceni ?? "").Replace(" ", ""),
-                        Kabel = k.Kabel,
-                        KabelVelikost = k.PocetZil + "x" + k.Prurezmm2,
+                        Kabel = k.Kabel ?? string.Empty,
+                        KabelVelikost = (k.PocetZil ?? "") + "x" + (k.Prurezmm2 ?? ""),
                         //PocetZil = k.PocetZil,
                         //Prurezmm2 = k.Prurezmm2,
-                        PrurezFt = k.PrurezFt,
-                        Druh = k.Tag + "-" + k.Popis,
+                        PrurezFt = k.PrurezFt ?? string.Empty,
+                        Druh = (k.Tag ?? "") + "-" + (k.Popis ?? ""),
                         OdkudSvorka = string.IsNullOrEmpty(k.OdkudSvorka) ? "SZ" : k.OdkudSvorka, 
-                        Mezera = k.Mezera,
-                        Patro = k.Patro,
-                        Predmet = k.Predmet,
+                        Mezera = k.Mezera ?? string.Empty,
+                        Patro = k.Patro ?? string.Empty,
+                        Predmet = k.Predmet ?? string.Empty,
                         //Svorka = string.IsNullOrEmpty(k.Svorka) ? "SZ" : k.Svorka, 
-                        Svorka = k.Popis.StartsWith("PU") ? "SZ" : k.Popis, 
-                        Delka = k.Delka,
-                        Popis = k.Popis
+                        Svorka = k.Popis != null && k.Popis.StartsWith("PU") ? "SZ" : k.Popis ?? string.Empty, 
+                        Delka = k.Delka ?? string.Empty,
+                        Popis = k.Popis ?? string.Empty
                     };
                     SeznamKabelu.Add(kopieKabelu);
                 }
@@ -708,9 +715,11 @@ namespace WinForms
                 nameof(Zarizeni.Popis),
                 nameof(Zarizeni.Prikon),
                 nameof(Zarizeni.Napeti),
+                nameof(Zarizeni.Druh),
                 nameof(Zarizeni.Menic),
                 nameof(Zarizeni.BalenaJednotka),
-                nameof(Zarizeni.Pozice)
+                nameof(Zarizeni.Pozice),
+                nameof(Trasa.Popis)
             ];
 
             Console.WriteLine($"Generování sloučeného exportu do {targetBase}.*");
@@ -857,7 +866,7 @@ namespace WinForms
 
             List<Zarizeni> hlavniElektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
 
-            string sablonaCesta = "g:\\Můj disk\\Projekty\\SemiProvoz\\Podklady\\SeznamMichal\\Sablona.xlsx";
+            string sablonaCesta = Path.Combine(Cesty.AdresarSpusteni, "Sablony", "Sablona.xlsx");
             new ExcelGenerator().Generuj(sablonaCesta, targetKabelyBase + "123" + ".xlsx", cover, spotrebice);
         }
 
@@ -955,14 +964,14 @@ namespace WinForms
                         Polozka = poradi++.ToString(),
                         Rev = "0",
                         BalenaJednotka = z.BalenaJednotka,
-                        Umisteni = z.Patro,
+                        Umisteni = z.Pozice,
                         Tag = z.Tag,
                         Popis = z.Popis,
                         TypVelikost = z.Typ,
                         Rozvadec = z.RozvadecOznačení,
                         Napeti = z.Napeti,
                         InstalovanyPi = z.Prikon,
-                        VypoctovyPi = double.TryParse(z.Prikon, out double p) ? (p*0.9).ToString() : null,
+                        VypoctovyPi = double.TryParse(z.Prikon, out double p) ? (p*0.9).ToString() : "",
                         StartMotoru = z.Menic,
                         Poznamka = z.Poznamka
                     };
@@ -1053,7 +1062,7 @@ namespace WinForms
                     //NastavBunku(row.Cell("J"), kabel.UkonceniDo);
                     //NastavBunku(row.Cell("K"), kabel.Poznamka);
 
-                        var DelkaPom = double.TryParse(kab.Delka?.Replace(',', '.'),System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,out double d) ? d.ToString(System.Globalization.CultureInfo.InvariantCulture) : null;
+                        var DelkaPom = double.TryParse(kab.Delka?.Replace(',', '.'),System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,out double d) ? d.ToString(System.Globalization.CultureInfo.InvariantCulture) : "";
                         KabelPolozka kp = new()
                         {
                             Polozka = novyVztah ? skupinaCislo++.ToString() : "",
@@ -1063,7 +1072,7 @@ namespace WinForms
                             //kab.KabelVelikost = kab.PocetZil + "x" + kab.Prurezmm2,
                             Prurez = kab.PocetZil + "x" + kab.Prurezmm2,
 
-                            Delka = DelkaPom.ToString(),
+                            Delka = DelkaPom,
                             ZeZarizeni = kab.RozvadecAll,
                             UkonceniZe = "SZ", // kab.OdkudSvorka,
                             DoZarizeni = kab.Tag,
@@ -1126,19 +1135,37 @@ namespace WinForms
                 ]
             };
         }
+
+        private void NapovedaItem_Click(object? sender, EventArgs e)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("=== ELEKTRO SEZNAMY A EXCEL EXPORTY ===");
+            sb.AppendLine();
+            sb.AppendLine("Tato aplikace slouží k automatizaci zpracování elektroseznamů, kabelových specifikací a seznamů místností.");
+            sb.AppendLine();
+            sb.AppendLine("ZÁKLADNÍ POSTUP:");
+            sb.AppendLine("1. Nastavte složku projektu přes 'Soubor' -> 'Nastav složku projektu'. Všechny výstupy a hledání souborů budou vycházet z této složky.");
+            sb.AppendLine("2. Převod strojů: Tlačítko 'Načíst stroje z XLS' (nebo menu) převede strojní podklady od strojařů do formátu JSON/CSV.");
+            sb.AppendLine("3. Seznam a úpravy: Tlačítko 'Seznam zařízení' zobrazí tabulku načtených zařízení, kde lze provádět úpravy, doplňovat kabely a specifikace.");
+            sb.AppendLine("4. Generování výstupů: Přes menu 'Generování' můžete exportovat sloučené seznamy a kabelové knihy do 6 formátů (XLSX, CSV, XML, HTML, PDF, DOCX). Výstupy se ukládají do podsložky 'Výstup' ve složce projektu.");
+            sb.AppendLine();
+            sb.AppendLine("Pokud soubor na disku již existuje, aplikace se vás před uložením zeptá, zda jej chcete přepsat.");
+
+            MessageBox.Show(sb.ToString(), "Nápověda a struktura aplikace", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 
     public class ListBoxWriter(ListBox listBox) : TextWriter
     {
         private readonly ListBox _listBox = listBox;
-        private readonly SynchronizationContext _context = SynchronizationContext.Current;
+        private readonly SynchronizationContext? _context = SynchronizationContext.Current;
 
         public override Encoding Encoding => Encoding.UTF8;
 
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
-            //_context.Post(_ => _listBox.Items.Add(value), null);
-            _context.Post(_ =>
+            if (value == null) return;
+            _context?.Post(_ =>
             {
                 _listBox.Items.Add(value);
                 _listBox.TopIndex = _listBox.Items.Count - 1; // ← automatické scrollování dolů

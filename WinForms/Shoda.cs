@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Tridy;
 using Knihovna.Tridy;
 using System;
@@ -7,8 +7,8 @@ namespace WinForms
 {
     public partial class Shoda : Form
     {
-        private List<Zarizeni> Strojni { get; set; } // obecný typ, nebo použij generický s omezením
-        private List<Zarizeni> Elektro { get; set; } // obecný typ, nebo použij generický s omezením
+        private List<Zarizeni> Strojni { get; set; } = []; // obecný typ, nebo použij generický s omezením
+        private List<Zarizeni> Elektro { get; set; } = []; // obecný typ, nebo použij generický s omezením
         public Shoda(List<Zarizeni> strojni, List<Zarizeni> elektro) {
             this.Strojni = strojni;
             this.Elektro = elektro;
@@ -29,28 +29,19 @@ namespace WinForms
         }
 
         private static void SkrytSloupce(DataGridView data) {
-            data.Columns["Patro"].Visible = false;
-            data.Columns["HP"].Visible = false;
-            data.Columns["Delka"].Visible = false;
-            data.Columns["IsExist"].Visible = false;
-            data.Columns["IsExistElektro"].Visible = false;
-            data.Columns["Bod"].Visible = false;
-            data.Columns["BodElektro"].Visible = false;
-
-            data.Columns["Nic"].Visible = false;
-            data.Columns["AWG"].Visible = false;
-            data.Columns["Delkaft"].Visible = false;
-
-            data.Columns["PrurezMM2"].Visible = false;
-            data.Columns["Rozvadec"].Visible = false;
-            data.Columns["RozvadecCislo"].Visible = false;
-            data.Columns["RozvadecOznačení"].Visible = false;
-            data.Columns["Kabel"].Visible = false;
-            data.Columns["Motor"].Visible = false;
-
-            data.Columns["Vykres"].Visible = false;
-            data.Columns["Vodice"].Visible = false;
-            data.Columns["Motor"].Visible = false;
+            string[] sloupceKeSkryti = [
+                "Patro", "HP", "Delka", "IsExist", "IsExistElektro", "Bod", "BodElektro",
+                "Nic", "AWG", "Delkaft", "PrurezMM2", "Rozvadec", "RozvadecCislo",
+                "RozvadecOznačení", "Kabel", "Motor", "Vykres", "Vodice"
+            ];
+            foreach (var colName in sloupceKeSkryti)
+            {
+                var col = data.Columns[colName];
+                if (col != null)
+                {
+                    col.Visible = false;
+                }
+            }
         }
 
 

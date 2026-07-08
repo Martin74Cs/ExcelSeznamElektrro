@@ -1,4 +1,4 @@
-﻿using Aplikace.Tridy;
+using Aplikace.Tridy;
 using Knihovna.Tridy;
 using System;
 using System.Collections.Generic;
@@ -88,25 +88,47 @@ namespace Aplikace.Sdilene
         public static string MistnostiXLs => Path.Combine(Místnost, "Místnosti.celek.xlsx");
         public static string Mistnosti => Path.ChangeExtension(MistnostiXLs, ".json");
 
+        /// <summary>
+        /// Získá adresář se zdroji dat (stykače, měniče, kabely atd.).
+        /// Pokud není nastaven v Informace.Instance.AdresarZdrojDat nebo neexistuje,
+        /// použije se fallback na lokální složku ZdrojeDat v adresáři spuštění.
+        /// </summary>
+        public static string ZdrojDatAdresar
+        {
+            get
+            {
+                var cesta = Informace.Instance.AdresarZdrojDat;
+                if (string.IsNullOrEmpty(cesta) || !Directory.Exists(cesta))
+                {
+                    cesta = Path.Combine(AdresarSpusteni ?? string.Empty, "ZdrojeDat");
+                    if (!Directory.Exists(cesta))
+                    {
+                        Directory.CreateDirectory(cesta);
+                    }
+                }
+                return cesta;
+            }
+        }
+
         //Cesta ke zdroji dat pro stykače, měniče a jističe, motory.
-        public static string KM => Path.Combine(Informace.Instance.AdresarZdrojDat, "Stykac", "KM.json");
-        public static string KMCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Stykac", "KM.csv");
+        public static string KM => Path.Combine(ZdrojDatAdresar, "Stykac", "KM.json");
+        public static string KMCsv => Path.Combine(ZdrojDatAdresar, "Stykac", "KM.csv");
 
-        public static string FM => Path.Combine(Informace.Instance.AdresarZdrojDat, "Menic", "FM.json");
-        public static string FMCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Menic", "FM.csv");
+        public static string FM => Path.Combine(ZdrojDatAdresar, "Menic", "FM.json");
+        public static string FMCsv => Path.Combine(ZdrojDatAdresar, "Menic", "FM.csv");
 
-        public static string CuJson => Path.Combine(Informace.Instance.AdresarZdrojDat, "Kabel", "Cu.json");
-        public static string AlJson => Path.Combine(Informace.Instance.AdresarZdrojDat, "Kabel", "Al.json");
+        public static string CuJson => Path.Combine(ZdrojDatAdresar, "Kabel", "Cu.json");
+        public static string AlJson => Path.Combine(ZdrojDatAdresar, "Kabel", "Al.json");
 
-        public static string JisticCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Jistic", "Jističe3VA.csv");
-        public static string Jistic => Path.Combine(Informace.Instance.AdresarZdrojDat, "Jistic", "Jističe3VA.json");
+        public static string JisticCsv => Path.Combine(ZdrojDatAdresar, "Jistic", "Jističe3VA.csv");
+        public static string Jistic => Path.Combine(ZdrojDatAdresar, "Jistic", "Jističe3VA.json");
 
-        public static string Motor => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "MotoryList.json");
-        public static string MotorCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "MotoryList.csv");
-        public static string Motor3000Csv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "Motory3000.csv");
+        public static string Motor => Path.Combine(ZdrojDatAdresar, "Motor", "MotoryList.json");
+        public static string MotorCsv => Path.Combine(ZdrojDatAdresar, "Motor", "MotoryList.csv");
+        public static string Motor3000Csv => Path.Combine(ZdrojDatAdresar, "Motor", "Motory3000.csv");
 
-        public static string Motory => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "Motory.Json");
-        public static string MotoryCsv => Path.Combine(Informace.Instance.AdresarZdrojDat, "Motor", "Motory.Csv");
+        public static string Motory => Path.Combine(ZdrojDatAdresar, "Motor", "Motory.Json");
+        public static string MotoryCsv => Path.Combine(ZdrojDatAdresar, "Motor", "Motory.Csv");
 
         //Projekt
         public static string Projekt => Path.Combine(Informace.Instance.BasePath);

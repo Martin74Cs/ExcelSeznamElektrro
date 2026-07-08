@@ -1,0 +1,24 @@
+[
+  {
+    "Id": 1,
+    "Apid": "kabelcu1",
+    "Name": "PRAFlaDur 3x1.5",
+    "Proud": "16",
+    "Deleni": "3",
+    "SLmm2": 1.5,
+    "IzAE": 18.5,
+    "IzAGsvis": 22.0,
+    "IzAGvod": 24.0,
+    "IzAFlin": 20.0,
+    "IzAFtroj": 19.0,
+    "IzAD1": 15.0,
+    "IzAD2": 16.0,
+    "IzAC": 17.5,
+    "IzAB": 14.5,
+    "IzAA": 13.0,
+    "RLOhmkm": 12.1,
+    "XLOhmkm": 0.115,
+    "RPENOhmkm": 12.1,
+    "XPENOhmkm": 0.115
+  }
+]

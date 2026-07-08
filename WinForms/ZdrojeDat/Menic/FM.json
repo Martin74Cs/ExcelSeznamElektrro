@@ -1,0 +1,15 @@
+[
+  {
+    "Id": 1,
+    "Apid": "menic001",
+    "Prikon": 0.75,
+    "PrikonHP": 1.0,
+    "Proud": 2.4,
+    "Provoz": "Normální",
+    "TypovyKod": "ACS380-040S-02A4-4",
+    "Velikost": "R1",
+    "NapetiMin": 380,
+    "NapetiMax": 480,
+    "Výrobce": "ABB"
+  }
+]

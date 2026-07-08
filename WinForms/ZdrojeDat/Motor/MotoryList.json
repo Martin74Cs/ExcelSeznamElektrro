@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 1,
+    "Apid": "motor001",
+    "Vyrobce": "Siemens",
+    "TypMotoru": "1LE1001-1DB43-4AA4",
+    "Material": "Hliník",
+    "Vykon50": 11.0,
+    "Vykon60": 12.6,
+    "Velikost": "132M",
+    "Otacky50": 1460,
+    "Moment50": 72.0,
+    "Ucinnost44": 89.8,
+    "Ucinnost34": 90.5,
+    "Ucinnost24": 89.7,
+    "Ucinik50": 0.82,
+    "Proud400": 21.5,
+    "MaMn": 2.5,
+    "IaIn": 6.9,
+    "MkMn": 3.0,
+    "Lpfa": 64.0,
+    "LWA": 76.0,
+    "ObjednaciCislo": "1LE10011DB434AA4",
+    "TrojuhelnikHvezda": "Y/D 400/690V",
+    "Priruba": "IM B3",
+    "Termistory": "PTC",
+    "Hmotnost": 72.0,
+    "MomentSetrvacnosti": 0.041,
+    "MomentovaTrida": 16.0,
+    "Poly": 4
+  }
+]

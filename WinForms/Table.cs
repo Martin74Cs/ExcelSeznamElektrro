@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
@@ -14,7 +14,7 @@ namespace WinForms
     public partial class Table : Form
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<Zarizeni> PoleOut { get; set; }
+        public List<Zarizeni> PoleOut { get; set; } = [];
 
         private List<Zarizeni> Pole { get; set; }
 
@@ -90,7 +90,7 @@ namespace WinForms
             };
         }
 
-        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void DataGridView1_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || sender is not DataGridView dgv || dgv.Rows[e.RowIndex].DataBoundItem == null)
                 return;
@@ -99,11 +99,20 @@ namespace WinForms
             PropertyInfo[] vlastnosti = type.GetProperties();
 
             var Text = vlastnosti.Select(x => x.Name).ToArray();
+            string colName = dgv.Columns[e.ColumnIndex].Name;
 
-            if (Text.Contains(dgv.Columns[e.ColumnIndex].Name) && !type.GetProperty(dgv.Columns[e.ColumnIndex].Name).CanWrite) // název sloupce ve zdroji dat
+            if (Text.Contains(colName)) // název sloupce ve zdroji dat
             {
-                e.CellStyle.BackColor = Color.LightGray;
-                dgv.Columns[dgv.Columns[e.ColumnIndex].Name].ReadOnly = true;
+                var prop = type.GetProperty(colName);
+                if (prop != null && !prop.CanWrite)
+                {
+                    e.CellStyle.BackColor = Color.LightGray;
+                    var col = dgv.Columns[colName];
+                    if (col != null)
+                    {
+                        col.ReadOnly = true;
+                    }
+                }
             }
         }
 
@@ -111,7 +120,8 @@ namespace WinForms
         private static string GetEnumDescription(Enum value)
         {
             var field = value.GetType().GetField(value.ToString());
-            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+            if (field == null) return value.ToString();
+            var attribute = (DescriptionAttribute?)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
             return attribute == null ? value.ToString() : attribute.Description;
         }
 
@@ -483,7 +493,10 @@ namespace WinForms
             {
                 dataGridView1.EndEdit();        // Ukončí editaci buňky
                 dataGridView1.CurrentCell = null; // Vynutí commit řádku
-                BindingContext[dataGridView1.DataSource].EndCurrentEdit(); // Vynutí uložení do seznamu
+                if (dataGridView1.DataSource != null)
+                {
+                    BindingContext?[dataGridView1.DataSource]?.EndCurrentEdit(); // Vynutí uložení do seznamu
+                }
             }
 
         }
@@ -509,7 +522,7 @@ namespace WinForms
             //    dataGridView1.DataSource = new SortableBindingList<Popis>(Pole);
             //}
         }
-        private Zarizeni _lastAddedOrEditedZarizeni = null;
+        private Zarizeni? _lastAddedOrEditedZarizeni = null;
         private string? _highlightedApid = null;
         //Přidat
         private void BtnAdd_Click(object sender, EventArgs e)
@@ -712,29 +725,23 @@ namespace WinForms
         private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
-            if (box.Text == "All")
+            if (box?.Text == "All")
             {
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
             ObnovGrid(); // zachová aktuální filtry
-            //string vybranePatro = box.SelectedItem.ToString();
-            //var filtrovanaData = Pole.Where(z => z.Etapa == vybranePatro).ToList();
-            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
         }
 
         private void ComboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
-            if (box.Text == "All")
+            if (box?.Text == "All")
             {
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
             ObnovGrid(); // zachová aktuální filtry
-            //string vybranePatro = box.SelectedItem.ToString();
-            //var filtrovanaData = Pole.Where(z => z.RozvadecOznačení == vybranePatro).ToList();
-            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
         }
 
         private void ComboBox3_MouseClick(object sender, MouseEventArgs e)
@@ -758,16 +765,13 @@ namespace WinForms
         private void ComboBox4Pid_SelectedIndexChanged(object sender, EventArgs e)
         {
             var box = sender as ComboBox; // Získání ComboBoxu, který vyvolal událost
-            if (box.Text == "All")
+            if (box?.Text == "All")
             {
                 dataGridView1.DataSource = new SortableBindingList<Zarizeni>(Pole);
                 return;
             }
 
             ObnovGrid(); // zachová aktuální filtry
-            //string vybranePatro = box.SelectedItem.ToString();
-            //var filtrovanaData = Pole.Where(z => z.PID == vybranePatro).ToList();
-            //dataGridView1.DataSource = new SortableBindingList<Popis>(filtrovanaData);
         }
 
         private void ComboBox4Pid_MouseClick(object sender, MouseEventArgs e)
@@ -903,7 +907,7 @@ namespace WinForms
 
         private bool isSorted;
         private ListSortDirection sortDirection;
-        private PropertyDescriptor sortProperty;
+        private PropertyDescriptor? sortProperty;
 
         protected override bool SupportsSortingCore => true;
         protected override bool IsSortedCore => isSorted;
@@ -931,7 +935,7 @@ namespace WinForms
             isSorted = false;
         }
 
-        protected override PropertyDescriptor SortPropertyCore => sortProperty;
+        protected override PropertyDescriptor? SortPropertyCore => sortProperty;
         protected override ListSortDirection SortDirectionCore => sortDirection;
     }
 }

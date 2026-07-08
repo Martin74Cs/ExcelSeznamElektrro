@@ -1,4 +1,4 @@
-﻿using Knihovna.Tridy;
+using Knihovna.Tridy;
 
 namespace Knihovna.Excel {
     public class ExcelLoad
@@ -414,7 +414,7 @@ namespace Knihovna.Excel {
                     {
                         var cb = kvp.Value;
                         cb.Items.Clear();
-                        cb.Items.Add(new { Key = -1, Value = "-- Nepřiřazeno --" });
+                        cb.Items.Add(new ColumnMappingItem { Key = -1, Value = "-- Nepřiřazeno --" });
 
                         int selectIndex = 0;
                         int currentIndex = 1;
@@ -427,7 +427,7 @@ namespace Knihovna.Excel {
 
                         foreach (var col in excelCols)
                         {
-                            cb.Items.Add(new { Key = col.Item1, Value = col.Item2 });
+                            cb.Items.Add(new ColumnMappingItem { Key = col.Item1, Value = col.Item2 });
 
                             if (savedCol > 0)
                             {
@@ -511,17 +511,11 @@ namespace Knihovna.Excel {
 
                     foreach (var kvp in comboBoxes)
                     {
-                        var selectedItem = kvp.Value.SelectedItem;
-                        if (selectedItem != null)
+                        if (kvp.Value.SelectedItem is ColumnMappingItem selectedItem)
                         {
-                            var keyProp = selectedItem.GetType().GetProperty("Key");
-                            if (keyProp != null)
+                            if (selectedItem.Key > 0)
                             {
-                                int key = (int)keyProp.GetValue(selectedItem)!;
-                                if (key > 0)
-                                {
-                                    dir[key] = kvp.Key;
-                                }
+                                dir[selectedItem.Key] = kvp.Key;
                             }
                         }
                     }
@@ -672,6 +666,30 @@ namespace Knihovna.Excel {
             //return new string(Enumerable.Repeat(chars, length)
             //    .Select(s => s[random.Next(s.Length)]).ToArray());
             return new string([.. Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)])]);
+        }
+    }
+
+    /// <summary>
+    /// Reprezentuje položku pro mapování sloupce v dialogovém okně.
+    /// </summary>
+    public class ColumnMappingItem
+    {
+        /// <summary>
+        /// Index sloupce v Excelu (1-based, nebo -1 pro nepřiřazeno).
+        /// </summary>
+        public int Key { get; set; }
+
+        /// <summary>
+        /// Textový popis sloupce.
+        /// </summary>
+        public string Value { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Vrací textovou reprezentaci položky.
+        /// </summary>
+        public override string ToString()
+        {
+            return Value;
         }
     }
 }

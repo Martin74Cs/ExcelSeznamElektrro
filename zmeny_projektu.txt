@@ -1,0 +1,50 @@
+==================================================================
+              PŘEHLED PROVEDENÝCH ZMĚN V PROJEKTU A JEJICH DOPAD
+==================================================================
+
+1. OPRAVA ZACYKLENÍ KONZOLOVÉ APLIKACE
+   - Soubor: Aplikace/Program.cs
+   - Změna: Odstraněno chybné klíčové slovo 'return;' na konci hlavního menu cyklu.
+   - Dopad: Konzolová nabídka se nyní po vykonání příkazu správně zopakuje a neukončí celou aplikaci. Aplikace končí korektně pouze volbou '0'.
+
+2. ODSTRANĚNÍ ZASTARALÝCH PEVNÝCH CEST K SOUBORŮM
+   - Soubory: Aplikace/Upravy/LigthChem.cs, WinForms/Form1.cs
+   - Změna:
+     - V LigthChem.cs byly kompletně smazány nepoužívané zakomentované metody (Hlavni, AddKabely), které obsahovaly pevné cesty k testovacímu souboru 'N92120_Seznam_stroju_zarizeni_250311_250407.xlsx'.
+     - Ve WinForms/Form1.cs v metodě KabelExcel byla nahrazena pevná cesta k šabloně na disku 'G:\' za relativní cestu k aplikační složce 'Sablony/Sablona.xlsx'.
+   - Dopad: Kód je čistší, neobsahuje pozůstatky po testovacích souborech a je přenositelný na jakýkoliv jiný počítač.
+
+3. TYPOVĚ BEZPEČNÉ INTERAKTIVNÍ MAPOVÁNÍ EXCELU
+   - Soubor: Knihovna/Excel/ExcelLoad.cs
+   - Změna: Zavedena třída 'ColumnMappingItem' reprezentující přiřazení parametrů sloupců. Nahradila anonymní typy a nespolehlivou reflexi pro načítání klíče sloupce.
+   - Dopad: Zvýšení stability interaktivního dialogu pro přiřazení sloupců. Eliminace rizik spojených s reflexí na anonymních typech při optimalizaci nebo změnách runtime prostředí.
+
+4. INTELIGENTNÍ OŠETŘENÍ PŘEPISOVÁNÍ SOUBORŮ (GRAFICKÝ DIALOG)
+   - Soubor: Knihovna/Soubory.cs (metoda CanSaveFile)
+   - Změna: Metoda CanSaveFile byla rozšířena o detekci běhu v grafickém prostředí (Windows Forms). Pokud soubor existuje a aplikace běží jako WinForms, zobrazí se standardní 'MessageBox.Show' s otázkou Ano/Ne pro přepsání. V konzolovém režimu se nadále používá textový dotaz přes Console.ReadLine.
+   - Dopad: Aplikace WinForms již nevisí na neviditelném konzolovém vstupu a korektně se dotáže uživatele před přepsáním jakéhokoliv generovaného souboru. Výstupy se nadále ukládají automaticky do podsložky 'Výstup' ve složce projektu.
+
+5. LOKÁLNÍ DATABÁZE PŘÍSTROJŮ A FALLBACK CEST
+   - Soubory: WinForms/WinForms.csproj, Aplikace/Sdilene/Cesty.cs, složka WinForms/ZdrojeDat
+   - Změna:
+     - V projektu WinForms byla vytvořena složka 'ZdrojeDat' obsahující strukturované JSON soubory pro přístroje a kabely (Stykac/KM.json, Menic/FM.json, Kabel/Cu.json, Kabel/Al.json, Jistic/Jističe3VA.json, Motor/MotoryList.json). Tyto soubory se při buildu kopírují do výstupního adresáře.
+     - V Cesty.cs byl implementován dynamický fallback: pokud v konfiguraci 'data.txt' není nastaven nebo neexistuje externí adresář zdrojů dat, použije se tato lokální složka 'ZdrojeDat' z výstupního adresáře aplikace.
+   - Dopad: Projekt je plně samostatný a funkční ihned po stažení/sestavení, i bez předem nastavené externí složky pro přístroje. Zároveň je zachována možnost tuto složku kdykoliv přenastavit v menu.
+
+6. ROZŠÍŘENÁ NÁPOVĚDA PRO UŽIVATELE
+   - Soubory: Aplikace/Program.cs, WinForms/Form1.cs
+   - Změna:
+     - V konzolové aplikaci byla rozšířena textová nápověda.
+     - Ve Windows Forms byla do menu 'Pomoc' programově přidána nová položka 'Nápověda k aplikaci...', která po kliknutí zobrazí dialog s vysvětlením postupu práce, struktury ukládání a ošetření souborů.
+   - Dopad: Snazší zorientování se v aplikaci po delší době nepoužívání.
+
+7. DRUHÁ FÁZE: VYČIŠTĚNÍ A BEZPEČNOSTNÍ OPRAVY VE WINDOWS FORMS
+   - Soubory: WinForms/Form1.cs, WinForms/Table.cs, WinForms/Shoda.cs, WinForms/FormKabely.cs
+   - Změna:
+     - Form1.cs: Ošetřena nullability varování při exportu (přiřazování z.Tag, parsování DelkaPom, VypoctovyPi). V ListBoxWriteru opravena signatura WriteLine a ošetřen SynchronizationContext na null. Odstraněno varování CS4014 discardem u InitializeComponent.
+     - Table.cs: Ošetřen přístup k dgv.Columns[colName] na null. Přepsána metoda GetEnumDescription s ošetřením null u pole enumu. Doplněny nullable operátory v ComboBox_SelectedIndexChanged. Inicializováno pole PoleOut.
+     - Shoda.cs: Nahrazeno natvrdo zapsané skrývání sloupců bezpečným cyklem přes existující sloupce s kontrolou null, což odstranilo přes 20 varování. Inicializována pole Strojni a Elektro na prázdný seznam.
+     - FormKabely.cs: Změněny signatury event handlerů (object? sender) a ošetřeno ToString() na SelectedItem.
+   - Dopad: Výrazné zvýšení stability formulářů WinForms a kompletní eliminace všech 52 varování kompilátoru o možnostech chyb NullReferenceException za běhu. Celé řešení se nyní kompiluje se 100% čistým výsledkem (0 chyb, 0 varování).
+
+==================================================================

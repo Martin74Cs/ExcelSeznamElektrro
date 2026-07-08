@@ -1,0 +1,24 @@
+[
+  {
+    "Id": 1,
+    "Apid": "kabelal1",
+    "Name": "AYKY 4x16",
+    "Proud": "50",
+    "Deleni": "4",
+    "SLmm2": 16.0,
+    "IzAE": 55.0,
+    "IzAGsvis": 60.0,
+    "IzAGvod": 62.0,
+    "IzAFlin": 58.0,
+    "IzAFtroj": 54.0,
+    "IzAD1": 48.0,
+    "IzAD2": 50.0,
+    "IzAC": 52.0,
+    "IzAB": 45.0,
+    "IzAA": 40.0,
+    "RLOhmkm": 1.91,
+    "XLOhmkm": 0.082,
+    "RPENOhmkm": 1.91,
+    "XPENOhmkm": 0.082
+  }
+]

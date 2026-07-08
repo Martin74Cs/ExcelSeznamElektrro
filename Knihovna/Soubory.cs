@@ -1,4 +1,4 @@
-﻿using Knihovna;
+using Knihovna;
 using Knihovna.Export;
 using Knihovna.Tridy;
 using Newtonsoft.Json;
@@ -106,15 +106,42 @@ namespace Knihovna {
                 }
 
                 if(File.Exists(cesta)) {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write($"Soubor '{Path.GetFileName(cesta)}' již existuje. Chcete jej přepsat? [A/N, výchozí A]: ");
-                    Console.ResetColor();
-                    string? odpoved = Console.ReadLine();
-                    if(!string.IsNullOrEmpty(odpoved) &&
-                        (odpoved.Equals("N", StringComparison.OrdinalIgnoreCase) ||
-                         odpoved.Equals("Ne", StringComparison.OrdinalIgnoreCase))) {
-                        Console.WriteLine($"Ukládání souboru '{Path.GetFileName(cesta)}' bylo stornováno uživatelem.");
-                        return false;
+                    bool isWinForms = false;
+                    try {
+                        isWinForms = System.Windows.Forms.Application.OpenForms.Count > 0 || System.Windows.Forms.Application.MessageLoop;
+                    } catch {
+                        // Ignorovat, pokud by selhalo v non-WinForms kontextu
+                    }
+
+                    if (isWinForms) {
+                        System.Windows.Forms.DialogResult result = System.Windows.Forms.DialogResult.Yes;
+                        var thread = new System.Threading.Thread(() => {
+                            result = System.Windows.Forms.MessageBox.Show(
+                                $"Soubor '{Path.GetFileName(cesta)}' již existuje. Chcete jej přepsat?",
+                                "Potvrzení přepsání",
+                                System.Windows.Forms.MessageBoxButtons.YesNo,
+                                System.Windows.Forms.MessageBoxIcon.Question
+                            );
+                        });
+                        thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                        thread.Start();
+                        thread.Join();
+
+                        if (result == System.Windows.Forms.DialogResult.No) {
+                            Console.WriteLine($"Ukládání souboru '{Path.GetFileName(cesta)}' bylo stornováno uživatelem.");
+                            return false;
+                        }
+                    } else {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write($"Soubor '{Path.GetFileName(cesta)}' již existuje. Chcete jej přepsat? [A/N, výchozí A]: ");
+                        Console.ResetColor();
+                        string? odpoved = Console.ReadLine();
+                        if(!string.IsNullOrEmpty(odpoved) &&
+                            (odpoved.Equals("N", StringComparison.OrdinalIgnoreCase) ||
+                             odpoved.Equals("Ne", StringComparison.OrdinalIgnoreCase))) {
+                            Console.WriteLine($"Ukládání souboru '{Path.GetFileName(cesta)}' bylo stornováno uživatelem.");
+                            return false;
+                        }
                     }
                 }
                 return true;

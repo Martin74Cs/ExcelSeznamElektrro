@@ -73,21 +73,21 @@ namespace WinForms
             NactiVychoziHodnotyZařízení();
         }
 
-        private void ComboBoxZarizeni_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBoxZarizeni_SelectedIndexChanged(object? sender, EventArgs e) {
             // Při změně zařízení zrušíme případný režim úpravy
             ResetFormNaNovaKabel();
             ObnovSeznamKabelu();
             NactiVychoziHodnotyZařízení();
         }
 
-        private void ComboBoxZnacka_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBoxZnacka_SelectedIndexChanged(object? sender, EventArgs e) {
             // Automatický návrh označení jen pokud NEJSME v režimu úpravy
             if(_upravovanyKabel == null) {
                 AutoSuggestOznaceni();
             }
         }
 
-        private void ComboBoxFilter_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ComboBoxFilter_SelectedIndexChanged(object? sender, EventArgs e) {
             if(_nacitani) return;
             AplikujFiltryZarizeni();
         }
@@ -120,7 +120,7 @@ namespace WinForms
 
             // 3. Fáze výstavby (Etapa)
             if(comboBoxFilterEtapa.SelectedItem != null && comboBoxFilterEtapa.SelectedItem.ToString() != "Vše") {
-                string vybranaEtapa = comboBoxFilterEtapa.SelectedItem.ToString();
+                string vybranaEtapa = comboBoxFilterEtapa.SelectedItem.ToString() ?? string.Empty;
                 query = query.Where(z => z.Etapa == vybranaEtapa);
             }
 
