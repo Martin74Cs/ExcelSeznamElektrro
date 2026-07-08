@@ -20,17 +20,20 @@ namespace Aplikace.Upravy
             Console.WriteLine("Otevírám dialog pro výběr Seznamu strojů ...");
             Console.ResetColor();
             var Cesty = Informace.Instance.SouborStrojeXls;
-            if(!File.Exists(Cesty)) { 
+            if (!File.Exists(Cesty))
+            {
                 Cesty = Soubory.ShowOpenFileDialog("Excel soubory (*.xls;*.xlsx)|*.xls;*.xlsx", Informace.Instance.BasePath);
-                if(string.IsNullOrEmpty(Cesty) || !File.Exists(Cesty)) {
+                if (string.IsNullOrEmpty(Cesty) || !File.Exists(Cesty))
+                {
                     Console.WriteLine("Výběr souboru byl stornován nebo soubor neexistuje.");
                     return;
                 }
-                else { 
+                else
+                {
                     Informace.Instance.SouborStrojeXls = Cesty;
                     Informace.Instance.Ulozit();
                 }
-                    
+
             }
 
             var Json = Path.ChangeExtension(Cesty, ".json");
@@ -83,7 +86,8 @@ namespace Aplikace.Upravy
             Console.WriteLine("Otevírám dialog pro výběr Dwg extrahovaných dat (např. UpravaZnovu.006.xlsm)...");
             Console.ResetColor();
             string? cesta1 = Soubory.ShowOpenFileDialog("Excel / Makro soubory (*.xls;*.xlsx;*.xlsm)|*.xls;*.xlsx;*.xlsm");
-            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1)) {
+            if (string.IsNullOrEmpty(cesta1) || !File.Exists(cesta1))
+            {
                 Console.WriteLine("Výběr souboru byl stornován.");
                 return;
             }
@@ -129,7 +133,8 @@ namespace Aplikace.Upravy
                     Nove.Add(item);
                     Zmeny.Add(item);
                 }
-                else {
+                else
+                {
                     //zaznam existuje - bude přídán již existující záznam.
                     Nove.Add(Jeden);
                 }
@@ -142,128 +147,130 @@ namespace Aplikace.Upravy
         }
 
         /// <summary>Vytvoření excelu dle ElektroRozvaděč.Json</summary>
-        public static void JsonToExcel() {
-            string cestaData = Informace.Instance.SouborElektroJson;
-            //cestaData = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json");
-            var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
+        //public static void JsonToExcel()
+        //{
+        //    string cestaData = Informace.Instance.SouborElektroJson;
+        //    //cestaData = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.json");
+        //    var Stara = Soubory.LoadJsonList<Zarizeni>(cestaData);
 
-            //Vývody pro doplnění
-            //var cestaVývody = Path.Combine(Cesty.Elektro, "Vývody.json");
-            //var Vývody = Soubory.LoadJsonList<Popis>(cestaVývody);
+        //    //Vývody pro doplnění
+        //    //var cestaVývody = Path.Combine(Cesty.Elektro, "Vývody.json");
+        //    //var Vývody = Soubory.LoadJsonList<Popis>(cestaVývody);
 
-            //Spojení ZAŘÍZENÍ A ROZVADĚČE
-            //Stara = [.. Stara, .. Vývody];
+        //    //Spojení ZAŘÍZENÍ A ROZVADĚČE
+        //    //Stara = [.. Stara, .. Vývody];
 
-            //Vývody pro doplnění
-            //var cestaStavba = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
-            var VývodyStavba = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
+        //    //Vývody pro doplnění
+        //    //var cestaStavba = Path.Combine(Cesty.Elektro, "Vývody.Stavba.json");
+        //    var VývodyStavba = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
 
-            //Spojení původních s doplněnými
-            Stara = [.. Stara, .. VývodyStavba];
+        //    //Spojení původních s doplněnými
+        //    Stara = [.. Stara, .. VývodyStavba];
 
-            //Překlad do Angličtiny
-            Preklad(Stara);
+        //    //Překlad do Angličtiny
+        //    Preklad(Stara);
 
-            Console.WriteLine($"Načteno {Stara.Count} záznamů z {cestaData}");
-            Stara = [.. Stara.Where(x => x.Etapa == "FAZE 1")];
-            Console.WriteLine($"Pouze záznamy FAZE 1");
+        //    Console.WriteLine($"Načteno {Stara.Count} záznamů z {cestaData}");
+        //    Stara = [.. Stara.Where(x => x.Etapa == "FAZE 1")];
+        //    Console.WriteLine($"Pouze záznamy FAZE 1");
 
-            //Možná proud asi jen tam kde není.
-            //Stara.AddProud();
+        //    //Možná proud asi jen tam kde není.
+        //    //Stara.AddProud();
 
-            //Přidání typu kabelu pokud chybí.
-            var prazdne = Stara.Where(x => x.Kabel == null).ToList();
-            prazdne.AddKabelCyky(1.8);
+        //    //Přidání typu kabelu pokud chybí.
+        //    var prazdne = Stara.Where(x => x.Kabel == null).ToList();
+        //    prazdne.AddKabelCyky(1.8);
 
-            // Spojení původních neprázdných s doplněnými kabely – Concat vytvoří novou spojenou kolekci
-            //Stara = Stara.Where(x => x.Kabel != null).Concat(prazdne).ToList();
-            Stara = [.. Stara.Where(x => x.Kabel != null), .. prazdne];
+        //    // Spojení původních neprázdných s doplněnými kabely – Concat vytvoří novou spojenou kolekci
+        //    //Stara = Stara.Where(x => x.Kabel != null).Concat(prazdne).ToList();
+        //    Stara = [.. Stara.Where(x => x.Kabel != null), .. prazdne];
 
-            var StaraVSD = Stara.Where(x => x.Menic == "VSD").ToList();
-            var StaraBezVSD = Stara.Where(x => x.Menic != "VSD").ToList(); // vyloučí všechny s Menic == "VSD"
+        //    var StaraVSD = Stara.Where(x => x.Menic == "VSD").ToList();
+        //    var StaraBezVSD = Stara.Where(x => x.Menic != "VSD").ToList(); // vyloučí všechny s Menic == "VSD"
 
-            string filename = "Seznam.xlsx";
-            var cesta = Path.Combine(Informace.Instance.BasePath, filename);
-            //vytvoření nebo otevření dokumentu elektro
-            var ExcelApp = new ExcelApp(cesta);
+        //    string filename = "Seznam.xlsx";
+        //    var cesta = Path.Combine(Informace.Instance.BasePath, filename);
+        //    //vytvoření nebo otevření dokumentu elektro
+        //    var ExcelApp = new ExcelApp(cesta);
 
-            //1.Excel založka seznam kabelů
-            //Nastavení nebo vytvoření záložky
+        //    //1.Excel založka seznam kabelů
+        //    //Nastavení nebo vytvoření záložky
 
-            //čísla sloupců a nazvy tříd. 
-            var dir = new Dictionary<int, string>() {
-                {1,"Tag"},
-                {2,"Popis"},
-                {3,"Prikon"},
-                {4,"Napeti"},
-                {5,"Druh"},
-                {6,"Menic"},
-                {7,"Typ"},
-                {8,"RozvadecOznačení"},
-                {9,"Predmet"},
+        //    //čísla sloupců a nazvy tříd. 
+        //    var dir = new Dictionary<int, string>() {
+        //        {1,"Tag"},
+        //        {2,"Popis"},
+        //        {3,"Prikon"},
+        //        {4,"Napeti"},
+        //        {5,"Druh"},
+        //        {6,"Menic"},
+        //        {7,"Typ"},
+        //        {8,"RozvadecOznačení"},
+        //        {9,"Predmet"},
 
-                //{1,"Tag"},
-                //{2,"Popis"},
-                //{3,"Prikon"},
-                //{4,"Napeti"},
-                ////{5,"Proud"},
-                //{6,"Druh"},
-                //{7,"Menic"},
-                //{8,"Typ"},
-                ////{9,"PrurezMM2"},
-                ////{10,"Delka"},
-                //{11,"RozvadecOznačení"},
-                ////{12,"RozvadecCislo"},
-                //{12,"Predmet"},
+        //        //{1,"Tag"},
+        //        //{2,"Popis"},
+        //        //{3,"Prikon"},
+        //        //{4,"Napeti"},
+        //        ////{5,"Proud"},
+        //        //{6,"Druh"},
+        //        //{7,"Menic"},
+        //        //{8,"Typ"},
+        //        ////{9,"PrurezMM2"},
+        //        ////{10,"Delka"},
+        //        //{11,"RozvadecOznačení"},
+        //        ////{12,"RozvadecCislo"},
+        //        //{12,"Predmet"},
 
-                //{100,"PID"},
-                //{101,"Nic"},
-                //{102,"HP"},
-                //{103,"AWG"},
-                //{105,"Napeti"},
-                //{106,"Radek"},
-            };
+        //        //{100,"PID"},
+        //        //{101,"Nic"},
+        //        //{102,"HP"},
+        //        //{103,"AWG"},
+        //        //{105,"Napeti"},
+        //        //{106,"Radek"},
+        //    };
 
-            ExcelApp.GetSheet("Seznam Všechno");
-            //Vytvoření nadpisů
-            var range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
-            //Formátování nadpisů
-            ExcelApp.NadpisSet(range);
-            ExcelApp.ClassToExcel(Row: 3, Stara, dir);
+        //    ExcelApp.GetSheet("Seznam Všechno");
+        //    //Vytvoření nadpisů
+        //    var range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
+        //    //Formátování nadpisů
+        //    ExcelApp.NadpisSet(range);
+        //    ExcelApp.ClassToExcel(Row: 3, Stara, dir);
 
-            ExcelApp.GetSheet("Seznam Elektro");
-            //Vytvoření nadpisů
-            range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
-            //Formátování nadpisů
-            ExcelApp.NadpisSet(range);
-            ExcelApp.ClassToExcel(Row: 3, StaraBezVSD, dir);
+        //    ExcelApp.GetSheet("Seznam Elektro");
+        //    //Vytvoření nadpisů
+        //    range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
+        //    //Formátování nadpisů
+        //    ExcelApp.NadpisSet(range);
+        //    ExcelApp.ClassToExcel(Row: 3, StaraBezVSD, dir);
 
-            //2.Excel založka seznam kabelů
-            ExcelApp.GetSheet("Seznam Elektro VSD");
-            range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
-            ExcelApp.NadpisSet(range);
-            ExcelApp.ClassToExcel(Row: 3, StaraVSD, dir);
+        //    //2.Excel založka seznam kabelů
+        //    ExcelApp.GetSheet("Seznam Elektro VSD");
+        //    range = ExcelApp.Nadpisy([.. Nadpis.DataEn()]);
+        //    ExcelApp.NadpisSet(range);
+        //    ExcelApp.ClassToExcel(Row: 3, StaraVSD, dir);
 
-            //3.Excel založka seznam kabelů
-            //Vyzváření seznamu kabelů podle krytérii
-            List<List<string>> PoleDataBezVSD = SeznamKabelů(StaraBezVSD, ExcelApp, "Kabely");
-            //4.Excel založka seznam kabelů
-            Pridat.Soucet(ExcelApp, PoleDataBezVSD, "Součet Kabely");
+        //    //3.Excel založka seznam kabelů
+        //    //Vyzváření seznamu kabelů podle krytérii
+        //    List<List<string>> PoleDataBezVSD = SeznamKabelů(StaraBezVSD, ExcelApp, "Kabely");
+        //    //4.Excel založka seznam kabelů
+        //    Pridat.Soucet(ExcelApp, PoleDataBezVSD, "Součet Kabely");
 
-            //5.Excel založka seznam kabelů
-            //Vyzváření seznamu kabelů podle krytérii
-            var PoleDataVSD = SeznamKabelů(StaraVSD, ExcelApp, "Kabely VSD");
-            //6.Excel založka seznam kabelů
-            Pridat.Soucet(ExcelApp, PoleDataVSD, "Seznam VSD");
+        //    //5.Excel založka seznam kabelů
+        //    //Vyzváření seznamu kabelů podle krytérii
+        //    var PoleDataVSD = SeznamKabelů(StaraVSD, ExcelApp, "Kabely VSD");
+        //    //6.Excel založka seznam kabelů
+        //    Pridat.Soucet(ExcelApp, PoleDataVSD, "Seznam VSD");
 
-            ExcelApp.ExcelQuit(cesta);
+        //    ExcelApp.ExcelQuit(cesta);
 
-        }
+        //}
 
-        private static void Preklad(List<Zarizeni> Stara) {
+        private static void Preklad(List<Zarizeni> Stara)
+        {
             Stara.Where(x => x.Druh == Druhy.Otop).ToList()
                 .ForEach(x => x.Druh = Druhy.Otop);
-                        //.ForEach(x => x.Druh = "Heating");
+            //.ForEach(x => x.Druh = "Heating");
 
             Stara.Where(x => x.Druh == Druhy.Rozvadeč).ToList()
                         //.ForEach(x => x.Druh = "Distributor");
@@ -297,43 +304,41 @@ namespace Aplikace.Upravy
                 .ForEach(x => x.Typ = "Mixer");
         }
 
-        public static List<List<string>> SeznamKabelů(List<Zarizeni> Stara, ExcelApp ExcelApp, string SheatName)
-        {
-            Console.WriteLine("Probíhá načítaní kabelů");
+        //public static List<List<string>> SeznamKabelů(List<Zarizeni> Stara, ExcelApp ExcelApp, string SheatName)
+        //{
+        //    Console.WriteLine("Probíhá načítaní kabelů");
 
-            //2.Excel založka seznam kabelů
-            //Vytvoření pole kabelů pro zápis do Excelu
-            var DataTrida = KabelList.KabelyTrida(Stara);
-            DataTrida = [.. DataTrida.OrderBy(x => x.Hlavni.Rozvadec + x.Hlavni.RozvadecCislo)];
+        //    //2.Excel založka seznam kabelů
+        //    //Vytvoření pole kabelů pro zápis do Excelu
+        //    var DataTrida = KabelList.KabelyTrida(Stara);
+        //    DataTrida = [.. DataTrida.OrderBy(x => x.Hlavni.Rozvadec + x.Hlavni.RozvadecCislo)];
 
-            var Change = new List<Trasa>();
-            foreach (var kabel in DataTrida)
-            {
-                if (kabel.Hlavni != null)
-                    Change.Add(kabel.Hlavni);
-                if (kabel.PTC != null)
-                    Change.Add(kabel.PTC);
-                if (kabel.Ovladani != null)
-                    Change.Add(kabel.Ovladani);
-            }
+        //    var Change = new List<Trasa>();
+        //    foreach (var kabel in DataTrida)
+        //    {
+        //        if (kabel.Hlavni != null)
+        //            Change.Add(kabel.Hlavni);
+        //        if (kabel.PTC != null)
+        //            Change.Add(kabel.PTC);
+        //        if (kabel.Ovladani != null)
+        //            Change.Add(kabel.Ovladani);
+        //    }
 
-            //pole kabelů zapsat do Excel tabulky 
-            var PoleData = KabelList.KabelyTridaToString(Change);
-            //var PoleData = KabelList.Kabely(Stara);
+        //    //pole kabelů zapsat do Excel tabulky 
+        //    var PoleData = KabelList.KabelyTridaToString(Change);
+        //    //var PoleData = KabelList.Kabely(Stara);
 
-            //Nová záložka nebo nastav existující
-            ExcelApp.GetSheet(SheatName);
+        //    //Nová záložka nebo nastav existující
+        //    ExcelApp.GetSheet(SheatName);
 
-            //Doplnení nadpisu a ramecku
-            //ExcelApp.ExcelSaveNadpis(PoleData);
-            ExcelApp.ExcelSaveNadpisEn(PoleData);
+        //    //Doplnení nadpisu a ramecku
+        //    //ExcelApp.ExcelSaveNadpis(PoleData);
+        //    ExcelApp.ExcelSaveNadpisEn(PoleData);
 
-            //Do Excel vyplní od radku 3 data z PoleData mělo by se jednat o seznam kabelů
-            ExcelApp.KabelyToExcel(PoleData, 3);
-            return PoleData;
-        }
-
-
+        //    //Do Excel vyplní od radku 3 data z PoleData mělo by se jednat o seznam kabelů
+        //    ExcelApp.KabelyToExcel(PoleData, 3);
+        //    return PoleData;
+        //}
 
         //public static void Hlavni()
         //{
@@ -433,114 +438,118 @@ namespace Aplikace.Upravy
         //    //Target.SaveToCsv(Path.ChangeExtension(cesta1, ".csv"));
         //}
 
-        public static IEnumerable<Zarizeni> AddKabelCyky(this IEnumerable<Zarizeni> target, double rezerva = 1.5)
-        {
-            var Target = target.ToList(); // převod na List, abys mohl indexovat
+        //public static IEnumerable<Zarizeni> AddKabelCyky(this IEnumerable<Zarizeni> target, double rezerva = 1.5)
+        //{
+        //    var Target = target.ToList(); // převod na List, abys mohl indexovat
 
-            var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
-                //.Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
-                .Where(x => x.Name.Contains("PraFlaDur ", StringComparison.OrdinalIgnoreCase) && x.Deleni == "3")
-                //.Where(x => x.Name == "PRAFlaDur" && x.Deleni == "4")
-                .OrderBy(x => x.IzAE).ToList();
-            //vymazaní položek ze seznam
-            KabelCu.RemoveAll(x => x.SLmm2 < 2.5);
+        //    var KabelCu = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
+        //        //.Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
+        //        .Where(x => x.Name.Contains("PraFlaDur ", StringComparison.OrdinalIgnoreCase) && x.Deleni == "3")
+        //        //.Where(x => x.Name == "PRAFlaDur" && x.Deleni == "4")
+        //        .OrderBy(x => x.IzAE).ToList();
+        //    //vymazaní položek ze seznam
+        //    KabelCu.RemoveAll(x => x.SLmm2 < 2.5);
 
-            var KabelCYKY = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
-                .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
-                .OrderBy(x => x.IzAE).ToList();
-            //vymazaní položek ze seznam
-            KabelCYKY.RemoveAll(x => x.SLmm2 < 2.5);
+        //    var KabelCYKY = Soubory.LoadJsonListEn<KabelVse>(Cesty.CuJson)
+        //        .Where(x => x.Name.Contains("CYKY", StringComparison.OrdinalIgnoreCase) && x.Deleni == "4")
+        //        .OrderBy(x => x.IzAE).ToList();
+        //    //vymazaní položek ze seznam
+        //    KabelCYKY.RemoveAll(x => x.SLmm2 < 2.5);
 
-            if (KabelCu.Count < 1) Console.WriteLine("Chyba hledání kabelů Cu");
-            else Console.WriteLine($"Kabelů Cu je {KabelCu.Count}");
+        //    if (KabelCu.Count < 1) Console.WriteLine("Chyba hledání kabelů Cu");
+        //    else Console.WriteLine($"Kabelů Cu je {KabelCu.Count}");
 
-            //Kontrola
-            //KabelCu.SaveJsonList(Path.ChangeExtension(cesta1, ".txt"));
+        //    //Kontrola
+        //    //KabelCu.SaveJsonList(Path.ChangeExtension(cesta1, ".txt"));
 
-            var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.IzAE ).ToList(); 
-            //vymazaní položek ze seznam
-            KabelAL.RemoveAll(x => x.SLmm2 < 16);
-            if(KabelAL.Count < 1) Console.WriteLine("Chyba hledání kabelů Al");
-            else Console.WriteLine($"Kabelů Al je {KabelAL.Count}");
+        //    var KabelAL = Soubory.LoadJsonList<KabelVse>(Cesty.AlJson).OrderByDescending(x => x.IzAE).ToList();
+        //    //vymazaní položek ze seznam
+        //    KabelAL.RemoveAll(x => x.SLmm2 < 16);
+        //    if (KabelAL.Count < 1) Console.WriteLine("Chyba hledání kabelů Al");
+        //    else Console.WriteLine($"Kabelů Al je {KabelAL.Count}");
 
-            var properties = typeof(Zarizeni).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                 .Where(p => p.CanWrite && p.Name != "Item")
-                                 .ToList();
+        //    var properties = typeof(Zarizeni).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        //                         .Where(p => p.CanWrite && p.Name != "Item")
+        //                         .ToList();
 
-            for(int i = 0; i < Target.Count; i++)
-            {
-                int pocet = 1;
-                bool volba = true;
-                while (volba)
-                {
-                    foreach (var prop in properties)
-                    {
-                        //var value = prop.GetValue(target);
-                        var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
-                        //var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva) ?? KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
+        //    for (int i = 0; i < Target.Count; i++)
+        //    {
+        //        int pocet = 1;
+        //        bool volba = true;
+        //        while (volba)
+        //        {
+        //            foreach (var prop in properties)
+        //            {
+        //                //var value = prop.GetValue(target);
+        //                var proud = double.TryParse(Target[i].Proud, out var p) ? p : 1;
+        //                //var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva) ?? KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
 
-                        if (proud < 150)
-                        {
-                            //kabel PraFlaDur
-                            var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
-                            JedenKabel ??= KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
-                            if (JedenKabel == null) continue;
+        //                if (proud < 150)
+        //                {
+        //                    //kabel PraFlaDur
+        //                    var JedenKabel = KabelCu.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
+        //                    JedenKabel ??= KabelCu.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
+        //                    if (JedenKabel == null) continue;
 
-                            //prop.SetValue(target, value);
-                            //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-                            if (pocet > 1) {
-                                Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
-                                Target[i].PocetKabelu = pocet;
-                            }
-                            
-                            else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
-                            Target[i].Vodice = JedenKabel.Deleni;
-                            Target[i].Kabel = JedenKabel;
-                            volba = false;
-                            break;
-                        }
-                        else {
-                            //kabel CYKY
-                            var JedenKabel = KabelCYKY.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
-                            JedenKabel ??= KabelCYKY.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
-                            if (JedenKabel == null) {
-                                pocet++;
-                            continue;
-                            }
+        //                    //prop.SetValue(target, value);
+        //                    //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
+        //                    if (pocet > 1)
+        //                    {
+        //                        Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+        //                        Target[i].PocetKabelu = pocet;
+        //                    }
 
-                            //prop.SetValue(target, value);
-                            //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
-                            if (pocet > 1) {
-                                Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
-                                Target[i].PocetKabelu = pocet;
-                            } 
-                            else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
-                            Target[i].Vodice = JedenKabel.Deleni;
-                            Target[i].Kabel = JedenKabel;
-                            volba = false;
-                            break;
-                        }
-                        
-                    }
-                    //pocet++;
-                }
-            }
-            return Target;
-        }
+        //                    else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+        //                    Target[i].Vodice = JedenKabel.Deleni;
+        //                    Target[i].Kabel = JedenKabel;
+        //                    volba = false;
+        //                    break;
+        //                }
+        //                else
+        //                {
+        //                    //kabel CYKY
+        //                    var JedenKabel = KabelCYKY.FirstOrDefault(x => x.MaxProudVzduch > proud * rezerva);
+        //                    JedenKabel ??= KabelCYKY.FirstOrDefault(x => pocet * x.MaxProud > proud * rezerva);
+        //                    if (JedenKabel == null)
+        //                    {
+        //                        pocet++;
+        //                        continue;
+        //                    }
+
+        //                    //prop.SetValue(target, value);
+        //                    //target.GetType().GetProperty("PrurezMM2").SetValue(target, JedenKabel.SLmm2.Tostring());
+        //                    if (pocet > 1)
+        //                    {
+        //                        Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+        //                        Target[i].PocetKabelu = pocet;
+        //                    }
+        //                    else Target[i].PrurezMM2 = JedenKabel.SLmm2.ToString();
+        //                    Target[i].Vodice = JedenKabel.Deleni;
+        //                    Target[i].Kabel = JedenKabel;
+        //                    volba = false;
+        //                    break;
+        //                }
+
+        //            }
+        //            //pocet++;
+        //        }
+        //    }
+        //    return Target;
+        //}
 
         public static void DoplneniCsvToJson()
         {
             //Soubor kam bude doplněno
             string cestaData = Path.Combine(Informace.Instance.SouborElektroJson);
             var Target = Soubory.LoadJsonList<Zarizeni>(cestaData);
-            
+
             //Data pro doplnění
             string cesta = Path.Combine(Cesty.ElektroDataCsv);
             if (!File.Exists(cesta)) return;
             var Source = Soubory.LoadFromCsv<Zarizeni>(cesta);
-            
+
             //Doplnění dat do Json.
-            Prevod.UpdateCsvToJson(Source, Target );
+            Prevod.UpdateCsvToJson(Source, Target);
 
             //uložit doplnění informace do Json
             Target.SaveJsonList(cestaData);
@@ -558,8 +567,8 @@ namespace Aplikace.Upravy
         public static void VyvoritFM()
         {
             string basePath = Path.Combine(Informace.Instance.BasePath, "Data");
-            string CestaKM = Path.Combine(basePath, "KM.csv"); 
-           
+            string CestaKM = Path.Combine(basePath, "KM.csv");
+
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
             Console.WriteLine($"Pocet stykaču: {KM.Count}");
 
@@ -571,8 +580,8 @@ namespace Aplikace.Upravy
         public static void VyvoritKM()
         {
             string basePath = Path.Combine(Informace.Instance.BasePath, "Data");
-            string CestaKM = Path.Combine(basePath, "KM.csv"); 
-           
+            string CestaKM = Path.Combine(basePath, "KM.csv");
+
             var KM = Soubory.LoadFromCsv<Stykac>(CestaKM);
             Console.WriteLine($"Pocet stykaču: {KM.Count}");
 
@@ -599,7 +608,8 @@ namespace Aplikace.Upravy
             Console.WriteLine($"Motory uloženy jako Json");
         }
 
-        public static void Rozvadec() {
+        public static void Rozvadec()
+        {
             var Data = Soubory.LoadJsonList<Zarizeni>(Informace.Instance.SouborElektroJson);
             //var Vývody = Path.Combine(Cesty.Elektro, "Vývody.json");
             var Data2 = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
@@ -611,7 +621,8 @@ namespace Aplikace.Upravy
             int PocetRozvadecu = skupiny.Count();
             Console.WriteLine($"\nPočet rozvaděčů : {PocetRozvadecu}");
 
-            foreach (var skupina in skupiny) {
+            foreach (var skupina in skupiny)
+            {
                 //prvni položka skupiny
                 var Jedna = skupina.ElementAtOrDefault(1) ?? new Zarizeni();
 
@@ -627,10 +638,11 @@ namespace Aplikace.Upravy
                     .Sum(x => double.TryParse(x.Prikon, NumberStyles.Any, CultureInfo.InvariantCulture, out double result) ? result : 0.0);
                 Console.WriteLine($" ");
                 Console.WriteLine($"\nRozvaděč: {skupina.Key}");
-                foreach(var item in Pole) {
+                foreach (var item in Pole)
+                {
                     //Console.WriteLine($"Rozvaděč: {skupina.Key}, Tag: {item.Tag}, Popis: {item.Popis}");
-                    if(item.DruhEnum == Druhy.Přívod)
-                        Console.WriteLine($"Tag: {item.Tag.Replace("\n"," "),-12}, Druh: {item.Druh,-12}, Popis: {item.Popis,-35}, SumaPříkon: {SumaPrikon,-15:F2}");
+                    if (item.DruhEnum == Druhy.Přívod)
+                        Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-12}, Druh: {item.Druh,-12}, Popis: {item.Popis,-35}, SumaPříkon: {SumaPrikon,-15:F2}");
                     else
                         Console.WriteLine($"Tag: {item.Tag.Replace("\n", " "),-12}, Druh: {item.Druh,-12}, Popis: {item.Popis,-35}, Příkon: {item.Prikon,-15}");
                 }
@@ -660,12 +672,16 @@ namespace Aplikace.Upravy
             Data.SaveJsonList(Informace.Instance.SouborElektroJson);
         }
         /// <summary>Převod stringu na enum</summary>
-        private static void StringToEnum(IGrouping<string, Zarizeni> skupina) {
-            foreach(var ukol in skupina) {
-                if(Enum.TryParse<Druhy>(ukol.Druh.ToString(), true, out var priorita)) {
+        private static void StringToEnum(IGrouping<string, Zarizeni> skupina)
+        {
+            foreach (var ukol in skupina)
+            {
+                if (Enum.TryParse<Druhy>(ukol.Druh.ToString(), true, out var priorita))
+                {
                     ukol.DruhEnum = priorita;
                 }
-                else {
+                else
+                {
                     ukol.DruhEnum = Druhy.Nic; // nebo jiná výchozí hodnota
                 }
             }
@@ -685,10 +701,10 @@ namespace Aplikace.Upravy
         /// <summary> Asi se jedná o náčítání seznamu výkresů z excelu pro další zpracování</summary>
         /// 17 je rádek kde to má začínat načítat
         /// V souboru pak vypsáno co se kam má načítat.
-        internal static void NačtiSeznamVýkresůXls(string v) {
+        internal static void NačtiSeznamVýkresůXls(string v)
+        {
             var data = ExcelLoad.DataExcelVykres(v, "seznam dokumentace", 17);
             data.SaveJsonList(Path.ChangeExtension(v, ".json"));
         }
     }
 }
-

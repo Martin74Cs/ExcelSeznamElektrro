@@ -287,7 +287,9 @@ namespace Knihovna.KabelyXls
             {
                 cell.Value = string.Empty;
             }
-            else if (detekovatCislo && double.TryParse(hodnota, NumberStyles.Any, CultureInfo.InvariantCulture, out double cislo))
+            else
+
+            if (detekovatCislo && double.TryParse(hodnota.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out double cislo))
             {
                 cell.Value = cislo;
             }

@@ -21,7 +21,6 @@ namespace WinForms
         /// <summary>Uchovává aktivní vlastní filtry pro zobrazení řádků.</summary>
         private List<FilterRule>? _customFilters = null;
 
-
         //private SortableBindingList<Popis> DataBind;
         //private BindingSource SourceBind = new BindingSource();
         public Table(List<Zarizeni> Pole)
@@ -40,7 +39,7 @@ namespace WinForms
                 nameof(Zarizeni.Rozvadec),
                 nameof(Zarizeni.RozvadecCislo),
                 nameof(Zarizeni.Vyvod),
-                nameof(Zarizeni.Kabel),
+                //nameof(Zarizeni.Kabel),
                 nameof(Zarizeni.SeznamKabelu)
             };
             SetListBox(defaultColumns);
@@ -183,8 +182,6 @@ namespace WinForms
         //    dataGridView1.EditMode = DataGridViewEditMode.EditOnEnter; // Umožnit editaci při kliknutí
         //}
 
-
-
         public void SetListBox(string[] propertyNames)
         {
             //dataGridView1.AutoGenerateColumns = true;
@@ -246,7 +243,6 @@ namespace WinForms
                     Name = propertyName
                 };
                 dataGridView1.Columns.Add(nameColumn);
-
 
             }
 
@@ -376,7 +372,7 @@ namespace WinForms
             //průřez
             if (Pole == null) return;
             //Strojni.AddProud();
-            Pole.AddKabelCyky(1.6);
+            //Pole.AddKabelCyky(1.6);
             //Pole.AddKabelCyky(2);
             dataGridView1.Refresh(); // obnoví zobrazení v datagridu
         }
@@ -524,7 +520,10 @@ namespace WinForms
             if (dataGridView1.CurrentRow != null && dataGridView1.CurrentRow.DataBoundItem is Zarizeni z)
             {
                 var kopie = Zarizeni.Clone(z); // Zkopíruje aktuální řádek do nového záznamu
-                kopie.Apid = ExcelLoad.Apid(); // Přidá nový prázdný záznam do seznamu
+                kopie.Apid = ExcelLoad.Apid(); // Přidá se nový generovaný APID 
+                kopie.SeznamKabelu = []; // Nulování kabelu aby se nekopírovaly
+                //Všechno ostatní se kopíruje
+                //kopie.Kabel = []; // Nulování kabelu aby se nekopírovaly
 
                 // Vyhledáme skutečný index vybraného prvku v celkovém seznamu Pole
                 int index = Pole.IndexOf(z);
@@ -568,8 +567,6 @@ namespace WinForms
                 dataGridView1.FirstDisplayedScrollingRowIndex = scrollIndex;
             }
         }
-
-
 
         private void ObnovGrid(bool zachovatPozici = true)
         {
@@ -837,7 +834,7 @@ namespace WinForms
                 nameof(Zarizeni.Proud),
                 nameof(Zarizeni.RozvadecOznačení),
                 nameof(Zarizeni.PrurezMM2),
-                nameof(Zarizeni.Kabel),
+                //nameof(Zarizeni.Kabel),
                 nameof(Zarizeni.SeznamKabelu)
             };
             SetListBox(dataColumns); // Obnoví sloupce v datagridu

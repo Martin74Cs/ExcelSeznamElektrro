@@ -1,4 +1,4 @@
-﻿using Knihovna.Tridy;
+using Knihovna.Tridy;
 using System.ComponentModel.DataAnnotations;
 
 namespace Knihovna.Shared.Tridy
@@ -50,11 +50,16 @@ namespace Knihovna.Shared.Tridy
         public string Delka { get; set; } = string.Empty;
         public string Popis { get; set; } = string.Empty;
         /// <summary>Rozvaděč</summary>
-        
+        [System.ComponentModel.Category("5. Kabelové připojení")]
+        [System.ComponentModel.DisplayName("Kabel (Objekt)")]
+        [System.ComponentModel.Description("Interní data kabelu.")]
+        public Kabel? KabelData { get; set; } = new Kabel();
+
         //převod enumu na pole stringů 
-        public static string[] KabelZnačkaPole => Enum.GetNames<KabelZnačka>();
+        //public static string[] KabelZnačkaPole => Enum.GetNames<KabelZnačka>();
     }
 
+    /*
     /// <summary>
     /// Reprezentuje skupinu kabelů pro zařízení.
     /// </summary>
@@ -64,7 +69,9 @@ namespace Knihovna.Shared.Tridy
         public Trasa PTC { get; set; }
         public Trasa Ovladani{ get; set; }
     }
-    
+    */
+
+    /*
     public enum KabelZnačka
     {
         WH,
@@ -72,6 +79,7 @@ namespace Knihovna.Shared.Tridy
         WS,
         WC,
     }
+    */
 
     
 

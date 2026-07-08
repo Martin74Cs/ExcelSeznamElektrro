@@ -230,11 +230,11 @@ namespace Knihovna.Tridy
         [JsonIgnore]
         public string KabelyPrehled => string.Join(", ", SeznamKabelu.Select(k => k.Oznaceni));
 
-        private Kabel kabel = new();
-        [Category("5. Kabelové připojení")]
-        [DisplayName("Kabel (Objekt)")]
-        [Description("Interní data kabelu.")]
-        public Kabel Kabel { get => kabel; set => SetProperty(ref kabel, value); }
+        //private Kabel kabel = new();
+        //[Category("5. Kabelové připojení")]
+        //[DisplayName("Kabel (Objekt)")]
+        //[Description("Interní data kabelu.")]
+        //public Kabel Kabel { get => kabel; set => SetProperty(ref kabel, value); }
 
         private int pocetKabelu = 1; //string.Empty;
         [Category("5. Kabelové připojení")]

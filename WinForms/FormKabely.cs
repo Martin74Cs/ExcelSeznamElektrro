@@ -1,4 +1,4 @@
-﻿using Knihovna;
+using Knihovna;
 using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System;
@@ -30,8 +30,8 @@ namespace WinForms
             _nacitani = true;
 
             // Naplnění seznamu značek
-            comboBoxZnacka.DataSource = Enum.GetValues<KabelZnačka>();
-            comboBoxZnacka.SelectedItem = KabelZnačka.WL;
+            comboBoxZnacka.DataSource = new[] { "WH", "WL", "WS", "WC" };
+            comboBoxZnacka.SelectedItem = "WL";
 
             comboBoxFilterExistElektro.Items.Clear();
             comboBoxFilterExistElektro.Items.AddRange(["Vše", "Ano", "Ne"]);

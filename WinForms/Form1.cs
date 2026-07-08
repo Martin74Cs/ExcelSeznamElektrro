@@ -1,5 +1,4 @@
-﻿
-using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
 using Knihovna;
@@ -33,7 +32,6 @@ namespace WinForms
         {
             Console.SetOut(new ListBoxWriter(listBox1));
         }
-
 
         private void ListBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
@@ -122,7 +120,7 @@ namespace WinForms
 
         private async void Button6_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => LigthChem.JsonToExcel());
+            //await Task.Run(() => LigthChem.JsonToExcel());
         }
 
         private void Button10_Click(object sender, EventArgs e)
@@ -868,35 +866,37 @@ namespace WinForms
             if (data == null || data.Count == 0) return [];
 
             // Klonování a příprava kabelů
-            var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
-            var prazdne = kopie.Where(x => x.Kabel == null).ToList();
-            prazdne.AddKabelCyky(1.8);
-            var spolecne = kopie.Where(x => x.Kabel != null).Concat(prazdne).ToList();
+            //var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
+            //var prazdne = kopie.Where(x => x.Kabel == null).ToList();
+            //prazdne.AddKabelCyky(1.8);
+            //var spolecne = kopie.Where(x => x.Kabel != null).Concat(prazdne).ToList();
 
-            var kabelyTrida = KabelList.KabelyTrida(spolecne);
-            kabelyTrida = [.. kabelyTrida.OrderBy(x => x.Hlavni.Rozvadec + x.Hlavni.RozvadecCislo)];
+            //var kabelyTrida = KabelList.KabelyTrida(spolecne);
+            //kabelyTrida = [.. kabelyTrida.OrderBy(x => x.Hlavni.Rozvadec + x.Hlavni.RozvadecCislo)];
 
-            var change = new List<Trasa>();
-            foreach (var kabel in kabelyTrida)
-            {
-                if (kabel.Hlavni != null)
-                    change.Add(kabel.Hlavni);
-                if (kabel.PTC != null)
-                    change.Add(kabel.PTC);
-                if (kabel.Ovladani != null)
-                    change.Add(kabel.Ovladani);
-            }
-            return change;
+            //var change = new List<Trasa>();
+            //foreach (var kabel in kabelyTrida)
+            //{
+            //    if (kabel.Hlavni != null)
+            //        change.Add(kabel.Hlavni);
+            //    if (kabel.PTC != null)
+            //        change.Add(kabel.PTC);
+            //    if (kabel.Ovladani != null)
+            //        change.Add(kabel.Ovladani);
+            //}
+            //return change;
+            return [];
         }
 
         private static List<Zarizeni> PripravZarizeniProKabely(List<Zarizeni> data)
         {
             if (data == null || data.Count == 0) return [];
 
-            var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
-            var prazdne = kopie.Where(x => x.Kabel == null).ToList();
-            prazdne.AddKabelCyky(1.8);
-            return [.. kopie.Where(x => x.Kabel != null), .. prazdne];
+            //var kopie = data.Select(x => Zarizeni.Clone(x)).ToList();
+            //var prazdne = kopie.Where(x => x.Kabel == null).ToList();
+            //prazdne.AddKabelCyky(1.8);
+            //return [.. kopie.Where(x => x.Kabel != null), .. prazdne];
+            return [];
         }
 
         /// <summary>
@@ -1053,7 +1053,6 @@ namespace WinForms
                     //NastavBunku(row.Cell("J"), kabel.UkonceniDo);
                     //NastavBunku(row.Cell("K"), kabel.Poznamka);
 
-                        
                         var DelkaPom = double.TryParse(kab.Delka?.Replace(',', '.'),System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,out double d) ? d.ToString(System.Globalization.CultureInfo.InvariantCulture) : null;
                         KabelPolozka kp = new()
                         {
