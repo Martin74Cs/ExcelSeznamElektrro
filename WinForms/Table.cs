@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
@@ -86,6 +86,12 @@ namespace WinForms
             {
                 dataGridView1.Refresh();
             };
+
+            // Programové přidání menu pro správu umístění a fází
+            var umisteniItem = new ToolStripMenuItem("Umístění");
+            var spravaItem = new ToolStripMenuItem("Správa objektů, souborů, pater a etap...", null, SpravaUmisteniToolStripMenuItem_Click);
+            umisteniItem.DropDownItems.Add(spravaItem);
+            menuStrip1.Items.Add(umisteniItem);
         }
 
         private void DataGridView1_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
@@ -276,7 +282,15 @@ namespace WinForms
 
         private void PrirazeniKRozvadecumToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using var form = new FormRozvadece(Pole);
+            using var form = new FormUmisteni(Pole, nameof(Zarizeni.RozvadecOznačení));
+            form.ShowDialog(this);
+            dataGridView1.Refresh();
+            propertyGrid1.Refresh();
+        }
+
+        private void SpravaUmisteniToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            using var form = new FormUmisteni(Pole, nameof(Zarizeni.Objekt));
             form.ShowDialog(this);
             dataGridView1.Refresh();
             propertyGrid1.Refresh();
