@@ -1,6 +1,5 @@
-﻿using Knihovna;
+using Knihovna;
 using Knihovna.Shared.Tridy;
-using Knihovna.Tridy;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,6 +18,13 @@ namespace WinForms
         /// Odkaz na právě upravovaný kabel (null = režim přidávání nového kabelu).
         /// </summary>
         private Trasa? _upravovanyKabel = null;
+
+        private GroupBox? groupBoxProud;
+        private Label? lblProudZeme;
+        private Label? lblProudStena;
+        private Label? lblProudTrubkaStena;
+        private Label? lblProudIzolace;
+        private Label? lblProudVzduch;
 
         public FormKabely(List<Zarizeni> seznamZarizeni, Zarizeni? predvoleneZarizeni = null) {
             InitializeComponent();
@@ -71,6 +77,7 @@ namespace WinForms
 
             ObnovSeznamKabelu();
             NactiVychoziHodnotyZařízení();
+            InicializujPanelProudoveZatizitelnosti();
         }
 
         private void ComboBoxZarizeni_SelectedIndexChanged(object? sender, EventArgs e) {
@@ -93,8 +100,6 @@ namespace WinForms
         }
 
         private void AplikujFiltryZarizeni() {
-            var predesleVybrane = comboBoxZarizeni.SelectedItem as Zarizeni;
-
             IEnumerable<Zarizeni> query = _seznamZarizeni;
 
             // 1. Existence v projektu (IsExist)
@@ -140,7 +145,7 @@ namespace WinForms
             comboBoxZarizeni.SelectedIndexChanged += ComboBoxZarizeni_SelectedIndexChanged;
 
             // Pokus o obnovení původního výběru
-            if(predesleVybrane != null && filtrovanySeznam.Contains(predesleVybrane)) {
+            if(comboBoxZarizeni.SelectedItem is Zarizeni predesleVybrane && filtrovanySeznam.Contains(predesleVybrane)) {
                 comboBoxZarizeni.SelectedItem = predesleVybrane;
             }
             else if(filtrovanySeznam.Count > 0) {
@@ -176,6 +181,7 @@ namespace WinForms
             if(_upravovanyKabel == null) {
                 AutoSuggestOznaceni();
             }
+            AktualizujZobrazeniProudu();
         }
 
         private void NastavSloupceGridu() {
@@ -229,8 +235,8 @@ namespace WinForms
             // Předvyplnění hodnot pro nový kabel (pouze pokud NEJSME v režimu úpravy)
             if(_upravovanyKabel == null) {
                 txtPocetZil.Text = activeZar.Vodice;
-                txtPrurez.Text = activeZar.PrurezMM2;
-                txtDelka.Text = activeZar.Delka.ToString("0.##");
+                //txtPrurez.Text = activeZar.PrurezMM2;
+                //txtDelka.Text = activeZar.Delka.ToString("0.##");
                 txtPopis.Text = string.Empty;
             }
         }
@@ -357,6 +363,7 @@ namespace WinForms
                 _upravovanyKabel.Delka = txtDelka.Text.Trim();
                 _upravovanyKabel.Svorka = txtSvorka.Text.Trim();
                 _upravovanyKabel.Popis = txtPopis.Text.Trim();
+                _upravovanyKabel.AktualizujKabelData();
 
                 ResetFormNaNovaKabel();
                 ObnovSeznamKabelu();
@@ -377,6 +384,7 @@ namespace WinForms
                     Patro = activeZar.Patro,
                     Predmet = activeZar.Predmet
                 };
+                trasa.AktualizujKabelData();
 
                 activeZar.SeznamKabelu.Add(trasa);
 
@@ -450,8 +458,8 @@ namespace WinForms
             // Obnovení výchozích hodnot z aktuálně vybraného zařízení
             if(comboBoxZarizeni.SelectedItem is Zarizeni activeZar) {
                 txtPocetZil.Text = activeZar.Vodice;
-                txtPrurez.Text = activeZar.PrurezMM2;
-                txtDelka.Text = activeZar.Delka.ToString("0.##");
+                txtPrurez.Text = "";// activeZar.PrurezMM2;
+                txtDelka.Text = ""; // activeZar.Delka.ToString("0.##");
                 txtPopis.Text = string.Empty;
                 txtTyp.Text = "JZ-500";
                 AutoSuggestOznaceni();
@@ -488,10 +496,11 @@ namespace WinForms
                 Prurezmm2 = prurez,
                 Druh = string.Empty,
                 Popis = popisKabelu,
-                Delka = activeZar.Delka.ToString("0.##"),
+                Delka = "", // activeZar.Delka.ToString("0.##"),
                 Patro = activeZar.Patro,
                 Predmet = activeZar.Predmet
             };
+            trasa.AktualizujKabelData();
 
             activeZar.SeznamKabelu.Add(trasa);
 
@@ -571,6 +580,81 @@ namespace WinForms
                 DialogResult = DialogResult.Cancel;
             }
                 return;
+        }
+
+        private void InicializujPanelProudoveZatizitelnosti()
+        {
+            groupBoxProud = new GroupBox
+            {
+                Text = "Proudová zatížitelnost vybraného kabelu [A]",
+                Location = new Point(12, 690),
+                Size = new Size(796, 100),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold)
+            };
+
+            var fRegular = new Font("Segoe UI", 9.5F, FontStyle.Regular);
+
+            var lblZemeTitle = new Label { Text = "V zemi (IzE):", Location = new Point(15, 30), Size = new Size(130, 25), Font = fRegular };
+            lblProudZeme = new Label { Text = "-", Location = new Point(15, 60), Size = new Size(130, 25), ForeColor = Color.Blue };
+
+            var lblStenaTitle = new Label { Text = "Na stěně (IzC):", Location = new Point(160, 30), Size = new Size(130, 25), Font = fRegular };
+            lblProudStena = new Label { Text = "-", Location = new Point(160, 60), Size = new Size(130, 25), ForeColor = Color.Blue };
+
+            var lblTrubkaTitle = new Label { Text = "V trubce (IzB):", Location = new Point(310, 30), Size = new Size(130, 25), Font = fRegular };
+            lblProudTrubkaStena = new Label { Text = "-", Location = new Point(310, 60), Size = new Size(130, 25), ForeColor = Color.Blue };
+
+            var lblIzolaceTitle = new Label { Text = "V izolaci (IzA):", Location = new Point(460, 30), Size = new Size(130, 25), Font = fRegular };
+            lblProudIzolace = new Label { Text = "-", Location = new Point(460, 60), Size = new Size(130, 25), ForeColor = Color.Blue };
+
+            var lblVzduchTitle = new Label { Text = "Ve vzduchu (IzG vodorovně / svisle):", Location = new Point(610, 30), Size = new Size(175, 25), Font = fRegular };
+            lblProudVzduch = new Label { Text = "- / -", Location = new Point(610, 60), Size = new Size(175, 25), ForeColor = Color.Blue };
+
+            groupBoxProud.Controls.AddRange([
+                lblZemeTitle, lblProudZeme,
+                lblStenaTitle, lblProudStena,
+                lblTrubkaTitle, lblProudTrubkaStena,
+                lblIzolaceTitle, lblProudIzolace,
+                lblVzduchTitle, lblProudVzduch
+            ]);
+
+            this.Controls.Add(groupBoxProud);
+
+            // Napojení na změnu výběru v DataGridView
+            dataGridViewKabely.SelectionChanged += DataGridViewKabely_SelectionChanged;
+
+            // Prvotní zobrazení
+            AktualizujZobrazeniProudu();
+        }
+
+        private void DataGridViewKabely_SelectionChanged(object? sender, EventArgs e)
+        {
+            AktualizujZobrazeniProudu();
+        }
+
+        private void AktualizujZobrazeniProudu()
+        {
+            if (lblProudZeme == null || lblProudStena == null || lblProudTrubkaStena == null || lblProudIzolace == null || lblProudVzduch == null) return;
+
+            if (dataGridViewKabely.CurrentRow?.DataBoundItem is Trasa vybranyKabel && vybranyKabel.KabelData != null)
+            {
+                var kd = vybranyKabel.KabelData;
+                lblProudZeme.Text = kd.IzAE > 0 ? $"{kd.IzAE} A" : "-";
+                lblProudStena.Text = kd.IzAC > 0 ? $"{kd.IzAC} A" : "-";
+                lblProudTrubkaStena.Text = kd.IzAB > 0 ? $"{kd.IzAB} A" : "-";
+                lblProudIzolace.Text = kd.IzAA > 0 ? $"{kd.IzAA} A" : "-";
+
+                string vodorovne = kd.IzAGvod > 0 ? $"{kd.IzAGvod} A" : "-";
+                string svisle = kd.IzAGsvis > 0 ? $"{kd.IzAGsvis} A" : "-";
+                lblProudVzduch.Text = $"{vodorovne} / {svisle}";
+            }
+            else
+            {
+                lblProudZeme.Text = "-";
+                lblProudStena.Text = "-";
+                lblProudTrubkaStena.Text = "-";
+                lblProudIzolace.Text = "-";
+                lblProudVzduch.Text = "- / -";
+            }
         }
     }
 }

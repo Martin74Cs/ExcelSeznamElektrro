@@ -1,4 +1,4 @@
-﻿namespace WinForms
+namespace WinForms
 {
     partial class FormKabely
     {
@@ -359,7 +359,7 @@
             dataGridViewKabely.ReadOnly = true;
             dataGridViewKabely.RowHeadersWidth = 51;
             dataGridViewKabely.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewKabely.Size = new Size(796, 520);
+            dataGridViewKabely.Size = new Size(796, 420);
             dataGridViewKabely.TabIndex = 2;
             dataGridViewKabely.CellContentClick += DataGridViewKabely_CellContentClick;
             dataGridViewKabely.CellDoubleClick += DataGridViewKabely_CellDoubleClick;
@@ -790,7 +790,7 @@
             // 
             // btnSmazat
             // 
-            btnSmazat.Location = new Point(12, 745);
+            btnSmazat.Location = new Point(12, 645);
             btnSmazat.Name = "btnSmazat";
             btnSmazat.Size = new Size(160, 35);
             btnSmazat.TabIndex = 5;
@@ -802,7 +802,7 @@
             // 
             lblStatistika.AutoSize = true;
             lblStatistika.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            lblStatistika.Location = new Point(190, 752);
+            lblStatistika.Location = new Point(190, 652);
             lblStatistika.Name = "lblStatistika";
             lblStatistika.Size = new Size(220, 25);
             lblStatistika.TabIndex = 6;
@@ -822,6 +822,7 @@
             // 
             AutoScaleDimensions = new SizeF(11F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
             ClientSize = new Size(1160, 855);
             Controls.Add(btnZavrit);
             Controls.Add(lblStatistika);

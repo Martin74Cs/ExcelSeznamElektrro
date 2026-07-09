@@ -38,7 +38,7 @@ namespace WinForms
             // Načtení motorů z JSON souboru
             List<Motor> motorySeznam = Soubory.LoadJsonList<Motor>(CestaMotor);
             label2.Text = "Cesta = " + CestaMotor;
-            Motor = new BindingList<Motor>(motorySeznam);
+            Motor = [with(motorySeznam)];
             dataGridView1.DataSource = Motor;
             SetListBox();
         }
@@ -48,7 +48,7 @@ namespace WinForms
             // Načtení měničů z JSON souboru (opraveno z LoadFromCsv, protože CestaFM je .json)
             List<Menic> meniceSeznam = Soubory.LoadJsonList<Menic>(CestaFM);
             label2.Text = "Cesta = " + CestaFM;
-            FM = new BindingList<Menic>(meniceSeznam);
+            FM = [with(meniceSeznam)];
             SetListBox();
             dataGridView1.ClearSelection();
             dataGridView1.DataSource = FM;
@@ -77,7 +77,7 @@ namespace WinForms
             // Načtení stykačů z JSON souboru (opraveno z LoadFromCsv, protože CestaKM je .json)
             List<Stykac> stykaceSeznam = Soubory.LoadJsonList<Stykac>(CestaKM);
             label2.Text = "Cesta = " + CestaKM;
-            KM = new BindingList<Stykac>(stykaceSeznam);
+            KM = [with(stykaceSeznam)];
             SetListBox();
             dataGridView1.DataSource = KM;
         }
@@ -129,7 +129,7 @@ namespace WinForms
             List<Jistic> jisticeSeznam = Soubory.LoadJsonList<Jistic>(Cesty.Jistic);
 
             label2.Text = "Cesta = " + CestaJistic;
-            FA = new BindingList<Jistic>(jisticeSeznam);
+            FA = [with(jisticeSeznam)];
             SetListBox();
             dataGridView1.DataSource = FA;
         }

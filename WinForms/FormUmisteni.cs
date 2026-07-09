@@ -1,4 +1,5 @@
-using Knihovna;
+﻿using Knihovna;
+using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System;
 using System.Collections.Generic;

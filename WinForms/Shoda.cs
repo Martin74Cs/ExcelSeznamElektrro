@@ -1,6 +1,6 @@
 ﻿using Aplikace.Sdilene;
 using Aplikace.Tridy;
-using Knihovna.Tridy;
+using Knihovna.Shared.Tridy;
 using System;
 
 namespace WinForms

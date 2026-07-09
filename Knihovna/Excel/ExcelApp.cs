@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using Knihovna.Tridy;
+using Knihovna.Shared.Tridy;
 
 namespace Knihovna.Excel {
     /// <summary>
@@ -849,67 +850,67 @@ namespace Knihovna.Excel {
             ws.Columns().AdjustToContents();
         }
 
-        public void ExcelSaveClass(List<Zarizeni> Vstup)
-        {
-            int row = 2;
-            var ws = Xls.Worksheet;
+        //public void ExcelSaveClass(List<Zarizeni> Vstup)
+        //{
+        //    int row = 2;
+        //    var ws = Xls.Worksheet;
 
-            foreach (var radek in Vstup)
-            {
-                row++;
-                for (int col = 1; col <= 15; col++)
-                {
-                    var cell = ws.Cell(row, col);
-                    switch (col)
-                    {
-                        case 1:
-                            cell.Value = radek.Tag;
-                            break;
-                        case 2:
-                            cell.Value = radek.Pid;
-                            break;
-                        case 3:
-                            cell.Value = radek.Popis;
-                            break;
-                        case 4:
-                            cell.Value = radek.Prikon;
-                            break;
-                        case 5:
-                            cell.Value = radek.BalenaJednotka;
-                            break;
-                        case 6:
-                            cell.Value = radek.Menic;
-                            break;
-                        case 7:
-                            cell.Value = radek.Proud;
-                            break;
-                        case 8:
-                            cell.Value = radek.HP;
-                            break;
-                        case 9:
-                            if (double.TryParse(radek.Proud, out double proud1))
-                                cell.Value = (proud1 * 500 / 480).ToString();
-                            break;
-                        case 10:
-                            cell.Value = radek.PrurezMM2;
-                            break;
-                        case 12:
-                            cell.Value = radek.Delka;
-                            break;
-                        case 14:
-                            cell.Value = radek.Rozvadec;
-                            break;
-                        case 15:
-                            cell.Value = radek.RozvadecCislo;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                ws.Row(row).AdjustToContents();
-            }
-            ws.Columns().AdjustToContents();
-        }
+        //    foreach (var radek in Vstup)
+        //    {
+        //        row++;
+        //        for (int col = 1; col <= 15; col++)
+        //        {
+        //            var cell = ws.Cell(row, col);
+        //            switch (col)
+        //            {
+        //                case 1:
+        //                    cell.Value = radek.Tag;
+        //                    break;
+        //                case 2:
+        //                    cell.Value = radek.Pid;
+        //                    break;
+        //                case 3:
+        //                    cell.Value = radek.Popis;
+        //                    break;
+        //                case 4:
+        //                    cell.Value = radek.Prikon;
+        //                    break;
+        //                case 5:
+        //                    cell.Value = radek.BalenaJednotka;
+        //                    break;
+        //                case 6:
+        //                    cell.Value = radek.Menic;
+        //                    break;
+        //                case 7:
+        //                    cell.Value = radek.Proud;
+        //                    break;
+        //                case 8:
+        //                    cell.Value = radek.HP;
+        //                    break;
+        //                case 9:
+        //                    if (double.TryParse(radek.Proud, out double proud1))
+        //                        cell.Value = (proud1 * 500 / 480).ToString();
+        //                    break;
+        //                case 10:
+        //                    cell.Value = radek.PrurezMM2;
+        //                    break;
+        //                case 12:
+        //                    cell.Value = radek.Delka;
+        //                    break;
+        //                case 14:
+        //                    cell.Value = radek.Rozvadec;
+        //                    break;
+        //                case 15:
+        //                    cell.Value = radek.RozvadecCislo;
+        //                    break;
+        //                default:
+        //                    break;
+        //            }
+        //        }
+        //        ws.Row(row).AdjustToContents();
+        //    }
+        //    ws.Columns().AdjustToContents();
+        //}
 
         public void ExcelSaveProud(List<List<string>> Vstup)
         {

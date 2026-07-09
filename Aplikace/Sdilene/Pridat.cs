@@ -1,5 +1,6 @@
 ﻿﻿using Knihovna;
 using Knihovna.Excel;
+using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 
 namespace Aplikace.Sdilene
@@ -65,15 +66,15 @@ namespace Aplikace.Sdilene
         }
 
         /// <summary>Pridání délky kabelu </summary>
-        public static void AddKabelDelka(this List<Zarizeni> pole, double delka = 100)
-        {
-            // Přidání vlastnosti "Proud" do každého zařízení
-            for (int i = 0; i < pole.Count; i++)
-            {
-                pole[i].Delka = delka;
-                pole[i].Delkaft = delka * 3.28;
-            }
-        }
+        //public static void AddKabelDelka(this List<Zarizeni> pole, double delka = 100)
+        //{
+        //    // Přidání vlastnosti "Proud" do každého zařízení
+        //    for (int i = 0; i < pole.Count; i++)
+        //    {
+        //        pole[i].Delka = delka;
+        //        pole[i].Delkaft = delka * 3.28;
+        //    }
+        //}
 
         public static void Soucet(ExcelApp ExcelApp, List<List<string>> PoleData, string SheetName)
         {

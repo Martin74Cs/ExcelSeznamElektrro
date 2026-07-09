@@ -1,4 +1,4 @@
-﻿using Knihovna.Shared.Tridy;
+using Knihovna.Shared.Tridy;
 using System.ComponentModel;
 
 namespace Knihovna.Tridy
@@ -133,5 +133,12 @@ namespace Knihovna.Tridy
         [DisplayName("Rozvaděč")]
         [ReadOnly(true)]
         public string RozvadecAll => Trasa.RozvadecAll;
+
+        /// <summary>
+        /// Proudové zatížení kabelu (např. Iz = 22/34 A).
+        /// </summary>
+        [DisplayName("Zatížení (Iz)")]
+        [ReadOnly(true)]
+        public string ProudZatizeni => Trasa.KabelData?.Proud ?? string.Empty;
     }
 }

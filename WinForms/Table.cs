@@ -3,6 +3,7 @@ using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
 using Knihovna.Excel;
+using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System.Collections;
 using System.ComponentModel;
@@ -24,6 +25,16 @@ namespace WinForms
         public Table(List<Zarizeni> Pole)
         {
             this.Pole = Pole;
+
+            // Spárování kabelů s databází proudového zatížení
+            foreach (var zar in Pole)
+            {
+                foreach (var trasa in zar.SeznamKabelu)
+                {
+                    trasa.AktualizujKabelData();
+                }
+            }
+
             InitializeComponent();
             var defaultColumns = new[] {
                 nameof(Zarizeni.Tag),
@@ -112,10 +123,7 @@ namespace WinForms
                 {
                     e.CellStyle.BackColor = Color.LightGray;
                     var col = dgv.Columns[colName];
-                    if (col != null)
-                    {
-                        col.ReadOnly = true;
-                    }
+                    col?.ReadOnly = true;
                 }
             }
         }
@@ -254,7 +262,7 @@ namespace WinForms
                 vybraneZar = dataGridView1.CurrentRow.DataBoundItem as Zarizeni;
             }
 
-            using var form = new FormKabely(Pole.OrderBy(x => x.Tag).ToList(), vybraneZar);
+            using var form = new FormKabely([.. Pole.OrderBy(x => x.Tag)], vybraneZar);
             try {
                 form.ShowDialog();
             } catch(Exception) {
@@ -377,7 +385,7 @@ namespace WinForms
                 nameof(Zarizeni.Menic),
                 nameof(Zarizeni.Napeti),
                 nameof(Zarizeni.Prikon),
-                nameof(Zarizeni.Delka),
+                //nameof(Zarizeni.Delka),
                 nameof(Zarizeni.Rozvadec),
                 nameof(Zarizeni.RozvadecCislo),
                 nameof(Zarizeni.Vyvod),
@@ -714,7 +722,7 @@ namespace WinForms
                 nameof(Zarizeni.Menic),
                 nameof(Zarizeni.Proud),
                 nameof(Zarizeni.RozvadecOznačení),
-                nameof(Zarizeni.PrurezMM2),
+                //nameof(Zarizeni.PrurezMM2),
                 //nameof(Zarizeni.Kabel),
                 nameof(Zarizeni.SeznamKabelu)
             };

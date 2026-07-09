@@ -1,4 +1,4 @@
-﻿﻿using Knihovna.Shared.Tridy;
+using Knihovna.Tridy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -9,8 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Knihovna.Tridy
-{
+namespace Knihovna.Shared.Tridy {
 
     //Pokud chceš jednotky ukládat přímo jako atribut, přidej si vlastní:
     [AttributeUsage(AttributeTargets.Property)]
@@ -196,11 +195,11 @@ namespace Knihovna.Tridy
         [Description("Označení balené jednotky (Package Unit).")]
         public string BalenaJednotka { get => balenaJednotka; set => SetProperty(ref balenaJednotka, value); }
 
-        private string nic = string.Empty;
-        [Category("4. Napájení a řízení")]
-        [DisplayName("Nic (Rezerva)")]
-        [Description("Rezervní pole.")]
-        public string Nic { get => nic; set => SetProperty(ref nic, value); }
+        //private string nic = string.Empty;
+        //[Category("4. Napájení a řízení")]
+        //[DisplayName("Nic (Rezerva)")]
+        //[Description("Rezervní pole.")]
+        //public string Nic { get => nic; set => SetProperty(ref nic, value); }
 
         [Category("4. Napájení a řízení")]
         [DisplayName("Vývod")]
@@ -248,11 +247,6 @@ namespace Knihovna.Tridy
         [JsonIgnore]
         public string KabelyPrehled => string.Join(", ", SeznamKabelu.Select(k => k.Oznaceni));
 
-        //[Category("5. Kabelové připojení")]
-        //[DisplayName("Kabel (Objekt)")]
-        //[Description("Interní data kabelu.")]
-        //public Kabel Kabel { get => kabel; set => SetProperty(ref kabel, value); }
-
         private int pocetKabelu = 1; //string.Empty;
         [Category("5. Kabelové připojení")]
         [DisplayName("Počet kabelů")]
@@ -261,35 +255,6 @@ namespace Knihovna.Tridy
         [Jednotky("[ks]")]
         public int PocetKabelu { get => pocetKabelu; set => SetProperty(ref pocetKabelu, value); }
 
-        private string prurezMM2 = string.Empty;
-        [Category("5. Kabelové připojení")]
-        [DisplayName("Průřez [mm2]")]
-        [Description("Průřez silových vodičů v mm2.")]
-        [Display(Name = "Průřez")]
-        [Jednotky("[mm2]")]
-        public string PrurezMM2 { get => prurezMM2; set => SetProperty(ref prurezMM2, value); }
-
-        private string aWG = string.Empty;
-        [Category("5. Kabelové připojení")]
-        [DisplayName("AWG")]
-        [Description("Průřez kabelu v jednotkách AWG.")]
-        public string AWG { get => aWG; set => SetProperty(ref aWG, value); }
-
-        private double delka = 100;
-        [Category("5. Kabelové připojení")]
-        [DisplayName("Délka [m]")]
-        [Description("Délka kabelové trasy v metrech.")]
-        [Display(Name = "Délka")]
-        [Jednotky("[m]")]
-        public double Delka { get => delka; set => SetProperty(ref delka, value); }
-
-        private double delkaft;
-        [Category("5. Kabelové připojení")]
-        [DisplayName("Délka [ft]")]
-        [Description("Délka kabelové trasy ve stopách.")]
-        [Display(Name = "Délka")]
-        [Jednotky("[ft]")]
-        public double Delkaft { get => delkaft; set => SetProperty(ref delkaft, value); }
         #endregion
 
         #region 6. Motor

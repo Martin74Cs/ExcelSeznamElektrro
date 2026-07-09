@@ -1,4 +1,4 @@
-﻿﻿using Aplikace.Sdilene;
+﻿using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
 using Knihovna;
@@ -35,6 +35,7 @@ namespace WinForms
         private void Form1_Load(object sender, EventArgs e)
         {
             Console.SetOut(new ListBoxWriter(listBox1));
+            KabelDatabaze.Inicializuj(Cesty.CuJson, Cesty.AlJson);
         }
 
         private void ListBox1_SelectedIndexChanged_1(object sender, EventArgs e)

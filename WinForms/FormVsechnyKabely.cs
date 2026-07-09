@@ -14,7 +14,7 @@ namespace WinForms
     /// </summary>
     public partial class FormVsechnyKabely : Form
     {
-        private readonly List<Zarizeni> _seznamZarizeni;
+        private readonly List<Zarizeni> _seznamZarizeni= [];
         private readonly List<KabelRowView> _vsechnyRadky = [];
         private SortableBindingList<KabelRowView> _dataBind = [];
 
@@ -45,10 +45,7 @@ namespace WinForms
             _vsechnyRadky.Clear();
             foreach (Zarizeni zarizeni in _seznamZarizeni)
             {
-                if (zarizeni.SeznamKabelu == null)
-                {
-                    zarizeni.SeznamKabelu = [];
-                }
+                zarizeni.SeznamKabelu ??= [];
 
                 foreach (Trasa trasa in zarizeni.SeznamKabelu)
                 {
@@ -121,6 +118,12 @@ namespace WinForms
                     col.DisplayIndex = 9;
                     col.Width = 120;
                 }
+                else if (col.Name == nameof(KabelRowView.ProudZatizeni))
+                {
+                    col.ReadOnly = true;
+                    col.DisplayIndex = 10;
+                    col.Width = 120;
+                }
             }
 
             // Obarvení needitovatelných sloupců na lehce šedou barvu
@@ -158,7 +161,7 @@ namespace WinForms
                 .ThenBy(k => k.Oznaceni)
                 .ToList();
 
-            _dataBind = new SortableBindingList<KabelRowView>(serazeno);
+            _dataBind = [with(serazeno)];
             dataGridViewKabely.DataSource = _dataBind;
 
             lblStatistika.Text = $"Počet kabelů celkem: {_vsechnyRadky.Count} (zobrazeno: {serazeno.Count})";
@@ -257,13 +260,14 @@ namespace WinForms
                 Oznaceni = noveOznaceni,
                 Kabel = "CYKY-J",
                 PocetZil = string.IsNullOrEmpty(activeZar.Vodice) ? "3" : activeZar.Vodice,
-                Prurezmm2 = string.IsNullOrEmpty(activeZar.PrurezMM2) ? "1.5" : activeZar.PrurezMM2,
+                Prurezmm2 =  "", //string.IsNullOrEmpty(activeZar.PrurezMM2) ? "1.5" : activeZar.PrurezMM2,
                 Druh = string.Empty,
                 Popis = "Nový kabel",
-                Delka = activeZar.Delka > 0 ? activeZar.Delka.ToString("0.##") : "10",
+                Delka = "", // activeZar.Delka > 0 ? activeZar.Delka.ToString("0.##") : "10",
                 Patro = activeZar.Patro,
                 Predmet = activeZar.Predmet
             };
+            novaTrasa.AktualizujKabelData();
 
             // Přidáme do zařízení
             activeZar.SeznamKabelu.Add(novaTrasa);
@@ -303,7 +307,7 @@ namespace WinForms
 
             // Zjistíme prefix označení (např. "WL" ze "WL 02")
             string prefix = "WL";
-            string[] casti = staryKabel.Oznaceni.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] casti = staryKabel.Oznaceni.Split([' '], StringSplitOptions.RemoveEmptyEntries);
             if (casti.Length > 0)
             {
                 prefix = casti[0];
@@ -330,6 +334,7 @@ namespace WinForms
                 Mezera = staryKabel.Mezera,
                 Svorka = staryKabel.Svorka
             };
+            kopieTrasy.AktualizujKabelData();
 
             // Přidáme do zařízení
             activeZar.SeznamKabelu.Add(kopieTrasy);
@@ -433,19 +438,15 @@ namespace WinForms
                 Oznaceni = noveOznaceni,
                 Kabel = "CYKY-J",
                 PocetZil = string.IsNullOrEmpty(activeZar.Vodice) ? "3" : activeZar.Vodice,
-                Prurezmm2 = string.IsNullOrEmpty(activeZar.PrurezMM2) ? "1.5" : activeZar.PrurezMM2,
+                Prurezmm2 = "",// string.IsNullOrEmpty(activeZar.PrurezMM2) ? "1.5" : activeZar.PrurezMM2,
                 Druh = string.Empty,
                 Popis = "Nový kabel",
-                Delka = activeZar.Delka > 0 ? activeZar.Delka.ToString("0.##") : "10",
+                Delka = "",//activeZar.Delka > 0 ? activeZar.Delka.ToString("0.##") : "10",
                 Patro = activeZar.Patro,
                 Predmet = activeZar.Predmet
             };
 
-            if (activeZar.SeznamKabelu == null)
-            {
-                activeZar.SeznamKabelu = [];
-            }
-
+            activeZar.SeznamKabelu ??= [];
             // Přidáme do zařízení
             activeZar.SeznamKabelu.Add(novaTrasa);
 

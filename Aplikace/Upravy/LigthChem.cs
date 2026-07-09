@@ -7,7 +7,7 @@ using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System.Globalization;
 using System.Reflection;
-using static Knihovna.Tridy.Zarizeni;
+using static Knihovna.Shared.Tridy.Zarizeni;
 
 namespace Aplikace.Upravy
 {
@@ -128,7 +128,7 @@ namespace Aplikace.Upravy
                 {
                     //zeznam nebyl nelezen pravděpodobně chybí
                     //záznam bude ze strojů doplněn
-                    item.Nic = "Nove";
+                    //item.Nic = "Nove";
                     Nove.Add(item);
                     Zmeny.Add(item);
                 }

@@ -1,4 +1,4 @@
-﻿using Knihovna.Tridy;
+using Knihovna.Tridy;
 using System.ComponentModel.DataAnnotations;
 
 namespace Knihovna.Shared.Tridy
@@ -54,6 +54,14 @@ namespace Knihovna.Shared.Tridy
         [System.ComponentModel.DisplayName("Kabel (Objekt)")]
         [System.ComponentModel.Description("Interní data kabelu.")]
         public Kabel? KabelData { get; set; } = new Kabel();
+
+        /// <summary>
+        /// Vyhledá a aktualizuje interní data kabelu (proudové zatížení, odpor atd.) na základě typu, počtu žil a průřezu.
+        /// </summary>
+        public void AktualizujKabelData()
+        {
+            KabelData = KabelDatabaze.NajdiKabel(Kabel, PocetZil, Prurezmm2) ?? new Kabel();
+        }
 
         //převod enumu na pole stringů 
     }
