@@ -82,11 +82,29 @@ namespace Knihovna.Tridy
         #endregion
 
         #region 2. Umístění a fáze
+        private string objekt = string.Empty;
+        [Category("2. Umístění a fáze")]
+        [DisplayName("Objekt")]
+        [Description("Stavební objekt.")]
+        public string Objekt { get => objekt; set => SetProperty(ref objekt, value); }
+
+        private string provozni = string.Empty;
+        [Category("2. Umístění a fáze")]
+        [DisplayName("Soubor")]
+        [Description("Provozní soubor.")]
+        public string Provozni { get => provozni; set => SetProperty(ref provozni, value); }
+
         private string patro = string.Empty;
         [Category("2. Umístění a fáze")]
         [DisplayName("Patro")]
         [Description("Patro budovy / podlaží.")]
         public string Patro { get => patro; set => SetProperty(ref patro, value); }
+
+        private string mistnost = string.Empty;
+        [Category("2. Umístění a fáze")]
+        [DisplayName("Mistnost")]
+        [Description("Ćislo místnosti.")]
+        public string Mistnost { get => mistnost; set => SetProperty(ref mistnost, value); }
 
         private string vykres = string.Empty;
         [Category("2. Umístění a fáze")]
@@ -331,7 +349,6 @@ namespace Knihovna.Tridy
             
         }
 
-
         /// <summary>Volání parametru jako string např. Nadpis[Name]  </summary>
         [JsonIgnore]
         public object? this[string nazev]
@@ -511,4 +528,3 @@ namespace Knihovna.Tridy
     }
 
 }
-

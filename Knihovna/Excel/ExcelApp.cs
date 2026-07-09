@@ -170,23 +170,6 @@ namespace Knihovna.Excel {
                 else if (_range is not null)
                     _range.Value = xlValue;
             }
-            //set
-            //{
-            //    {
-            //    }
-
-            //    {
-            //    }
-            //    {
-            //    }
-            //    {
-            //    }
-            //    {
-            //    }
-            //    else
-            //    {
-            //    }
-            //}
         }
 
         /// <summary>
