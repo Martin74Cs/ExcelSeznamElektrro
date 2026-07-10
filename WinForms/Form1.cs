@@ -1,4 +1,4 @@
-﻿using Aplikace.Sdilene;
+using Aplikace.Sdilene;
 using Aplikace.Seznam;
 using Aplikace.Upravy;
 using Knihovna;
@@ -134,7 +134,7 @@ namespace WinForms
                 Console.WriteLine("Soubor je prázdný " + Cesta);
             }
 
-            var table = new Table(Data);
+            var table = new Table(Data, Cesta);
             SetTable(table);
 
             // Zobrazíme druhý formulář jako modální dialog
@@ -166,7 +166,7 @@ namespace WinForms
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
             Console.WriteLine($"Soubor {Vývody} - načten.");
 
-            var table = new Table(Data);
+            var table = new Table(Data, Vývody);
             SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
@@ -250,7 +250,7 @@ namespace WinForms
                 Console.WriteLine($"Soubor je prázdný: {cestaStroje}");
                 return;
             }
-            var table = new Table(Data);
+            var table = new Table(Data, cestaStroje);
             SetTable(table);
 
             // Zobrazíme druhý formulář jako modální dialog
@@ -285,7 +285,7 @@ namespace WinForms
 
             var Data = Soubory.LoadJsonList<Zarizeni>(Cesty.VyvodyStavbaJson);
 
-            var table = new Table(Data);
+            var table = new Table(Data, Cesty.VyvodyStavbaJson);
             SkrytSloupce(table.dataGridView1);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
@@ -575,7 +575,7 @@ namespace WinForms
             var Data = Soubory.LoadJsonList<Zarizeni>(Vývody);
             Console.WriteLine($"Soubor {Vývody} - načten.");
 
-            var table = new Table(Data);
+            var table = new Table(Data, Vývody);
             // Zobrazíme druhý formulář jako modální dialog
             var result = table.ShowDialog();
             if (result == DialogResult.OK)

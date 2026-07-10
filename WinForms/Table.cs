@@ -22,9 +22,13 @@ namespace WinForms
         /// <summary>Uchovává aktivní vlastní filtry pro zobrazení řádků.</summary>
         private List<FilterRule>? _customFilters = null;
 
-        public Table(List<Zarizeni> Pole)
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string? FilePath { get; set; }
+
+        public Table(List<Zarizeni> Pole, string? filePath = null)
         {
             this.Pole = Pole;
+            this.FilePath = filePath;
 
             // Spárování kabelů s databází proudového zatížení
             foreach (var zar in Pole)
@@ -290,7 +294,7 @@ namespace WinForms
 
         private void PrirazeniKRozvadecumToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using var form = new FormUmisteni(Pole, nameof(Zarizeni.RozvadecOznačení));
+            using var form = new FormUmisteni(Pole, nameof(Zarizeni.RozvadecOznačení), FilePath);
             form.ShowDialog(this);
             dataGridView1.Refresh();
             propertyGrid1.Refresh();
@@ -298,7 +302,7 @@ namespace WinForms
 
         private void SpravaUmisteniToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            using var form = new FormUmisteni(Pole, nameof(Zarizeni.Objekt));
+            using var form = new FormUmisteni(Pole, nameof(Zarizeni.Objekt), FilePath);
             form.ShowDialog(this);
             dataGridView1.Refresh();
             propertyGrid1.Refresh();

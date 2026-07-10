@@ -1,4 +1,4 @@
-﻿using Knihovna;
+using Knihovna;
 using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System;
@@ -16,6 +16,7 @@ namespace WinForms
         private readonly List<Zarizeni> _seznamZarizeni;
         private readonly List<string> _seznamHodnot;
         private readonly string? _vychoziVlastnost;
+        private readonly string? _filePath;
 
         private class VlastnostItem
         {
@@ -29,12 +30,13 @@ namespace WinForms
             public override string ToString() => DisplayName;
         }
 
-        public FormUmisteni(List<Zarizeni> seznamZarizeni, string? vychoziVlastnost = null)
+        public FormUmisteni(List<Zarizeni> seznamZarizeni, string? vychoziVlastnost = null, string? filePath = null)
         {
             InitializeComponent();
             _seznamZarizeni = seznamZarizeni;
             _seznamHodnot = new List<string>();
             _vychoziVlastnost = vychoziVlastnost;
+            _filePath = filePath;
         }
 
         private void FormUmisteni_Load(object sender, EventArgs e)
@@ -385,8 +387,10 @@ namespace WinForms
         {
             try
             {
-                string Cesta = Path.Combine(Informace.Instance.BasePath, "Elektro.Data.Json");
-                _seznamZarizeni.SaveJsonList(Cesta);
+                if (!string.IsNullOrEmpty(_filePath))
+                {
+                    _seznamZarizeni.SaveJsonList(_filePath);
+                }
             }
             catch (Exception ex)
             {
