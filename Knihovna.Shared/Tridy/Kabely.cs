@@ -219,6 +219,97 @@ namespace Knihovna.Shared.Tridy
 
         public static double UProcenta(this KabelVse kabel, double napeti, double proud, double delka, double uhel) =>
             KabelVse.ProcentaU3f(kabel, napeti, proud, delka, uhel);
+
+        public static double VypoctiProudZatizeni(double prikonKw, double napetiV, double cosPhi)
+        {
+            if (prikonKw <= 0 || napetiV <= 0 || cosPhi <= 0) return 0;
+            if (napetiV >= 380)
+            {
+                return (prikonKw * 1000.0) / (Math.Sqrt(3.0) * napetiV * cosPhi);
+            }
+            else
+            {
+                return (prikonKw * 1000.0) / (napetiV * cosPhi);
+            }
+        }
+
+        public static double VypoctiUbytekNapetiV(this Kabel kabel, double proudA, double delkaM, double napetiV, double cosPhi)
+        {
+            if (kabel == null || proudA <= 0 || delkaM <= 0 || napetiV <= 0 || cosPhi <= 0) return 0;
+            double sinPhi = Math.Sqrt(1.0 - cosPhi * cosPhi);
+            
+            // Přepočet odporu na maximální provozní teplotu kabelu (standardně 70 °C pro PVC, 90 °C pro XLPE)
+            double tprac = kabel.TpracstC > 0 ? kabel.TpracstC : 70.0;
+            double tempCoeff = 1.0 + 0.00393 * (tprac - 20.0);
+            double rTemp = kabel.RLOhmkm * tempCoeff;
+            
+            if (napetiV >= 380)
+            {
+                return Math.Sqrt(3.0) * proudA * ((rTemp * cosPhi) + (kabel.XLOhmkm * sinPhi)) * (delkaM / 1000.0);
+            }
+            else
+            {
+                return 2.0 * proudA * ((rTemp * cosPhi) + (kabel.XLOhmkm * sinPhi)) * (delkaM / 1000.0);
+            }
+        }
+
+        public static double VypoctiUbytekNapetiProcenta(this Kabel kabel, double proudA, double delkaM, double napetiV, double cosPhi)
+        {
+            if (napetiV <= 0) return 0;
+            double ubytekV = kabel.VypoctiUbytekNapetiV(proudA, delkaM, napetiV, cosPhi);
+            return (ubytekV / napetiV) * 100.0;
+        }
+
+        public static double VypoctiTeplotuVodice(this Kabel kabel, double proudA, bool veVzduchu)
+        {
+            if (kabel == null || proudA <= 0) return 30.0;
+            double tprac = kabel.TpracstC > 0 ? kabel.TpracstC : 70.0;
+            double iz = veVzduchu ? kabel.IzAGvod : kabel.IzAC;
+            if (iz <= 0) return 30.0;
+            
+            return 30.0 + (tprac - 30.0) * Math.Pow(proudA / iz, 2.0);
+        }
+
+        public static double VypoctiZkratovyProud(this Kabel kabel, bool jeHlinik, double casSekund)
+        {
+            if (kabel == null || casSekund <= 0) return 0;
+            double k = jeHlinik ? 76.0 : 115.0;
+            double s = kabel.SLmm2;
+            return (k * s) / Math.Sqrt(casSekund);
+        }
+
+        public static double VypoctiImpedanciSmycky(this Kabel kabel, double delkaM)
+        {
+            if (kabel == null || delkaM <= 0) return 0;
+            double tprac = kabel.TpracstC > 0 ? kabel.TpracstC : 70.0;
+            double tempCoeff = 1.0 + 0.00393 * (tprac - 20.0);
+            
+            double rLoop = (kabel.RLOhmkm + kabel.RPENOhmkm) * tempCoeff * (delkaM / 1000.0);
+            double xLoop = (kabel.XLOhmkm + kabel.XPENOhmkm) * (delkaM / 1000.0);
+            return Math.Sqrt(rLoop * rLoop + xLoop * xLoop);
+        }
+
+        public static double VypoctiZkrat3f(this Kabel kabel, double delkaM, double napetiV)
+        {
+            if (kabel == null || delkaM <= 0 || napetiV <= 0) return 0;
+            double rL = kabel.RLOhmkm * (delkaM / 1000.0);
+            double xL = kabel.XLOhmkm * (delkaM / 1000.0);
+            double zL = Math.Sqrt(rL * rL + xL * xL);
+            if (zL <= 0) return 0;
+            return napetiV / (Math.Sqrt(3.0) * zL);
+        }
+
+        public static double VypoctiZkrat1f(this Kabel kabel, double delkaM, double napetiV)
+        {
+            if (kabel == null || delkaM <= 0 || napetiV <= 0) return 0;
+            double rLoop = (kabel.RLOhmkm + kabel.RPENOhmkm) * (delkaM / 1000.0);
+            double xLoop = (kabel.XLOhmkm + kabel.XPENOhmkm) * (delkaM / 1000.0);
+            double zLoop = Math.Sqrt(rLoop * rLoop + xLoop * xLoop);
+            if (zLoop <= 0) return 0;
+            
+            double uPhase = napetiV / Math.Sqrt(3.0);
+            return uPhase / zLoop;
+        }
     }
 }
 
