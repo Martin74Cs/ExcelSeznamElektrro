@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
+using Knihovna.Shared.Tridy;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Knihovna.Tridy
 {
@@ -59,17 +56,18 @@ namespace Knihovna.Tridy
 
             foreach (var m in menice)
             {
-                sb.AppendLine(string.Join(";", new string[]
-                {
-                m.Prikon.ToString(culture),
-                m.PrikonHP.ToString(culture),
-                m.Proud.ToString(culture),
-                m.Provoz,
-                m.TypovyKod,
-                m.Velikost,
-                m.NapetiMin.ToString(),
-                m.NapetiMax.ToString()
-                }));
+                sb.AppendLine(string.Join(";", 
+                    [
+                        m.Prikon.ToString(culture),
+                        m.PrikonHP.ToString(culture),
+                        m.Proud.ToString(culture),
+                        m.Provoz,
+                        m.TypovyKod,
+                        m.Velikost,
+                        m.NapetiMin.ToString(),
+                        m.NapetiMax.ToString()
+                    ]
+                ));
             }
 
             File.WriteAllText(cesta, sb.ToString(), Encoding.UTF8);

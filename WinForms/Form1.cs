@@ -738,7 +738,8 @@ namespace WinForms
             Console.WriteLine("Sloučený export kabelů dokončen ve všech 6 formátech!");
         }
 
-        public static void KabelExcel(string targetKabelyBase, string cestaElektro, List<Trasa> trasa) { 
+        //public static void KabelExcel(string targetKabelyBase, string cestaElektro, List<Trasa> trasa) {
+        public static void KabelExcel(string targetKabelyBase, List<Trasa> trasa) { 
         CoverData cover = new() {
                 Zakaznik = "LUČEBNÍ ZÁVODY DRASLOVKA A.S. KOLÍN",
                 Projekt = "W.005685.0200",
@@ -796,10 +797,10 @@ namespace WinForms
                 spotrebice.Add(spotrebic);
             }
 
-            List<Zarizeni> hlavniElektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
+            //var hlavniElektro = Soubory.LoadJsonList<Zarizeni>(cestaElektro);
 
             string sablonaCesta = Path.Combine(Cesty.AdresarSpusteni, "Sablony", "Sablona.xlsx");
-            new ExcelGenerator().Generuj(sablonaCesta, targetKabelyBase + "123" + ".xlsx", cover, spotrebice);
+            ExcelGenerator.Generuj(sablonaCesta, targetKabelyBase + "123" + ".xlsx", cover, spotrebice);
         }
 
         private static List<Trasa> ZiskejTrasyProZarizeni(List<Zarizeni> data)
@@ -890,7 +891,7 @@ namespace WinForms
                 string vystupCesta = Path.Combine(targetDir, "Elektro.SeznamZarizeni.xlsx");
 
                 Console.WriteLine($"Generování seznamu zařízení do Excelu: {vystupCesta}");
-                new ExcelGenerator().Generuj(sablonaCesta, vystupCesta, cover, spotrebice);
+                ExcelGenerator.Generuj(sablonaCesta, vystupCesta, cover, spotrebice);
                 Console.WriteLine("Generování seznamu zařízení dokončeno!");
             }
             catch (Exception ex)
@@ -992,7 +993,7 @@ namespace WinForms
                 string vystupCesta = Path.Combine(targetDir, "Elektro.SeznamKabelu.xlsx");
 
                 Console.WriteLine($"Generování seznamu kabelů do Excelu: {vystupCesta}");
-                new ExcelGenerator().GenerujKabel(sablonaCesta, vystupCesta, cover, kabely);
+                ExcelGenerator.GenerujKabel(sablonaCesta, vystupCesta, cover, kabely);
                 Console.WriteLine("Generování seznamu kabelů dokončeno!");
             }
             catch (Exception ex)
@@ -1001,7 +1002,7 @@ namespace WinForms
             }
         }
 
-        private CoverData PripravCoverData(string dokumentNazev)
+        private static CoverData PripravCoverData(string dokumentNazev)
         {
             return new CoverData
             {

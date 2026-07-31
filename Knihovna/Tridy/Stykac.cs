@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Knihovna.Shared.Tridy;
 
 namespace Knihovna.Tridy
 {
@@ -49,10 +45,11 @@ namespace Knihovna.Tridy
 
         // Maximální teplota (např. okolí) v °C
         public int Teplota { get; set; }
-        public string Výrobce { get; set; }
+
+        public string Výrobce { get; set; } = string.Empty;
 
         //Odkaz na datasheet nebo další informace
-        public string Data { get; set; }   
+        public string Data { get; set; } = string.Empty;
 
     }
 }

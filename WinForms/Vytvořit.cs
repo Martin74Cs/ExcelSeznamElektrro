@@ -4,6 +4,7 @@ using Knihovna.Tridy;
 using Knihovna.Sdilene;
 using System.ComponentModel;
 using Knihovna;
+using Knihovna.Shared.Tridy;
 
 namespace WinForms
 {

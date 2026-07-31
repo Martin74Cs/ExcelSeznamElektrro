@@ -1,7 +1,6 @@
-﻿﻿using Knihovna;
+﻿using Knihovna;
 using Knihovna.Excel;
 using Knihovna.Shared.Tridy;
-using Knihovna.Tridy;
 
 namespace Aplikace.Sdilene
 {

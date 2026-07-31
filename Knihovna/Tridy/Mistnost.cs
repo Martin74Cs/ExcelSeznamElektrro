@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Knihovna.Shared.Tridy;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -151,7 +152,6 @@ namespace Knihovna.Tridy
             .Select((name, index) => new { Index = index + 1, Name = name })
             .ToDictionary(x => x.Index, x => x.Name);
 
-
         [JsonIgnore]
         /// <summary>Sloupce pro zobrazení v tabulce, ze seznamu vytvoženy IDictionary čísla označují sloupce</summary>
         public static IDictionary<int, string> SloupceSpojit => Mistnost.Nadpis
@@ -161,4 +161,3 @@ namespace Knihovna.Tridy
 
     }
 }
-

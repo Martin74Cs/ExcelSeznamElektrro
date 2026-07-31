@@ -26,7 +26,8 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             dataGridView1 = new DataGridView();
             menuStrip1 = new MenuStrip();
             souborToolStripMenuItem = new ToolStripMenuItem();
@@ -80,6 +81,7 @@
             button8 = new Button();
             Button2 = new Button();
             Button1 = new Button();
+            seznamZařízeníToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             panelFilters.SuspendLayout();
@@ -217,20 +219,20 @@
             // proudToolStripMenuItem
             // 
             proudToolStripMenuItem.Name = "proudToolStripMenuItem";
-            proudToolStripMenuItem.Size = new Size(107, 22);
+            proudToolStripMenuItem.Size = new Size(180, 22);
             proudToolStripMenuItem.Text = "Proud";
             proudToolStripMenuItem.Click += Button3_Click;
             // 
             // prurezToolStripMenuItem
             // 
             prurezToolStripMenuItem.Name = "prurezToolStripMenuItem";
-            prurezToolStripMenuItem.Size = new Size(107, 22);
+            prurezToolStripMenuItem.Size = new Size(180, 22);
             prurezToolStripMenuItem.Text = "Průřez";
             prurezToolStripMenuItem.Click += Button4_Click;
             // 
             // zobrazeniToolStripMenuItem
             // 
-            zobrazeniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { vsechnySloupceToolStripMenuItem, rozvadecSloupceToolStripMenuItem, datoveSloupceToolStripMenuItem, filtToolStripMenuItem });
+            zobrazeniToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { vsechnySloupceToolStripMenuItem, rozvadecSloupceToolStripMenuItem, datoveSloupceToolStripMenuItem, filtToolStripMenuItem, seznamZařízeníToolStripMenuItem });
             zobrazeniToolStripMenuItem.Name = "zobrazeniToolStripMenuItem";
             zobrazeniToolStripMenuItem.Size = new Size(71, 20);
             zobrazeniToolStripMenuItem.Text = "Zobrazení";
@@ -238,28 +240,28 @@
             // vsechnySloupceToolStripMenuItem
             // 
             vsechnySloupceToolStripMenuItem.Name = "vsechnySloupceToolStripMenuItem";
-            vsechnySloupceToolStripMenuItem.Size = new Size(172, 22);
+            vsechnySloupceToolStripMenuItem.Size = new Size(180, 22);
             vsechnySloupceToolStripMenuItem.Text = "Všechny sloupce";
             vsechnySloupceToolStripMenuItem.Click += Button6_Click;
             // 
             // rozvadecSloupceToolStripMenuItem
             // 
             rozvadecSloupceToolStripMenuItem.Name = "rozvadecSloupceToolStripMenuItem";
-            rozvadecSloupceToolStripMenuItem.Size = new Size(172, 22);
+            rozvadecSloupceToolStripMenuItem.Size = new Size(180, 22);
             rozvadecSloupceToolStripMenuItem.Text = "Sloupce rozvaděče";
             rozvadecSloupceToolStripMenuItem.Click += Button5_Click;
             // 
             // datoveSloupceToolStripMenuItem
             // 
             datoveSloupceToolStripMenuItem.Name = "datoveSloupceToolStripMenuItem";
-            datoveSloupceToolStripMenuItem.Size = new Size(172, 22);
+            datoveSloupceToolStripMenuItem.Size = new Size(180, 22);
             datoveSloupceToolStripMenuItem.Text = "Datové sloupce";
             datoveSloupceToolStripMenuItem.Click += Button8_Click;
             // 
             // filtToolStripMenuItem
             // 
             filtToolStripMenuItem.Name = "filtToolStripMenuItem";
-            filtToolStripMenuItem.Size = new Size(172, 22);
+            filtToolStripMenuItem.Size = new Size(180, 22);
             filtToolStripMenuItem.Text = "Filtr";
             filtToolStripMenuItem.Click += FiltToolStripMenuItem_Click;
             // 
@@ -428,7 +430,7 @@
             // comboBoxIsExistElektro
             // 
             comboBoxIsExistElektro.FormattingEnabled = true;
-            comboBoxIsExistElektro.Location = new Point(10, 34);
+            comboBoxIsExistElektro.Location = new Point(10, 40);
             comboBoxIsExistElektro.Margin = new Padding(0, 0, 15, 0);
             comboBoxIsExistElektro.Name = "comboBoxIsExistElektro";
             comboBoxIsExistElektro.Size = new Size(100, 29);
@@ -438,7 +440,7 @@
             // lblSearch
             // 
             lblSearch.AutoSize = true;
-            lblSearch.Location = new Point(125, 39);
+            lblSearch.Location = new Point(125, 45);
             lblSearch.Margin = new Padding(0, 5, 5, 0);
             lblSearch.Name = "lblSearch";
             lblSearch.Size = new Size(74, 21);
@@ -447,7 +449,7 @@
             // 
             // textBoxSearch
             // 
-            textBoxSearch.Location = new Point(204, 34);
+            textBoxSearch.Location = new Point(204, 40);
             textBoxSearch.Margin = new Padding(0, 0, 15, 0);
             textBoxSearch.Name = "textBoxSearch";
             textBoxSearch.Size = new Size(201, 29);
@@ -591,6 +593,13 @@
             Button1.UseVisualStyleBackColor = true;
             Button1.Click += Button1_Click;
             // 
+            // seznamZařízeníToolStripMenuItem
+            // 
+            seznamZařízeníToolStripMenuItem.Name = "seznamZařízeníToolStripMenuItem";
+            seznamZařízeníToolStripMenuItem.Size = new Size(180, 22);
+            seznamZařízeníToolStripMenuItem.Text = "Seznam zařízení";
+            seznamZařízeníToolStripMenuItem.Click += SeznamZařízeníToolStripMenuItem_Click;
+            // 
             // Table
             // 
             AutoScaleDimensions = new SizeF(9F, 21F);
@@ -676,5 +685,6 @@
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripMenuItem smazatToolStripMenuItem1;
         private ToolStripMenuItem bezKWToolStripMenuItem;
+        private ToolStripMenuItem seznamZařízeníToolStripMenuItem;
     }
 }

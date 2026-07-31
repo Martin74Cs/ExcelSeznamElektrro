@@ -51,6 +51,7 @@ namespace WinForms
             místnostiToolStripMenuItem1 = new ToolStripMenuItem();
             generovatToolStripMenuItem = new ToolStripMenuItem();
             pomocToolStripMenuItem = new ToolStripMenuItem();
+            deleteNaKWToolStripMenuItem = new ToolStripMenuItem();
             atributyToolStripMenuItem = new ToolStripMenuItem();
             expotrToolStripMenuItem = new ToolStripMenuItem();
             rozvaděčToolStripMenuItem = new ToolStripMenuItem();
@@ -63,6 +64,9 @@ namespace WinForms
             seznamToolStripMenuItem = new ToolStripMenuItem();
             kabelyToolStripMenuItem = new ToolStripMenuItem();
             sloucenySeznamToolStripMenuItem = new ToolStripMenuItem();
+            sloucenySeznamKabeluToolStripMenuItem = new ToolStripMenuItem();
+            excelSeznamZarizeniToolStripMenuItem = new ToolStripMenuItem();
+            excelSeznamKabeluToolStripMenuItem = new ToolStripMenuItem();
             button6 = new Button();
             label5 = new Label();
             button10 = new Button();
@@ -77,10 +81,6 @@ namespace WinForms
             button5 = new Button();
             button7 = new Button();
             label6 = new Label();
-            deleteNaKWToolStripMenuItem = new ToolStripMenuItem();
-            sloucenySeznamKabeluToolStripMenuItem = new ToolStripMenuItem();
-            excelSeznamZarizeniToolStripMenuItem = new ToolStripMenuItem();
-            excelSeznamKabeluToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -268,14 +268,14 @@ namespace WinForms
             // místnostiToolStripMenuItem1
             // 
             místnostiToolStripMenuItem1.Name = "místnostiToolStripMenuItem1";
-            místnostiToolStripMenuItem1.Size = new Size(180, 26);
+            místnostiToolStripMenuItem1.Size = new Size(176, 26);
             místnostiToolStripMenuItem1.Text = "Otevřít složku";
             místnostiToolStripMenuItem1.Click += MístnostiToolStripMenuItem1_Click;
             // 
             // generovatToolStripMenuItem
             // 
             generovatToolStripMenuItem.Name = "generovatToolStripMenuItem";
-            generovatToolStripMenuItem.Size = new Size(180, 26);
+            generovatToolStripMenuItem.Size = new Size(176, 26);
             generovatToolStripMenuItem.Text = "Generovat ";
             generovatToolStripMenuItem.Click += GenerovatToolStripMenuItem_Click;
             // 
@@ -285,6 +285,13 @@ namespace WinForms
             pomocToolStripMenuItem.Name = "pomocToolStripMenuItem";
             pomocToolStripMenuItem.Size = new Size(69, 25);
             pomocToolStripMenuItem.Text = "Pomoc";
+            // 
+            // deleteNaKWToolStripMenuItem
+            // 
+            deleteNaKWToolStripMenuItem.Name = "deleteNaKWToolStripMenuItem";
+            deleteNaKWToolStripMenuItem.Size = new Size(173, 26);
+            deleteNaKWToolStripMenuItem.Text = "Delete na KW";
+            deleteNaKWToolStripMenuItem.Click += DeleteNaKWToolStripMenuItem_Click;
             // 
             // atributyToolStripMenuItem
             // 
@@ -331,14 +338,14 @@ namespace WinForms
             // cestyToolStripMenuItem
             // 
             cestyToolStripMenuItem.Name = "cestyToolStripMenuItem";
-            cestyToolStripMenuItem.Size = new Size(260, 26);
+            cestyToolStripMenuItem.Size = new Size(261, 26);
             cestyToolStripMenuItem.Text = "Cesty";
             cestyToolStripMenuItem.Click += CestyToolStripMenuItem_Click;
             // 
             // kontrolaCestToolStripMenuItem
             // 
             kontrolaCestToolStripMenuItem.Name = "kontrolaCestToolStripMenuItem";
-            kontrolaCestToolStripMenuItem.Size = new Size(260, 26);
+            kontrolaCestToolStripMenuItem.Size = new Size(261, 26);
             kontrolaCestToolStripMenuItem.Text = "Kontrola a nastavení cest...";
             kontrolaCestToolStripMenuItem.Click += KontrolaCestToolStripMenuItem_Click;
             // 
@@ -352,42 +359,42 @@ namespace WinForms
             // seznamToolStripMenuItem
             // 
             seznamToolStripMenuItem.Name = "seznamToolStripMenuItem";
-            seznamToolStripMenuItem.Size = new Size(180, 26);
+            seznamToolStripMenuItem.Size = new Size(257, 26);
             seznamToolStripMenuItem.Text = "Seznam zařízení";
             seznamToolStripMenuItem.Click += SeznamToolStripMenuItem_Click;
             // 
             // kabelyToolStripMenuItem
             // 
             kabelyToolStripMenuItem.Name = "kabelyToolStripMenuItem";
-            kabelyToolStripMenuItem.Size = new Size(180, 26);
+            kabelyToolStripMenuItem.Size = new Size(257, 26);
             kabelyToolStripMenuItem.Text = "Seznam kabelů";
             kabelyToolStripMenuItem.Click += KabelyToolStripMenuItem_Click;
             // 
             // sloucenySeznamToolStripMenuItem
             // 
             sloucenySeznamToolStripMenuItem.Name = "sloucenySeznamToolStripMenuItem";
-            sloucenySeznamToolStripMenuItem.Size = new Size(180, 26);
+            sloucenySeznamToolStripMenuItem.Size = new Size(257, 26);
             sloucenySeznamToolStripMenuItem.Text = "Sloučený seznam zařízení";
             sloucenySeznamToolStripMenuItem.Click += SloucenySeznamToolStripMenuItem_Click;
             // 
             // sloucenySeznamKabeluToolStripMenuItem
             // 
             sloucenySeznamKabeluToolStripMenuItem.Name = "sloucenySeznamKabeluToolStripMenuItem";
-            sloucenySeznamKabeluToolStripMenuItem.Size = new Size(180, 26);
+            sloucenySeznamKabeluToolStripMenuItem.Size = new Size(257, 26);
             sloucenySeznamKabeluToolStripMenuItem.Text = "Sloučený seznam kabelů";
             sloucenySeznamKabeluToolStripMenuItem.Click += SloucenySeznamKabeluToolStripMenuItem_Click;
             // 
             // excelSeznamZarizeniToolStripMenuItem
             // 
             excelSeznamZarizeniToolStripMenuItem.Name = "excelSeznamZarizeniToolStripMenuItem";
-            excelSeznamZarizeniToolStripMenuItem.Size = new Size(240, 26);
+            excelSeznamZarizeniToolStripMenuItem.Size = new Size(257, 26);
             excelSeznamZarizeniToolStripMenuItem.Text = "Excel - Seznam zařízení";
             excelSeznamZarizeniToolStripMenuItem.Click += ExcelSeznamZarizeniToolStripMenuItem_Click;
             // 
             // excelSeznamKabeluToolStripMenuItem
             // 
             excelSeznamKabeluToolStripMenuItem.Name = "excelSeznamKabeluToolStripMenuItem";
-            excelSeznamKabeluToolStripMenuItem.Size = new Size(240, 26);
+            excelSeznamKabeluToolStripMenuItem.Size = new Size(257, 26);
             excelSeznamKabeluToolStripMenuItem.Text = "Excel - Seznam kabelů";
             excelSeznamKabeluToolStripMenuItem.Click += ExcelSeznamKabeluToolStripMenuItem_Click;
             // 
@@ -552,13 +559,6 @@ namespace WinForms
             label6.Size = new Size(154, 21);
             label6.TabIndex = 35;
             label6.Text = "Vlasní vývody topeni";
-            // 
-            // deleteNaKWToolStripMenuItem
-            // 
-            deleteNaKWToolStripMenuItem.Name = "deleteNaKWToolStripMenuItem";
-            deleteNaKWToolStripMenuItem.Size = new Size(180, 26);
-            deleteNaKWToolStripMenuItem.Text = "Delete na KW";
-            deleteNaKWToolStripMenuItem.Click += DeleteNaKWToolStripMenuItem_Click;
             // 
             // Form1
             // 

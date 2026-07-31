@@ -188,7 +188,7 @@ namespace Aplikace.Seznam
             .Where(p => type == null || p.Type == type)];
         }
 
-        public static void Main(string cesta)
+        public static void Hlavni(string cesta)
         {
             string file = "OEZExportZbozi2025-05-29.csv";
             string Cesta = Path.Combine(cesta, "Jištení", file);

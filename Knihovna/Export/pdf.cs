@@ -38,7 +38,7 @@ namespace Knihovna.Export
             // STYL
             // ======================
             var normal = document.Styles["Normal"];
-            normal.Font.Name = "Calibri";
+            normal!.Font.Name = "Calibri";
             normal.Font.Size = 9;
 
             // ======================
@@ -73,7 +73,6 @@ namespace Knihovna.Export
             //    "Pid",
             //    "Pozice",
             //    "Poznamka"
-
 
             // ======================
             // VÝPOČET ŠÍŘEK
@@ -178,7 +177,7 @@ namespace Knihovna.Export
             // ======================
             // RENDER
             // ======================
-            var renderer = new PdfDocumentRenderer(true)
+            var renderer = new PdfDocumentRenderer()
             {
                 Document = document
             };
@@ -198,7 +197,6 @@ namespace Knihovna.Export
             renderer.PdfDocument.Save(pdfPath);
             Console.WriteLine($"Soubor : {Path.GetFileName(pdfPath)} Uložen.");
         }
-
 
         public static void SavePdfGen<T>(this IEnumerable<T> data, string pdfPath, string? title = null, string[] columns = null)
         {
@@ -228,7 +226,7 @@ namespace Knihovna.Export
             // STYL
             // ======================
             var normal = document.Styles["Normal"];
-            normal.Font.Name = "Calibri";
+            normal!.Font.Name = "Calibri";
             normal.Font.Size = 9;
 
             // ======================
@@ -254,10 +252,9 @@ namespace Knihovna.Export
             PropertyInfo[] properties;
             if (columns != null && columns.Length > 0)
             {
-                properties = columns
+                properties = [.. columns
                     .Select(colName => allProperties.FirstOrDefault(p => string.Equals(p.Name, colName, StringComparison.OrdinalIgnoreCase)))
-                    .Where(p => p != null)
-                    .ToArray();
+                    .Where(p => p != null)];
             }
             else
             {
@@ -372,8 +369,7 @@ namespace Knihovna.Export
             // ======================
             // RENDER
             // ======================
-            var renderer = new PdfDocumentRenderer(true)
-            {
+            var renderer = new PdfDocumentRenderer() {
                 Document = document
             };
 

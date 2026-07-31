@@ -3,6 +3,7 @@ using Aplikace.Upravy;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Knihovna;
 using Knihovna.Excel;
+using Knihovna.KabelyXls;
 using Knihovna.Shared.Tridy;
 using Knihovna.Tridy;
 using System.Collections;
@@ -141,14 +142,12 @@ namespace WinForms
             return attribute == null ? value.ToString() : attribute.Description;
         }
 
-
         public void SetListBox(string[] propertyNames)
         {
             dataGridView1.AutoGenerateColumns = false; // Vypnout automatické generování sloupců
             dataGridView1.Columns.Clear(); // důležité – vyčistí dříve vygenerované sloupce
 
             //"Druh"
-
 
             // Přidáš sloupce ručně:
             foreach (var propertyName in propertyNames)
@@ -267,9 +266,12 @@ namespace WinForms
             }
 
             using var form = new FormKabely([.. Pole.OrderBy(x => x.Tag)], vybraneZar);
-            try {
+            try
+            {
                 form.ShowDialog();
-            } catch(Exception) {
+            }
+            catch (Exception)
+            {
                 Console.WriteLine("Divná chyba");
                 throw;
             }
@@ -752,7 +754,7 @@ namespace WinForms
 
             // Vytvoření filtrů jako u Form1
             _customFilters = [
-            
+
                 new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
                 // Všechny položky, jejichž Příkon nezačíná na "—" ani "-"
                 new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith, negate: true),
@@ -785,6 +787,98 @@ namespace WinForms
                 }
             }
             ObnovGrid(zachovatPozici: false); // Obnovíme grid bez automatického zachování
+        }
+
+        private void SeznamZařízeníToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Pořadí
+            //Revize
+            //Balená jednotka
+            //Umístění
+            //Technolologické označení
+            //Zařízení
+            //Typ, Velikost
+            //Rozváděč
+            //Napětí
+            //Příkon Pi
+            //Příkon Pp
+            //Start motoru
+            //Poznámka
+            // Sloupce k zobrazení podle exportu ve Form1
+
+            //NastavBunku(row.Cell("A"), spotrebic.Polozka, true);
+            //NastavBunku(row.Cell("B"), spotrebic.Rev);
+            //NastavBunku(row.Cell("C"), spotrebic.BalenaJednotka);
+            //NastavBunku(row.Cell("D"), spotrebic.Umisteni);
+            //NastavBunku(row.Cell("E"), spotrebic.Tag);
+            //NastavBunku(row.Cell("F"), spotrebic.Popis);
+            //NastavBunku(row.Cell("G"), spotrebic.TypVelikost);
+            //NastavBunku(row.Cell("H"), spotrebic.Rozvadec);
+            //NastavBunku(row.Cell("I"), spotrebic.Napeti, true);
+            //NastavBunku(row.Cell("J"), spotrebic.InstalovanyPi, true);
+
+            //Spotrebic s = new()
+            //{
+            //    Polozka = poradi++.ToString(),
+            //    Rev = "0",
+            //    BalenaJednotka = z.BalenaJednotka,
+            //    Umisteni = z.Pozice,
+            //    Tag = z.Tag,
+            //    Popis = z.Popis,
+            //    TypVelikost = z.Typ,
+            //    Rozvadec = z.RozvadecOznačení,
+            //    Napeti = z.Napeti,
+            //    InstalovanyPi = z.Prikon,
+            //    VypoctovyPi = double.TryParse(z.Prikon, out double p) ? (p * 0.9).ToString() : "",
+            //    StartMotoru = z.Menic,
+            //    Poznamka = z.Poznamka
+            //};
+            //spotrebice.Add(s);
+
+            var namesToRemove = new[] {
+                //    Polozka = poradi++.ToString(),
+                //    Rev = "0",
+                nameof(Zarizeni.Revize),
+                //    BalenaJednotka = z.BalenaJednotka,
+                nameof(Zarizeni.BalenaJednotka),
+                //    Umisteni = z.Pozice,
+                nameof(Zarizeni.Pozice),
+                //    Tag = z.Tag,
+                nameof(Zarizeni.Tag),
+                //    Popis = z.Popis,
+                nameof(Zarizeni.Popis),
+                //    TypVelikost = z.Typ,
+                nameof(Zarizeni.Typ),
+                //    Rozvadec = z.RozvadecOznačení,
+                nameof(Zarizeni.Rozvadec),
+                nameof(Zarizeni.RozvadecCislo),
+                //    Napeti = z.Napeti,
+                nameof(Zarizeni.Napeti),
+                //    InstalovanyPi = z.Prikon,
+                nameof(Zarizeni.Prikon),
+                nameof(Zarizeni.Proud),
+                //    VypoctovyPi = double.TryParse(z.Prikon, out double p) ? (p * 0.9).ToString() : "",
+                //    StartMotoru = z.Menic,
+                nameof(Zarizeni.Menic),
+                //    Poznamka = z.Poznamka
+                nameof(Zarizeni.Poznamka),
+                //
+                nameof(Zarizeni.DatumZmeny),
+                nameof(Zarizeni.Autor),
+
+            };
+            SetListBox(namesToRemove);
+
+            // Vytvoření filtrů jako u Form1
+            _customFilters = [
+
+                new(nameof(Zarizeni.Prikon), op: FilterOperator.IsNotNullOrEmpty),
+                // Všechny položky, jejichž Příkon nezačíná na "—" ani "-"
+                new(nameof(Zarizeni.Prikon), "—", op: FilterOperator.StartsWith, negate: true),
+                new(nameof(Zarizeni.Prikon), "-", op: FilterOperator.StartsWith, negate: true),
+            ];
+
+            ObnovGrid(); // Aplikuje filtry na data
         }
     }
 
@@ -828,4 +922,3 @@ namespace WinForms
         protected override ListSortDirection SortDirectionCore => sortDirection;
     }
 }
-

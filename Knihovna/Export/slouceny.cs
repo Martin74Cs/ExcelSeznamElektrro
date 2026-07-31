@@ -41,17 +41,14 @@ namespace Knihovna.Export
         /// </summary>
         private static List<PropertyInfo> GetPropertiesToExport<T>(string[]? columns)
         {
-            List<PropertyInfo> allProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                                         .Where(p => p.GetIndexParameters().Length == 0)
-                                                         .ToList();
+            List<PropertyInfo> allProperties = [.. typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0)];
 
             if (columns != null && columns.Length > 0)
             {
-                return columns
+                return [.. columns
                     .Select(colName => allProperties.FirstOrDefault(p => string.Equals(p.Name, colName, StringComparison.OrdinalIgnoreCase)))
                     .Where(p => p != null)
-                    .Cast<PropertyInfo>()
-                    .ToList();
+                    .Cast<PropertyInfo>()];
             }
 
             return allProperties;
@@ -111,7 +108,7 @@ namespace Knihovna.Export
                 return;
             }
 
-            using XLWorkbook workbook = new XLWorkbook();
+            using XLWorkbook workbook = new();
             IXLWorksheet ws = workbook.Worksheets.Add("Seznam");
 
             List<PropertyInfo> properties = GetPropertiesToExport<T>(columns);
@@ -156,9 +153,9 @@ namespace Knihovna.Export
                         string strVal = rawVal.ToString() ?? string.Empty;
                         
                         // Detekce vzorců (začíná na "=")
-                        if (strVal.StartsWith("=") && strVal.Length > 1)
+                        if (strVal.StartsWith('=') && strVal.Length > 1)
                         {
-                            cell.FormulaA1 = strVal.Substring(1);
+                            cell.FormulaA1 = strVal[1..];
                         }
                         // Detekce čísel
                         else if (double.TryParse(strVal, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double numVal))
@@ -209,7 +206,7 @@ namespace Knihovna.Export
                 return;
             }
 
-            using XLWorkbook workbook = new XLWorkbook();
+            using XLWorkbook workbook = new();
             IXLWorksheet ws = workbook.Worksheets.Add("Sloučený seznam");
 
             List<PropertyInfo> properties = GetPropertiesToExport<T>(columns);
@@ -272,9 +269,9 @@ namespace Knihovna.Export
                             if (rawVal != null)
                             {
                                 string strVal = rawVal.ToString() ?? string.Empty;
-                                if (strVal.StartsWith("=") && strVal.Length > 1)
+                                if (strVal.StartsWith('=') && strVal.Length > 1)
                                 {
-                                    cell.FormulaA1 = strVal.Substring(1);
+                                    cell.FormulaA1 = strVal[1..];
                                 }
                                 else if (double.TryParse(strVal, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double numVal))
                                 {
@@ -329,7 +326,7 @@ namespace Knihovna.Export
 
             List<PropertyInfo> properties = GetPropertiesToExport<T>(columns);
 
-            using StreamWriter writer = new StreamWriter(csvPath, false, new UTF8Encoding(true));
+            using StreamWriter writer = new(csvPath, false, new UTF8Encoding(true));
 
             foreach (ExportSection<T> section in sections)
             {
@@ -387,7 +384,7 @@ namespace Knihovna.Export
             string rootName = $"SloucenyExportOf{typeof(T).Name}";
             string itemName = typeof(T).Name;
 
-            XDocument xDoc = new XDocument(
+            XDocument xDoc = new (
                 new XDeclaration("1.0", "utf-8", "yes"),
                 new XElement(rootName,
                     sections.Select(section =>
@@ -431,7 +428,7 @@ namespace Knihovna.Export
             }
 
             List<PropertyInfo> properties = GetPropertiesToExport<T>(columns);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine("<!DOCTYPE html>");
             sb.AppendLine("<html><head><meta charset=\"UTF-8\"><title>Sloučený seznam</title>");
@@ -509,7 +506,7 @@ namespace Knihovna.Export
                 return;
             }
 
-            MigraDocDoc.Document document = new MigraDocDoc.Document();
+            MigraDocDoc.Document document = new();
             MigraDocDoc.Section pdfSection = document.AddSection();
 
             // Nastavení A4 Landscape
@@ -522,7 +519,7 @@ namespace Knihovna.Export
 
             // Nastavení základního stylu písma
             MigraDocDoc.Style normalStyle = document.Styles["Normal"];
-            normalStyle.Font.Name = "Calibri";
+            normalStyle!.Font.Name = "Calibri";
             normalStyle.Font.Size = 9;
 
             // Hlavní nadpis dokumentu
@@ -644,8 +641,7 @@ namespace Knihovna.Export
             pdfSection.Footers.Primary.AddParagraph("Vygenerováno: " + DateTime.Now.ToString("dd.MM.yyyy HH:mm")).Format.Font.Size = 8;
 
             // Vykreslení PDF dokumentu
-            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true)
-            {
+            PdfDocumentRenderer renderer = new() {
                 Document = document
             };
             renderer.RenderDocument();
@@ -664,7 +660,7 @@ namespace Knihovna.Export
         {
             try
             {
-                using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                using FileStream stream = new(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
                 return false;
             }
             catch (IOException)
@@ -736,7 +732,7 @@ namespace Knihovna.Export
                 }
 
                 // Tabulka
-                Wordprocessing.Table table = new Wordprocessing.Table();
+                Wordprocessing.Table table = new();
                 table.AppendChild(new Wordprocessing.TableProperties(
                     new Wordprocessing.TableStyle { Val = "TableGrid" },
                     new Wordprocessing.TableWidth { Type = Wordprocessing.TableWidthUnitValues.Pct, Width = "5000" },
@@ -744,7 +740,7 @@ namespace Knihovna.Export
                 ));
 
                 // Header řádek
-                Wordprocessing.TableRow headerRow = new Wordprocessing.TableRow();
+                Wordprocessing.TableRow headerRow = new();
                 foreach (PropertyInfo prop in properties)
                 {
                     headerRow.Append(Tc(GetHeaderName(prop), header: true, altRow: false));
@@ -756,7 +752,7 @@ namespace Knihovna.Export
                 {
                     T item = dataSection.Data[i];
                     bool alt = (i % 2) == 1;
-                    Wordprocessing.TableRow row = new Wordprocessing.TableRow();
+                    Wordprocessing.TableRow row = new();
 
                     foreach (PropertyInfo prop in properties)
                     {
@@ -780,7 +776,7 @@ namespace Knihovna.Export
         {
             string? bg = header ? "E6E6E6" : (altRow ? "F7F7F7" : null);
 
-            Wordprocessing.TableCellProperties props = new Wordprocessing.TableCellProperties(
+            Wordprocessing.TableCellProperties props = new(
                 new Wordprocessing.TableCellWidth { Type = Wordprocessing.TableWidthUnitValues.Auto },
                 new Wordprocessing.TableCellVerticalAlignment { Val = Wordprocessing.TableVerticalAlignmentValues.Center },
                 new Wordprocessing.TableCellMargin(
@@ -801,14 +797,14 @@ namespace Knihovna.Export
                 });
             }
 
-            Wordprocessing.RunProperties runProps = new Wordprocessing.RunProperties();
+            Wordprocessing.RunProperties runProps = new();
             if (header)
             {
                 runProps.Append(new Wordprocessing.Bold());
             }
             runProps.Append(new Wordprocessing.FontSize { Val = "20" }); // Velikost písma 10pt (20 half-points)
 
-            Wordprocessing.Paragraph paragraph = new Wordprocessing.Paragraph(
+            Wordprocessing.Paragraph paragraph = new(
                 new Wordprocessing.ParagraphProperties(new Wordprocessing.SpacingBetweenLines { Before = "0", After = "0" }),
                 new Wordprocessing.Run(runProps, new Wordprocessing.Text(text ?? string.Empty) { Space = SpaceProcessingModeValues.Preserve })
             );
@@ -818,7 +814,7 @@ namespace Knihovna.Export
 
         private static Wordprocessing.Paragraph ParagraphOf(string text, bool bold, int fontSizeHalfPoints, int spacingAfter)
         {
-            Wordprocessing.RunProperties runProps = new Wordprocessing.RunProperties(new Wordprocessing.FontSize { Val = fontSizeHalfPoints.ToString() });
+            Wordprocessing.RunProperties runProps = new(new Wordprocessing.FontSize { Val = fontSizeHalfPoints.ToString() });
             if (bold)
             {
                 runProps.Append(new Wordprocessing.Bold());

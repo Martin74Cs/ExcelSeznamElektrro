@@ -20,7 +20,7 @@ namespace Knihovna.KabelyXls
         /// <param name="vystupCesta">Cesta pro uložení nově generovaného souboru.</param>
         /// <param name="coverData">Data pro vyplnění úvodního listu Cover.</param>
         /// <param name="spotrebice">Seznam spotřebičů pro uložení do listu.</param>
-        public void Generuj(string sablonaCesta, string vystupCesta, CoverData coverData, List<Spotrebic> spotrebice)
+        public static void Generuj(string sablonaCesta, string vystupCesta, CoverData coverData, List<Spotrebic> spotrebice)
         {
             if (!File.Exists(sablonaCesta))
             {
@@ -36,17 +36,15 @@ namespace Knihovna.KabelyXls
             File.Copy(sablonaCesta, vystupCesta, true);
 
             // Otevřeme a upravíme pomocí ClosedXML
-            using (XLWorkbook workbook = new(vystupCesta))
-            {
-                // 1. Úprava listu Cover
-                UpravCover(workbook, coverData);
+            using XLWorkbook workbook = new(vystupCesta);
+            // 1. Úprava listu Cover
+            UpravCover(workbook, coverData);
 
-                // 2. Úprava listu se spotřebiči
-                UpravSpotrebice(workbook, spotrebice);
+            // 2. Úprava listu se spotřebiči
+            UpravSpotrebice(workbook, spotrebice);
 
-                // Uložení změn
-                workbook.Save();
-            }
+            // Uložení změn
+            workbook.Save();
         }
 
         /// <summary>
@@ -56,7 +54,7 @@ namespace Knihovna.KabelyXls
         /// <param name="vystupCesta">Cesta pro uložení nově generovaného souboru.</param>
         /// <param name="coverData">Data pro vyplnění úvodního listu Cover.</param>
         /// <param name="kabely">Seznam kabelů pro uložení do listu.</param>
-        public void GenerujKabel(string sablonaCesta, string vystupCesta, CoverData coverData, List<KabelPolozka> kabely)
+        public static void GenerujKabel(string sablonaCesta, string vystupCesta, CoverData coverData, List<KabelPolozka> kabely)
         {
             if (!File.Exists(sablonaCesta))
             {
@@ -72,23 +70,21 @@ namespace Knihovna.KabelyXls
             File.Copy(sablonaCesta, vystupCesta, true);
 
             // Otevřeme a upravíme pomocí ClosedXML
-            using (XLWorkbook workbook = new(vystupCesta))
-            {
-                // 1. Úprava listu Cover
-                UpravCover(workbook, coverData);
+            using XLWorkbook workbook = new(vystupCesta);
+            // 1. Úprava listu Cover
+            UpravCover(workbook, coverData);
 
-                // 2. Úprava listu s kabely
-                UpravKabely(workbook, kabely);
+            // 2. Úprava listu s kabely
+            UpravKabely(workbook, kabely);
 
-                // Uložení změn
-                workbook.Save();
-            }
+            // Uložení změn
+            workbook.Save();
         }
 
         /// <summary>
         /// Vyplní úvodní list Cover podle zadaných dat.
         /// </summary>
-        private void UpravCover(XLWorkbook workbook, CoverData coverData)
+        private static void UpravCover(XLWorkbook workbook, CoverData coverData)
         {
             IXLWorksheet ws = workbook.Worksheet(1); // Cover list je první
 
@@ -172,7 +168,7 @@ namespace Knihovna.KabelyXls
         /// <summary>
         /// Vyplní seznam spotřebičů v druhém listu šablony.
         /// </summary>
-        private void UpravSpotrebice(XLWorkbook workbook, List<Spotrebic> spotrebice)
+        private static void UpravSpotrebice(XLWorkbook workbook, List<Spotrebic> spotrebice)
         {
             IXLWorksheet ws = workbook.Worksheet(2); // List se spotřebiči
 
@@ -229,7 +225,7 @@ namespace Knihovna.KabelyXls
         /// <summary>
         /// Vyplní seznam kabelů v druhém listu šablony.
         /// </summary>
-        private void UpravKabely(XLWorkbook workbook, List<KabelPolozka> kabely)
+        private static void UpravKabely(XLWorkbook workbook, List<KabelPolozka> kabely)
         {
             IXLWorksheet ws = workbook.Worksheet(2); // List s kabely
 

@@ -6,7 +6,7 @@ using Knihovna;
 using Knihovna.Export;
 using Knihovna.Sdilene;
 using Knihovna.Tridy;
-using Knihovna.Tridy;
+
 using Parametr.MAcad;
 
 // Setup console logging to a file in Windows-1250 encoding
@@ -124,7 +124,11 @@ while(!konec) {
 
             case "7":
                 Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
-                string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath);
+                string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath)??"";
+                if (string.IsNullOrEmpty(CestaSoubor))  {
+                    Console.WriteLine("Výběr souboru byl stornován.");
+                    return;
+                }
                 var Json = Soubory.LoadJsonEn<SumoResult>(CestaSoubor);
                 Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
                 foreach(var item in Json) {
@@ -173,7 +177,12 @@ while(!konec) {
 
 static void SumoKKs() {
     Console.WriteLine($"\nCesta : {Informace.Instance.BasePath} ");
-    string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath);
+    string CestaSoubor = Soubory.ShowOpenFileDialog("(*.json)|*.json", Informace.Instance.BasePath) ?? "";
+    if (string.IsNullOrEmpty(CestaSoubor))
+    {
+        Console.WriteLine("Výběr souboru byl stornován.");
+        return;
+    }
     var Json = Soubory.LoadJsonEn<SumoDivisionLog>(CestaSoubor);
     Console.WriteLine($"\nNačteno. {Json.Count} záznamů");
 

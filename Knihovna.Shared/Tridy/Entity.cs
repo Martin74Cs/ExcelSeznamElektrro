@@ -1,4 +1,6 @@
-namespace Knihovna.Tridy
+using System.ComponentModel;
+
+namespace Knihovna.Shared.Tridy
 {
     /// <summary>
     /// Základní třída reprezentující entitu s identifikátorem.
@@ -22,6 +24,24 @@ namespace Knihovna.Tridy
         {
             Apid = GenerujApid();
         }
+
+        /// <summary>
+        /// Uživatel, který naposledy provedl změnu.
+        /// </summary>
+        [DisplayName("Autor")]
+        public string Autor { get; set; }
+
+        /// <summary>
+        /// Revize entity, která se zvyšuje při každé změně.
+        /// </summary>
+        [DisplayName("Revize")]
+        public int Revize { get; set; }
+
+        /// <summary>
+        /// Datum a čas poslední změny.
+        /// </summary>
+        [DisplayName("Datum")]
+        public DateTime DatumZmeny { get; set; }
 
         /// <summary>
         /// Generuje náhodný 8místný alfanumerický řetězec.

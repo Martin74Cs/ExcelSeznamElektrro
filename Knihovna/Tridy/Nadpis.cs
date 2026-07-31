@@ -1,4 +1,5 @@
 ﻿using Aplikace.Tridy;
+using Knihovna.Shared.Tridy;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
